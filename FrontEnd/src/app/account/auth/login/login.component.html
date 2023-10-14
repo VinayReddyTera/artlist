@@ -1,0 +1,135 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#20b04b" type="ball-clip-rotate"></ngx-spinner>
+<div class="account-pages my-5 pt-sm-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6 col-xl-5">
+        <div class="card overflow-hidden">
+          <div class="bg-soft bg-primary">
+            <div class="row">
+              <div class="col-7">
+                <div class="text-primary p-4">
+                  <h5 class="text-primary">Welcome Back !</h5>
+                  <p>Sign in to continue to Artlist.</p>
+                </div>
+              </div>
+              <div class="col-5 align-self-end">
+                <img src="assets/images/profile-img.png" alt="" class="img-fluid">
+              </div>
+            </div>
+          </div>
+          <div class="card-body pt-0">
+            <div>
+              <a routerLink="/">
+                <div class="avatar-md profile-user-wid mb-4">
+                  <span class="avatar-title rounded-circle bg-light">
+                    <img src="assets/images/logo.svg" alt="" class="rounded-circle" height="34">
+                  </span>
+                </div>
+              </a>
+            </div>
+            <div class="p-2">
+              <form class="form-horizontal" [formGroup]="loginForm" (ngSubmit)="login()">
+
+                <!-- <ngb-alert type="danger" *ngIf="error" [dismissible]="false">{{ error }}</ngb-alert> -->
+
+                <div class="mb-3">
+                  <label for="email">Email</label>
+                  <input type="email" formControlName="email" class="form-control" id="email" placeholder="Email"
+                  [ngClass]="{ 'is-invalid': submitted && loginForm.controls.email.errors }"/>
+                    <div *ngIf="loginForm.controls.email.errors?.required && loginForm.controls.email.dirty" class="required-message text-danger">
+                      <small>Required Field!</small>
+                    </div>
+                    <div *ngIf="loginForm.controls.email.errors?.emailError && !loginForm.controls.email.errors?.required && loginForm.controls.email.dirty" class="required-message text-danger">
+                      <small>{{loginForm.controls.email.errors.emailError.message}}</small>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="password">Password</label>
+                  <div class="input-group auth-pass-inputgroup">
+                    <input type="password" id="password" class="form-control" formControlName="password" placeholder="Enter password"
+                      aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': submitted && loginForm.controls.password.errors }">
+
+                    <button class="btn btn-light ms-0" type="button" id="password-addon">
+                      <i class="mdi mdi-eye" *ngIf="!showPassword" (click)="togglePasswordVisibility()"></i>
+                      <i class="mdi mdi-eye-off" *ngIf="showPassword" (click)="togglePasswordVisibility()"></i>
+                    </button>
+                    </div>
+                    <div *ngIf="loginForm.controls.password.errors?.required && loginForm.controls.password.dirty" class="text-danger">
+                      <small>Required Field!</small>
+                     </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="password">Sign in as</label>
+                    <div class="input-group auth-pass-inputgroup">
+                        <select id="role" class="form-control" formControlName="role" [ngClass]="{ 'is-invalid': submitted && loginForm.controls.role.errors }">
+                          <option value="" disabled selected>--select role--</option>
+                          <option value="artist">artist</option>
+                          <option value="user">User</option>
+                        </select>
+                      </div>
+                      <div *ngIf="loginForm.controls.role.errors?.required && loginForm.controls.role.dirty" class="text-danger">
+                        <small>Required Field!</small>
+                       </div>
+                    </div>
+
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="remember-check">
+                  <label class="form-check-label" for="remember-check">
+                      Remember me
+                  </label>
+              </div>
+
+                <div class="mt-3 d-grid">
+                  <button class="btn btn-primary" type="submit">Log In</button>
+                </div>
+                <!-- <div class="mt-4 text-center">
+                  <h5 class="font-size-14 mb-3 text-danger" *ngIf="errorMessage">{{errorMessage}}</h5>
+                  <h5 class="font-size-14 mb-3">Sign in with</h5>
+
+                  <ul class="list-inline">
+                    <li class="list-inline-item">
+                      <a href="javascript::void()" class="social-list-item bg-primary text-white border-primary">
+                        <i class="mdi mdi-facebook"></i>
+                      </a>
+                    </li>
+                    <li class="list-inline-item">
+                      <a href="javascript::void()" class="social-list-item bg-info text-white border-info">
+                        <i class="mdi mdi-twitter"></i>
+                      </a>
+                    </li>
+                    <li class="list-inline-item">
+                      <a href="javascript::void()" class="social-list-item bg-danger text-white border-danger">
+                        <i class="mdi mdi-google"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div> -->
+                <div class="mt-4 text-center">
+                  <a routerLink="/account/reset-password" class="text-muted"><i class="mdi mdi-lock mr-1"></i> Forgot
+                    your
+                    password?</a>
+                </div>
+                <div class="mt-4 text-center">
+                  <p *ngIf="errorMessage" class="mb-0 text-danger message">{{errorMessage}}</p>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+        <div class="mt-5 text-center">
+          <p>Don't have an account ? <br>
+            <a routerLink="/account/signup/user" class="fw-medium text-primary">Register as a User</a> <br>
+            <a routerLink="/account/signup/artist" class="fw-medium text-primary">Register as an Artist</a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- end container -->
+</div>
+<!-- end page -->

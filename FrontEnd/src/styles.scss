@@ -1,0 +1,150 @@
+/* Importing Bootstrap SCSS file. */
+@import 'node_modules/bootstrap/scss/bootstrap';
+
+
+@import "~ag-grid-community/styles//ag-grid.css";
+@import "~ag-grid-community/styles//ag-theme-alpine.css";
+/* You can add global styles to this file, and also import other style files */
+.modal-holder {
+  animation-name: example;
+  animation-duration: 0.3s;
+}
+
+@keyframes example {
+  0% {
+    transform: scale(0.5)
+  }
+
+  100% {
+    transform: scale(1)
+  }
+}
+
+.carousel-item {
+  transition: opacity 0.7s ease !important;
+  position: absolute !important;
+  display: block !important;
+  opacity: 0;
+}
+
+.carousel-item.active {
+  position: relative !important;
+  opacity: 1;
+}
+
+.btn-soft-primary {
+    color: #556ee6 !important;
+    background-color: #556ee61a !important;
+    border-color: transparent !important;
+    transition: all .5s ease
+}
+
+.btn-soft-primary:hover,.btn-soft-primary:focus,.btn-soft-primary:active {
+    color: #fff !important;
+    background-color: #556ee6 !important;
+    border-color: transparent
+}
+
+.btn-soft-secondary {
+    color: #74788d !important;
+    background-color: #74788d1a !important;
+    border-color: transparent !important;
+    transition: all .5s ease
+}
+
+.btn-soft-secondary:hover,.btn-soft-secondary:focus,.btn-soft-secondary:active {
+    color: #fff !important;
+    background-color: #74788d !important;
+    border-color: transparent
+}
+
+.btn-soft-success {
+    color: #34c38f !important;
+    background-color: #34c38f1a !important;
+    border-color: transparent !important;
+    transition: all .5s ease
+}
+
+.btn-soft-success:hover,.btn-soft-success:focus,.btn-soft-success:active {
+    color: #fff !important;
+    background-color: #34c38f !important;
+    border-color: transparent
+}
+
+.btn-soft-info {
+    color: #50a5f1 !important;
+    background-color: #50a5f11a !important;
+    border-color: transparent !important;
+    transition: all .5s ease
+}
+
+.btn-soft-info:hover,.btn-soft-info:focus,.btn-soft-info:active {
+    color: #fff !important;
+    background-color: #50a5f1 !important;
+    border-color: transparent
+}
+
+.btn-soft-warning {
+    color: #f1b44c !important;
+    background-color: #f1b44c1a !important;
+    border-color: transparent !important;
+    transition: all .5s ease
+}
+
+.btn-soft-warning:hover,.btn-soft-warning:focus,.btn-soft-warning:active {
+    color: #fff !important;
+    background-color: #f1b44c !important;
+    border-color: transparent
+}
+
+.btn-soft-danger {
+    color: #f46a6a !important;
+    background-color: #f46a6a1a !important;
+    border-color: transparent !important;
+    transition: all .5s ease
+}
+
+.btn-soft-danger:hover,.btn-soft-danger:focus,.btn-soft-danger:active {
+    color: #fff !important;
+    background-color: #f46a6a !important;
+    border-color: transparent
+}
+
+.btn-soft-pink {
+    color: #e83e8c !important;
+    background-color: #e83e8c1a !important;
+    border-color: transparent !important;
+    transition: all .5s ease
+}
+
+.btn-soft-pink:hover,.btn-soft-pink:focus,.btn-soft-pink:active {
+    color: #fff !important;
+    background-color: #e83e8c !important;
+    border-color: transparent
+}
+
+.btn-soft-light {
+    color: #eff2f7 !important;
+    background-color: #eff2f71a !important;
+    border-color: transparent !important;
+    transition: all .5s ease
+}
+
+.btn-soft-light:hover,.btn-soft-light:focus,.btn-soft-light:active {
+    color: #fff !important;
+    background-color: #eff2f7 !important;
+    border-color: transparent
+}
+
+.btn-soft-dark {
+    color: #343a40 !important;
+    background-color: #343a401a !important;
+    border-color: transparent !important;
+    transition: all .5s ease
+}
+
+.btn-soft-dark:hover,.btn-soft-dark:focus,.btn-soft-dark:active {
+    color: #fff !important;
+    background-color: #343a40 !important;
+    border-color: transparent
+}

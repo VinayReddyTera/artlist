@@ -1,0 +1,178 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#20b04b" type="ball-clip-rotate"></ngx-spinner>
+<div class="account-pages my-5 pt-sm-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6 col-xl-5">
+        <div class="card overflow-hidden">
+          <div class="bg-soft bg-primary">
+            <div class="row">
+              <div class="col-7">
+                <div class="text-primary p-4">
+                  <h5 class="text-primary">Register</h5>
+                  <p>Register yourself with Artlist now.</p>
+                </div>
+              </div>
+              <div class="col-5 align-self-end">
+                <img src="assets/images/profile-img.png" alt="" class="img-fluid">
+              </div>
+            </div>
+          </div>
+          <div class="card-body pt-0">
+            <div>
+              <a routerLink="/">
+                <div class="avatar-md profile-user-wid mb-4">
+                  <span class="avatar-title rounded-circle bg-light">
+                    <img src="assets/images/logo.svg" alt="" class="rounded-circle" height="34">
+                  </span>
+                </div>
+              </a>
+            </div>
+            <div class="p-2">
+
+              <form class="needs-validation" name="signupForm" [formGroup]="signupForm" (ngSubmit)="onSubmit()"
+                novalidate>
+
+                <ngb-alert type="success" *ngIf="successmsg" [dismissible]="false">Registeration successfull.
+                </ngb-alert>
+
+                <ngb-alert type="danger" *ngIf="error" [dismissible]="false">{{ error }}</ngb-alert>
+
+                <div class="mb-3">
+                  <label for="name" class="form-label">Name</label>
+
+                  <input type="text" formControlName="name" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && f.name.errors }" id="name"
+                    placeholder="Enter name" />
+
+                  <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                    <div *ngIf="f.name.errors.required">Name is required</div>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email</label>
+
+                  <input type="email" formControlName="email" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && f.email.errors }" id="email" placeholder="Email" />
+                    <div *ngIf="signupForm.controls.email.errors?.required && signupForm.controls.email.dirty" class="required-message text-danger">
+                      <small>Required Field!</small>
+                    </div>
+                    <div *ngIf="signupForm.controls.email.errors?.emailError && !signupForm.controls.email.errors?.required && signupForm.controls.email.dirty" class="required-message text-danger">
+                      <small>{{signupForm.controls.email.errors.emailError.message}}</small>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="phoneNo" class="form-label">Phone Number</label>
+
+                  <input type="tel" formControlName="phoneNo" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && f.phoneNo.errors }" id="phoneNo" placeholder="Phone Number" />
+
+                    <div *ngIf="signupForm.controls.phoneNo.errors?.required && signupForm.controls.phoneNo.dirty" class="required-message text-danger">
+                      <small>Required Field!</small>
+                    </div>
+                    <div *ngIf="signupForm.controls.phoneNo.errors?.phoneError && !signupForm.controls.phoneNo.errors?.required && signupForm.controls.phoneNo.dirty" class="required-message text-danger">
+                      <small>{{signupForm.controls.phoneNo.errors.phoneError.message}}</small>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="password">Password</label>
+                  <div class="input-group auth-pass-inputgroup">
+                    <input type="password" id="password" class="form-control" formControlName="password" placeholder="Enter password"
+                      aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': submitted && signupForm.controls.password.errors }">
+  
+                    <button class="btn btn-light ms-0" type="button" id="cPassword-addon" (click)="togglePasswordVisibility()">
+                      <i class="mdi mdi-eye" *ngIf="!showPassword"></i>
+                      <i class="mdi mdi-eye-off" *ngIf="showPassword"></i>
+                    </button>
+                    </div>
+                    <div *ngIf="signupForm.controls.password.errors?.required && signupForm.controls.password.dirty" class="text-danger">
+                      <small>Required Field!</small>
+                     </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password">Confirm Password</label>
+                    <div class="input-group auth-pass-inputgroup">
+                      <input type="password" id="cPassword" class="form-control" formControlName="cPassword" placeholder="Enter password"
+                        aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': submitted && signupForm.controls.cPassword.errors }">
+  
+                      <button class="btn btn-light ms-0" type="button" id="password-addon" (click)="toggleConfirmPasswordVisibility()">
+                        <i class="mdi mdi-eye" *ngIf="!showConfirmPassword"></i>
+                        <i class="mdi mdi-eye-off" *ngIf="showConfirmPassword"></i>
+                      </button>
+                      </div>
+                      <div *ngIf="signupForm.controls.cPassword.errors?.required && signupForm.controls.cPassword.dirty" class="text-danger">
+                        <small>Required Field!</small>
+                        </div>
+                        <div *ngIf="signupForm.errors?.passwordError && !signupForm.controls.cPassword.errors?.required && signupForm.controls.cPassword.dirty" class="required-message text-danger">
+                        <small>{{signupForm.errors.passwordError.message}}</small>
+                      </div>
+                </div>
+
+                <div class="mt-4 d-grid">
+                  <button class="btn btn-primary" type="submit">Register</button>
+                </div>
+                <!-- <div class="mt-4 text-center">
+                  <h5 class="font-size-14 mb-3">Sign in with</h5>
+
+                  <ul class="list-inline">
+                    <li class="list-inline-item">
+                      <a href="javascript::void()" class="social-list-item bg-primary text-white border-primary">
+                        <i class="mdi mdi-facebook"></i>
+                      </a>
+                    </li>
+                    <li class="list-inline-item">
+                      <a href="javascript::void()" class="social-list-item bg-info text-white border-info">
+                        <i class="mdi mdi-twitter"></i>
+                      </a>
+                    </li>
+                    <li class="list-inline-item">
+                      <a href="javascript::void()" class="social-list-item bg-danger text-white border-danger">
+                        <i class="mdi mdi-google"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div> -->
+                <div class="mt-4 text-center">
+                  <p class="mb-0">By registering you agree to the Artlist 
+                    <a class="text-primary">Terms of
+                      Use</a></p>
+                </div>
+                <div class="mt-4 text-center">
+                  <p *ngIf="successMessage" class="mb-0 text-success font-weight-bold">{{successMessage}}</p>
+                  <p *ngIf="errorMessage" class="mb-0 text-danger font-weight-bold">{{errorMessage}}</p>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- end card -->
+
+        <div class="mt-5 text-center">
+          <p>Back to <a routerLink="/account/login" class="fw-medium text-primary"> Login</a>
+          </p>
+          <!-- <p>© {{year}} Artlist.</p> -->
+        </div>
+      </div> <!-- end col -->
+    </div>
+    <!-- end row -->
+  </div>
+  <!-- end container -->
+</div>
+
+<div class="modal fade" id="invalidRoleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle" style="color: #f46a6a;">Invalid Role</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
+      </div>
+      <div class="modal-body">
+        <button class="btn btn-primary btn-block mb-2" (click)="navigateUser()">Signup as User</button> <br>
+        <button class="btn btn-primary btn-block" (click)="navigateArtist()">Signup as Artist</button>
+      </div>
+    </div>
+  </div>
+</div>

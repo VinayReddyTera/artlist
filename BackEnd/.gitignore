@@ -1,0 +1,8 @@
+node_modules
+.vscode
+npm-debug.log
+src/.env
+src/ErrorLogger.txt
+src/loginRecords.txt
+src/RequestLogger.txt
+src/temp
