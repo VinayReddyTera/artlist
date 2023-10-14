@@ -59,26 +59,6 @@ const feedback = Schema({
 
 let collection = {}
 
-collection.getToken = () => {
-    return Mongoose.connect(url,{useNewUrlParser:true,useUnifiedTopology:true}).then((database)=>{
-        return database.model('tokens',tokens)
-    }).catch((error)=>{
-        let err = new Error("Could not connect to database " + error);
-        err.status = 500;
-        throw err;
-    })
-}
-
-collection.getGoogleToken = () => {
-    return Mongoose.connect(url,{useNewUrlParser:true,useUnifiedTopology:true}).then((database)=>{
-        return database.model('googleTokens',googleTokens)
-    }).catch((error)=>{
-        let err = new Error("Could not connect to database " + error);
-        err.status = 500;
-        throw err;
-    })
-}
-
 collection.getUsers = () => {
     return Mongoose.connect(url,{useNewUrlParser:true,useUnifiedTopology:true}).then((database)=>{
         return database.model('users',users)
