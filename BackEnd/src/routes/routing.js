@@ -42,17 +42,42 @@ router.post('/register',(req,res,next)=>{
 //router to fetch forgotten password of user
 router.post('/forgotPassword', (req, res, next)=>{
   let userData = req.body
-  userservice.forgotPassword(userData).then((data)=>{
+  userservice.forgotPassword(userData,req.headers.origin).then((data)=>{
       res.json(data);
   }).catch(err => next(err));
 })
 
 //router to reset password
 router.post('/resetPassword', (req, res, next)=>{
-  let userData = req.body
-  userservice.resetPassword(userData).then((data)=>{
-      res.json(data);
-  }).catch(err => next(err));
+  if(req.body.token && req.body.password){
+    jwt.verify(req.body.token,process.env.JWT_Secret,(err,user)=>{
+      if(err){
+          let response = {
+              status : 204,
+              data : 'reset password link expired'
+          }
+          return response
+      }
+      else{
+          let payload = {
+              email : user.data.email,
+              role : user.data.role,
+              otp:user.data.otp,
+              password : req.body.password
+          }
+          userservice.resetPassword(payload).then((data)=>{
+              res.json(data);
+          }).catch(err => next(err));
+      }
+    });
+  }
+  else{
+    let response = {
+      status : 204,
+      data : 'Required fields missing'
+    }
+    res.json(response)
+  }
 })
 
 module.exports = router

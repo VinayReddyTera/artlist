@@ -25,7 +25,7 @@ export class AuthGuard implements CanActivate {
       localStorage.clear()
     }
     if(this.authservice.isLoggedIn() == true){
-      if (route.routeConfig?.path === 'login' || route.routeConfig?.path === 'reset-password' || route.routeConfig?.path === 'signup/:type' || route.routeConfig?.path === 'reset-password/:mail') {
+      if (route.routeConfig?.path === 'login' || route.routeConfig?.path === 'reset-password' || route.routeConfig?.path === 'signup/:type' || route.routeConfig?.path === 'reset-password/:token') {
         this.router.navigateByUrl('/dashboard')
         return false;
       } else {
@@ -65,7 +65,7 @@ export class AuthGuard implements CanActivate {
       }
     }
     else {
-      if (route.routeConfig?.path === 'login' || route.routeConfig?.path === 'reset-password' || route.routeConfig?.path === 'signup/:type' || route.routeConfig?.path === 'reset-password/:mail') {
+      if (route.routeConfig?.path === 'login' || route.routeConfig?.path === 'reset-password' || route.routeConfig?.path === 'signup/:type' || route.routeConfig?.path === 'reset-password/:token') {
         return true;
       } else {
         this.router.navigateByUrl('/account/login')

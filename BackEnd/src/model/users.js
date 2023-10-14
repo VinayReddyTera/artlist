@@ -338,19 +338,14 @@ userDB.verifyPasswordResetOtp = async (data1) => {
 
 userDB.updatePasswordForUsers = async (userData) => {
   if(userData.role == 'artist'){
+    const salt = await bcrypt.genSalt(10);
+    const hashpassword = await bcrypt.hash(userData.password, salt);
     const collection = await connection.getArtist();
-    const data = await collection.updateOne({ "email" : userData.email},{"$set": {"password" : userData.password}});
+    const data = await collection.updateOne({ "email" : userData.email},{"$set": {"password" : hashpassword}});
     if (data.modifiedCount == 1 && data.acknowledged == true) {
         let res = {
             status :200,
             data : "Successfully updated password"
-        }
-        return res
-    }
-    else if(data.acknowledged == true && data.modifiedCount == 0 ){
-        let res = {
-            status :204,
-            data : "Password cannot be old password"
         }
         return res
     }
@@ -359,19 +354,14 @@ userDB.updatePasswordForUsers = async (userData) => {
     }
   }
   else if(userData.role == 'user'){
+    const salt = await bcrypt.genSalt(10);
+    const hashpassword = await bcrypt.hash(userData.password, salt);
     const collection = await connection.getUsers();
-    const data = await collection.updateOne({ "email" : userData.email},{"$set": {"password" : userData.password}});
+    const data = await collection.updateOne({ "email" : userData.email},{"$set": {"password" : hashpassword}});
     if (data.modifiedCount == 1 && data.acknowledged == true) {
         let res = {
             status :200,
             data : "Successfully updated password"
-        }
-        return res
-    }
-    else if(data.acknowledged == true && data.modifiedCount == 0 ){
-        let res = {
-            status :204,
-            data : "Password cannot be old password"
         }
         return res
     }

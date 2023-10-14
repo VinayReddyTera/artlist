@@ -22,7 +22,7 @@ const routes: Routes = [
         component: PasswordresetComponent,canActivate:[AuthGuard]
     },
     {
-        path: 'reset-password/:mail',
+        path: 'reset-password/:token',
         component: ResetPasswordComponent,canActivate:[AuthGuard]
     }
 ];

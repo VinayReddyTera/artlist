@@ -1,7 +1,6 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { environment } from '../../../../environments/environment';
 import { ApiService } from 'src/app/pages/services/api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { EncryptionService } from 'src/app/pages/services/encryption.service';
@@ -24,21 +23,14 @@ export class ResetPasswordComponent implements OnInit {
   showPassword: boolean = false;
   showConfirmPassword : boolean = false;
 
-  // tslint:disable-next-line: max-line-length
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute,
     private router: Router, private encrypt: EncryptionService,
     private apiservice : ApiService, private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
-    let data = JSON.parse(this.encrypt.deCrypt(this.route.snapshot.params['mail']))
-    let email = data.email;
-    let role = data.role;
     this.resetForm = this.formBuilder.group({
       password: ['', [Validators.required]],
-      cPassword: ['', [Validators.required]],
-      otp: ['', [Validators.required]],
-      email : [email, [Validators.required]],
-      role : [role, [Validators.required]]
+      cPassword: ['', [Validators.required]]
     },{validator : this.validatePassword});
   }
 
@@ -81,9 +73,14 @@ export class ResetPasswordComponent implements OnInit {
   onSubmit() {
     this.success = '';
     this.submitted = true;
+    let token = this.route.snapshot.params['token'];
     if(this.resetForm.valid){
+      let payload = {
+        password : this.resetForm.value.password,
+        token : token
+      }
       this.apiservice.initiateLoading(true)
-      this.apiservice.resetPassword(this.resetForm.value).subscribe(
+      this.apiservice.resetPassword(payload).subscribe(
         (res:any)=>{
           console.log(res)
           if(res.status == 200){

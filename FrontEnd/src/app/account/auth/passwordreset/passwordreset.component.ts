@@ -41,20 +41,8 @@ export class PasswordresetComponent implements OnInit {
     this.success = '';
     this.submitted = true;
     if(this.resetForm.valid){
-      let data = {
-        email : this.resetForm.value.email,
-        role : this.resetForm.value.role
-      }
-      let encrypt = this.encryptionService.enCrypt(JSON.stringify(data))
-      
-      let redirectUrl = location.origin + '/account/reset-password/' + encrypt;
-      let payload = {
-        email : this.resetForm.value.email,
-        role : this.resetForm.value.role,
-        redirectUrl : redirectUrl
-      }
       this.apiservice.initiateLoading(true)
-      this.apiservice.forgotPassword(payload).subscribe(
+      this.apiservice.forgotPassword(this.resetForm.value).subscribe(
         (res:any)=>{
           console.log(res)
           if(res.status == 200){
