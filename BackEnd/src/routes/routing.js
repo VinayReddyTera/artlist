@@ -39,18 +39,8 @@ router.post('/register',(req,res,next)=>{
     })
 })
 
-// api to give feedback
-router.post('/giveFeedback',verifyToken,(req,res,next)=>{
-  let payload = req.body;
-  userservice.giveFeedback(payload).then((data)=>{
-      res.json(data)
-   }).catch((err)=>{
-      next(err)
-   })
-})
-
 //router to fetch forgotten password of user
-router.post('/forgotPassword', function (req, res, next) {
+router.post('/forgotPassword', (req, res, next)=>{
   let userData = req.body
   userservice.forgotPassword(userData).then((data)=>{
       res.json(data);
@@ -58,7 +48,7 @@ router.post('/forgotPassword', function (req, res, next) {
 })
 
 //router to reset password
-router.post('/resetPassword', function (req, res, next) {
+router.post('/resetPassword', (req, res, next)=>{
   let userData = req.body
   userservice.resetPassword(userData).then((data)=>{
       res.json(data);

@@ -322,22 +322,4 @@ userService.resetPassword=(payload)=>{
     })
 }
 
-userService.giveFeedback=(payload)=>{
-    return userDB.updateFeedback(payload).then((data) => {
-      if (data) {
-        let res = {
-          status: 200,
-          data: "successfully took feedback",
-        };
-        return res;
-      } else {
-        let res = {
-          status: 204,
-          data: "Unable to take feedback",
-        };
-        return res;
-      }
-    });
-}
-
 module.exports = userService
