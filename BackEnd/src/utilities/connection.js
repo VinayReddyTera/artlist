@@ -5,37 +5,16 @@ Mongoose.set('strictQuery', true);
 const url = process.env.MONGO_URL;
 const moment = require('moment');
 
-const tokens = Schema({
-    email:String,
-    token_type : String,
-    scope : String,
-    expires_in : Number,
-    ext_expires_in : Number,
-    access_token : String,
-    refresh_token : String
-},{collection : "tokens"});
-
-const googleTokens = Schema({
-    email:String,
-    token_type : String,
-    scope : String,
-    expires_in : Number,
-    ext_expires_in : Number,
-    access_token : String,
-    refresh_token : String
-},{collection : "googleTokens"});
-
 const users = Schema({
     name:String,
     email:String,
     phoneNo:String,
     password:String,
     otp:Number,
-    pastInterviews : [
+    history : [
         {
-            interviewDate : Date,
-            userId : String,
-            interviewerId : String,
+            date : Date,
+            artistId : String,
             feedback : String
         }
     ],
@@ -52,23 +31,11 @@ const artistDetails = Schema({
     password:String,
     otp:Number,
     profileStatus :{type:String,default:'Incomplete'},
-    artistId : String,
-    MCalendar : {type:Boolean,default:false},
-    GCalendar : {type:Boolean,default:false},
-    availableDays : [
+    availableDays : [Number],
+    history : [
         {
-            day : String,
-            from : String,
-            to : String,
-            isNotAvailable : Boolean
-        }
-    ],
-    pastInterviews : [
-        {
-            interviewDate : Date,
-            userId : String,
-            interviewerId : String,
-            feedback : String
+            date : Date,
+            userId : String
         }
     ],
     createdOn: {
@@ -85,7 +52,7 @@ const feedback = Schema({
             feedbackType: String,
             feedback: String,
             emotion: String,
-            dateOfCreation: { type: Date, default: Date.now }
+            date: { type: Date, default: Date.now }
         }
     ]
 },{collection : "feedback"})

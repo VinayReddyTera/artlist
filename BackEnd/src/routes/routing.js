@@ -6,38 +6,6 @@ const qs = require("qs");
 const jwt = require('jsonwebtoken');
 const verifyToken = require("../utilities/verifyToken");
 
-// api to save date given by users.
-router.post('/saveDate',async (req,res,next)=>{
-  const body = req.body.schedulePayload
-  if (
-    !body.subject ||
-    !body.body ||
-    !body.start ||
-    !body.end ||
-    !body.attendees
-  ) {
-    return res.status(204).send("Required fields missing");
-  }
-  userservice.schedule(req.body).then((data)=>{
-    if(data.data.status == 'success'){
-      userservice.saveDate(req.body,data.data.id).then((data)=>{
-        res.json(data)
-      }).catch((err)=>{
-        next(err)
-      })
-    }
-    else{
-      let respons = {
-        status : 204,
-        data : 'Unable to schedule interview'
-      }
-      res.json(respons)
-    }
-  }).catch((err)=>{
-    next(err)
-  })
-})
-
 // api to login users
 router.post('/login',(req,res,next)=>{
   userservice.login(req.body).then((data)=>{
@@ -214,15 +182,6 @@ axios
       console.log("err", JSON.stringify(error))
     res.json(error)
   });
-});
-
-//api to fetch interviewer availability
-router.post("/fetchAvailableSlots",verifyToken, async (req, res,next) => {
-  userservice.fetchAvailableSlots(req.body).then((data)=>{
-    res.json(data)
- }).catch((err)=>{
-    next(err)
- })
 });
 
 //api to fetch dashboard data

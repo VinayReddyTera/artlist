@@ -35,8 +35,8 @@ export class TopbarComponent implements OnInit {
   }
 
   openProfile(){
-    if(this.role == 'interviewer'){
-      this.router.navigateByUrl('/interviewer-profile')
+    if(this.role == 'artist'){
+      this.router.navigateByUrl('/artist-profile')
     }
     else if(this.role == 'user'){
       this.router.navigateByUrl('/user-profile')

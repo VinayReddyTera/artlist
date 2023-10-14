@@ -6,22 +6,6 @@ const axios = require("axios");
 const qs = require("qs");
 const bcrypt = require('bcryptjs');
 
-userDB.generateArtistId = () => {
-  return connection.getArtist().then((model)=>{
-      return model.distinct("artistId").then((ids)=>{
-          if(ids.length == 0){
-              artistId = "I1001"
-              return artistId
-          }
-          else{
-              artistId = parseInt((ids[ids.length-1]).slice(1,))+1
-              artistId = "I" + artistId
-              return artistId 
-          }
-      })
-  })
-}
-
 userDB.checkLoginUser = async (payload) => {
   const collection = await connection.getUsers();
   const collection1 = await connection.getArtist();
@@ -71,34 +55,12 @@ userDB.register = async (data1) => {
     }
     data = await collection1.create(artistData);
     if (data) {
-      let id = await userDB.generateArtistId();
-      if(id){
-        const isUpdated = await collection1.updateOne({"email" : data1.email},{"$set" : {"artistId" : id}})
-        if(isUpdated.modifiedCount == 1){
-          let res = {
-            status : 200,
-            sendMail : true,
-            data : 'Successfully registered'
-          }
-            return res
-        }
-        else{
-          let res = {
-            status : 204,
-            sendMail : true,
-            data : 'Successfully registered, but unable to update Artist Id'
-          }
-            return res
-        }
+      let res = {
+        status : 200,
+        sendMail : true,
+        data : 'Successfully registered'
       }
-      else{
-        let res = {
-          status : 204,
-          sendMail : true,
-          data : 'Successfully registered, but unable to create Artist Id'
-        }
-          return res
-      }
+      return res
     }
     else{
       let res = {
