@@ -11,6 +11,9 @@ const users = Schema({
     phoneNo:String,
     password:String,
     otp:Number,
+    profileStatus :{type:String,default:'Incomplete'},
+    emailVerified : {type:Boolean,default:false},
+    phoneVerified : {type:Boolean,default:false},
     history : [
         {
             date : Date,
@@ -30,6 +33,8 @@ const artistDetails = Schema({
     phoneNo:String,
     password:String,
     otp:Number,
+    emailVerified : {type:Boolean,default:false},
+    phoneVerified : {type:Boolean,default:false},
     profileStatus :{type:String,default:'Incomplete'},
     availableDays : [Number],
     history : [

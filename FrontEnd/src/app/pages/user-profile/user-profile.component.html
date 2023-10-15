@@ -1,1 +1,135 @@
-<p>user-profile works!</p>
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#20b04b" type="ball-clip-rotate"></ngx-spinner>
+
+<div class="button-container">
+    <button class="btn btn-primary" [disabled]="showProfile" (click)="toggle()">Update Profile</button>
+    <button class="btn btn-success" [disabled]="showPasswordPage" (click)="toggle()">Update Password</button>
+</div>
+
+<div *ngIf="showProfile" class="account-pages my-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6 col-xl-5">
+        <div class="card overflow-hidden">
+          <div class="card-body">
+            <div class="p-2">
+              <form class="form-horizontal" [formGroup]="profileForm" (ngSubmit)="submit()">
+
+                <div class="mb-3">
+                    <label for="name">Name</label>
+                    <input type="text" formControlName="name" class="form-control" id="name" placeholder="Name"
+                    [ngClass]="{ 'is-invalid': submitted && profileForm.controls.name.errors }"/>
+                      <div *ngIf="profileForm.controls.name.errors?.required && profileForm.controls.name.dirty" class="required-message text-danger">
+                        <small>Required Field!</small>
+                      </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="email">Email</label>
+                    <input type="email" formControlName="email" class="form-control" id="email" placeholder="Email"
+                    [ngClass]="{ 'is-invalid': submitted && profileForm.controls.email.errors }"/>
+                      <div *ngIf="profileForm.controls.email.errors?.required && profileForm.controls.email.dirty" class="required-message text-danger">
+                        <small>Required Field!</small>
+                      </div>
+                      <div *ngIf="profileForm.controls.email.errors?.emailError && !profileForm.controls.email.errors?.required && profileForm.controls.email.dirty" class="required-message text-danger">
+                        <small>{{profileForm.controls.email.errors.emailError.message}}</small>
+                      </div>
+                  </div>
+
+                <div class="mb-3">
+                  <label for="phoneNo">Phone Number</label>
+                  <input type="tel" formControlName="phoneNo" class="form-control" id="phoneNo" placeholder="phoneNo"
+                  [ngClass]="{ 'is-invalid': submitted && profileForm.controls.phoneNo.errors }"/>
+                    <div *ngIf="profileForm.controls.phoneNo.errors?.required && profileForm.controls.phoneNo.dirty" class="required-message text-danger">
+                      <small>Required Field!</small>
+                    </div>
+                    <div *ngIf="profileForm.controls.phoneNo.errors?.phoneError && !profileForm.controls.phoneNo.errors?.required && profileForm.controls.phoneNo.dirty" class="required-message text-danger">
+                      <small>{{profileForm.controls.phoneNo.errors.phoneError.message}}</small>
+                    </div>
+                </div>
+
+                <div class="mt-3 d-grid">
+                  <button class="btn btn-primary" type="submit">Update</button>
+                </div>
+                <div class="mt-4 text-center">
+                  <p *ngIf="errorMessage" class="mb-0 text-danger message">{{errorMessage}}</p>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- end container -->
+</div>
+
+<div *ngIf="showPasswordPage" class="account-pages my-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 col-xl-5">
+          <div class="card overflow-hidden">
+            <div class="card-body">
+  
+              <form class="needs-validation" name="resetForm" [formGroup]="resetForm" (ngSubmit)="onSubmit()" novalidate>
+                <div class="mb-3">
+                    <label for="oldPassword">Old Password</label>
+                    <div class="input-group auth-pass-inputgroup">
+                      <input type="password" id="oldPassword" class="form-control" formControlName="oldPassword" placeholder="Enter password"
+                        aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': passSubmitted && resetForm.controls.oldPassword.errors }">
+    
+                      <button class="btn btn-light ms-0" type="button" id="oldPassword-addon" (click)="toggleOldPasswordVisibility()">
+                        <i class="mdi mdi-eye" *ngIf="!showOldPassword"></i>
+                        <i class="mdi mdi-eye-off" *ngIf="showOldPassword"></i>
+                      </button>
+                      </div>
+                      <div *ngIf="resetForm.controls.oldPassword.errors?.required && resetForm.controls.oldPassword.dirty" class="text-danger">
+                        <small>Required Field!</small>
+                       </div>
+                    </div>
+
+                <div class="mb-3">
+                  <label for="password">New Password</label>
+                  <div class="input-group auth-pass-inputgroup">
+                    <input type="password" id="password" class="form-control" formControlName="password" placeholder="Enter password"
+                      aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': passSubmitted && resetForm.controls.password.errors }">
+  
+                    <button class="btn btn-light ms-0" type="button" id="cPassword-addon" (click)="togglePasswordVisibility()">
+                      <i class="mdi mdi-eye" *ngIf="!showPassword"></i>
+                      <i class="mdi mdi-eye-off" *ngIf="showPassword"></i>
+                    </button>
+                    </div>
+                    <div *ngIf="resetForm.controls.password.errors?.required && resetForm.controls.password.dirty" class="text-danger">
+                      <small>Required Field!</small>
+                     </div>
+                  </div>
+                  <div class="mb-3">
+                      <label for="password">Confirm New Password</label>
+                      <div class="input-group auth-pass-inputgroup">
+                        <input type="password" id="cPassword" class="form-control" formControlName="cPassword" placeholder="Confirm password"
+                          aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': passSubmitted && resetForm.controls.cPassword.errors }">
+    
+                        <button class="btn btn-light ms-0" type="button" id="password-addon" (click)="toggleConfirmPasswordVisibility()">
+                          <i class="mdi mdi-eye" *ngIf="!showConfirmPassword"></i>
+                          <i class="mdi mdi-eye-off" *ngIf="showConfirmPassword"></i>
+                        </button>
+                        </div>
+                        <div *ngIf="resetForm.controls.cPassword.errors?.required && resetForm.controls.cPassword.dirty" class="text-danger">
+                          <small>Required Field!</small>
+                         </div>
+                         <div *ngIf="resetForm.errors?.passwordError && !resetForm.controls.cPassword.errors?.required && resetForm.controls.cPassword.dirty" class="required-message text-danger">
+                         <small>{{resetForm.errors.passwordError.message}}</small>
+                        </div>
+                      </div>
+                <div class="mt-3 d-grid">
+                    <button class="btn btn-primary" type="submit">Change Password</button>
+                  </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
