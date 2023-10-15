@@ -18,27 +18,33 @@ import { NgChartsModule } from 'ng2-charts';
 import { AgGridModule } from 'ag-grid-angular';
 import { timeRenderer } from './artist-dashboard/timeRenderer';
 import { contactRenderer } from './artist-dashboard/contactRenderer';
-import { BookInterviewComponent } from './book-interview/book-interview.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 import { UserHistoryComponent } from './user-history/user-history.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ArtistProfileComponent } from './artist-profile/artist-profile.component';
-import { ArtistDetailsComponent } from './artist-details/artist-details.component';
 import { ArtistHistoryComponent } from './artist-history/artist-history.component';
 import { ArtistDashboardComponent } from './artist-dashboard/artist-dashboard.component';
+import { AllArtistsComponent } from './all-artists/all-artists.component';
+import { ArtistDataComponent } from './artist-data/artist-data.component';
+import { ArtistApproveComponent } from './artist-approve/artist-approve.component';
+import { SkillDataComponent } from './skill-data/skill-data.component';
+import { NewRequestsComponent } from './new-requests/new-requests.component';
 
 @NgModule({
   declarations: [
     ArtistDashboardComponent,
     timeRenderer,
     contactRenderer,
-    BookInterviewComponent,
-    ArtistDetailsComponent,
     ArtistHistoryComponent,
     ArtistProfileComponent,
     UserDashboardComponent,
     UserHistoryComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    AllArtistsComponent,
+    ArtistDataComponent,
+    ArtistApproveComponent,
+    SkillDataComponent,
+    NewRequestsComponent
   ],
   imports: [
     CommonModule,

@@ -9,9 +9,30 @@ export const MENU: MenuItem[] = [
         role: ['artist','access-artist-dashboard']
     },
     {
+        id: 1,
+        label: 'Skill Data',
+        icon: 'bxs-detail',
+        link: '/skill-data',
+        role: ['artist','access-skill-data']
+    },
+    {
+        id: 1,
+        label: 'New Requests',
+        icon: 'bxs-collection',
+        link: '/new-requests',
+        role: ['artist','access-new-requests']
+    },
+    {
+        id: 1,
+        label: 'Approve Artist',
+        icon: 'bxs-user-plus',
+        link: '/artist-approve',
+        role: ['artist','access-artist-approve']
+    },
+    {
         id: 2,
         label: 'Profile',
-        icon: 'bx-id-card',
+        icon: 'bxs-id-card',
         link: '/artist-profile',
         role: ['artist','access-artist-profile']
     },
@@ -31,15 +52,15 @@ export const MENU: MenuItem[] = [
     },
     {
         id: 5,
-        label: 'Book Interview',
-        icon: 'bx-calendar',
-        link : '/bookInterview',
-        role: ['admin','user','access-bookInterview']
+        label: 'All Artists',
+        icon: 'bxs-group',
+        link : '/all-artists',
+        role: ['admin','user','access-all-artists']
     },
     {
         id: 6,
         label: 'Profile',
-        icon: 'bx-id-card',
+        icon: 'bxs-id-card',
         link : '/user-profile',
         role: ['admin','user','access-user-profile']
     },

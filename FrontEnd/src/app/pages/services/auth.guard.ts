@@ -34,7 +34,7 @@ export class AuthGuard implements CanActivate {
         // console.log(role)
         if(role == 'artist' || role == 'user' || role == 'admin'){
           if(role == 'artist'){
-            if(route.routeConfig?.path === 'artist-profile' || route.routeConfig?.path === 'artist-dashboard' || route.routeConfig?.path === 'artist-history'){
+            if(route.routeConfig?.path === 'artist-profile' || route.routeConfig?.path === 'artist-dashboard' || route.routeConfig?.path === 'artist-history' || route.routeConfig?.path === 'skill-data' || route.routeConfig?.path === 'new-requests' || route.routeConfig?.path === 'artist-approve'){
               return true
             }
             else{
@@ -44,7 +44,7 @@ export class AuthGuard implements CanActivate {
             return false
           }
           else if(role == 'user'){
-            if(route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'user-dashboard' || route.routeConfig?.path === 'user-history' || route.routeConfig?.path === 'artist-details' || route.routeConfig?.path === 'bookInterview'){
+            if(route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'user-dashboard' || route.routeConfig?.path === 'user-history' || route.routeConfig?.path === 'all-artists' || route.routeConfig?.path === 'artist-data'){
               return true
             }
             else{
