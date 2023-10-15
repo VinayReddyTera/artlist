@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from 'src/app/pages/services/api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -29,9 +29,18 @@ export class PasswordresetComponent implements OnInit {
   ngOnInit() {
 
     this.resetForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, this.validateEmail]],
       role: ['', [Validators.required]],
     });
+  }
+
+  validateEmail(c:FormControl){
+    const emailRegex = environment.emailRegex
+    return emailRegex.test(c.value)? null : {
+      emailError : {
+        message : 'Invalid email format!'
+      }
+    }
   }
 
   // convenience getter for easy access to form fields

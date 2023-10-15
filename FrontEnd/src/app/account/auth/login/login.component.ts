@@ -57,7 +57,7 @@ export class LoginComponent implements OnInit {
     this.submitted = true
     if(this.loginForm.valid){
       this.apiService.initiateLoading(true);
-    this.apiService.login(this.loginForm.value).subscribe(
+      this.apiService.login(this.loginForm.value).subscribe(
       (res : any)=>{
         console.log(res)
         if(res.status == 200){
@@ -73,8 +73,6 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('token',res.token);
           localStorage.setItem('role', this.loginForm.value.role);
           localStorage.setItem('profileStatus', res.data?.status);
-          localStorage.setItem('microsoftInt', JSON.stringify(res.data.MCalendar));
-          localStorage.setItem('googleInt', JSON.stringify(res.data.GCalendar));
           this.router.navigateByUrl('/artist-dashboard');
         }
         else if(res.status == 204){
