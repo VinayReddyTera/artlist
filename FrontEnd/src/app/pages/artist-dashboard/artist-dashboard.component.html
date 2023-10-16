@@ -102,27 +102,6 @@
             </div>
             <!-- end row -->
             <div class="card">
-              <div class="card-body">
-                  <div class="d-sm-flex flex-wrap">
-                      <h4 class="card-title mb-4">Calendar Integrations</h4>
-                  </div>
-                  <div class="mb-2">
-                    <button type="button" class="btn microsoftIcon ml-2">
-                      <img src="assets/images/microsoftIcon.png" height="20px" width="20px" alt="microsoft icon">
-                    </button>
-                    <button *ngIf="calendarConnected == 'false'" type="button" class="btn btn-success ml-2" (click)="connectMicrosoft()">Connect</button>
-                    <button *ngIf="calendarConnected == 'true'" type="button" class="btn btn-soft-danger ml-2" (click)="removeMicrosoft()">Delete Integration</button>
-                  </div>
-                  <div>
-                    <button type="button" class="btn microsoftIcon ml-2">
-                      <img src="assets/images/googleIcon.png" class="googleIcon" height="20px" width="20px" alt="google icon">
-                    </button>
-                    <button *ngIf="googleConnected == 'false'" type="button" class="btn btn-success ml-2" (click)="connectGoogle()">Connect</button>
-                    <button *ngIf="googleConnected == 'true'" type="button" class="btn btn-soft-danger ml-2" (click)="removeGoogle()">Delete Integration</button>
-                  </div>
-              </div>
-          </div>
-            <div class="card">
                 <div class="card-body">
                     <div class="d-sm-flex flex-wrap">
                         <h4 class="card-title mb-4">Hiring Frequency</h4>

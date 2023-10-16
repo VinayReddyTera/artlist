@@ -41,7 +41,13 @@ export class ApiService {
   }
 
   getRole(){
-    return localStorage.getItem('role')
+    if(localStorage.getItem('data')){
+      let data:any = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('data')));
+      return data.role
+    }
+    else{
+      return ''
+    }
   }
 
   getToken() {

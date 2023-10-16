@@ -121,8 +121,6 @@ userDB.checkPassword = async (data1) => {
         email : data.email,
         role : data.role,
         status : data.profileStatus,
-        MCalendar : data?.MCalendar,
-        GCalendar : data?.GCalendar,
         _id : data._id
       }
       }
@@ -148,6 +146,7 @@ userDB.checkPassword = async (data1) => {
         phoneNo : data.phoneNo,
         email : data.email,
         role : data.role,
+        status : data.profileStatus,
         _id : data._id
       }
     }

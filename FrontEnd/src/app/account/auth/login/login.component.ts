@@ -65,14 +65,17 @@ export class LoginComponent implements OnInit {
           let now = new Date();
           let time = now.getTime();
           let expireTime = time + 600 * 36000;
-          localStorage.setItem('email', res.data.email);
-          localStorage.setItem('name', res.data.name);
-          localStorage.setItem('phoneNo', res.data.phoneNo);
-          localStorage.setItem('id', res.data._id);
+          let data : any = {
+            name : res.data.name,
+            email : res.data.email,
+            phoneNo : res.data.phoneNo,
+            id : res.data._id,
+            role : this.loginForm.value.role,
+            profileStatus : res.data.status
+          }
+          localStorage.setItem('data', this.encrypt.enCrypt(JSON.stringify(data)));
           localStorage.setItem('client-token',this.encrypt.enCrypt(environment.secretKey));
           localStorage.setItem('token',res.token);
-          localStorage.setItem('role', this.loginForm.value.role);
-          localStorage.setItem('profileStatus', res.data?.status);
           this.router.navigateByUrl('/artist-dashboard');
         }
         else if(res.status == 204){

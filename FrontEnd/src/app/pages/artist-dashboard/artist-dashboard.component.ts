@@ -5,6 +5,7 @@ import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { contactRenderer } from './contactRenderer';
 import { ActivatedRoute, Router } from '@angular/router';
 import { timeRenderer } from './timeRenderer';
+import { EncryptionService } from '../services/encryption.service';
 
 declare const $ : any;
 
@@ -21,9 +22,9 @@ export class ArtistDashboardComponent {
     rejected : 0
   }
 
-  name : any = localStorage.getItem('name')
+  name : any;
   @ViewChild('content') content:any;
-
+  userData:any;
   errorMessage : any;
   resumeCount = 0;
   jdCount = 0;
@@ -36,7 +37,7 @@ export class ArtistDashboardComponent {
     fitContent : true
   }
   date: Date = new Date();
-  profileStatus = localStorage.getItem('profileStatus')
+  profileStatus:any;
 
   statData: any = [{
     "icon": "bx bx-copy-alt",
@@ -160,19 +161,21 @@ export class ArtistDashboardComponent {
     onboarded:any = 0;
 
   constructor(private activeRoute : ActivatedRoute,private apiService : ApiService,
-    private spinner : NgxSpinnerService,private router:Router) {}
+    private spinner : NgxSpinnerService,private router:Router,private decrypt:EncryptionService) {}
 
   ngOnInit() {
+    this.userData = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('data')));
+    this.name = this.userData.name;
+    this.profileStatus = this.userData.profileStatus
     if(this.profileStatus == "Incomplete"){
       $('#profileComplete').modal('show')
     }
     if(this.activeRoute.snapshot.params['redirected'] == 'success'){
       localStorage.setItem('microsoftInt','true')
     }
-    this.calendarConnected = localStorage.getItem('microsoftInt');
-    this.googleConnected = localStorage.getItem('googleInt');
+
     let payload;
-    let role = localStorage.getItem('role')!
+    let role = this.userData.role;
     if(role.includes('admin')){
       this.role = 'Admin'
       payload = {
@@ -183,29 +186,29 @@ export class ArtistDashboardComponent {
       this.role = 'Manager'
       payload = {
         role : 'manager',
-        email : localStorage.getItem('email'),
-        userId : localStorage.getItem('id')
+        email : this.userData.email,
+        userId : this.userData.id
       }
     }
     else if(role.includes('rmg')){
       this.role = 'Rmg'
       payload = {
         "role" : "rmg",
-        "userId" : localStorage.getItem('id')
+        "userId" : this.userData.id
       }
     }
     else if(role.includes('taghead')){
       this.role = 'Tag Head'
       payload = {
         role : 'taghead',
-        userId : localStorage.getItem('id')
+        userId : this.userData.id
       }
     }
     else if(role.includes('tag')){
       this.role = 'Tag Executive'
       payload = {
         role : 'tag',
-        userId : localStorage.getItem('id')
+        userId : this.userData.id
       }
     }
     
@@ -313,136 +316,6 @@ export class ArtistDashboardComponent {
         (document.getElementById('filter-text-box2') as HTMLInputElement).value
       );
     }
-  }
-
-  connectMicrosoft(){
-    let payload = {
-      email : localStorage.getItem('email')
-    }
-    this.spinner.show()
-    this.apiService.connectMicrosoft(payload).subscribe(
-      (res:any)=>{
-        if(res.status == 200){
-          console.log(res)
-          window.open(res.url,'_blank')
-        }
-        else if(res.status == 204){
-          let msgData = {
-            severity : "error",
-            summary : 'Error',
-            detail : res.data,
-            life : 5000
-          }
-          this.apiService.sendMessage(msgData);
-        }
-      },
-      (err:any)=>{
-        console.log(err)
-      }
-    ).add(()=>{
-      this.spinner.hide()
-    })
-  }
-
-  removeMicrosoft(){
-    let payload = {
-      email : localStorage.getItem('email')
-    }
-    this.spinner.show()
-    this.apiService.delCalIntegration(payload).subscribe(
-      (res:any)=>{
-        if(res.status == 200){
-          let msgData = {
-            severity : "success",
-            summary : 'Success',
-            detail : res.data,
-            life : 5000
-          }
-          this.apiService.sendMessage(msgData);
-          this.calendarConnected = 'false';
-          localStorage.setItem('microsoftInt','false')
-        }
-        else if(res.status == 204){
-          let msgData = {
-            severity : "error",
-            summary : 'Error',
-            detail : res.data,
-            life : 5000
-          }
-          this.apiService.sendMessage(msgData);
-        }
-      },
-      (err:any)=>{
-        console.log(err)
-      }
-    ).add(()=>{
-      this.spinner.hide()
-    })
-  }
-
-  connectGoogle(){
-    let payload = {
-      email : localStorage.getItem('email')
-    }
-    this.spinner.show()
-    this.apiService.connectGoogle(payload).subscribe(
-      (res:any)=>{
-        if(res.status == 200){
-          console.log(res)
-          window.open(res.url,'_blank')
-        }
-        else if(res.status == 204){
-          let msgData = {
-            severity : "error",
-            summary : 'Error',
-            detail : res.data,
-            life : 5000
-          }
-          this.apiService.sendMessage(msgData);
-        }
-      },
-      (err:any)=>{
-        console.log(err)
-      }
-    ).add(()=>{
-      this.spinner.hide()
-    })
-  }
-
-  removeGoogle(){
-    let payload = {
-      email : localStorage.getItem('email')
-    }
-    this.spinner.show()
-    this.apiService.delGoogleCalIntegration(payload).subscribe(
-      (res:any)=>{
-        if(res.status == 200){
-          let msgData = {
-            severity : "success",
-            summary : 'Success',
-            detail : res.data,
-            life : 5000
-          }
-          this.apiService.sendMessage(msgData);
-          this.calendarConnected = 'false';
-          localStorage.setItem('microsoftInt','false')
-        }
-        else if(res.status == 204){
-          let msgData = {
-            severity : "error",
-            summary : 'Error',
-            detail : res.data,
-            life : 5000
-          }
-          this.apiService.sendMessage(msgData);
-        }
-      },
-      (err:any)=>{
-        console.log(err)
-      }
-    ).add(()=>{
-      this.spinner.hide()
-    })
   }
 
 }

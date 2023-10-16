@@ -2,6 +2,7 @@ import { Component , OnInit} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, FormArray } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiService } from './pages/services/api.service';
+import { EncryptionService } from './pages/services/encryption.service';
 
 declare var $:any;
 
@@ -16,12 +17,13 @@ export class AppComponent implements OnInit  {
   showFeedback:boolean = false;
   title:any;
 
-  constructor(private apiService : ApiService,private fb: FormBuilder){}
+  constructor(private apiService : ApiService,private fb: FormBuilder,private decrypt:EncryptionService){}
 
   ngOnInit() {
+    let data = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('data')))
     this.feedbackForm = this.fb.group({
-      name: [localStorage.getItem('name'), [Validators.required]],
-      email: [localStorage.getItem('email'), [Validators.required]],
+      name: [data.name, [Validators.required]],
+      email: [data.email, [Validators.required]],
       type: ['', [Validators.required]],
       feedback: ['', [Validators.required]]
   })

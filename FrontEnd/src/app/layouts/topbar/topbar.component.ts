@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
+import { EncryptionService } from 'src/app/pages/services/encryption.service';
 
 @Component({
   selector: 'app-topbar',
@@ -12,14 +13,16 @@ export class TopbarComponent implements OnInit {
 
   element:any;
   name : any;
-  role:any = localStorage.getItem('role')
-  constructor(@Inject(DOCUMENT) private document: any, private router: Router) {
+  role:any;
+  constructor(@Inject(DOCUMENT) private document: any, private router: Router,private decrypt:EncryptionService) {
   }
   openMobileMenu: any;
   @Output() mobileMenuButtonClicked = new EventEmitter();
 
   ngOnInit() {
-    this.name = localStorage.getItem('name')
+    let data = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('data')))
+    this.name = data.name;
+    this.role = data.role;
     this.openMobileMenu = false;
     this.element = document.documentElement;
   }
