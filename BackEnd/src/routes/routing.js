@@ -140,4 +140,70 @@ router.post('/resetPassword', (req, res, next)=>{
   }
 })
 
+//router to change password
+router.post('/changePassword',verifyToken, (req, res, next)=>{
+  if(req.body.token && req.body.password){
+    jwt.verify(req.body.token,process.env.JWT_Secret,(err,user)=>{
+      if(err){
+          let response = {
+              status : 204,
+              data : 'reset password link expired'
+          }
+          return res.json(response)
+      }
+      else{
+          let payload = {
+              email : user.data.email,
+              role : user.data.role,
+              otp:user.data.otp,
+              password : req.body.password
+          }
+          userservice.resetPassword(payload).then((data)=>{
+              res.json(data);
+          }).catch(err => next(err));
+      }
+    });
+  }
+  else{
+    let response = {
+      status : 204,
+      data : 'Required fields missing'
+    }
+    res.json(response)
+  }
+})
+
+//router to update profile
+router.post('/updateProfile',verifyToken, (req, res, next)=>{
+  if(req.body.token && req.body.password){
+    jwt.verify(req.body.token,process.env.JWT_Secret,(err,user)=>{
+      if(err){
+          let response = {
+              status : 204,
+              data : 'reset password link expired'
+          }
+          return res.json(response)
+      }
+      else{
+          let payload = {
+              email : user.data.email,
+              role : user.data.role,
+              otp:user.data.otp,
+              password : req.body.password
+          }
+          userservice.resetPassword(payload).then((data)=>{
+              res.json(data);
+          }).catch(err => next(err));
+      }
+    });
+  }
+  else{
+    let response = {
+      status : 204,
+      data : 'Required fields missing'
+    }
+    res.json(response)
+  }
+})
+
 module.exports = router

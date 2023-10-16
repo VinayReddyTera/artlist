@@ -51,52 +51,22 @@ export class ApiService {
   }
 
   getToken() {
-    if((this.decrypt.deCrypt(localStorage.getItem('client-token')) == environment.secretKey)){
-      return true
+    if(localStorage.getItem('client-token')){
+      let data = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('client-token')))
+      if((data.key == environment.secretKey) && (data.time>new Date())){
+        return true
+      }
+      else{
+        return false
+      }
     }
     else{
       return false
     }
   }
 
-  changeUserInterest(data : any):Observable<any>{
-    return this.http.post(environment.domain+"/changeUserInterest",data)
-  }
-
   fetchDashboardData(data : any):Observable<any>{
     return this.http.post(environment.domain+"/fetchDashboardData",data)
-  }
-
-  remind(data : any):Observable<any>{
-    return this.http.post(environment.domain+"/remind",data)
-  }
-
-  saveAnswer(data : any):Observable<any>{
-    return this.http.post(environment.domain+"/saveAnswers",data)
-  }
-
-  getAnswer(data : any):Observable<any>{
-    return this.http.post(environment.domain+"/getJDAnswers",data)
-  }
-
-  saveDate(data : any):Observable<any>{
-    return this.http.post(environment.domain+"/saveDate",data)
-  }
-
-  updateUser(data : any):Observable<any>{
-    return this.http.post(environment.domain+"/updateUser",data)
-  }
-
-  sendMail(payload:any):Observable<any>{
-    return this.http.post(environment.domain+"/sendMail",payload)
-  }
-
-  generateOtp(payload:any):Observable<any>{
-    return this.http.post(environment.domain+"/generateOtp",payload)
-  }
-
-  verifyPasscode(payload:any):Observable<any>{
-    return this.http.post(environment.domain+"/verifyPasscode",payload)
   }
 
   register(payload:any):Observable<any>{
@@ -111,32 +81,16 @@ export class ApiService {
     return this.http.post(environment.domain+"/resetPassword",payload)
   }
 
-  fetchAvailableSlots(payload:any):Observable<any>{
-    return this.http.post(environment.domain+"/fetchAvailableSlots",payload)
-  }
-
   giveFeedback(payload:any):Observable<any>{
     return this.http.post(environment.domain+"/giveFeedback",payload)
   }
 
-  connectMicrosoft(payload:any):Observable<any>{
-    return this.http.post(environment.domain+"/mslogin",payload)
+  changePassword(payload:any):Observable<any>{
+    return this.http.post(environment.domain+"/changePassword",payload)
   }
 
-  delCalIntegration(payload:any):Observable<any>{
-    return this.http.post(environment.domain+"/delCalIntegration",payload)
-  }
-
-  connectGoogle(payload:any):Observable<any>{
-    return this.http.post(environment.domain+"/mslogin",payload)
-  }
-
-  delGoogleCalIntegration(payload:any):Observable<any>{
-    return this.http.post(environment.domain+"/delCalIntegration",payload)
-  }
-
-  reschedule(payload:any):Observable<any>{
-    return this.http.post(environment.domain+"/rescheduleInterview",payload)
+  updateProfile(payload:any):Observable<any>{
+    return this.http.post(environment.domain+"/updateProfile",payload)
   }
 
 }

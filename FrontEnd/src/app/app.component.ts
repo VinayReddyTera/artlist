@@ -20,10 +20,13 @@ export class AppComponent implements OnInit  {
   constructor(private apiService : ApiService,private fb: FormBuilder,private decrypt:EncryptionService){}
 
   ngOnInit() {
-    let data = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('data')))
+    let data;
+    if(localStorage.getItem('data')){
+      data = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('data')))
+    }
     this.feedbackForm = this.fb.group({
-      name: [data.name, [Validators.required]],
-      email: [data.email, [Validators.required]],
+      name: [data?.name, [Validators.required]],
+      email: [data?.email, [Validators.required]],
       type: ['', [Validators.required]],
       feedback: ['', [Validators.required]]
   })

@@ -26,17 +26,22 @@ export class UserProfileComponent {
   showConfirmPassword : boolean = false;
   showOldPassword : boolean = false;
   resetForm:any;
+  userData:any;
+  profileStatus : any;
 
   constructor(public http: HttpClient, public router: Router,
     private apiService : ApiService,private fb: FormBuilder,
     private encrypt:EncryptionService) { }
 
   ngOnInit() {
-
+    if(localStorage.getItem('data')){
+      this.userData = JSON.parse(this.encrypt.deCrypt(localStorage.getItem('data')));
+      this.profileStatus = this.userData.profileStatus
+    }
     this.profileForm = this.fb.group({
-      email:['',[Validators.required,this.validateEmail]],
-      name:['',[Validators.required]],
-      phoneNo : ['',[Validators.required,this.validatePhone]]
+      email:[this.userData.email,[Validators.required,this.validateEmail]],
+      name:[this.userData.name,[Validators.required]],
+      phoneNo : [this.userData.phoneNo,[Validators.required,this.validatePhone]]
     })
 
     this.resetForm = this.fb.group({
@@ -108,26 +113,29 @@ export class UserProfileComponent {
   }
 
   submit() {
-    this.submitted = true
+    this.submitted = true;
+    if(this.userData.email != this.profileForm.value.email || this.userData.phoneNo != this.profileForm.value.phoneNo){
+      this.profileStatus = 'Incomplete'
+    }
+    let payload = {
+      name : this.profileForm.value.name,
+      email : this.profileForm.value.email,
+      phoneNo : this.profileForm.value.phoneNo,
+      profileStatus : this.profileStatus
+    }
     if(this.profileForm.valid){
       this.apiService.initiateLoading(true);
-      this.apiService.login(this.profileForm.value).subscribe(
+      this.apiService.updateProfile(payload).subscribe(
       (res : any)=>{
         console.log(res)
         if(res.status == 200){
-          localStorage.clear();
-          let now = new Date();
-          let time = now.getTime();
-          let expireTime = time + 600 * 36000;
-          localStorage.setItem('email', res.data.email);
-          localStorage.setItem('name', res.data.name);
-          localStorage.setItem('phoneNo', res.data.phoneNo);
-          localStorage.setItem('id', res.data._id);
-          localStorage.setItem('client-token',this.encrypt.enCrypt(environment.secretKey));
-          localStorage.setItem('token',res.token);
-          localStorage.setItem('role', this.profileForm.value.role);
-          localStorage.setItem('profileStatus', res.data?.status);
-          this.router.navigateByUrl('/artist-dashboard');
+          let msgData = {
+            severity : "success",
+            summary : 'Success',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
         }
         else if(res.status == 204){
           this.errorMessage = res.data;
@@ -137,7 +145,7 @@ export class UserProfileComponent {
             detail : res.data,
             life : 5000
           }
-          this.apiService.sendMessage(msgData);
+          // this.apiService.sendMessage(msgData);
         }
       },
       (err:any)=>{

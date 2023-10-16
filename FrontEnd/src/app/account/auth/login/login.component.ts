@@ -65,6 +65,10 @@ export class LoginComponent implements OnInit {
           let now = new Date();
           let time = now.getTime();
           let expireTime = time + 600 * 36000;
+          let clientData = {
+            key : environment.secretKey,
+            time : expireTime
+          }
           let data : any = {
             name : res.data.name,
             email : res.data.email,
@@ -74,7 +78,7 @@ export class LoginComponent implements OnInit {
             profileStatus : res.data.status
           }
           localStorage.setItem('data', this.encrypt.enCrypt(JSON.stringify(data)));
-          localStorage.setItem('client-token',this.encrypt.enCrypt(environment.secretKey));
+          localStorage.setItem('client-token',this.encrypt.enCrypt(JSON.stringify(clientData)));
           localStorage.setItem('token',res.token);
           this.router.navigateByUrl('/artist-dashboard');
         }
