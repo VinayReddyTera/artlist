@@ -75,7 +75,9 @@ export class LoginComponent implements OnInit {
             phoneNo : res.data.phoneNo,
             id : res.data._id,
             role : this.loginForm.value.role,
-            profileStatus : res.data.status
+            profileStatus : res.data.status,
+            emailVerified: res.data.emailVerified,
+            phoneVerified: res.data.phoneVerified
           }
           localStorage.setItem('data', this.encrypt.enCrypt(JSON.stringify(data)));
           localStorage.setItem('client-token',this.encrypt.enCrypt(JSON.stringify(clientData)));

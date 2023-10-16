@@ -125,19 +125,28 @@ export class UserProfileComponent {
 
   submit() {
     this.submitted = true;
-    if(this.userData.email != this.profileForm.value.email || this.userData.phoneNo != this.profileForm.value.phoneNo){
-      this.profileStatus = 'Incomplete'
-    }
-    let payload = {
-      name : this.profileForm.value.name,
-      email : this.profileForm.value.email,
-      phoneNo : this.profileForm.value.phoneNo,
-      profileStatus : this.profileStatus,
-      role: this.userData.role,
-      id : this.userData.id
-    }
-    console.log(payload)
     if(this.profileForm.valid){
+      let emailVerified = this.userData.emailVerified;
+      let phoneVerified = this.userData.phoneVerified;
+      if(this.userData.email != this.profileForm.value.email){
+        this.profileStatus = 'Incomplete';
+        emailVerified = false;
+      }
+      if(this.userData.phoneNo != this.profileForm.value.phoneNo){
+        this.profileStatus = 'Incomplete';
+        phoneVerified = false;
+      }
+      let payload = {
+        name : this.profileForm.value.name,
+        email : this.profileForm.value.email,
+        phoneNo : this.profileForm.value.phoneNo,
+        profileStatus : this.profileStatus,
+        role: this.userData.role,
+        id : this.userData.id,
+        emailVerified : emailVerified,
+        phoneVerified : phoneVerified
+      }
+      console.log(payload)
       this.apiService.initiateLoading(true);
       this.apiService.updateProfile(payload).subscribe(
       (res : any)=>{
@@ -150,6 +159,26 @@ export class UserProfileComponent {
             life : 5000
           }
           this.apiService.sendMessage(msgData);
+          localStorage.setItem('token',res.token);
+          let data : any = {
+            name : this.profileForm.value.name,
+            email : this.profileForm.value.email,
+            phoneNo : this.profileForm.value.phoneNo,
+            profileStatus : this.profileStatus,
+            role: this.userData.role,
+            id : this.userData.id,
+            emailVerified : emailVerified,
+            phoneVerified : phoneVerified
+          }
+          localStorage.setItem('data', this.encrypt.enCrypt(JSON.stringify(data)));
+          let now = new Date();
+          let time = now.getTime();
+          let expireTime = time + 600 * 36000;
+          let clientData = {
+            key : environment.secretKey,
+            time : expireTime
+          }
+          localStorage.setItem('client-token',this.encrypt.enCrypt(JSON.stringify(clientData)));
         }
         else if(res.status == 204){
           this.errorMessage = res.data;

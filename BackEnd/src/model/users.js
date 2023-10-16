@@ -121,7 +121,9 @@ userDB.checkPassword = async (data1) => {
         email : data.email,
         role : data.role,
         status : data.profileStatus,
-        _id : data._id
+        _id : data._id,
+        emailVerified: data.emailVerified,
+        phoneVerified: data.phoneVerified
       }
       }
         return userData;
@@ -147,7 +149,9 @@ userDB.checkPassword = async (data1) => {
         email : data.email,
         role : data.role,
         status : data.profileStatus,
-        _id : data._id
+        _id : data._id,
+        emailVerified: data.emailVerified,
+        phoneVerified: data.phoneVerified
       }
     }
         return userData;
@@ -380,11 +384,31 @@ userDB.updatePasswordForUsers = async (userData) => {
 userDB.updateProfile = async (userData) => {
   if(userData.role == 'artist'){
     const collection = await connection.getArtist();
-    const data = await collection.updateOne({ "id" : new ObjectId(userData.id)},{"$set": {"name" : userData.name, "email":userData.email, "phoneNo":userData.phoneNo,"profileStatus":userData.profileStatus}});
-    if (data.modifiedCount == 1 && data.acknowledged == true) {
+    const data = await collection.updateOne({ "id" : new ObjectId(userData.id)},
+    {"$set": 
+    {
+      "name" : userData.name,
+      "email":userData.email,
+      "phoneNo":userData.phoneNo,
+      "profileStatus":userData.profileStatus,
+      "emailVerified": userData.emailVerified,
+      "phoneVerified": userData.phoneVerified
+    }
+  });
+    if (data.modifiedCount == 1 || data.acknowledged == true) {
         let res = {
             status :200,
-            data : "Successfully updated profile"
+            data : "Successfully updated profile",
+            userData:{
+              name : userData.name,
+              phoneNo : userData.phoneNo,
+              email : userData.email,
+              role : userData.role,
+              status : userData.profileStatus,
+              _id : userData.id,
+              emailVerified: userData.emailVerified,
+              phoneVerified: userData.phoneVerified
+            }
         }
         return res
     }
@@ -394,11 +418,31 @@ userDB.updateProfile = async (userData) => {
   }
   else if(userData.role == 'user'){
     const collection = await connection.getUsers();
-    const data = await collection.updateOne({ "_id" : new ObjectId(userData.id)},{"$set": {"name" : userData.name, "email":userData.email, "phoneNo":userData.phoneNo,"profileStatus":userData.profileStatus}});
-    if (data.modifiedCount == 1 && data.acknowledged == true) {
+    const data = await collection.updateOne({ "_id" : new ObjectId(userData.id)},
+    {"$set": 
+    {
+      "name" : userData.name,
+      "email":userData.email,
+      "phoneNo":userData.phoneNo,
+      "profileStatus":userData.profileStatus,
+      "emailVerified": userData.emailVerified,
+      "phoneVerified": userData.phoneVerified
+    }
+  });
+    if (data.modifiedCount == 1 || data.acknowledged == true) {
         let res = {
             status :200,
-            data : "Successfully updated profile"
+            data : "Successfully updated profile",
+            userData:{
+              name : userData.name,
+              phoneNo : userData.phoneNo,
+              email : userData.email,
+              role : userData.role,
+              status : userData.profileStatus,
+              _id : userData.id,
+              emailVerified: userData.emailVerified,
+              phoneVerified: userData.phoneVerified
+            }
         }
         return res
     }

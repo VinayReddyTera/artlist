@@ -190,7 +190,19 @@ router.post('/updateProfile', verifyToken, (req, res, next)=>{
     }
     else{
       userservice.updateProfile(req.body).then((data)=>{
-        return res.json(data)
+        if(data.status == 200){
+          const expirationTime = Math.floor(Date.now() / 1000) + 21600;
+          const token = jwt.sign({data:data.userData,exp : expirationTime},process.env.JWT_Secret);
+          let response = {
+            status : 200,
+            data : data.data,
+            token : token
+          }
+          return res.json(response)
+        }
+        else{
+          return res.json(data)
+        }
       }).catch((err)=>{
         next(err)
       })
