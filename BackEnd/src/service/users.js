@@ -342,4 +342,46 @@ userService.resetPassword=(payload)=>{
     })
 }
 
+userService.changePassword=(payload)=>{
+  return userDB.checkPassword(payload).then((data)=>{
+    if(data.status == 200){
+      let payload1 = {
+        email : payload.email,
+        password: payload.newPassword,
+        role:payload.role
+      }
+      return userDB.updatePasswordForUsers(payload1).then((data)=>{
+        if(data){
+            return data
+        }
+        else{
+            let res = {
+                status : 204,
+                data : "Unable to update password"
+            }
+            return res
+        }
+    })
+    }
+    else{
+      return data
+    }
+  })
+}
+
+userService.updateProfile=(payload)=>{
+  return userDB.updateProfile(payload).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let response = {
+        status : 204,
+        data : 'unable to update profile'
+      }
+      return response
+    }
+  })
+}
+
 module.exports = userService

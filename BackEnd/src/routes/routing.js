@@ -39,7 +39,7 @@ router.post('/login',(req,res,next)=>{
           data : data.data,
           token : ''
         }
-        res.json(obj)
+        return res.json(obj)
       }
       }).catch((err)=>{
         next(err)
@@ -74,9 +74,23 @@ router.post('/register',(req,res,next)=>{
     }
     return res.json(response)
   }
+  else if(!validate.validateName(req.body.name)){
+    let response = {
+      status : 204,
+      data : 'Invalid Name format'
+    }
+    return res.json(response)
+  }
+  else if(!validate.validateXss(req.body.name)){
+    let response = {
+      status : 204,
+      data : 'Invalid data format'
+    }
+    return res.json(response)
+  }
   else{
     userservice.register(req.body).then((data)=>{
-      res.json(data)
+      return res.json(data)
     }).catch((err)=>{
       next(err)
     })
@@ -102,7 +116,7 @@ router.post('/forgotPassword', (req, res, next)=>{
   }
   else{
     userservice.forgotPassword(userData,req.headers.origin).then((data)=>{
-      res.json(data);
+      return res.json(data);
   }).catch(err => next(err));
   }
 })
@@ -126,7 +140,7 @@ router.post('/resetPassword', (req, res, next)=>{
               password : req.body.password
           }
           userservice.resetPassword(payload).then((data)=>{
-              res.json(data);
+              return res.json(data);
           }).catch(err => next(err));
       }
     });
@@ -136,73 +150,58 @@ router.post('/resetPassword', (req, res, next)=>{
       status : 204,
       data : 'Required fields missing'
     }
-    res.json(response)
+    return res.json(response)
   }
 })
 
 //router to change password
-router.post('/changePassword',verifyToken, (req, res, next)=>{
-  if(req.body.token && req.body.password){
-    jwt.verify(req.body.token,process.env.JWT_Secret,(err,user)=>{
-      if(err){
-          let response = {
-              status : 204,
-              data : 'reset password link expired'
-          }
-          return res.json(response)
-      }
-      else{
-          let payload = {
-              email : user.data.email,
-              role : user.data.role,
-              otp:user.data.otp,
-              password : req.body.password
-          }
-          userservice.resetPassword(payload).then((data)=>{
-              res.json(data);
-          }).catch(err => next(err));
-      }
-    });
+router.post('/changePassword', verifyToken, (req, res, next)=>{
+  if(req.body.password && req.body.newPassword && req.body.role && req.body.email){
+    userservice.changePassword(req.body).then((data)=>{
+      return res.json(data)
+    }).catch((err)=>{
+      next(err)
+    })
   }
   else{
     let response = {
       status : 204,
       data : 'Required fields missing'
     }
-    res.json(response)
+    return res.json(response)
   }
 })
 
 //router to update profile
-router.post('/updateProfile',verifyToken, (req, res, next)=>{
-  if(req.body.token && req.body.password){
-    jwt.verify(req.body.token,process.env.JWT_Secret,(err,user)=>{
-      if(err){
-          let response = {
-              status : 204,
-              data : 'reset password link expired'
-          }
-          return res.json(response)
+router.post('/updateProfile', verifyToken, (req, res, next)=>{
+  if(req.body.name && req.body.email && req.body.phoneNo && req.body.id && req.body.profileStatus && req.body.role){
+    if(
+         !validate.validateXss(req.body.name)
+      || !validate.validateXss(req.body.profileStatus)
+      || !validate.validateName(req.body.name) 
+      || !validate.validateEmail(req.body.email)
+      || !validate.validatePhone(req.body.phoneNo)
+      ){
+      let response = {
+        status : 204,
+        data : 'Incorrect data format'
       }
-      else{
-          let payload = {
-              email : user.data.email,
-              role : user.data.role,
-              otp:user.data.otp,
-              password : req.body.password
-          }
-          userservice.resetPassword(payload).then((data)=>{
-              res.json(data);
-          }).catch(err => next(err));
-      }
-    });
+      return res.json(response)
+    }
+    else{
+      userservice.updateProfile(req.body).then((data)=>{
+        return res.json(data)
+      }).catch((err)=>{
+        next(err)
+      })
+    }
   }
   else{
     let response = {
       status : 204,
       data : 'Required fields missing'
     }
-    res.json(response)
+    return res.json(response)
   }
 })
 

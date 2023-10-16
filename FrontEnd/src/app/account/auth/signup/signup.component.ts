@@ -59,6 +59,15 @@ export class SignupComponent implements OnInit {
     }
   }
 
+  validateName(c:FormControl): { nameError: { message: string; }; } | null{
+    const nameRegex = environment.nameRegex
+    return nameRegex.test(c.value)? null : {
+      nameError : {
+        message : 'Invalid Name format!'
+      }
+    }
+  }
+  
 validatePassword(c:FormGroup){
   if(c.controls['password'].value == c.controls['cPassword'].value){
     return null

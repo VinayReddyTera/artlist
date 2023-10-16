@@ -41,13 +41,15 @@ export class UserProfileComponent {
     this.profileForm = this.fb.group({
       email:[this.userData.email,[Validators.required,this.validateEmail]],
       name:[this.userData.name,[Validators.required]],
-      phoneNo : [this.userData.phoneNo,[Validators.required,this.validatePhone]]
+      phoneNo : [this.userData.phoneNo,[Validators.required,this.validatePhone]],
     })
 
     this.resetForm = this.fb.group({
-      oldPassword: ['', [Validators.required]],
       password: ['', [Validators.required]],
-      cPassword: ['', [Validators.required]]
+      newPassword: ['', [Validators.required]],
+      cPassword: ['', [Validators.required]],
+      role: [this.userData.role, [Validators.required]],
+      email : [this.userData.email,[Validators.required]]
     },{validator : this.validatePassword});
   }
 
@@ -69,8 +71,17 @@ export class UserProfileComponent {
     }
   }
 
+  validateName(c:FormControl): { nameError: { message: string; }; } | null{
+    const nameRegex = environment.nameRegex
+    return nameRegex.test(c.value)? null : {
+      nameError : {
+        message : 'Invalid Name format!'
+      }
+    }
+  }
+
   validatePassword(c:FormGroup){
-    if(c.controls['password'].value == c.controls['cPassword'].value){
+    if(c.controls['newPassword'].value == c.controls['cPassword'].value){
       return null
     }
     else{
@@ -85,10 +96,10 @@ export class UserProfileComponent {
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
     if(this.showPassword){
-      document.getElementById("password")?.setAttribute("type","text");
+      document.getElementById("newPassword")?.setAttribute("type","text");
     }
     else{
-      document.getElementById("password")?.setAttribute("type","password");
+      document.getElementById("newPassword")?.setAttribute("type","password");
     }
   }
 
@@ -121,8 +132,11 @@ export class UserProfileComponent {
       name : this.profileForm.value.name,
       email : this.profileForm.value.email,
       phoneNo : this.profileForm.value.phoneNo,
-      profileStatus : this.profileStatus
+      profileStatus : this.profileStatus,
+      role: this.userData.role,
+      id : this.userData.id
     }
+    console.log(payload)
     if(this.profileForm.valid){
       this.apiService.initiateLoading(true);
       this.apiService.updateProfile(payload).subscribe(
@@ -172,24 +186,49 @@ export class UserProfileComponent {
   onSubmit() {
     this.passSubmitted = true;
     if(this.resetForm.valid){
-      this.apiService.initiateLoading(true)
-      this.apiService.resetPassword(this.resetForm.valid).subscribe(
-        (res:any)=>{
-          console.log(res)
-          if(res.status == 200){
-            console.log('ok')
+      this.apiService.initiateLoading(true);
+      this.apiService.changePassword(this.resetForm.value).subscribe(
+      (res : any)=>{
+        console.log(res)
+        if(res.status == 200){
+          let msgData = {
+            severity : "success",
+            summary : 'Success',
+            detail : res.data,
+            life : 5000
           }
-          else if(res.status == 204){
-            this.errorMessage = res.data
-          }
-        },
-        (err:any)=>{
-          console.log(err)
+          this.apiService.sendMessage(msgData);
         }
-      ).add(()=>{
-        this.apiService.initiateLoading(false)
-      })
+        else if(res.status == 204){
+          this.errorMessage = res.data;
+          let msgData = {
+            severity : "error",
+            summary : 'Error',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
+        }
+      },
+      (err:any)=>{
+        this.errorMessage = err.error
+        console.log(err);
+      }
+    ).add(()=>{
+      this.apiService.initiateLoading(false)
+      setTimeout(()=>{
+        this.errorMessage = null;
+      },5000)
+    })
+  }
+  else{
+    const controls = this.resetForm.controls;
+    for (const name in controls) {
+        if (controls[name].invalid) {
+            controls[name].markAsDirty()
+        }
     }
+  }
   }
 
   toggle(){

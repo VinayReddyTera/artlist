@@ -22,7 +22,7 @@ validate.validateTime=(time)=>{
 
 validate.validateXss=(data)=>{
     let dataRegex = /^[^<>&'"]*$/;
-    return dataRegex.test(data)? true : false
+    return dataRegex.test(data)
 }
 
 module.exports = validate

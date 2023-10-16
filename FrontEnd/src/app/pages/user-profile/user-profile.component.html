@@ -21,6 +21,9 @@
                       <div *ngIf="profileForm.controls.name.errors?.required && profileForm.controls.name.dirty" class="required-message text-danger">
                         <small>Required Field!</small>
                       </div>
+                      <div *ngIf="profileForm.controls.name.errors?.nameError && !profileForm.controls.name.errors?.required && profileForm.controls.name.dirty" class="required-message text-danger">
+                        <small>{{profileForm.controls.name.errors.nameError.message}}</small>
+                      </div>
                   </div>
 
                   <div class="mb-3">
@@ -77,41 +80,41 @@
                 <div class="mb-3">
                     <label for="oldPassword">Old Password</label>
                     <div class="input-group auth-pass-inputgroup">
-                      <input type="password" id="oldPassword" class="form-control" formControlName="oldPassword" placeholder="Enter password"
-                        aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': passSubmitted && resetForm.controls.oldPassword.errors }">
+                      <input type="password" id="oldPassword" class="form-control" formControlName="password" placeholder="Enter password"
+                        aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': passSubmitted && resetForm.controls.password.errors }">
     
                       <button class="btn btn-light ms-0" type="button" id="oldPassword-addon" (click)="toggleOldPasswordVisibility()">
                         <i class="mdi mdi-eye" *ngIf="!showOldPassword"></i>
                         <i class="mdi mdi-eye-off" *ngIf="showOldPassword"></i>
                       </button>
                       </div>
-                      <div *ngIf="resetForm.controls.oldPassword.errors?.required && resetForm.controls.oldPassword.dirty" class="text-danger">
+                      <div *ngIf="resetForm.controls.password.errors?.required && resetForm.controls.password.dirty" class="text-danger">
                         <small>Required Field!</small>
                        </div>
                     </div>
 
                 <div class="mb-3">
-                  <label for="password">New Password</label>
+                  <label for="newPassword">New Password</label>
                   <div class="input-group auth-pass-inputgroup">
-                    <input type="password" id="password" class="form-control" formControlName="password" placeholder="Enter password"
-                      aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': passSubmitted && resetForm.controls.password.errors }">
+                    <input type="password" id="newPassword" class="form-control" formControlName="newPassword" placeholder="Enter password"
+                      aria-label="Password" aria-describedby="newPassword-addon" [ngClass]="{ 'is-invalid': passSubmitted && resetForm.controls.password.errors }">
   
-                    <button class="btn btn-light ms-0" type="button" id="cPassword-addon" (click)="togglePasswordVisibility()">
+                    <button class="btn btn-light ms-0" type="button" id="newPassword-addon" (click)="togglePasswordVisibility()">
                       <i class="mdi mdi-eye" *ngIf="!showPassword"></i>
                       <i class="mdi mdi-eye-off" *ngIf="showPassword"></i>
                     </button>
                     </div>
-                    <div *ngIf="resetForm.controls.password.errors?.required && resetForm.controls.password.dirty" class="text-danger">
+                    <div *ngIf="resetForm.controls.newPassword.errors?.required && resetForm.controls.newPassword.dirty" class="text-danger">
                       <small>Required Field!</small>
                      </div>
                   </div>
                   <div class="mb-3">
-                      <label for="password">Confirm New Password</label>
+                      <label for="cPassword">Confirm New Password</label>
                       <div class="input-group auth-pass-inputgroup">
                         <input type="password" id="cPassword" class="form-control" formControlName="cPassword" placeholder="Confirm password"
                           aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': passSubmitted && resetForm.controls.cPassword.errors }">
     
-                        <button class="btn btn-light ms-0" type="button" id="password-addon" (click)="toggleConfirmPasswordVisibility()">
+                        <button class="btn btn-light ms-0" type="button" id="cPassword-addon" (click)="toggleConfirmPasswordVisibility()">
                           <i class="mdi mdi-eye" *ngIf="!showConfirmPassword"></i>
                           <i class="mdi mdi-eye-off" *ngIf="showConfirmPassword"></i>
                         </button>

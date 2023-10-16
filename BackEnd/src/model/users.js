@@ -377,4 +377,42 @@ userDB.updatePasswordForUsers = async (userData) => {
   }
 }
 
+userDB.updateProfile = async (userData) => {
+  if(userData.role == 'artist'){
+    const collection = await connection.getArtist();
+    const data = await collection.updateOne({ "id" : new ObjectId(userData.id)},{"$set": {"name" : userData.name, "email":userData.email, "phoneNo":userData.phoneNo,"profileStatus":userData.profileStatus}});
+    if (data.modifiedCount == 1 && data.acknowledged == true) {
+        let res = {
+            status :200,
+            data : "Successfully updated profile"
+        }
+        return res
+    }
+    else{
+        return false
+    }
+  }
+  else if(userData.role == 'user'){
+    const collection = await connection.getUsers();
+    const data = await collection.updateOne({ "_id" : new ObjectId(userData.id)},{"$set": {"name" : userData.name, "email":userData.email, "phoneNo":userData.phoneNo,"profileStatus":userData.profileStatus}});
+    if (data.modifiedCount == 1 && data.acknowledged == true) {
+        let res = {
+            status :200,
+            data : "Successfully updated profile"
+        }
+        return res
+    }
+    else{
+        return false
+    }
+  }
+  else{
+    let res = {
+      status : 204,
+      data : 'Invalid Role'
+    }
+    return res
+  }
+}
+
 module.exports = userDB
