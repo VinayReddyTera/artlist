@@ -1,1 +1,224 @@
-<p>artist-profile works!</p>
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#20b04b" type="ball-clip-rotate"></ngx-spinner>
+<p-speedDial [model]="items" direction="right" showIcon="pi pi-bars" hideIcon="pi pi-times" buttonClassName="p-button-outlined"></p-speedDial>
+<div class="button-container">
+    <button class="btn btn-primary" [disabled]="show.showProfile" (click)="setKeyTrue('showProfile')">Update Profile</button>
+    <button class="btn btn-success" [disabled]="show.showPassword" (click)="setKeyTrue('showPassword')">Update Password</button>
+    <button class="btn btn-pink" [disabled]="show.showProfileStatus" (click)="setKeyTrue('showProfileStatus')">Profile Status</button>
+    <button class="btn btn-success" [disabled]="show.showSkill" (click)="setKeyTrue('showSkill')">Add Skill</button>
+</div>
+
+<div *ngIf="show.showProfile" class="account-pages my-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6 col-xl-5">
+        <div class="card overflow-hidden">
+          <div class="card-body">
+            <div class="p-2">
+              <form class="form-horizontal" [formGroup]="profileForm" (ngSubmit)="submit()">
+
+                <div class="mb-3">
+                    <label for="name">Name</label>
+                    <input type="text" formControlName="name" class="form-control" id="name" placeholder="Name"
+                    [ngClass]="{ 'is-invalid': submitted && profileForm.controls.name.errors }"/>
+                      <div *ngIf="profileForm.controls.name.errors?.required && profileForm.controls.name.dirty" class="required-message text-danger">
+                        <small>Required Field!</small>
+                      </div>
+                      <div *ngIf="profileForm.controls.name.errors?.nameError && !profileForm.controls.name.errors?.required && profileForm.controls.name.dirty" class="required-message text-danger">
+                        <small>{{profileForm.controls.name.errors.nameError.message}}</small>
+                      </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="email">Email</label>
+                    <input type="email" formControlName="email" class="form-control" id="email" placeholder="Email"
+                    [ngClass]="{ 'is-invalid': submitted && profileForm.controls.email.errors }"/>
+                      <div *ngIf="profileForm.controls.email.errors?.required && profileForm.controls.email.dirty" class="required-message text-danger">
+                        <small>Required Field!</small>
+                      </div>
+                      <div *ngIf="profileForm.controls.email.errors?.emailError && !profileForm.controls.email.errors?.required && profileForm.controls.email.dirty" class="required-message text-danger">
+                        <small>{{profileForm.controls.email.errors.emailError.message}}</small>
+                      </div>
+                  </div>
+
+                <div class="mb-3">
+                  <label for="phoneNo">Phone Number</label>
+                  <input type="tel" formControlName="phoneNo" class="form-control" id="phoneNo" placeholder="phoneNo"
+                  [ngClass]="{ 'is-invalid': submitted && profileForm.controls.phoneNo.errors }"/>
+                    <div *ngIf="profileForm.controls.phoneNo.errors?.required && profileForm.controls.phoneNo.dirty" class="required-message text-danger">
+                      <small>Required Field!</small>
+                    </div>
+                    <div *ngIf="profileForm.controls.phoneNo.errors?.phoneError && !profileForm.controls.phoneNo.errors?.required && profileForm.controls.phoneNo.dirty" class="required-message text-danger">
+                      <small>{{profileForm.controls.phoneNo.errors.phoneError.message}}</small>
+                    </div>
+                </div>
+
+                <div class="mt-3 d-grid">
+                  <button class="btn btn-primary" type="submit">Update</button>
+                </div>
+                <div class="mt-4 text-center">
+                  <p *ngIf="errorMessage" class="mb-0 text-danger message">{{errorMessage}}</p>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- end container -->
+</div>
+
+<div *ngIf="show.showPassword" class="account-pages my-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 col-xl-5">
+          <div class="card overflow-hidden">
+            <div class="card-body">
+  
+              <form class="needs-validation" name="resetForm" [formGroup]="resetForm" (ngSubmit)="onSubmit()" novalidate>
+                <div class="mb-3">
+                    <label for="oldPassword">Old Password</label>
+                    <div class="input-group auth-pass-inputgroup">
+                      <input type="password" id="oldPassword" class="form-control" formControlName="password" placeholder="Enter password"
+                        aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': passSubmitted && resetForm.controls.password.errors }">
+    
+                      <button class="btn btn-light ms-0" type="button" id="oldPassword-addon" (click)="toggleOldPasswordVisibility()">
+                        <i class="mdi mdi-eye" *ngIf="!showOldPassword"></i>
+                        <i class="mdi mdi-eye-off" *ngIf="showOldPassword"></i>
+                      </button>
+                      </div>
+                      <div *ngIf="resetForm.controls.password.errors?.required && resetForm.controls.password.dirty" class="text-danger">
+                        <small>Required Field!</small>
+                       </div>
+                    </div>
+
+                <div class="mb-3">
+                  <label for="newPassword">New Password</label>
+                  <div class="input-group auth-pass-inputgroup">
+                    <input type="password" id="newPassword" class="form-control" formControlName="newPassword" placeholder="Enter password"
+                      aria-label="Password" aria-describedby="newPassword-addon" [ngClass]="{ 'is-invalid': passSubmitted && resetForm.controls.password.errors }">
+  
+                    <button class="btn btn-light ms-0" type="button" id="newPassword-addon" (click)="togglePasswordVisibility()">
+                      <i class="mdi mdi-eye" *ngIf="!showPassword"></i>
+                      <i class="mdi mdi-eye-off" *ngIf="showPassword"></i>
+                    </button>
+                    </div>
+                    <div *ngIf="resetForm.controls.newPassword.errors?.required && resetForm.controls.newPassword.dirty" class="text-danger">
+                      <small>Required Field!</small>
+                     </div>
+                  </div>
+                  <div class="mb-3">
+                      <label for="cPassword">Confirm New Password</label>
+                      <div class="input-group auth-pass-inputgroup">
+                        <input type="password" id="cPassword" class="form-control" formControlName="cPassword" placeholder="Confirm password"
+                          aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': passSubmitted && resetForm.controls.cPassword.errors }">
+    
+                        <button class="btn btn-light ms-0" type="button" id="cPassword-addon" (click)="toggleConfirmPasswordVisibility()">
+                          <i class="mdi mdi-eye" *ngIf="!showConfirmPassword"></i>
+                          <i class="mdi mdi-eye-off" *ngIf="showConfirmPassword"></i>
+                        </button>
+                        </div>
+                        <div *ngIf="resetForm.controls.cPassword.errors?.required && resetForm.controls.cPassword.dirty" class="text-danger">
+                          <small>Required Field!</small>
+                         </div>
+                         <div *ngIf="resetForm.errors?.passwordError && !resetForm.controls.cPassword.errors?.required && resetForm.controls.cPassword.dirty" class="required-message text-danger">
+                         <small>{{resetForm.errors.passwordError.message}}</small>
+                        </div>
+                      </div>
+                <div class="mt-3 d-grid">
+                    <button class="btn btn-primary" type="submit">Change Password</button>
+                  </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div *ngIf="show.showProfileStatus" class="account-pages my-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6 col-xl-5">
+        <div class="card overflow-hidden">
+          <div class="card-body">
+            <div>
+              <h5>Profile Status : <span [ngClass]="{'text-danger': userData.profileStatus === 'Incomplete', 'text-success': userData.profileStatus !== 'Incomplete'}">{{userData.profileStatus}}</span></h5>
+            </div>
+            <button *ngIf="!userData.emailVerified" (click)="verifyEmail()" class="btn btn-block btn-soft-primary mt-2 mb-2">Verify Email</button> 
+            <div *ngIf="userData.emailVerified"><h5 class="text-success">Email Verified</h5></div><br>
+            <button *ngIf="!userData.phoneVerified" (click)="verifyPhone()" class="btn btn-block btn-soft-success">Verify Mobile Number</button>
+            <div *ngIf="userData.phoneVerified"><h5 class="text-success">Mobile Number Verified</h5></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="show.showSkill" class="account-pages my-5">
+    <form [formGroup]="skillForm" (ngSubmit)="submitSkill()">
+        <div class="card fileInput mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Add Skills</h5>
+      
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                        <th scope="col">Job Description Questions</th>
+                        <th scope="col">Answer Type</th>
+                        <th scope="col">Mandatory Yes/No</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody formArrayName="skills" *ngFor="let skill of skillForm.get('skills').controls; let i = index" style="border-top: none;">
+                  <tr [formGroupName]="i">
+                      <td>
+                        <input type="text" class="form-control" [id]="'skill' + i" placeholder="Enter Question"  formControlName="question">
+                        <div *ngIf="skill.get('question').errors?.required &&
+                                skill.get('question').dirty" class="text-danger">
+                                <small>Question is required</small>
+                        </div>
+                      </td>
+                      <td>
+                        <select formControlName="answerType" class="form-control">
+                          <option value="boolean">Yes/No</option>
+                          <option value="input">Input Field</option>
+                        </select>
+                        <div *ngIf="skill.get('answerType').errors?.required &&
+                        skill.get('answerType').dirty" class="text-danger">
+                        <small>Answer Type is required</small>
+                        </div>
+                      </td>
+                      <td>
+                        <select formControlName="mandatory" class="form-control">
+                          <option value="yes">Mandatory Yes</option>
+                          <option value="no">Mandatory No</option>
+                          <option value="not required">Any</option>
+                        </select>
+                        <div *ngIf="skill.get('mandatory').errors?.required &&
+                        skill.get('mandatory').dirty" class="text-danger">
+                        <small>Mandatory Type is required</small>
+                        </div>
+                      </td>
+                      <td>
+                      <div style="display:flex;">
+                        <button type="button" class="btn btn-soft-success btn-rounded btn-icon" (click)="addQuestionButtonClick()"><i class="fa fa-plus"></i></button>&nbsp; &nbsp;
+                        <button type="button" class="btn btn-soft-danger btn-rounded btn-icon" (click)="delete(i)">
+                          <i class="fa fa-trash"></i>
+                        </button>
+                      </div>
+                      </td>
+                  </tr>
+                </tbody>
+                </table>
+                </div>
+                <button class="btn btn-soft-success">Save</button>
+            </div>
+        </div>
+    </form>
+</div>

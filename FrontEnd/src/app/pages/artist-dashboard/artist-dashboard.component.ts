@@ -212,76 +212,76 @@ export class ArtistDashboardComponent {
       }
     }
     
-    this.spinner.show();
-    this.apiService.fetchDashboardData(payload).subscribe(
-      (res:any)=>{
-        if(res.status == 200){
-          console.log(res.data)
-          this.userStatistics = res.data.userStatistics;
-          this.interviewerCount = res.data.interviewerCount;
-          this.jdCount = res.data.jdCount;
-          this.resumeCount = res.data.resumeCount;
-          this.todayInterviews = res.data.todayInterviews;
-          this.pastInterviews = res.data.pastInterviews;
-          this.upComingInterviews = res.data.upComingInterviews;
-          this.openings = res.data.openings;
-          this.onboarded = res.data.onboarded;
-          this.lineChartData = {
-            labels: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
-            "JUL","AUG","SEP","OCT","NOV","DEC"],
-            datasets: [
-              {
-                data: res.data.graphData,
-                label: 'No. of resumes parsed',
-                fill: true,
-                tension: 0.5,
-                borderColor: 'black',
-                backgroundColor: 'rgba(255,255,0,0.28)'
-              }
-            ]
-          };
-          this.statData[0].value = res.data.jdCount;
-          this.statData[1].value = res.data.resumeCount;
-          this.statData[2].value = res.data.interviewerCount;
-          this.doughnutChartDatasets = [
-            { 
-              data: [ this.userStatistics?.inProgress,this.userStatistics?.cleared,
-                 this.userStatistics?.rejected ],
-                 backgroundColor: [
-                  '#556ee6',
-                  '#36c391',
-                  '#f46a6a'
-                ],
-                borderColor: [
-                  'rgba(177, 148, 250, .2)',
-                  'rgba(132, 217, 210, .2)',
-                  'rgba(254, 112, 150, .2)'
-                ]
-                }
-          ];
-        }
-        else if(res.status == 204){
-          if(res.data == 'Session Expired'){
-            localStorage.clear();
-            this.router.navigateByUrl('/account/login')
-          }
-          else{
-            let msgData = {
-              severity : "error",
-              summary : 'Error',
-              detail : res.data,
-              life : 5000
-            }
-            this.apiService.sendMessage(msgData);
-          }
-        }
-      },
-    (err:any)=>{
-      console.log(err)
-    }
-    ).add(()=>{
-      this.spinner.hide();
-    })
+    // this.spinner.show();
+    // this.apiService.fetchDashboardData(payload).subscribe(
+    //   (res:any)=>{
+    //     if(res.status == 200){
+    //       console.log(res.data)
+    //       this.userStatistics = res.data.userStatistics;
+    //       this.interviewerCount = res.data.interviewerCount;
+    //       this.jdCount = res.data.jdCount;
+    //       this.resumeCount = res.data.resumeCount;
+    //       this.todayInterviews = res.data.todayInterviews;
+    //       this.pastInterviews = res.data.pastInterviews;
+    //       this.upComingInterviews = res.data.upComingInterviews;
+    //       this.openings = res.data.openings;
+    //       this.onboarded = res.data.onboarded;
+    //       this.lineChartData = {
+    //         labels: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+    //         "JUL","AUG","SEP","OCT","NOV","DEC"],
+    //         datasets: [
+    //           {
+    //             data: res.data.graphData,
+    //             label: 'No. of resumes parsed',
+    //             fill: true,
+    //             tension: 0.5,
+    //             borderColor: 'black',
+    //             backgroundColor: 'rgba(255,255,0,0.28)'
+    //           }
+    //         ]
+    //       };
+    //       this.statData[0].value = res.data.jdCount;
+    //       this.statData[1].value = res.data.resumeCount;
+    //       this.statData[2].value = res.data.interviewerCount;
+    //       this.doughnutChartDatasets = [
+    //         { 
+    //           data: [ this.userStatistics?.inProgress,this.userStatistics?.cleared,
+    //              this.userStatistics?.rejected ],
+    //              backgroundColor: [
+    //               '#556ee6',
+    //               '#36c391',
+    //               '#f46a6a'
+    //             ],
+    //             borderColor: [
+    //               'rgba(177, 148, 250, .2)',
+    //               'rgba(132, 217, 210, .2)',
+    //               'rgba(254, 112, 150, .2)'
+    //             ]
+    //             }
+    //       ];
+    //     }
+    //     else if(res.status == 204){
+    //       if(res.data == 'Session Expired'){
+    //         localStorage.clear();
+    //         this.router.navigateByUrl('/account/login')
+    //       }
+    //       else{
+    //         let msgData = {
+    //           severity : "error",
+    //           summary : 'Error',
+    //           detail : res.data,
+    //           life : 5000
+    //         }
+    //         this.apiService.sendMessage(msgData);
+    //       }
+    //     }
+    //   },
+    // (err:any)=>{
+    //   console.log(err)
+    // }
+    // ).add(()=>{
+    //   this.spinner.hide();
+    // })
   }
 
   getDisplayText(): string {

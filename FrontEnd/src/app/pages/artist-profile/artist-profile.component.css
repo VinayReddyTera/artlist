@@ -1,0 +1,35 @@
+.button-container {
+    display: flex; /* Use flexbox layout */
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .button-container button {
+    margin-right: 10px; /* Add some space between buttons */
+  }
+
+  @media (max-width: 425px) {
+    .button-container {
+      display: none;
+    }
+  }
+
+  @media (min-width: 426px) {
+    ::ng-deep p-speedDial{
+      display: none;
+    }
+  }
+
+  ::ng-deep p-speedDial{
+    position: relative;
+    bottom: 10px;
+  }
+
+  ::ng-deep.p-speeddial-button{
+    width: 3rem !important;
+    height: 3rem !important;
+}
+
+::ng-deep .p-speeddial-action-icon{
+  font-size: 20px;
+}

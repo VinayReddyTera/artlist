@@ -1,1 +1,304 @@
-<p>user-dashboard works!</p>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="medium" color="#20b04b" type="ball-clip-rotate"></ngx-spinner>
+
+<div class="container-fluid">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-flex align-items-center justify-content-between">
+                <h4 class="mb-0 font-size-18">{{role}} Dashboard</h4>
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item active">Welcome to {{role}} Dashboard</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end page title -->
+
+    <div class="row">
+        <div class="col-xl-4">
+            <div class="card overflow-hidden">
+                <div class="bg-primary bg-soft">
+                    <div class="row">
+                        <div class="col-7">
+                            <div class="text-primary p-3">
+                                <h5 class="text-primary">Welcome Back !</h5>
+                                <p>{{role}} Dashboard</p>
+                            </div>
+                        </div>
+                        <div class="col-5 align-self-end">
+                            <img src="assets/images/profile-img.png" alt="" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="avatar-md profile-user-wid mb-4">
+                                <img src="assets/images/users/avatar-1.jpg" alt="" class="img-thumbnail rounded-circle">
+                            </div>
+                            <h5 class="font-size-15 text-truncate">{{name}}</h5>
+                            <p class="text-muted mb-0 text-truncate">{{role}}</p>
+                        </div>
+
+                        <div class="col-sm-8">
+                            <div class="pt-4">
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h5 class="font-size-15">{{openings}}</h5>
+                                        <p class="text-muted mb-0">Openings</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5 class="font-size-15">{{onboarded}}</h5>
+                                        <p class="text-muted mb-0">Onboarded</p>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <a class="btn btn-primary btn-sm text-white" routerLink="/artist-profile">{{getDisplayText()}}
+                                       <i class="mdi mdi-arrow-right ms-1"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">User Statistics</h4>
+                  <canvas baseChart
+                  [labels]="doughnutChartLabels"
+                  [datasets]="doughnutChartDatasets"
+                  [options]="doughnutChartOptions"
+                  [legend]="true"
+                  [type]="'doughnut'">
+                </canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8">
+            <div class="row">
+                <div *ngFor="let stat of statData" class="col-md-4">
+                  <a [routerLink]="stat.link">
+                    <div class="card mini-stats-wid main">
+                      <div class="card-body">
+                        <div class="media">
+                          <div class="media-body">
+                            <p class="text-muted fw-medium">{{stat.title}}</p>
+                            <h4 class="mb-0">{{stat.value}}</h4>
+                          </div>
+                    
+                          <div class="mini-stat-icon avatar-sm rounded-circle bg-primary align-self-center">
+                            <span class="avatar-title">
+                              <i class="bx {{stat.icon}} font-size-24"></i>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+            </div>
+            <!-- end row -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-sm-flex flex-wrap">
+                        <h4 class="card-title mb-4">Hiring Frequency</h4>
+                    </div>
+                    <canvas baseChart
+                    [type]="'line'"
+                    [data]="lineChartData"
+                    [options]="lineChartOptions"
+                    [legend]="lineChartLegend">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end row -->
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div *ngIf="todayInterviews" class="card-body">
+            <div class="row">
+              <div class="col-6">
+                <h5 class="card-title">Interviews Today</h5>
+              </div>
+              <div class="offset-2 col-4 mb-2">
+                <input type="text" id="filter-text-box" 
+                placeholder="Filter..." (input)="filter('0')"
+                class="form-control"
+              />
+              </div>
+            </div>
+            <ag-grid-angular
+            style="width: 100%; height: 400px"
+            class="ag-theme-alpine"
+            [rowData]="todayInterviews"
+            [columnDefs]="dashboardColumnDefs"
+            [pagination]="pagination"
+            [paginationPageSize]="10"
+            [defaultColDef]="defaultColDef"
+            (gridReady)="onGridReady($event)"
+          >
+          </ag-grid-angular>
+          </div>
+          <div *ngIf="!todayInterviews" class="card-body">
+            <h4 class="card-title">Interviews Today</h4>
+            <div class="text-success text-center font-weight-bold">No Interviews going on today</div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div *ngIf="pastInterviews" class="card-body">
+            <div class="row">
+              <div class="col-6">
+                <h5 class="card-title">Past Interviews with no feedback</h5>
+              </div>
+              <div class="offset-2 col-4 mb-2">
+                <input type="text" id="filter-text-box1" 
+                placeholder="Filter..." (input)="filter('1')"
+                class="form-control"
+              />
+              </div>
+            </div>
+            <ag-grid-angular
+            style="width: 100%; height: 400px"
+            class="ag-theme-alpine"
+            [rowData]="pastInterviews"
+            [columnDefs]="dashboardColumnDefs"
+            [pagination]="pagination"
+            [paginationPageSize]="10"
+            [defaultColDef]="defaultColDef"
+            (gridReady)="onGridReady1($event)"
+          >
+          </ag-grid-angular>
+          </div>
+          <div *ngIf="!pastInterviews" class="card-body">
+            <h4 class="card-title">Past Interviews with no feedback</h4>
+            <div class="text-success text-center font-weight-bold">No Pending Feedbacks</div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div *ngIf="upComingInterviews" class="card-body">
+            <div class="row">
+              <div class="col-6">
+                <h5 class="card-title">Upcoming Interviews</h5>
+              </div>
+              <div class="offset-2 col-4 mb-2">
+                <input type="text" id="filter-text-box2" 
+                placeholder="Filter..." (input)="filter('2')"
+                class="form-control"
+              />
+              </div>
+            </div>
+            <ag-grid-angular
+            style="width: 100%; height: 400px"
+            class="ag-theme-alpine"
+            [rowData]="upComingInterviews"
+            [columnDefs]="dashboardColumnDefs"
+            [pagination]="pagination"
+            [paginationPageSize]="10"
+            [defaultColDef]="defaultColDef"
+            (gridReady)="onGridReady2($event)"
+          >
+          </ag-grid-angular>
+          </div>
+          <div *ngIf="!upComingInterviews" class="card-body">
+            <h4 class="card-title">Upcoming Interviews</h4>
+            <div class="text-success text-center font-weight-bold">No Interviews scheduled tomorrow</div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+</div> <!-- container-fluid -->
+
+  <!-- Modal -->
+  <div class="modal fade" id="subscribeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header border-bottom-0">
+            <button type="button" class="btn-close" aria-label="Close" data-dismiss="modal"> </button>
+        </div>
+        <div class="modal-body">
+            <div class="text-center mb-4">
+                <div class="avatar-md mx-auto mb-4">
+                    <div class="avatar-title bg-light rounded-circle text-primary h1">
+                        <i class="mdi mdi-email-open"></i>
+                    </div>
+                </div>
+    
+                <div class="row justify-content-center">
+                    <div class="col-xl-10">
+                        <h4 class="text-primary">Subscribe !</h4>
+                        <p class="text-muted font-size-14 mb-4">Subscribe our newletter and get notification to stay update.
+                        </p>
+    
+                        <div class="input-group bg-light rounded">
+                            <input type="email" class="form-control bg-transparent border-0"
+                                placeholder="Enter Email address" aria-label="Recipient's username"
+                                aria-describedby="button-addon2">
+    
+                            <button class="btn btn-primary" type="button" id="button-addon2">
+                                <i class="bx bxs-paper-plane"></i>
+                            </button>
+    
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="profileComplete" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <!-- <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div> -->
+        <div class="modal-header border-bottom-0">
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
+      </div>
+        <div class="modal-body">
+          <div class="text-center mb-4">
+              <div class="avatar-md mx-auto mb-4">
+                  <div class="avatar-title bg-light rounded-circle text-primary h1">
+                      <i class="bx bxs-user-detail"></i>
+                  </div>
+              </div>
+  
+              <div class="row justify-content-center">
+                  <div class="col-xl-10">
+                      <h4 class="text-primary">Complete your profile !</h4>
+                      <p class="text-muted font-size-14 mb-4">Complete your profile to increase your chances of being viewed by users.
+                      </p>
+                      <div class="mt-4">
+                        <a class="btn btn-primary btn-sm text-white" data-dismiss="modal" aria-label="Close" routerLink="/artist-profile">Complete Profile
+                           <i class="mdi mdi-arrow-right ms-1"></i></a>
+                    </div>
+  
+                  </div>
+              </div>
+          </div>
+      </div>
+      </div>
+    </div>
+  </div>
