@@ -55,6 +55,12 @@ export class UserProfileComponent implements OnInit{
           detail : data,
           life : 5000
         }
+        if(data == 'Email Verified'){
+          this.userData.emailVerified = true
+        }
+        if(data == 'Phone Verified'){
+          this.userData.phoneVerified = true
+        }
         this.apiService.sendMessage(msgData);
         if(this.userData.phoneVerified){
           this.profileStatus = "complete"
@@ -196,10 +202,14 @@ export class UserProfileComponent implements OnInit{
       if(this.userData.email != this.profileForm.value.email){
         this.profileStatus = 'Incomplete';
         emailVerified = false;
+        this.userData.emailVerified = false;
+        this.userData.email = this.profileForm.value.email
       }
       if(this.userData.phoneNo != this.profileForm.value.phoneNo){
         this.profileStatus = 'Incomplete';
         phoneVerified = false;
+        this.userData.phoneVerified = false;
+        this.userData.phoneNo = this.profileForm.value.phoneNo
       }
       let payload = {
         name : this.profileForm.value.name,

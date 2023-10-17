@@ -257,7 +257,8 @@ router.get('/verifyEmail/:token',(req,res,next)=>{
   if(req.params.token){
     jwt.verify(req.params.token,process.env.JWT_Secret,(err,user)=>{
       if(err){
-          let url = `${process.env.redirect_Url}/${user.data.role}-profile?status=204&data=Email verification link expired`
+          let userdata = jwt.decode(req.params.token)
+          let url = `${process.env.redirect_Url}/${userdata.data.role}-profile?status=204&data=Email verification link expired`
           return res.redirect(url)
       }
       else{

@@ -144,9 +144,13 @@
       <div class="col-md-8 col-lg-6 col-xl-5">
         <div class="card overflow-hidden">
           <div class="card-body">
-            <div><h5>Profile Status : <span [ngClass]="{'text-danger': userData.profileStatus === 'Incomplete', 'text-success': userData.profileStatus !== 'Incomplete'}">{{userData.profileStatus}}</span></h5></div>
-            <button [disabled]="userData.emailVerified" (click)="verifyEmail()" class="btn btn-block btn-soft-primary mt-2 mb-2">Verify Email</button> <br>
-            <button [disabled]="userData.phoneVerified" (click)="verifyPhone()" class="btn btn-block btn-soft-success">Verify Mobile Number</button>
+            <div>
+              <h5>Profile Status : <span [ngClass]="{'text-danger': userData.profileStatus === 'Incomplete', 'text-success': userData.profileStatus !== 'Incomplete'}">{{userData.profileStatus}}</span></h5>
+            </div>
+            <button *ngIf="!userData.emailVerified" (click)="verifyEmail()" class="btn btn-block btn-soft-primary mt-2 mb-2">Verify Email</button> 
+            <div *ngIf="userData.emailVerified"><h5 class="text-success">Email Verified</h5></div><br>
+            <button *ngIf="!userData.phoneVerified" (click)="verifyPhone()" class="btn btn-block btn-soft-success">Verify Mobile Number</button>
+            <div *ngIf="userData.phoneVerified"><h5 class="text-success">Mobile Number Verified</h5></div>
           </div>
         </div>
       </div>
