@@ -384,4 +384,120 @@ userService.updateProfile=(payload)=>{
   })
 }
 
+userService.sendVerifyEmail=(userData,host)=>{
+  return userDB.checkLoginUser(userData).then((data)=>{
+    if(data.status == 204){
+        return data
+    }
+    else{
+      let resetData = {
+        email : userData.email,
+        role : userData.role
+    }
+    const expirationTime = Math.floor(Date.now() / 1000) + 7200;
+    const token = jwt.sign({data:resetData,exp : expirationTime},process.env.JWT_Secret);
+    let payload1 = {
+    "subject" : 'Verify Email',
+    "email" : userData.email,
+    "body" : ` <table align='center' border='0' cellpadding='0' cellspacing='0' width='550' bgcolor='white'
+    style='border:2px solid black;border-radius:5px;'>
+    <tbody>
+        <tr>
+        <td align='center'>
+            <table align='center' border='0' cellpadding='0' cellspacing='0' class='col-550' width='550'>
+            <tbody>
+                <tr>
+                <td align='center' style='background-color: #d5dafa;
+                                    height: 50px;'>
+    
+                    <a href='#' style='text-decoration: none;'>
+                    <p style='color:#556ee6;
+                                            font-weight:bold;'>
+                        Artlist
+                    </p>
+                    </a>
+                </td>
+                </tr>
+            </tbody>
+            </table>
+        </td>
+        </tr>
+        <tr style='height: 300px;'>
+        <td align='center' style='border: none;
+                    border-bottom: 2px solid #d5dafa; 
+                    padding-right: 20px;padding-left:20px'>
+            <p style='font-size: 24px;
+            color:black;'>
+            Click below link verify email. The below link expires in 2 hours<br>
+            <a href=${host}/verifyEmail/${token} target='_blank'><button style="display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            background-color : #234c87;
+            color : #fff;
+            border-radius: 0.25rem;
+            cursor:pointer;
+            transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
+            Click Here!
+            </button></a>
+</p>
+
+        </td>
+        </tr>
+        <tr>
+        <td style='
+    font-size:11px; line-height:18px; 
+    color:#999999;' valign='top' align='center'>
+            <a href='#' style='color:#999999; 
+    text-decoration:underline;'>PRIVACY STATEMENT</a>
+            | <a href='#' style='color:#999999; text-decoration:underline;'>TERMS OF SERVICE</a>
+            | <a href='#' style='color:#999999; text-decoration:underline;'>RETURNS</a><br>
+            © 2023 Artlist. All Rights Reserved.<br>
+            If you do not wish to receive any further
+            emails from us, please
+            <a href='#' style='text-decoration:none; 
+                    color:#999999;'>unsubscribe</a>
+        </td>
+        </tr>
+    </tbody>
+    </table>
+    </td>
+    </tr>
+    </tbody>
+    </table>`
+    }
+    userService.sendMail(payload1)
+    let res = {
+        status: 200,
+        data: "Email Verification link sent to your email"
+    }
+    return res
+    }
+})
+}
+
+userService.verifyEmail=(payload)=>{
+  return userDB.verifyEmail(payload).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let response = {
+        status : 204,
+        data : 'unable to validate email'
+      }
+      return response
+    }
+  })
+}
+
 module.exports = userService

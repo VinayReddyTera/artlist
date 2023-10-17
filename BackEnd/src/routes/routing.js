@@ -217,4 +217,65 @@ router.post('/updateProfile', verifyToken, (req, res, next)=>{
   }
 })
 
+//router to sendVerifyEmail
+router.post('/sendVerifyEmail', verifyToken, (req, res, next)=>{
+  if(req.body.email && req.body.role){
+    if(
+         !validate.validateEmail(req.body.email)
+      ){
+      let response = {
+        status : 204,
+        data : 'Invalid email address'
+      }
+      return res.json(response)
+    }
+    else if(req.body.role != 'artist' && req.body.role != 'user'){
+      let response = {
+        status : 204,
+        data : 'Invalid role'
+      }
+      return res.json(response)
+    }
+    else{
+      userservice.sendVerifyEmail(req.body,req.headers.host).then((data)=>{
+        return res.json(data)
+      }).catch((err)=>{
+        next(err)
+      })
+    }
+  }
+  else{
+    let response = {
+      status : 204,
+      data : 'Required fields missing'
+    }
+    return res.json(response)
+  }
+})
+
+router.get('/verifyEmail/:token',(req,res,next)=>{
+  if(req.params.token){
+    jwt.verify(req.params.token,process.env.JWT_Secret,(err,user)=>{
+      if(err){
+          let url = `${process.env.redirect_Url}/${user.data.role}-profile?status=204&data=Email verification link expired`
+          return res.redirect(url)
+      }
+      else{
+          let payload = {
+              email : user.data.email,
+              role : user.data.role
+          }
+          userservice.verifyEmail(payload).then((data)=>{
+            let url = `${process.env.redirect_Url}/${user.data.role}-profile?status=${data.status}&data=${data.data}`;
+            return res.redirect(url)
+          }).catch(err => next(err));
+      }
+    });
+  }
+  else{
+    let url = `${process.env.redirect_Url}/${user.data.role}-profile?status=204&data=Invalid Link`;
+    return res.redirect(url)
+  }
+})
+
 module.exports = router

@@ -459,4 +459,63 @@ userDB.updateProfile = async (userData) => {
   }
 }
 
+userDB.verifyEmail = async(userData)=>{
+  if(userData.role == 'artist'){
+    const collection = await connection.getArtist();
+    let artist = await collection.find({"email":userData.email})
+    let profileStatus = 'Incomplete';
+    if(artist.phoneVerified){
+      profileStatus = 'complete'
+    }
+    const data = await collection.updateOne({ "email" : userData.email},
+    {"$set": 
+    {
+      "profileStatus":profileStatus,
+      "emailVerified": true
+    }
+  });
+    if (data.modifiedCount == 1 || data.acknowledged == true) {
+        let res = {
+            status :200,
+            data : "Email Verified"
+        }
+        return res
+    }
+    else{
+        return false
+    }
+  }
+  else if(userData.role == 'user'){
+    const collection = await connection.getUsers();
+    let user = await collection.find({"email":userData.email})
+    let profileStatus = 'Incomplete';
+    if(user.phoneVerified){
+      profileStatus = 'complete'
+    }
+    const data = await collection.updateOne({ "email" : userData.email},
+    {"$set": 
+    {
+      "profileStatus":profileStatus,
+      "emailVerified": true
+    }
+  });
+    if (data.modifiedCount == 1 || data.acknowledged == true) {
+        let res = {
+            status :200,
+            data : "Email Verified"
+        }
+        return res
+    }
+    else{
+        return false
+    }
+  }
+  else{
+    let res = {
+      status : 204,
+      data : 'Invalid Role'
+    }
+    return res
+  }
+}
 module.exports = userDB

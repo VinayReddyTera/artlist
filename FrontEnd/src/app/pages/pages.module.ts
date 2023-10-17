@@ -29,6 +29,7 @@ import { ArtistDataComponent } from './artist-data/artist-data.component';
 import { ArtistApproveComponent } from './artist-approve/artist-approve.component';
 import { SkillDataComponent } from './skill-data/skill-data.component';
 import { NewRequestsComponent } from './new-requests/new-requests.component';
+import { SpeedDialModule } from 'primeng/speeddial';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { NewRequestsComponent } from './new-requests/new-requests.component';
     ToolbarModule,
     TooltipModule,
     NgChartsModule,
-    AgGridModule
+    AgGridModule,
+    SpeedDialModule
   ]
 })
 export class PagesModule { }

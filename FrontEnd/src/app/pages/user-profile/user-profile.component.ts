@@ -8,36 +8,101 @@ import { ApiService } from 'src/app/pages/services/api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HttpClient } from '@angular/common/http';
 import { EncryptionService } from 'src/app/pages/services/encryption.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css']
 })
-export class UserProfileComponent {
+export class UserProfileComponent implements OnInit{
 
   profileForm : any;
   errorMessage : any;
   submitted : boolean = false;
   passSubmitted : boolean = false;
-  showProfile : boolean = true;
-  showPasswordPage : boolean = false;
   showPassword: boolean = false;
   showConfirmPassword : boolean = false;
   showOldPassword : boolean = false;
   resetForm:any;
   userData:any;
   profileStatus : any;
+  show:any={
+    'showProfile':true,
+    'showPassword':false,
+    'showProfileStatus':false
+  }
+  items: any;
 
   constructor(public http: HttpClient, public router: Router,
     private apiService : ApiService,private fb: FormBuilder,
-    private encrypt:EncryptionService) { }
+    private encrypt:EncryptionService,private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
     if(localStorage.getItem('data')){
       this.userData = JSON.parse(this.encrypt.deCrypt(localStorage.getItem('data')));
       this.profileStatus = this.userData.profileStatus
     }
+
+    this.activatedRoute.queryParamMap.subscribe(params => {
+      // Optional parameter
+      const status:any = params.get('status');
+      const data:any = params.get('data');
+      if(status == 200){
+        let msgData = {
+          severity : "success",
+          summary : 'Success',
+          detail : data,
+          life : 5000
+        }
+        this.apiService.sendMessage(msgData);
+        if(this.userData.phoneVerified){
+          this.profileStatus = "complete"
+        }
+        let encryptData : any = {
+          name : this.userData.name,
+          email : this.userData.email,
+          phoneNo : this.userData.phoneNo,
+          profileStatus : this.profileStatus,
+          role: this.userData.role,
+          id : this.userData.id,
+          emailVerified : true,
+          phoneVerified : this.userData.phoneVerified
+        }
+        localStorage.setItem('data', this.encrypt.enCrypt(JSON.stringify(encryptData)));
+      }
+      else if(status == 204){
+        let msgData = {
+          severity : "error",
+          summary : 'Error',
+          detail : data,
+          life : 5000
+        }
+        this.apiService.sendMessage(msgData);
+      }
+      this.router.navigateByUrl('/user-profile')
+    })
+    this.items = [
+      {
+          icon: 'mdi mdi-account-edit',
+          command: () => {
+              this.setKeyTrue('showProfile')
+          }
+      },
+      {
+          icon: 'mdi mdi-key-variant',
+          command: () => {
+            this.setKeyTrue('showPassword')
+          }
+      },
+      {
+          icon: 'mdi mdi-list-status',
+          command: () => {
+            this.setKeyTrue('showProfileStatus')
+          }
+      }
+  ];
+    console.log(this.userData)
     this.profileForm = this.fb.group({
       email:[this.userData.email,[Validators.required,this.validateEmail]],
       name:[this.userData.name,[Validators.required]],
@@ -260,9 +325,57 @@ export class UserProfileComponent {
   }
   }
 
-  toggle(){
-    this.showProfile = !this.showProfile;
-    this.showPasswordPage = !this.showPasswordPage
+  setKeyTrue(key:any) {
+    for (const prop in this.show) {
+      if (this.show.hasOwnProperty(prop)) {
+        this.show[prop] = prop === key;
+      }
+    }
+  }
+
+  verifyEmail(){
+    let payload = {
+      email : this.userData.email,
+      role : this.userData.role
+    }
+    this.apiService.initiateLoading(true);
+    this.apiService.sendVerifyEmail(payload).subscribe(
+    (res : any)=>{
+      console.log(res)
+      if(res.status == 200){
+        let msgData = {
+          severity : "success",
+          summary : 'Success',
+          detail : res.data,
+          life : 5000
+        }
+        this.apiService.sendMessage(msgData);
+      }
+      else if(res.status == 204){
+        this.errorMessage = res.data;
+        let msgData = {
+          severity : "error",
+          summary : 'Error',
+          detail : res.data,
+          life : 5000
+        }
+        this.apiService.sendMessage(msgData);
+      }
+    },
+    (err:any)=>{
+      this.errorMessage = err.error
+      console.log(err);
+    }
+  ).add(()=>{
+    this.apiService.initiateLoading(false)
+    setTimeout(()=>{
+      this.errorMessage = null;
+    },5000)
+  })
+  }
+
+  verifyPhone(){
+
   }
 
 }
