@@ -12,6 +12,7 @@ import { ArtistDataComponent } from './artist-data/artist-data.component';
 import { SkillDataComponent } from './skill-data/skill-data.component';
 import { NewRequestsComponent } from './new-requests/new-requests.component';
 import { ArtistApproveComponent } from './artist-approve/artist-approve.component';
+import { AddSkillComponent } from './add-skill/add-skill.component';
 
 const routes: Routes = [
   {
@@ -52,6 +53,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       role: ['admin', 'artist','access-artist-profile']
+    }
+  },
+  {
+    path: 'add-skill',
+    component: AddSkillComponent,
+    canActivate: [AuthGuard],
+    data: {
+      role: ['admin', 'artist','access-add-skill']
     }
   },
   {

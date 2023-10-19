@@ -1,0 +1,124 @@
+<div class="wrapper">
+    <form [formGroup]="skillForm" (ngSubmit) = "submit()">
+      <div class="card fileInput mb-3">
+        <div class="card-body">
+          <h5 *ngIf="isCreating" class="card-title">Enter Skill Details</h5>
+          <h5 *ngIf="isUpdating" class="card-title">Edit Skill Details</h5>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="title">Skill Name</label>
+                <!-- <input type="text" class="form-control" formControlName="name" placeholder="Enter Job Description Title"> -->
+                <select class="form-control select2" id="skillName">
+                    <option value="0" disabled selected>--select--</option>
+                    <option *ngFor="let skill of skillList" [value]="skill">{{skill}}</option>
+                  </select>
+                <div *ngIf="skillForm.controls.name.errors?.required && skillForm.controls.name.dirty" class="required-message text-danger">
+                  <small>Required Field!</small>
+                </div>
+              </div>
+      
+                <div class="form-group col-md-6" style="position: relative;">
+                  <label>Experience</label>
+                  <input type="number" class="form-control" formControlName="experience" placeholder="Enter Experience">
+                  <div *ngIf="skillForm.controls.experience.errors?.required && skillForm.controls.experience.dirty" class="required-message text-danger">
+                    <small>Required Field!</small>
+                  </div>
+                </div>
+          </div>
+
+            <div class="form-group">
+                <label for="title">Portfolio</label>
+                <input type="text" class="form-control" formControlName="portfolio" placeholder="Portfolio">
+                <div *ngIf="skillForm.controls.portfolio.errors?.required && skillForm.controls.portfolio.dirty" class="required-message text-danger">
+                  <small>Required Field!</small>
+                </div>
+              </div>
+        </div>
+      </div>
+
+      <div class="card fileInput mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Add Genre(optional)</h5>
+            <button type="button" class="btn btn-soft-success btn-rounded btn-icon" (click)="addGenreButtonClick()"><i class="fa fa-plus"></i></button>
+  
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                    <th scope="col">Genre Name</th>
+                    <th scope="col">Experience</th>
+                    <th scope="col">Portfolio</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody formArrayName="genre" *ngFor="let skill of skillForm.get('genre').controls; let i = index" style="border-top: none;">
+              <tr [formGroupName]="i">
+                  <td>
+                    <input type="text" class="form-control" [id]="'skill' + i" placeholder="Enter Genre"  formControlName="name">
+                    <div *ngIf="skill.get('name').errors?.required &&
+                            skill.get('name').dirty" class="text-danger">
+                            <small>Genre Name is required</small>
+                    </div>
+                  </td>
+                  <td>
+                    <input type="number" class="form-control" placeholder="Enter Experience"  formControlName="experience">
+                    <div *ngIf="skill.get('experience').errors?.required &&
+                    skill.get('experience').dirty" class="text-danger">
+                    <small>Experience is required</small>
+                    </div>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" placeholder="Enter Portfolio, press enter to add more"  formControlName="portfolio">
+                    <div *ngIf="skill.get('portfolio').errors?.required &&
+                    skill.get('portfolio').dirty" class="text-danger">
+                    <small>Portfolio is required</small>
+                    </div>
+                  </td>
+                  <td>
+                  <div style="display:flex;">
+                    <button type="button" class="btn btn-soft-success btn-rounded btn-icon" (click)="addGenreButtonClick()"><i class="fa fa-plus"></i></button>&nbsp; &nbsp;
+                    <button type="button" class="btn btn-soft-danger btn-rounded btn-icon" (click)="delete(i)">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </div>
+                  </td>
+              </tr>
+            </tbody>
+            </table>
+            </div>
+        </div>
+      </div>
+  
+      <div class="card fileInput mb-3">
+        <div class="card-body" formGroupName="pricing">
+          <h5 class="card-title">Pricing in Rupees</h5>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label>Hourly</label>
+              <input type="number" class="form-control" formControlName="hourly" placeholder="Enter Price">
+              <div *ngIf="skillForm.controls.pricing.controls.hourly.errors?.required && skillForm.controls.pricing.controls.hourly.dirty" class="required-message text-danger">
+                <small>Required Field!</small>
+              </div>
+            </div>
+            <div class="form-group col-md-4">
+              <label>Full Day(9-5)</label>
+              <input type="number" class="form-control" formControlName="fullDay" placeholder="Enter Price">
+              <div *ngIf="skillForm.controls.pricing.controls.fullDay.errors?.required && skillForm.controls.pricing.controls.fullDay.dirty" class="required-message text-danger">
+                <small>Required Field!</small>
+              </div>
+            </div>
+            <div class="form-group col-md-4">
+              <label>Event Basis</label>
+              <input type="number" class="form-control" formControlName="event" placeholder="Enter Price">
+              <div *ngIf="skillForm.controls.pricing.controls.event.errors?.required && skillForm.controls.pricing.controls.event.dirty" class="required-message text-danger">
+                <small>Required Field!</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <button *ngIf="isCreating" type="submit" name="update_brand" id="saveSkill" class="btn btn-success">Save</button>
+      <button *ngIf="isUpdating" type="submit" name="update_brand" id="updateSkill" class="btn btn-success">Update</button>
+      </form>
+  </div>

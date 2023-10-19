@@ -4,7 +4,6 @@
     <button class="btn btn-primary" [disabled]="show.showProfile" (click)="setKeyTrue('showProfile')">Update Profile</button>
     <button class="btn btn-success" [disabled]="show.showPassword" (click)="setKeyTrue('showPassword')">Update Password</button>
     <button class="btn btn-pink" [disabled]="show.showProfileStatus" (click)="setKeyTrue('showProfileStatus')">Profile Status</button>
-    <button class="btn btn-success" [disabled]="show.showSkill" (click)="setKeyTrue('showSkill')">Add Skill</button>
 </div>
 
 <div *ngIf="show.showProfile" class="account-pages my-5">
@@ -157,68 +156,4 @@
       </div>
     </div>
   </div>
-</div>
-
-<div *ngIf="show.showSkill" class="account-pages my-5">
-    <form [formGroup]="skillForm" (ngSubmit)="submitSkill()">
-        <div class="card fileInput mb-3">
-            <div class="card-body">
-              <h5 class="card-title">Add Skills</h5>
-      
-              <div class="table-responsive">
-                <table class="table">
-                  <thead>
-                    <tr>
-                        <th scope="col">Job Description Questions</th>
-                        <th scope="col">Answer Type</th>
-                        <th scope="col">Mandatory Yes/No</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody formArrayName="skills" *ngFor="let skill of skillForm.get('skills').controls; let i = index" style="border-top: none;">
-                  <tr [formGroupName]="i">
-                      <td>
-                        <input type="text" class="form-control" [id]="'skill' + i" placeholder="Enter Question"  formControlName="question">
-                        <div *ngIf="skill.get('question').errors?.required &&
-                                skill.get('question').dirty" class="text-danger">
-                                <small>Question is required</small>
-                        </div>
-                      </td>
-                      <td>
-                        <select formControlName="answerType" class="form-control">
-                          <option value="boolean">Yes/No</option>
-                          <option value="input">Input Field</option>
-                        </select>
-                        <div *ngIf="skill.get('answerType').errors?.required &&
-                        skill.get('answerType').dirty" class="text-danger">
-                        <small>Answer Type is required</small>
-                        </div>
-                      </td>
-                      <td>
-                        <select formControlName="mandatory" class="form-control">
-                          <option value="yes">Mandatory Yes</option>
-                          <option value="no">Mandatory No</option>
-                          <option value="not required">Any</option>
-                        </select>
-                        <div *ngIf="skill.get('mandatory').errors?.required &&
-                        skill.get('mandatory').dirty" class="text-danger">
-                        <small>Mandatory Type is required</small>
-                        </div>
-                      </td>
-                      <td>
-                      <div style="display:flex;">
-                        <button type="button" class="btn btn-soft-success btn-rounded btn-icon" (click)="addQuestionButtonClick()"><i class="fa fa-plus"></i></button>&nbsp; &nbsp;
-                        <button type="button" class="btn btn-soft-danger btn-rounded btn-icon" (click)="delete(i)">
-                          <i class="fa fa-trash"></i>
-                        </button>
-                      </div>
-                      </td>
-                  </tr>
-                </tbody>
-                </table>
-                </div>
-                <button class="btn btn-soft-success">Save</button>
-            </div>
-        </div>
-    </form>
 </div>

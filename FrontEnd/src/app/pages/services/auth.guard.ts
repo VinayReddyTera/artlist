@@ -34,7 +34,7 @@ export class AuthGuard implements CanActivate {
         // console.log(role)
         if(role == 'artist' || role == 'user' || role == 'admin'){
           if(role == 'artist'){
-            if(route.routeConfig?.path === 'artist-profile' || route.routeConfig?.path === 'artist-dashboard' || route.routeConfig?.path === 'artist-history' || route.routeConfig?.path === 'skill-data' || route.routeConfig?.path === 'new-requests' || route.routeConfig?.path === 'artist-approve'){
+            if(route.routeConfig?.path === 'artist-profile' || route.routeConfig?.path === 'artist-dashboard' || route.routeConfig?.path === 'artist-history' || route.routeConfig?.path === 'skill-data' || route.routeConfig?.path === 'new-requests' || route.routeConfig?.path === 'artist-approve' || route.routeConfig?.path === 'add-skill'){
               return true
             }
             else{

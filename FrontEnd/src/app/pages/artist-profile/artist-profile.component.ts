@@ -28,11 +28,9 @@ export class ArtistProfileComponent implements OnInit{
   show:any={
     'showProfile':true,
     'showPassword':false,
-    'showProfileStatus':false,
-    'showSkill':false
+    'showProfileStatus':false
   }
   items: any;
-  skillForm:any;
 
   constructor(public http: HttpClient, public router: Router,
     private apiService : ApiService,private fb: FormBuilder,
@@ -106,13 +104,7 @@ export class ArtistProfileComponent implements OnInit{
           command: () => {
             this.setKeyTrue('showProfileStatus')
           }
-      },
-      {
-        icon: 'mdi mdi-book-education',
-        command: () => {
-          this.setKeyTrue('showSkill')
-        }
-    }
+      }
     ];
     console.log(this.userData)
     this.profileForm = this.fb.group({
@@ -129,33 +121,6 @@ export class ArtistProfileComponent implements OnInit{
       email : [this.userData.email,[Validators.required]]
     },{validator : this.validatePassword});
 
-    this.skillForm = this.fb.group({
-      skills: this.fb.array([this.addQuestionFormGroup()]),
-    });
-
-  }
-
-  addQuestionFormGroup() {
-    return this.fb.group({
-      question: ['', [Validators.required]],
-      answerType : ['',[Validators.required]],
-      mandatory : ['',[Validators.required]]
-    });
-  }
-
-  addQuestionButtonClick(): void {
-    (<FormArray>this.skillForm.get('skills')).push(
-      this.addQuestionFormGroup()
-    );
-  }
-
-  delete(index: any) {
-    (<FormArray>this.skillForm.get('skills')).removeAt(index);
-    if (this.skillForm.value.skills.length == 0) {
-      (<FormArray>this.skillForm.get('skills')).push(
-        this.addQuestionFormGroup()
-      );
-    }
   }
 
   validateEmail(c:FormControl){
@@ -420,10 +385,6 @@ export class ArtistProfileComponent implements OnInit{
 
   verifyPhone(){
 
-  }
-
-  submitSkill(){
-    
   }
 
 }

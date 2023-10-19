@@ -30,6 +30,7 @@ import { ArtistApproveComponent } from './artist-approve/artist-approve.componen
 import { SkillDataComponent } from './skill-data/skill-data.component';
 import { NewRequestsComponent } from './new-requests/new-requests.component';
 import { SpeedDialModule } from 'primeng/speeddial';
+import { AddSkillComponent } from './add-skill/add-skill.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { SpeedDialModule } from 'primeng/speeddial';
     ArtistDataComponent,
     ArtistApproveComponent,
     SkillDataComponent,
-    NewRequestsComponent
+    NewRequestsComponent,
+    AddSkillComponent
   ],
   imports: [
     CommonModule,

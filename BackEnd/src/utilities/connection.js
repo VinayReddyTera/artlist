@@ -37,6 +37,34 @@ const artistDetails = Schema({
     phoneVerified : {type:Boolean,default:false},
     profileStatus :{type:String,default:'Incomplete'},
     availableDays : [Number],
+    currency : {type:String,default:'inr'},
+    skills : [
+        {
+            name : String,
+            status : String,
+            genre : [
+                {
+                    name : String,
+                    experience : Number,
+                    portfolio : [String],
+                    status : String,
+                    validated : {type:Boolean,default:false},
+                    approverId : String,
+                    feedback:String
+                }
+            ],
+            validated : {type:Boolean,default:false},
+            experience : Number,
+            portfolio : [String],
+            approverId : String,
+            feedback : String,
+            pricing : {
+                hourly : Number,
+                event : Number,
+                fullDay : Number
+            }
+        }
+    ],
     history : [
         {
             date : Date,
