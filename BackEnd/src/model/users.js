@@ -384,7 +384,7 @@ userDB.updatePasswordForUsers = async (userData) => {
 userDB.updateProfile = async (userData) => {
   if(userData.role == 'artist'){
     const collection = await connection.getArtist();
-    const data = await collection.updateOne({ "id" : new ObjectId(userData.id)},
+    const data = await collection.updateOne({ "_id" : new ObjectId(userData.id)},
     {"$set": 
     {
       "name" : userData.name,
@@ -516,6 +516,38 @@ userDB.verifyEmail = async(userData)=>{
       data : 'Invalid Role'
     }
     return res
+  }
+}
+
+userDB.addSkill = async(userData,id)=>{
+  const collection = await connection.getArtist();
+  let isSkillPresent = await collection.findOne({
+    "skills": {
+      $elemMatch: { "name": userData.name }
+    }
+  }, {
+    "skills.$": 1
+  })
+  console.log(isSkillPresent)
+  if(isSkillPresent){
+    let res = {
+      status :204,
+      data : "Skill present already, try editing the same!"
+  }
+  return res
+  }
+  else{
+    let data = await collection.updateOne({"_id":new ObjectId(id)},{$push:{"skills":userData}})
+    if (data.modifiedCount == 1 && data.acknowledged == true) {
+        let res = {
+            status :200,
+            data : "Added Skill"
+        }
+        return res
+    }
+    else{
+        return false
+    }
   }
 }
 module.exports = userDB

@@ -97,4 +97,8 @@ export class ApiService {
     return this.http.post(environment.domain+"/sendVerifyEmail",payload)
   }
 
+  addSkill(payload:any):Observable<any>{
+    return this.http.post(environment.domain+"/addSkill",payload)
+  }
+
 }

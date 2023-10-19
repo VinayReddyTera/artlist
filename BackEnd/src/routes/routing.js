@@ -4,6 +4,66 @@ const userservice = require("../service/users");
 const jwt = require('jsonwebtoken');
 const verifyToken = require("../utilities/verifyToken");
 const validate = require("../utilities/validateData");
+let skillList = [
+  "Director",
+  "Producer",
+  "Screenwriter",
+  "Cinematographer/Director of Photography (DP)",
+  "Actor/Actress",
+  "Editor",
+  "Costume Designer",
+  "Makeup and Hair Stylists",
+  "Production Designer/Art Director",
+  "Location Manager",
+  "Sound Engineer",
+  "Composer",
+  "Music Director",
+  "Choreographer",
+  "Dancer",
+  "Stunt Coordinator",
+  "Special Effects Supervisor",
+  "Visual Effects (VFX) Artists",
+  "Dialect Coach",
+  "Production Manager",
+  "Casting Director",
+  "Script Supervisor",
+  "Gaffer",
+  "Key Grip",
+  "Assistant Director (1st AD, 2nd AD)",
+  "Production Assistant (PA)",
+  "Set Decorator",
+  "Wardrobe Supervisor",
+  "Animal Wrangler",
+  "DIT (Digital Imaging Technician)",
+  "Colorist",
+  "Grip",
+  "Best Boy",
+  "Boom Operator",
+  "Caterer/Craft Service",
+  "Legal and Clearance Team",
+  "Publicist",
+  "Singer",
+  "Musician",
+  "Sound Recordist",
+  "Sound designer",
+  "Lighting Designer",
+  "Prop Master",
+  "Storyboard Artist",
+  "Location Scout",
+  "Dance Instructor",
+  "Fight Choreographer",
+  "SFX Makeup Artist",
+  "Foley Artist",
+  "ADR Supervisor",
+  "Post-Production Supervisor",
+  "Public Relations Manager",
+  "Film Editor",
+  "Line producer",
+  "Marketing Director",
+  "Set Builder",
+  "Cinematographer's Assistant",
+  "Background performers",
+]
 
 // api to login users
 router.post('/login',(req,res,next)=>{
@@ -253,6 +313,7 @@ router.post('/sendVerifyEmail', verifyToken, (req, res, next)=>{
   }
 })
 
+//router to verify email
 router.get('/verifyEmail/:token',(req,res,next)=>{
   if(req.params.token){
     jwt.verify(req.params.token,process.env.JWT_Secret,(err,user)=>{
@@ -279,4 +340,94 @@ router.get('/verifyEmail/:token',(req,res,next)=>{
   }
 })
 
+//  auth apis done
+
+//router to add new skill
+router.post('/addSkill',verifyToken,(req,res,next)=>{
+  if(req.body.genre.length){
+    for(let i of req.body.genre){
+      if(
+        !i.experience 
+    || !(i.portfolio.length > 0)
+    || !i.status
+    || !i.name
+      ){
+        let response = {
+          status : 204,
+          data : 'Required fields missing'
+        }
+        return res.json(response)
+      }
+      else if((i.status != 'active') || (i.validated != false) || (req.body.experience<0) ||  (req.body.experience>150)){
+        let response = {
+          status : 204,
+          data : 'Incorrect Data'
+        }
+        return res.json(response)
+      }
+      else if(
+        !validate.validateXss(req.body.name)
+     || !validate.validateXss(req.body.experience)
+     || !validate.validateXss(req.body.status)
+     || !validate.validateXss(req.body.validated)
+       ){
+       let response = {
+         status : 204,
+         data : 'Invalid data format'
+       }
+       return res.json(response)
+     }
+    }
+  }
+  if(!req.body.experience 
+    || !(req.body.portfolio.length > 0) 
+    || !req.body.status
+    || !req.body.name
+    || !req.body.pricing.hourly
+    || !req.body.pricing.event
+    || !req.body.pricing.fullDay){
+    let response = {
+      status : 204,
+      data : 'Required fields missing'
+    }
+    return res.json(response)
+  }
+  else if((req.body.status != 'active') || (req.body.validated != false) || (req.body.experience<0) ||  (req.body.experience>150) || (req.body.pricing.event <=0)  || (req.body.pricing.hourly <=0) || (req.body.pricing.fullDay <=0)){
+    let response = {
+      status : 204,
+      data : 'Incorrect Data'
+    }
+    return res.json(response)
+  }
+  else if(
+     !validate.validateXss(req.body.name)
+  || !validate.validateXss(req.body.experience)
+  || !validate.validateXss(req.body.status)
+  || !validate.validateXss(req.body.pricing.hourly)
+  || !validate.validateXss(req.body.pricing.event)
+  || !validate.validateXss(req.body.pricing.fullDay)
+  || !validate.validateXss(req.body.validated)
+    ){
+    let response = {
+      status : 204,
+      data : 'Invalid data format'
+    }
+    return res.json(response)
+  }
+  else if(skillList.includes(req.body.name)){
+    let response = {
+      status : 204,
+      data : 'Invalid data format'
+    }
+    return res.json(response)
+  }
+  else{
+    let id = jwt.decode(req.headers.authorization).data.data._id;
+    userservice.addSkill(req.body,id).then((data)=>{
+      return res.json(data)
+    }).catch((err)=>{
+      next(err)
+    })
+  }
+})
 module.exports = router

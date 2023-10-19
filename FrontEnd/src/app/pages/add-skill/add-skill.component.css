@@ -5,7 +5,7 @@
 
 .addGenre{
     position: relative;
-    bottom: 5px;
+    bottom: 2px;
 }
 
 ::ng-deep .p-chips {

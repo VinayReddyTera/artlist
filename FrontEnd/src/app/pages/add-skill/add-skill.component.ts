@@ -160,7 +160,34 @@ export class AddSkillComponent implements OnInit {
   submit() {
     console.log(this.skillForm.value);
     if(this.skillForm.valid){
-
+      this.apiService.initiateLoading(true)
+      this.apiService.addSkill(this.skillForm.value).subscribe(
+        (res:any)=>{
+          if(res.status == 200){
+            let msgData = {
+              severity : "success",
+              summary : 'Success',
+              detail : res.data,
+              life : 5000
+            }
+            this.apiService.sendMessage(msgData);
+          }
+          else if(res.status == 204){
+            let msgData = {
+              severity : "error",
+              summary : 'Error',
+              detail : res.data,
+              life : 5000
+            }
+            this.apiService.sendMessage(msgData);
+          }
+        },
+        (err:any)=>{
+          console.log(err)
+        }
+      ).add(()=>{
+        this.apiService.initiateLoading(false)
+      })
     }
     else{
       let basic = this.skillForm.controls;

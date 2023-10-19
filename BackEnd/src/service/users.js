@@ -500,4 +500,19 @@ userService.verifyEmail=(payload)=>{
   })
 }
 
+userService.addSkill=(payload,id)=>{
+  return userDB.addSkill(payload,id).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let response = {
+        status : 204,
+        data : 'unable to add skill'
+      }
+      return response
+    }
+  })
+}
+
 module.exports = userService
