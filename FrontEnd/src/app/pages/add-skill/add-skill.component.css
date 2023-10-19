@@ -1,0 +1,21 @@
+.container-box h5 {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.addGenre{
+    position: relative;
+    bottom: 5px;
+}
+
+::ng-deep .p-chips {
+    display: block !important;
+}
+
+::ng-deep .custom-chip{
+    height: 40px;
+}
+
+::ng-deep .p-chips .p-chips-multiple-container {
+    padding: 0px 10px !important;
+}

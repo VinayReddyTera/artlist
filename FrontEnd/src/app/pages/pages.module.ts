@@ -31,6 +31,7 @@ import { SkillDataComponent } from './skill-data/skill-data.component';
 import { NewRequestsComponent } from './new-requests/new-requests.component';
 import { SpeedDialModule } from 'primeng/speeddial';
 import { AddSkillComponent } from './add-skill/add-skill.component';
+import { ChipsModule } from 'primeng/chips';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { AddSkillComponent } from './add-skill/add-skill.component';
     TooltipModule,
     NgChartsModule,
     AgGridModule,
-    SpeedDialModule
+    SpeedDialModule,
+    ChipsModule
   ]
 })
 export class PagesModule { }

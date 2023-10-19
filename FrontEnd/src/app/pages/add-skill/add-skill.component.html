@@ -18,7 +18,7 @@
               </div>
       
                 <div class="form-group col-md-6" style="position: relative;">
-                  <label>Experience</label>
+                  <label>Experience in years</label>
                   <input type="number" class="form-control" formControlName="experience" placeholder="Enter Experience">
                   <div *ngIf="skillForm.controls.experience.errors?.required && skillForm.controls.experience.dirty" class="required-message text-danger">
                     <small>Required Field!</small>
@@ -27,8 +27,8 @@
           </div>
 
             <div class="form-group">
-                <label for="title">Portfolio</label>
-                <input type="text" class="form-control" formControlName="portfolio" placeholder="Portfolio">
+                <label for="title">Portfolio</label> <br>
+                <p-chips formControlName="portfolio" styleClass="custom-width" placeholder="Give Portfolio links, press enter to add more"></p-chips>
                 <div *ngIf="skillForm.controls.portfolio.errors?.required && skillForm.controls.portfolio.dirty" class="required-message text-danger">
                   <small>Required Field!</small>
                 </div>
@@ -38,15 +38,17 @@
 
       <div class="card fileInput mb-3">
         <div class="card-body">
-            <h5 class="card-title">Add Genre(optional)</h5>
-            <button type="button" class="btn btn-soft-success btn-rounded btn-icon" (click)="addGenreButtonClick()"><i class="fa fa-plus"></i></button>
+            <div class="container-box">
+                <h5 class="card-title">Add Genre(optional)</h5>
+                <button *ngIf="!showTable" type="button" class="btn btn-soft-success btn-rounded btn-icon addGenre" (click)="addGenreButtonClick()"><i class="fa fa-plus"></i></button>
+            </div>
   
-          <div class="table-responsive">
+          <div *ngIf="showTable" class="table-responsive">
             <table class="table">
               <thead>
                 <tr>
                     <th scope="col">Genre Name</th>
-                    <th scope="col">Experience</th>
+                    <th scope="col">Experience in yrs</th>
                     <th scope="col">Portfolio</th>
                     <th scope="col">Action</th>
                 </tr>
@@ -68,7 +70,8 @@
                     </div>
                   </td>
                   <td>
-                    <input type="text" class="form-control" placeholder="Enter Portfolio, press enter to add more"  formControlName="portfolio">
+                    <p-chips formControlName="portfolio" inputHeight="30px;" class="custom-chip" placeholder="Give Portfolio links, press enter to add more"></p-chips>
+                    <!-- <input type="text" class="form-control" placeholder="Give Portfolio links, press enter to add more"  formControlName="portfolio"> -->
                     <div *ngIf="skill.get('portfolio').errors?.required &&
                     skill.get('portfolio').dirty" class="text-danger">
                     <small>Portfolio is required</small>

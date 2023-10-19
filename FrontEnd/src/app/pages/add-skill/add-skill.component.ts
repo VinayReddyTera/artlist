@@ -19,8 +19,8 @@ export class AddSkillComponent implements OnInit {
   skillForm: any;
   isCreating:any = true;
   isUpdating:any = false;
-  jdId:any;
   role:any;
+  showTable:boolean = false;
   skillList : String[] = [
     "Director",
     "Producer",
@@ -91,23 +91,19 @@ export class AddSkillComponent implements OnInit {
     $(document).ready(function() {
       $('.select2').select2({width: '100%'});
     });
-
-    this.role = localStorage.getItem('role')
-    console.log(this.role);
-    if(this.role == 'rmg'){
-    }
-
-    this.jdId = this.encryptionService.deCrypt(this.route.snapshot.paramMap.get('id'));
-    if(!this.jdId){
-    }
+    $('.select2').on('change',(e:any)=>{
+      let index = e.target.id;
+      let skillName : any = (<HTMLSelectElement>document.getElementById(index))?.value;
+      (<FormArray>this.skillForm.get('name'))?.setValue(skillName);
+    })
 
     this.skillForm = this.fb.group({
       name: ['', [Validators.required]],
       status : ['active',[Validators.required]],
       validated : [false,[Validators.required]],
       experience: ['', [Validators.required]],
-      portfolio : [false,[Validators.required]],
-      genre: this.fb.array([this.addGenreFormGroup()]),
+      portfolio : ['',[Validators.required]],
+      genre: this.fb.array([]),
       pricing : this.fb.group({
         hourly: ['', [Validators.required]],
         event: ['', [Validators.required]],
@@ -146,6 +142,9 @@ export class AddSkillComponent implements OnInit {
   }
 
   addGenreButtonClick(): void {
+    if(this.skillForm.value.genre.length == 0){
+      this.showTable = true
+    }
     (<FormArray>this.skillForm.get('genre')).push(
       this.addGenreFormGroup()
     );
@@ -154,14 +153,48 @@ export class AddSkillComponent implements OnInit {
   delete(index: any) {
     (<FormArray>this.skillForm.get('genre')).removeAt(index);
     if (this.skillForm.value.genre.length == 0) {
-      (<FormArray>this.skillForm.get('genre')).push(
-        this.addGenreFormGroup()
-      );
+      this.showTable = false
     }
   }
 
   submit() {
-    console.log(this.skillForm.value)
+    console.log(this.skillForm.value);
+    if(this.skillForm.valid){
+
+    }
+    else{
+      let basic = this.skillForm.controls;
+      let skill = basic.pricing.controls;
+      const controls = [basic, skill];
+      for (let i in controls) {
+        for (const name in controls[i]) {
+          if (controls[i][name].invalid) {
+            controls[i][name].markAsDirty();
+          }
+        }
+      }
+      if(this.skillForm.value.genre.length >0){
+        const arrayControls = [
+          basic.genre.controls
+        ];
+        for (let i in arrayControls) {
+          for (let j in arrayControls[i]) {
+            for (const name in arrayControls[i][j].controls) {
+              if (arrayControls[i][j].controls[name].invalid) {
+                arrayControls[i][j].controls[name].markAsDirty();
+              }
+            }
+          }
+        }
+      }
+      let msgData = {
+        severity : "error",
+        summary : 'Error',
+        detail : 'Required fields missing',
+        life : 5000
+      }
+      this.apiService.sendMessage(msgData);
+    }
   }
 
   edit(data:any){
