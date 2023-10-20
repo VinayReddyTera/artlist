@@ -64,6 +64,14 @@ const routes: Routes = [
     }
   },
   {
+    path: 'add-skill/:type',
+    component: AddSkillComponent,
+    canActivate: [AuthGuard],
+    data: {
+      role: ['admin', 'artist','access-add-skill']
+    }
+  },
+  {
     path: 'artist-history',
     component: ArtistHistoryComponent,
     canActivate: [AuthGuard],

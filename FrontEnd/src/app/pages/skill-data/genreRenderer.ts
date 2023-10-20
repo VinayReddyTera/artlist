@@ -17,7 +17,7 @@ export class genreRenderer implements AgRendererComponent{
   data:any;
 
   agInit(params: ICellRendererParams): void {
-    this.data = params
+    this.data = params.data.genre
     this.params = params
   }
 

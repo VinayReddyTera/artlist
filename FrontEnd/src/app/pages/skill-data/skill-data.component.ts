@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { genreRenderer } from './genreRenderer';
 import { editRenderer } from './editRenderer';
 
+declare const $:any;
+
 @Component({
   selector: 'app-skill-data',
   templateUrl: './skill-data.component.html',
@@ -80,21 +82,62 @@ export class SkillDataComponent {
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "View Genre",
-      cellRenderer: genreRenderer
+      cellRenderer: genreRenderer,
+      cellRendererParams: { onStatusChange: this.viewGenre.bind(this) }
     },
     {
       field: "action",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "Edit",
-      cellRenderer: editRenderer
+      cellRenderer: editRenderer,
+      // cellRendererParams: { onStatusChange: this.viewJD.bind(this) }
     }
   ];
+  genreColumnDefs = [
+    {
+      field: "name",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Skill Name",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "experience",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Experience",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} years`
+    },
+    {
+      field: "validated",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Validated",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "status",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Status",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "portfolio",
+      filter: "agDateColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Portfolio",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value.toString()}`
+    }
+  ];
+  genreRowData:any;
   defaultColDef : ColDef = {
     sortable:true,filter:true,resizable:true
   }
   pagination:any = true;
   gridApi:any;
+  gridApi1:any;
 
   ngOnInit(): void {
     this.spinner.show()
@@ -102,13 +145,14 @@ export class SkillDataComponent {
       (res : any)=>{
         if(res.status == 200){
           this.usersRowData = res.data;
-          console.log(res.data)
         }
         else if(res.status == 204){
-          this.errorMessage = res.data;
           if(res.data == 'Invalid token'){
             localStorage.clear();
             this.router.navigate(['/account/login']);
+          }
+          else{
+            this.errorMessage = res.data;
           }
         }
       },
@@ -124,14 +168,30 @@ export class SkillDataComponent {
     this.gridApi = params.api;
   }
 
+  onGridReady1(params: GridReadyEvent) {
+    this.gridApi1 = params.api;
+  }
+
   filter(){
     this.gridApi.setQuickFilter(
       (document.getElementById('filter-text-box') as HTMLInputElement).value
     );
   }
 
+  filter1(){
+    this.gridApi1.setQuickFilter(
+      (document.getElementById('filter-text-box1') as HTMLInputElement).value
+    );
+  }
+
   refresh(){
     this.ngOnInit();
+  }
+
+  viewGenre(data:any){
+    console.log(data)
+    $('#viewGenreModal').modal('show');
+    this.genreRowData = data
   }
 
 }

@@ -20,6 +20,7 @@ export class AddSkillComponent implements OnInit {
   isCreating:any = true;
   isUpdating:any = false;
   role:any;
+  updateData : any;
   showTable:boolean = false;
   skillList : String[] = [
     "Director",
@@ -95,7 +96,19 @@ export class AddSkillComponent implements OnInit {
       let index = e.target.id;
       let skillName : any = (<HTMLSelectElement>document.getElementById(index))?.value;
       (<FormArray>this.skillForm.get('name'))?.setValue(skillName);
-    })
+    });
+
+    if(localStorage.getItem('editSkill')){
+      if(this.encryptionService.deCrypt(this.route.snapshot.paramMap.get('type')) == 'edit'){
+        this.isCreating = false;
+        this.isUpdating = true;
+        this.updateData = JSON.parse(this.encryptionService.deCrypt(localStorage.getItem('editSkill')));
+        this.edit();
+      }
+      else{
+        localStorage.removeItem('editSkill')
+      }
+    }
 
     this.skillForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -224,8 +237,8 @@ export class AddSkillComponent implements OnInit {
     }
   }
 
-  edit(data:any){
-    console.log(data)
+  edit(){
+    console.log(this.updateData)
   }
 
 }
