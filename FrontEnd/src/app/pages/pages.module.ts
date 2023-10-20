@@ -32,6 +32,9 @@ import { NewRequestsComponent } from './new-requests/new-requests.component';
 import { SpeedDialModule } from 'primeng/speeddial';
 import { AddSkillComponent } from './add-skill/add-skill.component';
 import { ChipsModule } from 'primeng/chips';
+import { dateRenderer } from './dateRenderer';
+import { genreRenderer } from './skill-data/genreRenderer';
+import { editRenderer } from './skill-data/editRenderer';
 
 @NgModule({
   declarations: [
@@ -48,7 +51,10 @@ import { ChipsModule } from 'primeng/chips';
     ArtistApproveComponent,
     SkillDataComponent,
     NewRequestsComponent,
-    AddSkillComponent
+    AddSkillComponent,
+    dateRenderer,
+    genreRenderer,
+    editRenderer
   ],
   imports: [
     CommonModule,

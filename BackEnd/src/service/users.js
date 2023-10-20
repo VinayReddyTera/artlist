@@ -515,4 +515,19 @@ userService.addSkill=(payload,id)=>{
   })
 }
 
+userService.getArtistSkill=(id)=>{
+  return userDB.getArtistSkill(id).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let response = {
+        status : 204,
+        data : 'unable to fetch skill data'
+      }
+      return response
+    }
+  })
+}
+
 module.exports = userService

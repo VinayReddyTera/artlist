@@ -549,4 +549,24 @@ userDB.addSkill = async(userData,id)=>{
     }
   }
 }
+
+userDB.getArtistSkill = async(id)=>{
+  const collection = await connection.getArtist();
+  let skillData = await collection.findOne({"_id":new ObjectId(id)},{_id:0,skills:1})
+  if(skillData.skills.length>0){
+    let res = {
+      status :200,
+      data : skillData.skills
+  }
+  return res
+  }
+  else{
+    let res = {
+      status :204,
+      data : "No Skills added"
+  }
+  return res
+  }
+}
+
 module.exports = userDB

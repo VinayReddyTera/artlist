@@ -1,0 +1,47 @@
+.icon{
+    width: 30px;
+    height: 30px;
+    position: relative;
+}
+
+.edit{
+    position: absolute;
+    left: 8px;
+    bottom: 4px;
+}
+
+.refresh {
+    cursor: pointer;
+}
+
+.refresh:hover {
+    opacity: 0.5;
+}
+
+.refreshButton {
+    color: #ffffff;
+    background: #4E6AF2;
+    border: 1px solid #4E6AF2;
+    position: absolute;
+    right: 0px;
+}
+
+.icon1 {
+    width: 35px;
+    height: 35px;
+}
+
+.i {
+    position: relative;
+    right: 2px;
+    bottom: 1px;
+}
+
+.eye{
+    color: #007BFF;
+    cursor: pointer;
+}
+
+.eye:hover{
+    opacity: 0.5;
+}
