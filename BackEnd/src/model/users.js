@@ -569,4 +569,31 @@ userDB.getArtistSkill = async(id)=>{
   }
 }
 
+userDB.updateArtistSkill = async(payload,id)=>{
+  const collection = await connection.getArtist();
+  let isUpdated = await collection.updateOne(
+    {
+      _id: new ObjectId(id),
+      "skills.name": payload.name
+    },
+    {
+      $set: { "skills.$": payload }
+    }
+  );
+  if(isUpdated.modifiedCount == 1){
+    let res = {
+      status :200,
+      data : 'Successfully updated skills'
+  }
+  return res
+  }
+  else{
+    let res = {
+      status :204,
+      data : "Unable to update skills"
+  }
+  return res
+  }
+}
+
 module.exports = userDB

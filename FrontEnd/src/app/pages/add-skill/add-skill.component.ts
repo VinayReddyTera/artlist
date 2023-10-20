@@ -207,7 +207,35 @@ export class AddSkillComponent implements OnInit {
         })
       }
       else{
-
+        this.apiService.updateArtistSkill(this.skillForm.value).subscribe(
+          (res:any)=>{
+            if(res.status == 200){
+              let msgData = {
+                severity : "success",
+                summary : 'Success',
+                detail : res.data,
+                life : 5000
+              }
+              this.apiService.sendMessage(msgData);
+              localStorage.removeItem('editSkill');
+              this.router.navigateByUrl('skill-data')
+            }
+            else if(res.status == 204){
+              let msgData = {
+                severity : "error",
+                summary : 'Error',
+                detail : res.data,
+                life : 5000
+              }
+              this.apiService.sendMessage(msgData);
+            }
+          },
+          (err:any)=>{
+            console.log(err)
+          }
+        ).add(()=>{
+          this.apiService.initiateLoading(false)
+        })
       }
     }
     else{
@@ -324,19 +352,6 @@ export class AddSkillComponent implements OnInit {
       this.skillForm.get('status').setValue('active');
     }
   }
-
-  // ngAfterViewInit(){
-  //   setTimeout(()=>{
-  //     for(let i in this.updateData.genre){
-  //       if(this.updateData.genre[i].status == 'active'){
-  //         (<HTMLInputElement>document.getElementById('genreSwitch'+i)).checked = true;
-  //       }
-  //       else{
-  //         (<HTMLInputElement>document.getElementById('genreSwitch'+i)).checked = false;
-  //       }
-  //     }
-  //   },100)
-  // }
 
   changeGenreActive(i:any){
     if(this.skillForm.getRawValue().genre[i].status == 'active'){

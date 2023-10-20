@@ -40,14 +40,42 @@ export class SkillDataComponent {
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "Validated",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          if(params.value == true){
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">${params.value}</span>`;
+            return link
+          }
+          else{
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">${params.value}</span>`;
+            return link
+          }
+        }
+      }
     },
     {
       field: "status",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "Status",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          if(params.value == 'active'){
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">${params.value}</span>`;
+            return link
+          }
+          else{
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">${params.value}</span>`;
+            return link
+          }
+        }
+      }
     },
     {
       field: "pricing.hourly",
@@ -114,14 +142,42 @@ export class SkillDataComponent {
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "Validated",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          if(params.value == true){
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">${params.value}</span>`;
+            return link
+          }
+          else{
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">${params.value}</span>`;
+            return link
+          }
+        }
+      }
     },
     {
       field: "status",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "Status",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          if(params.value == 'active'){
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">${params.value}</span>`;
+            return link
+          }
+          else{
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">${params.value}</span>`;
+            return link
+          }
+        }
+      }
     },
     {
       field: "portfolio",

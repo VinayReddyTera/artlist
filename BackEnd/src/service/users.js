@@ -530,4 +530,19 @@ userService.getArtistSkill=(id)=>{
   })
 }
 
+userService.updateArtistSkill=(payload,id)=>{
+  return userDB.updateArtistSkill(payload,id).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let response = {
+        status : 204,
+        data : 'unable to update skill data'
+      }
+      return response
+    }
+  })
+}
+
 module.exports = userService

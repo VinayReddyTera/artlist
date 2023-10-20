@@ -440,9 +440,9 @@ router.get('/getArtistSkill',verifyToken,(req,res,next)=>{
 })
 
 //router to update artist skill
-router.get('/updateArtistSkill',verifyToken,(req,res,next)=>{
+router.post('/updateArtistSkill',verifyToken,(req,res,next)=>{
   let id = jwt.decode(req.headers.authorization).data.data._id;
-  userservice.updateArtistSkill(id).then((data)=>{
+  userservice.updateArtistSkill(req.body,id).then((data)=>{
     return res.json(data)
   }).catch((err)=>{
     next(err)

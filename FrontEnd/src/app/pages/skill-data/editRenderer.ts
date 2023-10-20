@@ -23,7 +23,6 @@ link:any;
 
   agInit(params: ICellRendererParams): void {
     this.params = params;
-    this.link = `/add-skill/${this.encryptionService.enCrypt('edit')}`
   }
 
   refresh(params: ICellRendererParams) {
@@ -33,7 +32,7 @@ link:any;
   navigate(){
     let encryptData = this.encryptionService.enCrypt(JSON.stringify(this.params.data));
     localStorage.setItem('editSkill',encryptData);
-    window.open(`${window.location.origin}/add-skill/${this.encryptionService.enCrypt('edit')}`,'_blank')
+    window.open(`${window.location.origin}/add-skill/${this.encryptionService.enCrypt('edit')}`)
   }
 
 }
