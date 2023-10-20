@@ -39,6 +39,11 @@
                   <small>Required Field!</small>
                 </div>
               </div>
+
+              <div *ngIf="isUpdating" class="form-check form-switch form-switch-lg mb-3">
+                <input class="form-check-input" type="checkbox" id="activeMain" (click)="changeActive()">
+                <label class="form-check-label" for="activeMain">{{skillForm.value.status}}</label>
+            </div>
         </div>
       </div>
 
@@ -53,6 +58,7 @@
             <table class="table">
               <thead>
                 <tr>
+                    <th *ngIf="isUpdating" scope="col">Status</th>
                     <th scope="col">Genre Name</th>
                     <th scope="col">Experience in yrs</th>
                     <th scope="col">Portfolio</th>
@@ -61,6 +67,12 @@
             </thead>
             <tbody formArrayName="genre" *ngFor="let skill of skillForm.get('genre').controls; let i = index" style="border-top: none;">
               <tr [formGroupName]="i">
+                <td *ngIf="isUpdating">
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" [id]="'genreSwitch'+i" (click)="changeGenreActive(i)">
+                    <label class="form-check-label" for="genreSwitch">{{skill.controls.status.value}}</label>
+                </div>
+                </td>
                   <td>
                     <input type="text" class="form-control" [id]="'skill' + i" placeholder="Enter Genre"  formControlName="name">
                     <div *ngIf="skill.get('name').errors?.required &&
@@ -94,7 +106,7 @@
                   <td>
                   <div style="display:flex;">
                     <button type="button" class="btn btn-soft-success btn-rounded btn-icon" (click)="addGenreButtonClick()"><i class="fa fa-plus"></i></button>&nbsp; &nbsp;
-                    <button type="button" class="btn btn-soft-danger btn-rounded btn-icon" (click)="delete(i)">
+                    <button type="button" [disabled]="skill.controls.validated.value" class="btn btn-soft-danger btn-rounded btn-icon" (click)="delete(i)">
                       <i class="fa fa-trash"></i>
                     </button>
                   </div>

@@ -8,6 +8,10 @@
     bottom: 2px;
 }
 
+button:disabled{
+    cursor: no-drop;
+}
+
 ::ng-deep .p-chips {
     display: block !important;
 }

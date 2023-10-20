@@ -89,13 +89,18 @@ export class AddSkillComponent implements OnInit {
 
   ngOnInit(): void {
 
-    $(document).ready(function() {
-      $('.select2').select2({width: '100%'});
-    });
-    $('.select2').on('change',(e:any)=>{
-      let index = e.target.id;
-      let skillName : any = (<HTMLSelectElement>document.getElementById(index))?.value;
-      (<FormArray>this.skillForm.get('name'))?.setValue(skillName);
+    this.skillForm = this.fb.group({
+      name: ['', [Validators.required]],
+      status : ['active',[Validators.required]],
+      validated : [false,[Validators.required]],
+      experience: ['', [Validators.required,Validators.min(0.1),Validators.max(150)]],
+      portfolio : ['',[Validators.required]],
+      genre: this.fb.array([]),
+      pricing : this.fb.group({
+        hourly: ['', [Validators.required,Validators.min(0.1)]],
+        event: ['', [Validators.required,Validators.min(0.1)]],
+        fullDay: ['', [Validators.required,Validators.min(0.1)]],
+      }),
     });
 
     if(localStorage.getItem('editSkill')){
@@ -110,18 +115,16 @@ export class AddSkillComponent implements OnInit {
       }
     }
 
-    this.skillForm = this.fb.group({
-      name: ['', [Validators.required]],
-      status : ['active',[Validators.required]],
-      validated : [false,[Validators.required]],
-      experience: ['', [Validators.required,Validators.min(0.1),Validators.max(150)]],
-      portfolio : ['',[Validators.required]],
-      genre: this.fb.array([]),
-      pricing : this.fb.group({
-        hourly: ['', [Validators.required,Validators.min(0.1)]],
-        event: ['', [Validators.required,Validators.min(0.1)]],
-        fullDay: ['', [Validators.required,Validators.min(0.1)]],
-      }),
+    $(document).ready(()=> {
+      $('.select2').select2({width: '100%'});
+      if(this.isUpdating){
+        $('.select2').val(this.updateData.name).trigger('change');
+      }
+    });
+    $('.select2').on('change',(e:any)=>{
+      let index = e.target.id;
+      let skillName : any = (<HTMLSelectElement>document.getElementById(index))?.value;
+      (<FormArray>this.skillForm.get('name'))?.setValue(skillName);
     });
     
   }
@@ -171,36 +174,41 @@ export class AddSkillComponent implements OnInit {
   }
 
   submit() {
-    console.log(this.skillForm.value);
+    console.log(this.skillForm.getRawValue())
     if(this.skillForm.valid){
       this.apiService.initiateLoading(true)
-      this.apiService.addSkill(this.skillForm.value).subscribe(
-        (res:any)=>{
-          if(res.status == 200){
-            let msgData = {
-              severity : "success",
-              summary : 'Success',
-              detail : res.data,
-              life : 5000
+      if(this.isCreating){
+        this.apiService.addSkill(this.skillForm.value).subscribe(
+          (res:any)=>{
+            if(res.status == 200){
+              let msgData = {
+                severity : "success",
+                summary : 'Success',
+                detail : res.data,
+                life : 5000
+              }
+              this.apiService.sendMessage(msgData);
             }
-            this.apiService.sendMessage(msgData);
-          }
-          else if(res.status == 204){
-            let msgData = {
-              severity : "error",
-              summary : 'Error',
-              detail : res.data,
-              life : 5000
+            else if(res.status == 204){
+              let msgData = {
+                severity : "error",
+                summary : 'Error',
+                detail : res.data,
+                life : 5000
+              }
+              this.apiService.sendMessage(msgData);
             }
-            this.apiService.sendMessage(msgData);
+          },
+          (err:any)=>{
+            console.log(err)
           }
-        },
-        (err:any)=>{
-          console.log(err)
-        }
-      ).add(()=>{
-        this.apiService.initiateLoading(false)
-      })
+        ).add(()=>{
+          this.apiService.initiateLoading(false)
+        })
+      }
+      else{
+
+      }
     }
     else{
       let basic = this.skillForm.controls;
@@ -239,6 +247,104 @@ export class AddSkillComponent implements OnInit {
 
   edit(){
     console.log(this.updateData)
+    this.skillForm.patchValue({
+      name: this.updateData.name,
+      status : this.updateData.status,
+      validated : this.updateData.validated,
+      experience: this.updateData.experience,
+      portfolio: this.updateData.portfolio,
+      pricing : {
+        hourly: this.updateData.pricing.hourly,
+        fullDay: this.updateData.pricing.fullDay,
+        event: this.updateData.pricing.event
+      }
+    });
+    setTimeout(()=>{
+      if(this.updateData.status == 'active'){
+        (<HTMLInputElement>document.getElementById('activeMain')).checked = true;
+      }
+      else{
+        (<HTMLInputElement>document.getElementById('activeMain')).checked = false;
+      }
+    },100)
+
+    // Set 'required' validator for all fields
+    Object.keys(this.skillForm.controls).forEach((key) => {
+      this.skillForm.get(key).setValidators(Validators.required);
+      this.skillForm.get(key).updateValueAndValidity();
+    });
+
+    this.skillForm.get('experience').setValidators([Validators.required, Validators.min(0.1), Validators.max(150)]);
+    this.skillForm.get('experience').updateValueAndValidity();
+
+    // Also set 'required' validator for nested 'pricing' group
+    const pricingGroup = this.skillForm.get('pricing');
+    Object.keys(pricingGroup.controls).forEach((key) => {
+      pricingGroup.get(key).setValidators([Validators.required,Validators.min(0.1)]);
+      pricingGroup.get(key).updateValueAndValidity();
+    });
+
+    document.getElementById('skillName')?.setAttribute('disabled','true')
+    this.showTable = true;
+    if(this.updateData.genre.length > 0){
+      const genreFormArray = this.skillForm.get('genre') as FormArray;
+      genreFormArray.clear();
+      this.updateData.genre.forEach((i:any) => {
+        genreFormArray.push(
+          this.fb.group({
+            name: [{value:i.name,disabled:i.validated},[Validators.required]],
+            experience : [{value:i.experience,disabled:false},[Validators.required,Validators.min(0.1),Validators.max(150)]],
+            status : [{value:i.status,disabled:i.validated},[Validators.required]],
+            portfolio : [{value:i.portfolio,disabled:false},[Validators.required]],
+            validated : [{value:i.validated,disabled:false},[Validators.required]]
+          })
+        );
+      });
+      setTimeout(()=>{
+        for(let i in this.updateData.genre){
+          if(this.updateData.genre[i].status == 'active'){
+            (<HTMLInputElement>document.getElementById('genreSwitch'+i)).checked = true;
+          }
+          else{
+            (<HTMLInputElement>document.getElementById('genreSwitch'+i)).checked = false;
+          }
+        }
+      },100)
+    }
+    else{
+      this.showTable = false
+    }
+  }
+
+  changeActive(){
+    if(this.skillForm.getRawValue().status == 'active'){
+      this.skillForm.get('status').setValue('inactive');
+    }
+    else{
+      this.skillForm.get('status').setValue('active');
+    }
+  }
+
+  // ngAfterViewInit(){
+  //   setTimeout(()=>{
+  //     for(let i in this.updateData.genre){
+  //       if(this.updateData.genre[i].status == 'active'){
+  //         (<HTMLInputElement>document.getElementById('genreSwitch'+i)).checked = true;
+  //       }
+  //       else{
+  //         (<HTMLInputElement>document.getElementById('genreSwitch'+i)).checked = false;
+  //       }
+  //     }
+  //   },100)
+  // }
+
+  changeGenreActive(i:any){
+    if(this.skillForm.getRawValue().genre[i].status == 'active'){
+      (<FormArray>this.skillForm.get('genre')).at(i).get('status')?.setValue('inactive');
+    }
+    else{
+      (<FormArray>this.skillForm.get('genre')).at(i).get('status')?.setValue('active');
+    }
   }
 
 }

@@ -105,4 +105,8 @@ export class ApiService {
     return this.http.get(environment.domain+"/getArtistSkill")
   }
 
+  updateArtistSkill():Observable<any>{
+    return this.http.get(environment.domain+"/updateArtistSkill")
+  }
+
 }
