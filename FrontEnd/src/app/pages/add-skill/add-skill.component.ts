@@ -101,13 +101,13 @@ export class AddSkillComponent implements OnInit {
       name: ['', [Validators.required]],
       status : ['active',[Validators.required]],
       validated : [false,[Validators.required]],
-      experience: ['', [Validators.required]],
+      experience: ['', [Validators.required,Validators.min(0.1),Validators.max(150)]],
       portfolio : ['',[Validators.required]],
       genre: this.fb.array([]),
       pricing : this.fb.group({
-        hourly: ['', [Validators.required]],
-        event: ['', [Validators.required]],
-        fullDay: ['', [Validators.required]],
+        hourly: ['', [Validators.required,Validators.min(0.1)]],
+        event: ['', [Validators.required,Validators.min(0.1)]],
+        fullDay: ['', [Validators.required,Validators.min(0.1)]],
       }),
     });
     
@@ -134,7 +134,7 @@ export class AddSkillComponent implements OnInit {
   addGenreFormGroup() {
     return this.fb.group({
       name: ['', [Validators.required]],
-      experience : ['',[Validators.required]],
+      experience : ['',[Validators.required,Validators.min(0.1),Validators.max(150)]],
       portfolio : ['',[Validators.required]],
       status : ['active',[Validators.required]],
       validated : [false,[Validators.required]]

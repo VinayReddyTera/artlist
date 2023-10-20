@@ -528,7 +528,6 @@ userDB.addSkill = async(userData,id)=>{
   }, {
     "skills.$": 1
   })
-  console.log(isSkillPresent)
   if(isSkillPresent){
     let res = {
       status :204,

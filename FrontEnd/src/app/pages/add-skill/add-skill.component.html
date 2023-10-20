@@ -23,6 +23,12 @@
                   <div *ngIf="skillForm.controls.experience.errors?.required && skillForm.controls.experience.dirty" class="required-message text-danger">
                     <small>Required Field!</small>
                   </div>
+                  <div *ngIf="skillForm.controls.experience.errors?.min && skillForm.controls.experience.dirty" class="required-message text-danger">
+                    <small>Experience cannot be 0 or less</small>
+                  </div>
+                  <div *ngIf="skillForm.controls.experience.errors?.max && skillForm.controls.experience.dirty" class="required-message text-danger">
+                    <small>Experience cannot be more than 150</small>
+                  </div>
                 </div>
           </div>
 
@@ -68,6 +74,14 @@
                     skill.get('experience').dirty" class="text-danger">
                     <small>Experience is required</small>
                     </div>
+                    <div *ngIf="skill.get('experience').errors?.min &&
+                    skill.get('experience').dirty" class="text-danger">
+                    <small>Experience cannot be 0 or less</small>
+                    </div>
+                    <div *ngIf="skill.get('experience').errors?.max &&
+                    skill.get('experience').dirty" class="text-danger">
+                    <small>Experience cannot be more than 150</small>
+                    </div>
                   </td>
                   <td>
                     <p-chips formControlName="portfolio" inputHeight="30px;" class="custom-chip" placeholder="Give Portfolio links, press enter to add more"></p-chips>
@@ -102,6 +116,9 @@
               <div *ngIf="skillForm.controls.pricing.controls.hourly.errors?.required && skillForm.controls.pricing.controls.hourly.dirty" class="required-message text-danger">
                 <small>Required Field!</small>
               </div>
+              <div *ngIf="skillForm.controls.pricing.controls.hourly.errors?.min && skillForm.controls.pricing.controls.hourly.dirty" class="required-message text-danger">
+                <small>Price cannot be 0 or less</small>
+              </div>
             </div>
             <div class="form-group col-md-4">
               <label>Full Day(9-5)</label>
@@ -109,12 +126,18 @@
               <div *ngIf="skillForm.controls.pricing.controls.fullDay.errors?.required && skillForm.controls.pricing.controls.fullDay.dirty" class="required-message text-danger">
                 <small>Required Field!</small>
               </div>
+              <div *ngIf="skillForm.controls.pricing.controls.fullDay.errors?.min && skillForm.controls.pricing.controls.fullDay.dirty" class="required-message text-danger">
+                <small>Price cannot be 0 or less</small>
+              </div>
             </div>
             <div class="form-group col-md-4">
               <label>Event Basis</label>
               <input type="number" class="form-control" formControlName="event" placeholder="Enter Price">
               <div *ngIf="skillForm.controls.pricing.controls.event.errors?.required && skillForm.controls.pricing.controls.event.dirty" class="required-message text-danger">
                 <small>Required Field!</small>
+              </div>
+              <div *ngIf="skillForm.controls.pricing.controls.event.errors?.min && skillForm.controls.pricing.controls.event.dirty" class="required-message text-danger">
+                <small>Price cannot be 0 or less</small>
               </div>
             </div>
           </div>

@@ -369,7 +369,6 @@ router.post('/addSkill',verifyToken,(req,res,next)=>{
         !validate.validateXss(req.body.name)
      || !validate.validateXss(req.body.experience)
      || !validate.validateXss(req.body.status)
-     || !validate.validateXss(req.body.validated)
        ){
        let response = {
          status : 204,
@@ -406,7 +405,6 @@ router.post('/addSkill',verifyToken,(req,res,next)=>{
   || !validate.validateXss(req.body.pricing.hourly)
   || !validate.validateXss(req.body.pricing.event)
   || !validate.validateXss(req.body.pricing.fullDay)
-  || !validate.validateXss(req.body.validated)
     ){
     let response = {
       status : 204,
@@ -414,7 +412,7 @@ router.post('/addSkill',verifyToken,(req,res,next)=>{
     }
     return res.json(response)
   }
-  else if(skillList.includes(req.body.name)){
+  else if(!skillList.includes(req.body.name)){
     let response = {
       status : 204,
       data : 'Invalid data format'
