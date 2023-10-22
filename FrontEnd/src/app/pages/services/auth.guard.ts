@@ -15,7 +15,8 @@ export class AuthGuard implements CanActivate {
     {
       'admin' : '/dashboard',
       'artist' : '/artist-dashboard',
-      'user' : '/user-dashboard'
+      'user' : '/user-dashboard',
+      'tag' : '/approve-artist'
     }
 
   canActivate(route: ActivatedRouteSnapshot,state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
@@ -45,6 +46,16 @@ export class AuthGuard implements CanActivate {
           }
           else if(role == 'user'){
             if(route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'user-dashboard' || route.routeConfig?.path === 'user-history' || route.routeConfig?.path === 'all-artists' || route.routeConfig?.path === 'artist-data'){
+              return true
+            }
+            else{
+              console.log(`redirecting to ${this.redirect[role]}`)
+              this.router.navigateByUrl(this.redirect[role])
+            }
+            return false
+          }
+          else if(role == 'tag'){
+            if(route.routeConfig?.path === 'approve-artist'){
               return true
             }
             else{

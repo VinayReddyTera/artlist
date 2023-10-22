@@ -65,8 +65,9 @@
                     <div class="input-group auth-pass-inputgroup">
                         <select id="role" class="form-control" formControlName="role" [ngClass]="{ 'is-invalid': submitted && loginForm.controls.role.errors }">
                           <option value="" disabled selected>--select role--</option>
-                          <option value="artist">artist</option>
-                          <option value="user">User</option>
+                          <option value="artist">Artist</option>
+                          <option value="user" selected>User</option>
+                          <option value="tag">Approver</option>
                         </select>
                       </div>
                       <div *ngIf="loginForm.controls.role.errors?.required && loginForm.controls.role.dirty" class="text-danger">

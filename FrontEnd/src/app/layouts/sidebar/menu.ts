@@ -70,5 +70,12 @@ export const MENU: MenuItem[] = [
         icon: 'bx-history',
         link : '/user-history',
         role: ['admin', 'user','access-user-history']
+    },
+    {
+        id: 11,
+        label: 'Approve Artist',
+        icon: 'bxs-user-plus',
+        link : '/artist-approve',
+        role: ['admin', 'tag','access-artist-approve']
     }
 ]

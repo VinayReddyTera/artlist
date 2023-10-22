@@ -44,7 +44,7 @@ const routes: Routes = [
     component: ArtistApproveComponent,
     canActivate: [AuthGuard],
     data: {
-      role: ['artist','access-artist-approve']
+      role: ['tag','access-artist-approve']
     }
   },
   {

@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { ApiService } from 'src/app/pages/services/api.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HttpClient } from '@angular/common/http';
 import { EncryptionService } from 'src/app/pages/services/encryption.service';
 import { ActivatedRoute } from '@angular/router';
@@ -261,7 +260,12 @@ export class ArtistProfileComponent implements OnInit{
         role: this.userData.role,
         id : this.userData.id,
         emailVerified : emailVerified,
-        phoneVerified : phoneVerified
+        phoneVerified : phoneVerified,
+        address : this.profileForm.value.address,
+        mandal : this.profileForm.value.mandal,
+        district : this.profileForm.value.district,
+        state : this.profileForm.value.state,
+        pincode : this.profileForm.value.pincode
       }
       console.log(payload)
       this.apiService.initiateLoading(true);
@@ -285,7 +289,12 @@ export class ArtistProfileComponent implements OnInit{
             role: this.userData.role,
             id : this.userData.id,
             emailVerified : emailVerified,
-            phoneVerified : phoneVerified
+            phoneVerified : phoneVerified,
+            address : this.profileForm.value.address,
+            mandal : this.profileForm.value.mandal,
+            district : this.profileForm.value.district,
+            state : this.profileForm.value.state,
+            pincode : this.profileForm.value.pincode
           }
           localStorage.setItem('data', this.encrypt.enCrypt(JSON.stringify(data)));
           let now = new Date();
@@ -305,7 +314,7 @@ export class ArtistProfileComponent implements OnInit{
             detail : res.data,
             life : 5000
           }
-          // this.apiService.sendMessage(msgData);
+          this.apiService.sendMessage(msgData);
         }
       },
       (err:any)=>{

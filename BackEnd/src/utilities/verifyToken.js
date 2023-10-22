@@ -6,7 +6,7 @@ let verifyToken = (req,res,next) =>{
         if(!token){
            let response = {
             status : 204,
-            data : 'You are not authenticated'
+            data : 'You are not Authenticated'
            }
            res.json(response)
         }
