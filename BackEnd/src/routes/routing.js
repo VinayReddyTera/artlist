@@ -156,6 +156,26 @@ router.post('/login',(req,res,next)=>{
 
 // api to register users
 router.post('/register',(req,res,next)=>{
+  if(req.body.role == 'artist'){
+    if(!req.body.address 
+      || !req.body.mandal 
+      || !req.body.district
+      || !req.body.state
+      || !req.body.pincode){
+      let response = {
+        status : 204,
+        data : 'Required fields missing'
+      }
+      return res.json(response)
+    }
+    else if(!states.includes(req.body.state)){
+      let response = {
+        status : 204,
+        data : 'Invalid State Name'
+      }
+      return res.json(response)
+    }
+  }
   if(!req.body.email 
     || !req.body.password 
     || !req.body.role
@@ -194,26 +214,6 @@ router.post('/register',(req,res,next)=>{
       data : 'Invalid data format'
     }
     return res.json(response)
-  }
-  else if(req.body.role == 'artist'){
-    if(!req.body.address 
-      || !req.body.mandal 
-      || !req.body.district
-      || !req.body.state
-      || !req.body.pincode){
-      let response = {
-        status : 204,
-        data : 'Required fields missing'
-      }
-      return res.json(response)
-    }
-    else if(!states.includes(req.body.state)){
-      let response = {
-        status : 204,
-        data : 'Invalid State Name'
-      }
-      return res.json(response)
-    }
   }
   else{
     userservice.register(req.body).then((data)=>{

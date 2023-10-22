@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 
 import { environment } from 'src/environments/environment';
 import { ApiService } from 'src/app/pages/services/api.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { HttpClient } from '@angular/common/http';
 import { EncryptionService } from 'src/app/pages/services/encryption.service';
 
@@ -70,19 +69,7 @@ export class LoginComponent implements OnInit {
             time : expireTime
           }
           let data: any;
-          if(this.loginForm.value.role == 'user'){
-            data = {
-              name : res.data.name,
-              email : res.data.email,
-              phoneNo : res.data.phoneNo,
-              id : res.data._id,
-              role : this.loginForm.value.role,
-              profileStatus : res.data.status,
-              emailVerified: res.data.emailVerified,
-              phoneVerified: res.data.phoneVerified
-            }
-          }
-          else if(this.loginForm.value.role == 'artist'){
+          if(this.loginForm.value.role == 'artist'){
             data = {
               name : res.data.name,
               email : res.data.email,
@@ -97,6 +84,18 @@ export class LoginComponent implements OnInit {
               district : res.add.district,
               state : res.add.state,
               pincode : res.add.pincode
+            }
+          }
+          else{
+            data = {
+              name : res.data.name,
+              email : res.data.email,
+              phoneNo : res.data.phoneNo,
+              id : res.data._id,
+              role : this.loginForm.value.role,
+              profileStatus : res.data?.status,
+              emailVerified: res.data?.emailVerified,
+              phoneVerified: res.data?.phoneVerified
             }
           }
           localStorage.setItem('data', this.encrypt.enCrypt(JSON.stringify(data)));

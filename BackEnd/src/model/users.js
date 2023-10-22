@@ -18,10 +18,6 @@ userDB.checkLoginUser = async (payload) => {
       const collection = await connection.getTag();
       data = await collection.findOne({"email" : payload.email},{_id : 0});
     }
-    else if(payload.role == 'admin'){
-      const collection = await connection.getAdmin();
-      data = await collection.findOne({"email" : payload.email},{_id : 0});
-    }
     else{
       let res = {
         status : 204,
@@ -55,7 +51,12 @@ userDB.register = async (data1) => {
       name : data1.name,
       email : data1.email,
       password : hashpassword,
-      phoneNo : data1.phoneNo
+      phoneNo : data1.phoneNo,
+      address : data1.address,
+      mandal : data1.mandal,
+      district:data1.district,
+      state : data1.state,
+      pincode : data1.pincode
     }
     data = await collection.create(artistData);
     if (data) {
@@ -83,7 +84,8 @@ userDB.register = async (data1) => {
       name : data1.name,
       email : data1.email,
       password : hashpassword,
-      phoneNo : data1.phoneNo
+      phoneNo : data1.phoneNo,
+      role:data1.role
     }
     data = await collection.create(userData);
     if(data){
@@ -111,35 +113,8 @@ userDB.register = async (data1) => {
       name : data1.name,
       email : data1.email,
       password : hashpassword,
-      phoneNo : data1.phoneNo
-    }
-    data = await collection.create(userData);
-    if(data){
-      let res = {
-        status : 200,
-        sendMail : true,
-        data : 'Successfully registered'
-      }
-      return res
-    }
-    else{
-      let res = {
-        status : 204,
-        sendMail : false,
-        data : 'Unable to register'
-      }
-      return res
-    }
-  }
-  else if(data1.role == 'admin'){
-    const collection = await connection.getAdmin();
-    const salt = await bcrypt.genSalt(10);
-    const hashpassword = await bcrypt.hash(data1.password, salt);
-    let userData = {
-      name : data1.name,
-      email : data1.email,
-      password : hashpassword,
-      phoneNo : data1.phoneNo
+      phoneNo : data1.phoneNo,
+      role:data1.role
     }
     data = await collection.create(userData);
     if(data){
@@ -243,30 +218,7 @@ userDB.checkPassword = async (data1) => {
         data:{
         name : data.name,
         phoneNo : data.phoneNo,
-        email : data.email,
-        _id : data._id
-      }
-    }
-        return userData;
-    }
-    else{
-      let res = {
-        status : 204,
-        data : 'Incorrect Password'
-      }
-      return res
-    }
-  }
-  else if(data1.role == "admin"){
-    const collection = await connection.getAdmin();
-    const data = await collection.findOne({"email" : data1.email});
-    const checkPassword = await bcrypt.compare(data1.password,data.password);
-    if (checkPassword) {
-      let userData = {
-        status: 200,
-        data:{
-        name : data.name,
-        phoneNo : data.phoneNo,
+        role:data.role,
         email : data.email,
         _id : data._id
       }
@@ -372,24 +324,6 @@ userDB.getPassword = async (payload) => {
       return res
     };
   }
-  else if(payload.role == 'admin'){
-    const collection = await connection.getAdmin();
-    const data = await collection.findOne({ "email" : payload.email},{_id:0});
-    if (data) {
-        let res = {
-          status : 200,
-          data : data
-        }
-        return res
-    }
-    else {
-      let res = {
-        status : 204,
-        data : 'No user found'
-      }
-      return res
-    };
-  }
   else{
     let res = {
       status : 204,
@@ -439,24 +373,6 @@ userDB.generateOtpForUsers = async (userData) => {
     }
     else if(userData.role == 'tag'){
       const collection = await connection.getTag();
-      const data = await collection.updateOne({ "email" : userData.email},{"$set": {"otp" : random}});
-      if (data.modifiedCount == 1) {
-        let res = {
-          status : 200,
-          data : random
-        }
-        return res
-      }
-      else{
-        let res = {
-          status : 204,
-          data : "Unable to generate otp"
-        }
-        return res
-      }
-    }
-    else if(userData.role == 'admin'){
-      const collection = await connection.getAdmin();
       const data = await collection.updateOne({ "email" : userData.email},{"$set": {"otp" : random}});
       if (data.modifiedCount == 1) {
         let res = {
@@ -537,24 +453,6 @@ userDB.verifyPasswordResetOtp = async (data1) => {
       return res
     }
   }
-  else if(data1.role == 'admin'){
-    const collection = await connection.getAdmin();
-    const data = await collection.findOne({ "email" : data1.email},{otp:1});
-    if (data1.otp == data.otp) {
-      let res = {
-        status : 200,
-        data : 'ok'
-      }
-      return res
-    }
-    else{
-      let res = {
-        status : 204,
-        data : 'Incorrect Otp'
-      }
-      return res
-    }
-  }
   else{
     let res = {
       status : 204,
@@ -601,22 +499,6 @@ userDB.updatePasswordForUsers = async (userData) => {
     const salt = await bcrypt.genSalt(10);
     const hashpassword = await bcrypt.hash(userData.password, salt);
     const collection = await connection.getTag();
-    const data = await collection.updateOne({ "email" : userData.email},{"$set": {"password" : hashpassword}});
-    if (data.modifiedCount == 1 && data.acknowledged == true) {
-        let res = {
-            status :200,
-            data : "Successfully updated password"
-        }
-        return res
-    }
-    else{
-        return false
-    }
-  }
-  else if(userData.role == 'admin'){
-    const salt = await bcrypt.genSalt(10);
-    const hashpassword = await bcrypt.hash(userData.password, salt);
-    const collection = await connection.getAdmin();
     const data = await collection.updateOne({ "email" : userData.email},{"$set": {"password" : hashpassword}});
     if (data.modifiedCount == 1 && data.acknowledged == true) {
         let res = {
@@ -709,40 +591,6 @@ userDB.updateProfile = async (userData) => {
   }
   else if(userData.role == 'tag'){
     const collection = await connection.getTag();
-    const data = await collection.updateOne({ "_id" : new ObjectId(userData.id)},
-    {"$set": 
-    {
-      "name" : userData.name,
-      "email":userData.email,
-      "phoneNo":userData.phoneNo,
-      "profileStatus":userData.profileStatus,
-      "emailVerified": userData.emailVerified,
-      "phoneVerified": userData.phoneVerified
-    }
-  });
-    if (data.modifiedCount == 1 || data.acknowledged == true) {
-        let res = {
-            status :200,
-            data : "Successfully updated profile",
-            userData:{
-              name : userData.name,
-              phoneNo : userData.phoneNo,
-              email : userData.email,
-              role : userData.role,
-              status : userData.profileStatus,
-              _id : userData.id,
-              emailVerified: userData.emailVerified,
-              phoneVerified: userData.phoneVerified
-            }
-        }
-        return res
-    }
-    else{
-        return false
-    }
-  }
-  else if(userData.role == 'admin'){
-    const collection = await connection.getAdmin();
     const data = await collection.updateOne({ "_id" : new ObjectId(userData.id)},
     {"$set": 
     {

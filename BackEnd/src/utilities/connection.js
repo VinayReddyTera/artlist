@@ -10,6 +10,7 @@ const users = Schema({
     email:String,
     phoneNo:String,
     password:String,
+    role:String,
     otp:Number,
     profileStatus :{type:String,default:'Incomplete'},
     emailVerified : {type:Boolean,default:false},
@@ -32,6 +33,7 @@ const tag = Schema({
     email:String,
     phoneNo:String,
     password:String,
+    role:String,
     otp:Number,
     history : [
         {
@@ -46,18 +48,6 @@ const tag = Schema({
     }
 },{collection : "tag"});
 
-const admin = Schema({
-    name:String,
-    email:String,
-    phoneNo:String,
-    password:String,
-    otp:Number,
-    createdOn: {
-         type: Date,
-         default: moment().format("YYYY-MM-DD HH:mm:ss")
-    }
-},{collection : "admin"});
-
 const artistDetails = Schema({
     name:String,
     email:String,
@@ -69,6 +59,7 @@ const artistDetails = Schema({
     district:String,
     state:String,
     pincode:Number,
+    role:String,
     emailVerified : {type:Boolean,default:false},
     phoneVerified : {type:Boolean,default:false},
     profileStatus :{type:String,default:'Incomplete'},
@@ -151,16 +142,6 @@ collection.getArtist = () => {
 collection.getTag = () => {
     return Mongoose.connect(url,{useNewUrlParser:true,useUnifiedTopology:true}).then((database)=>{
         return database.model('tag',tag)
-    }).catch((error)=>{
-        let err = new Error("Could not connect to database " + error);
-        err.status = 500;
-        throw err;
-    })
-}
-
-collection.getAdmin = () => {
-    return Mongoose.connect(url,{useNewUrlParser:true,useUnifiedTopology:true}).then((database)=>{
-        return database.model('admin',admin)
     }).catch((error)=>{
         let err = new Error("Could not connect to database " + error);
         err.status = 500;
