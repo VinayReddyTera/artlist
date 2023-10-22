@@ -449,4 +449,13 @@ router.post('/updateArtistSkill',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to fetch artist skill
+router.get('/getArtistSkill',verifyToken,(req,res,next)=>{
+  userservice.getArtistSkill().then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 module.exports = router

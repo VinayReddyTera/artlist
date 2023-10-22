@@ -39,6 +39,30 @@ export class SignupComponent implements OnInit {
       password: ['', [Validators.required]],
       cPassword: ['', [Validators.required]]
     },{validator : this.validatePassword});
+
+    // Listen for changes in the "role" field
+this.signupForm.get('role').valueChanges.subscribe((role:any) => {
+  const addressControl = this.signupForm.get('address');
+
+  if (role === 'artist') {
+    if (!addressControl) {
+      this.signupForm.addControl('address', this.formBuilder.control('', Validators.required));
+      this.signupForm.addControl('mandal', this.formBuilder.control('', Validators.required));
+      this.signupForm.addControl('district', this.formBuilder.control('', Validators.required));
+      this.signupForm.addControl('state', this.formBuilder.control('', Validators.required));
+      this.signupForm.addControl('pincode', this.formBuilder.control('', Validators.required));
+    }
+  } else {
+    if (addressControl) {
+      this.signupForm.removeControl('address');
+      this.signupForm.removeControl('mandal');
+      this.signupForm.removeControl('district');
+      this.signupForm.removeControl('state');
+      this.signupForm.removeControl('pincode');
+    }
+  }
+});
+
   }
 
   validateEmail(c:FormControl): { emailError: { message: string; }; } | null{

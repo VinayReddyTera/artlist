@@ -96,7 +96,7 @@ export class AllArtistsComponent {
         status: 'Completed',
         date: '12 Oct, 19',
         comment: 106
-    },
+    }
 ];
 
 ngOnInit() {
