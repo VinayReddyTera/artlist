@@ -154,9 +154,11 @@
                 <div *ngIf="signupForm.get('role').value === 'artist'" class="mb-3">
                   <label for="state" class="form-label">State</label>
 
-                  <input type="text" formControlName="state" class="form-control"
-                    [ngClass]="{ 'is-invalid': submitted && f.state.errors }" id="state"
-                    placeholder="State" />
+                  <select name="state" id="state" formControlName="state" class="form-control"
+                  [ngClass]="{ 'is-invalid': submitted && f.state.errors }">
+                    <option value="0" disabled selected>--select state--</option>
+                    <option *ngFor="let state of states" [value]="state">{{state}}</option>
+                  </select>
 
                   <div *ngIf="submitted && f.state.errors" class="invalid-feedback">
                     <div *ngIf="f.state.errors.required">State is required</div>

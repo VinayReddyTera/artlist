@@ -31,6 +31,42 @@ export class ArtistProfileComponent implements OnInit{
     'showProfileStatus':false
   }
   items: any;
+  states = [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
+    "Andaman and Nicobar Islands",
+    "Chandigarh",
+    "Dadra and Nagar Haveli and Daman and Diu",
+    "Lakshadweep",
+    "Delhi",
+    "Puducherry"
+  ];
 
   constructor(public http: HttpClient, public router: Router,
     private apiService : ApiService,private fb: FormBuilder,
@@ -41,7 +77,7 @@ export class ArtistProfileComponent implements OnInit{
       this.userData = JSON.parse(this.encrypt.deCrypt(localStorage.getItem('data')));
       this.profileStatus = this.userData.profileStatus
     }
-
+    console.log(this.userData)
     this.activatedRoute.queryParamMap.subscribe(params => {
       // Optional parameter
       const status:any = params.get('status');
@@ -111,6 +147,11 @@ export class ArtistProfileComponent implements OnInit{
       email:[this.userData.email,[Validators.required,this.validateEmail]],
       name:[this.userData.name,[Validators.required]],
       phoneNo : [this.userData.phoneNo,[Validators.required,this.validatePhone]],
+      address : [this.userData.address, Validators.required],
+      mandal: [this.userData.mandal, [Validators.required]],
+      district: [this.userData.district, [Validators.required]],
+      state: [this.userData.state, [Validators.required]],
+      pincode: [this.userData.pincode, [Validators.required]]
     })
 
     this.resetForm = this.fb.group({
@@ -192,6 +233,8 @@ export class ArtistProfileComponent implements OnInit{
       document.getElementById("cPassword")?.setAttribute("type","password");
     }
   }
+
+  get f() { return this.profileForm.controls; }
 
   submit() {
     this.submitted = true;

@@ -69,15 +69,35 @@ export class LoginComponent implements OnInit {
             key : environment.secretKey,
             time : expireTime
           }
-          let data : any = {
-            name : res.data.name,
-            email : res.data.email,
-            phoneNo : res.data.phoneNo,
-            id : res.data._id,
-            role : this.loginForm.value.role,
-            profileStatus : res.data.status,
-            emailVerified: res.data.emailVerified,
-            phoneVerified: res.data.phoneVerified
+          let data: any;
+          if(this.loginForm.value.role == 'user'){
+            data = {
+              name : res.data.name,
+              email : res.data.email,
+              phoneNo : res.data.phoneNo,
+              id : res.data._id,
+              role : this.loginForm.value.role,
+              profileStatus : res.data.status,
+              emailVerified: res.data.emailVerified,
+              phoneVerified: res.data.phoneVerified
+            }
+          }
+          else if(this.loginForm.value.role == 'artist'){
+            data = {
+              name : res.data.name,
+              email : res.data.email,
+              phoneNo : res.data.phoneNo,
+              id : res.data._id,
+              role : this.loginForm.value.role,
+              profileStatus : res.data.status,
+              emailVerified: res.data.emailVerified,
+              phoneVerified: res.data.phoneVerified,
+              address : res.add.address,
+              mandal : res.add.mandal,
+              district : res.add.district,
+              state : res.add.state,
+              pincode : res.add.pincode
+            }
           }
           localStorage.setItem('data', this.encrypt.enCrypt(JSON.stringify(data)));
           localStorage.setItem('client-token',this.encrypt.enCrypt(JSON.stringify(clientData)));

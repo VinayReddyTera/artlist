@@ -18,37 +18,99 @@
                 <div class="mb-3">
                     <label for="name">Name</label>
                     <input type="text" formControlName="name" class="form-control" id="name" placeholder="Name"
-                    [ngClass]="{ 'is-invalid': submitted && profileForm.controls.name.errors }"/>
-                      <div *ngIf="profileForm.controls.name.errors?.required && profileForm.controls.name.dirty" class="required-message text-danger">
+                    [ngClass]="{ 'is-invalid': submitted && f.name.errors }"/>
+                      <div *ngIf="f.name.errors?.required && f.name.dirty" class="required-message text-danger">
                         <small>Required Field!</small>
                       </div>
-                      <div *ngIf="profileForm.controls.name.errors?.nameError && !profileForm.controls.name.errors?.required && profileForm.controls.name.dirty" class="required-message text-danger">
-                        <small>{{profileForm.controls.name.errors.nameError.message}}</small>
+                      <div *ngIf="f.name.errors?.nameError && !f.name.errors?.required && f.name.dirty" class="required-message text-danger">
+                        <small>{{f.name.errors.nameError.message}}</small>
                       </div>
                   </div>
 
                   <div class="mb-3">
                     <label for="email">Email</label>
                     <input type="email" formControlName="email" class="form-control" id="email" placeholder="Email"
-                    [ngClass]="{ 'is-invalid': submitted && profileForm.controls.email.errors }"/>
-                      <div *ngIf="profileForm.controls.email.errors?.required && profileForm.controls.email.dirty" class="required-message text-danger">
+                    [ngClass]="{ 'is-invalid': submitted && f.email.errors }"/>
+                      <div *ngIf="f.email.errors?.required && f.email.dirty" class="required-message text-danger">
                         <small>Required Field!</small>
                       </div>
-                      <div *ngIf="profileForm.controls.email.errors?.emailError && !profileForm.controls.email.errors?.required && profileForm.controls.email.dirty" class="required-message text-danger">
-                        <small>{{profileForm.controls.email.errors.emailError.message}}</small>
+                      <div *ngIf="f.email.errors?.emailError && !f.email.errors?.required && f.email.dirty" class="required-message text-danger">
+                        <small>{{f.email.errors.emailError.message}}</small>
                       </div>
                   </div>
 
                 <div class="mb-3">
                   <label for="phoneNo">Phone Number</label>
                   <input type="tel" formControlName="phoneNo" class="form-control" id="phoneNo" placeholder="phoneNo"
-                  [ngClass]="{ 'is-invalid': submitted && profileForm.controls.phoneNo.errors }"/>
-                    <div *ngIf="profileForm.controls.phoneNo.errors?.required && profileForm.controls.phoneNo.dirty" class="required-message text-danger">
+                  [ngClass]="{ 'is-invalid': submitted && f.phoneNo.errors }"/>
+                    <div *ngIf="f.phoneNo.errors?.required && f.phoneNo.dirty" class="required-message text-danger">
                       <small>Required Field!</small>
                     </div>
-                    <div *ngIf="profileForm.controls.phoneNo.errors?.phoneError && !profileForm.controls.phoneNo.errors?.required && profileForm.controls.phoneNo.dirty" class="required-message text-danger">
-                      <small>{{profileForm.controls.phoneNo.errors.phoneError.message}}</small>
+                    <div *ngIf="f.phoneNo.errors?.phoneError && !f.phoneNo.errors?.required && f.phoneNo.dirty" class="required-message text-danger">
+                      <small>{{f.phoneNo.errors.phoneError.message}}</small>
                     </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="address" class="form-label">Address</label>
+
+                  <input type="text" formControlName="address" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && f.address.errors }" id="address"
+                    placeholder="Address" />
+
+                  <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+                    <div *ngIf="f.address.errors.required">Address is required</div>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="mandal" class="form-label">Mandal</label>
+
+                  <input type="text" formControlName="mandal" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && f.mandal.errors }" id="mandal"
+                    placeholder="Mandal" />
+
+                  <div *ngIf="submitted && f.mandal.errors" class="invalid-feedback">
+                    <div *ngIf="f.mandal.errors.required">Mandal is required</div>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="district" class="form-label">District</label>
+
+                  <input type="text" formControlName="district" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && f.district.errors }" id="district"
+                    placeholder="District" />
+
+                  <div *ngIf="submitted && f.district.errors" class="invalid-feedback">
+                    <div *ngIf="f.district.errors.required">District is required</div>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="state" class="form-label">State</label>
+
+                  <select name="state" id="state" formControlName="state" class="form-control"
+                  [ngClass]="{ 'is-invalid': submitted && f.state.errors }">
+                    <option value="0" disabled selected>--select state--</option>
+                    <option *ngFor="let state of states" [value]="state">{{state}}</option>
+                  </select>
+
+                  <div *ngIf="submitted && f.state.errors" class="invalid-feedback">
+                    <div *ngIf="f.state.errors.required">State is required</div>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="pincode" class="form-label">Pincode</label>
+
+                  <input type="number" formControlName="pincode" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && f.pincode.errors }" id="pincode"
+                    placeholder="Pincode" />
+
+                  <div *ngIf="submitted && f.pincode.errors" class="invalid-feedback">
+                    <div *ngIf="f.pincode.errors.required">Pincode is required</div>
+                  </div>
                 </div>
 
                 <div class="mt-3 d-grid">

@@ -24,6 +24,42 @@ export class SignupComponent implements OnInit {
   // set the currenr year
   year: number = new Date().getFullYear();
   role : any;
+  states = [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
+    "Andaman and Nicobar Islands",
+    "Chandigarh",
+    "Dadra and Nagar Haveli and Daman and Diu",
+    "Lakshadweep",
+    "Delhi",
+    "Puducherry"
+  ];
 
   // tslint:disable-next-line: max-line-length
   constructor(private formBuilder: FormBuilder, private activeRoute : ActivatedRoute,
@@ -40,28 +76,24 @@ export class SignupComponent implements OnInit {
       cPassword: ['', [Validators.required]]
     },{validator : this.validatePassword});
 
-    // Listen for changes in the "role" field
-this.signupForm.get('role').valueChanges.subscribe((role:any) => {
-  const addressControl = this.signupForm.get('address');
-
-  if (role === 'artist') {
-    if (!addressControl) {
-      this.signupForm.addControl('address', this.formBuilder.control('', Validators.required));
-      this.signupForm.addControl('mandal', this.formBuilder.control('', Validators.required));
-      this.signupForm.addControl('district', this.formBuilder.control('', Validators.required));
-      this.signupForm.addControl('state', this.formBuilder.control('', Validators.required));
-      this.signupForm.addControl('pincode', this.formBuilder.control('', Validators.required));
+    const addressControl = this.signupForm.get('address');
+    if (this.role === 'artist') {
+      if (!addressControl) {
+        this.signupForm.addControl('address', new FormControl('', Validators.required));
+        this.signupForm.addControl('mandal', new FormControl('', Validators.required));
+        this.signupForm.addControl('district', new FormControl('', Validators.required));
+        this.signupForm.addControl('state', new FormControl('', Validators.required));
+        this.signupForm.addControl('pincode', new FormControl('', Validators.required));
+      }
+    } else {
+      if (addressControl) {
+        this.signupForm.removeControl('address');
+        this.signupForm.removeControl('mandal');
+        this.signupForm.removeControl('district');
+        this.signupForm.removeControl('state');
+        this.signupForm.removeControl('pincode');
+      }
     }
-  } else {
-    if (addressControl) {
-      this.signupForm.removeControl('address');
-      this.signupForm.removeControl('mandal');
-      this.signupForm.removeControl('district');
-      this.signupForm.removeControl('state');
-      this.signupForm.removeControl('pincode');
-    }
-  }
-});
 
   }
 

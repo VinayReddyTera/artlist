@@ -63,7 +63,43 @@ let skillList = [
   "Set Builder",
   "Cinematographer's Assistant",
   "Background performers",
-]
+];
+let states = [
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
+  "Andaman and Nicobar Islands",
+  "Chandigarh",
+  "Dadra and Nagar Haveli and Daman and Diu",
+  "Lakshadweep",
+  "Delhi",
+  "Puducherry"
+];
 
 // api to login users
 router.post('/login',(req,res,next)=>{
@@ -86,10 +122,21 @@ router.post('/login',(req,res,next)=>{
       if(data.status == 200){
         const expirationTime = Math.floor(Date.now() / 1000) + 21600;
         const token = jwt.sign({data:data,exp : expirationTime},process.env.JWT_Secret);
-        let obj = {
-          status : data.status,
-          data : data.data,
-          token : token
+        let obj;
+        if(req.body.role == 'artist'){
+          obj = {
+            status : data.status,
+            data : data.data,
+            token : token,
+            add : data.add
+          }
+        }
+        else{
+          obj = {
+            status : data.status,
+            data : data.data,
+            token : token
+          }
         }
         res.status(200).json(obj)
       }
@@ -147,6 +194,26 @@ router.post('/register',(req,res,next)=>{
       data : 'Invalid data format'
     }
     return res.json(response)
+  }
+  else if(req.body.role == 'artist'){
+    if(!req.body.address 
+      || !req.body.mandal 
+      || !req.body.district
+      || !req.body.state
+      || !req.body.pincode){
+      let response = {
+        status : 204,
+        data : 'Required fields missing'
+      }
+      return res.json(response)
+    }
+    else if(!states.includes(req.body.state)){
+      let response = {
+        status : 204,
+        data : 'Invalid State Name'
+      }
+      return res.json(response)
+    }
   }
   else{
     userservice.register(req.body).then((data)=>{

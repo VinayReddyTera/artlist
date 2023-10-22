@@ -124,6 +124,13 @@ userDB.checkPassword = async (data1) => {
         _id : data._id,
         emailVerified: data.emailVerified,
         phoneVerified: data.phoneVerified
+      },
+      add:{
+        address : data.address,
+        mandal : data.mandal,
+        district : data.district,
+        state : data.state,
+        pincode : data.pincode
       }
       }
         return userData;
