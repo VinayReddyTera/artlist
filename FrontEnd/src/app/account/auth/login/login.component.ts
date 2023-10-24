@@ -92,7 +92,7 @@ export class LoginComponent implements OnInit {
               email : res.data.email,
               phoneNo : res.data.phoneNo,
               id : res.data._id,
-              role : this.loginForm.value.role,
+              role : res.data.role,
               profileStatus : res.data?.status,
               emailVerified: res.data?.emailVerified,
               phoneVerified: res.data?.phoneVerified

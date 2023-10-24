@@ -35,6 +35,7 @@ import { ChipsModule } from 'primeng/chips';
 import { dateRenderer } from './dateRenderer';
 import { genreRenderer } from './skill-data/genreRenderer';
 import { editRenderer } from './skill-data/editRenderer';
+import { AddApproverComponent } from './add-approver/add-approver.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { editRenderer } from './skill-data/editRenderer';
     AddSkillComponent,
     dateRenderer,
     genreRenderer,
-    editRenderer
+    editRenderer,
+    AddApproverComponent
   ],
   imports: [
     CommonModule,

@@ -13,15 +13,15 @@ export class AuthGuard implements CanActivate {
 
   redirect : any = 
     {
-      'admin' : '/dashboard',
+      'admin' : '/all-artists',
       'artist' : '/artist-dashboard',
       'user' : '/user-dashboard',
-      'tag' : '/approve-artist'
+      'tag' : '/artist-approve'
     }
 
   canActivate(route: ActivatedRouteSnapshot,state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     let userRole : any = this.authservice.getRole();
-    let roles = ['admin','user','artist'];
+    let roles = ['admin','user','artist','tag'];
     if(!roles.includes(userRole)){
       localStorage.clear()
     }
@@ -33,7 +33,7 @@ export class AuthGuard implements CanActivate {
         let role : any = this.authservice.getRole();
         // console.log(route.data['role'])
         // console.log(role)
-        if(role == 'artist' || role == 'user' || role == 'admin'){
+        if(role == 'artist' || role == 'user' || role == 'admin' || role == 'tag'){
           if(role == 'artist'){
             if(route.routeConfig?.path === 'artist-profile' || route.routeConfig?.path === 'artist-dashboard' || route.routeConfig?.path === 'artist-history' || route.routeConfig?.path === 'skill-data' || route.routeConfig?.path === 'new-requests' || route.routeConfig?.path === 'artist-approve' || route.routeConfig?.path === 'add-skill' || route.routeConfig?.path === 'add-skill/:type'){
               return true
@@ -55,7 +55,17 @@ export class AuthGuard implements CanActivate {
             return false
           }
           else if(role == 'tag'){
-            if(route.routeConfig?.path === 'approve-artist'){
+            if(route.routeConfig?.path === 'artist-approve'){
+              return true
+            }
+            else{
+              console.log(`redirecting to ${this.redirect[role]}`)
+              this.router.navigateByUrl(this.redirect[role])
+            }
+            return false
+          }
+          else if(role == 'admin'){
+            if(route.routeConfig?.path === 'all-artists'){
               return true
             }
             else{
