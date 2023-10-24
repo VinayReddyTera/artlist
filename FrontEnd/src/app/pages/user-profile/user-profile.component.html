@@ -3,7 +3,7 @@
 <div class="button-container">
     <button class="btn btn-primary" [disabled]="show.showProfile" (click)="setKeyTrue('showProfile')">Update Profile</button>
     <button class="btn btn-success" [disabled]="show.showPassword" (click)="setKeyTrue('showPassword')">Update Password</button>
-    <button class="btn btn-pink" [disabled]="show.showProfileStatus" (click)="setKeyTrue('showProfileStatus')">Profile Status</button>
+    <button class="btn btn-pink" *ngIf="userData.role == 'user'" [disabled]="show.showProfileStatus" (click)="setKeyTrue('showProfileStatus')">Profile Status</button>
 </div>
 
 <div *ngIf="show.showProfile" class="account-pages my-5">
@@ -138,7 +138,7 @@
     </div>
 </div>
 
-<div *ngIf="show.showProfileStatus" class="account-pages my-5">
+<div *ngIf="show.showProfileStatus && userData.role == 'user'" class="account-pages my-5">
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-md-8 col-lg-6 col-xl-5">

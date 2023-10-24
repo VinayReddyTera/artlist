@@ -9,7 +9,7 @@ export class AllArtistsComponent {
   projectData = [
     {
         id: 1,
-        image: 'assets/images/companies/img-1.png',
+        image: 'assets/images/users/avatar-1.jpg',
         text: 'New admin Design',
         subtext: 'It will be as simple as Occidental',
         users: ['assets/images/users/avatar-2.jpg', 'assets/images/users/avatar-1.jpg'],
@@ -19,7 +19,7 @@ export class AllArtistsComponent {
     },
     {
         id: 2,
-        image: 'assets/images/companies/img-2.png',
+        image: 'assets/images/users/avatar-1.jpg',
         text: 'Brand logo design',
         subtext: 'To achieve it would be necessary',
         users: ['assets/images/users/avatar-3.jpg'],
@@ -29,7 +29,7 @@ export class AllArtistsComponent {
     },
     {
         id: 3,
-        image: 'assets/images/companies/img-3.png',
+        image: 'assets/images/users/avatar-1.jpg',
         text: 'New Landing Design',
         subtext: 'For science, music, sport, etc',
         users: ['assets/images/users/avatar-5.jpg', 'assets/images/users/avatar-4.jpg'],
@@ -39,7 +39,7 @@ export class AllArtistsComponent {
     },
     {
         id: 4,
-        image: 'assets/images/companies/img-4.png',
+        image: 'assets/images/users/avatar-1.jpg',
         text: 'Redesign - Landing page',
         subtext: 'If several languages coalesce',
         users: ['assets/images/users/avatar-6.jpg','assets/images/users/avatar-4.jpg','assets/images/users/avatar-3.jpg'],
@@ -49,7 +49,7 @@ export class AllArtistsComponent {
     },
     {
         id: 5,
-        image: 'assets/images/companies/img-5.png',
+        image: 'assets/images/users/avatar-1.jpg',
         text: 'Skote Dashboard UI',
         subtext: 'Separate existence is a myth',
         users: ['assets/images/users/avatar-7.jpg', 'assets/images/users/avatar-8.jpg'],
@@ -59,7 +59,7 @@ export class AllArtistsComponent {
     },
     {
         id: 6,
-        image: 'assets/images/companies/img-6.png',
+        image: 'assets/images/users/avatar-1.jpg',
         text: 'Blog Template UI',
         subtext: 'For science, music, sport, etc',
         users: ['assets/images/users/avatar-6.jpg'],
@@ -69,7 +69,7 @@ export class AllArtistsComponent {
     },
     {
         id: 7,
-        image: 'assets/images/companies/img-3.png',
+        image: 'assets/images/users/avatar-1.jpg',
         text: 'Multipurpose Landing',
         subtext: 'It will be as simple as Occidental',
         users: ['assets/images/users/avatar-3.jpg'],
@@ -79,7 +79,7 @@ export class AllArtistsComponent {
     },
     {
         id: 8,
-        image: 'assets/images/companies/img-4.png',
+        image: 'assets/images/users/avatar-1.jpg',
         text: 'App Landing UI',
         subtext: 'For science, music, sport, etc',
         users: ['assets/images/users/avatar-4.jpg'],
@@ -89,7 +89,7 @@ export class AllArtistsComponent {
     },
     {
         id: 9,
-        image: 'assets/images/companies/img-2.png',
+        image: 'assets/images/users/avatar-1.jpg',
         text: 'New admin Design',
         subtext: 'Their most common words.',
         users: ['assets/images/users/avatar-5.jpg'],

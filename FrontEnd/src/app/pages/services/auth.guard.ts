@@ -65,7 +65,7 @@ export class AuthGuard implements CanActivate {
             return false
           }
           else if(role == 'admin'){
-            if(route.routeConfig?.path === 'all-artists'){
+            if(route.routeConfig?.path === 'all-artists' || route.routeConfig?.path === 'user-profile'){
               return true
             }
             else{
