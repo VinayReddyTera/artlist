@@ -211,24 +211,33 @@ userDB.checkPassword = async (data1) => {
   else if(data1.role == "tag"){
     const collection = await connection.getTag();
     const data = await collection.findOne({"email" : data1.email});
-    const checkPassword = await bcrypt.compare(data1.password,data.password);
-    if (checkPassword) {
-      let userData = {
-        status: 200,
-        data:{
-        name : data.name,
-        phoneNo : data.phoneNo,
-        role:data.role,
-        email : data.email,
-        _id : data._id
+    if(data.password){
+      const checkPassword = await bcrypt.compare(data1.password,data.password);
+      if (checkPassword) {
+        let userData = {
+          status: 200,
+          data:{
+          name : data.name,
+          phoneNo : data.phoneNo,
+          role:data.role,
+          email : data.email,
+          _id : data._id
+        }
       }
-    }
-        return userData;
+          return userData;
+      }
+      else{
+        let res = {
+          status : 204,
+          data : 'Incorrect Password'
+        }
+        return res
+      }
     }
     else{
       let res = {
         status : 204,
-        data : 'Incorrect Password'
+        data : 'Create password by clicking forgot password'
       }
       return res
     }
@@ -764,6 +773,26 @@ userDB.updateArtistSkill = async(payload,id)=>{
     let res = {
       status :204,
       data : "Unable to update skills"
+  }
+  return res
+  }
+}
+
+userDB.addApprover = async(payload)=>{
+  const collection = await connection.getTag();
+  let isCreated = await collection.create(payload);
+  if(isCreated){
+    let res = {
+      status :200,
+      data : 'Successfully added approver',
+      sendMail : true
+  }
+  return res
+  }
+  else{
+    let res = {
+      status :204,
+      data : "Unable to add approver"
   }
   return res
   }

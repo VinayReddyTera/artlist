@@ -525,4 +525,60 @@ router.get('/getArtistSkill',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to add approver
+router.post('/addApprover',verifyToken,(req,res,next)=>{
+  if(!req.body.email
+    || !req.body.role
+    || !req.body.name
+    || !req.body.phoneNo){
+    let response = {
+      status : 204,
+      data : 'Required fields missing'
+    }
+    return res.json(response)
+  }
+  else if(!validate.validateEmail(req.body.email)){
+    let response = {
+      status : 204,
+      data : 'Invalid email format'
+    }
+    return res.json(response)
+  }
+  else if(!validate.validatePhone(req.body.phoneNo)){
+    let response = {
+      status : 204,
+      data : 'Invalid Phone Number format'
+    }
+    return res.json(response)
+  }
+  else if(!validate.validateName(req.body.name)){
+    let response = {
+      status : 204,
+      data : 'Invalid Name format'
+    }
+    return res.json(response)
+  }
+  else if(!validate.validateXss(req.body.name)){
+    let response = {
+      status : 204,
+      data : 'Invalid data format'
+    }
+    return res.json(response)
+  }
+  else if(!skillList.includes(req.body.name)){
+    let response = {
+      status : 204,
+      data : 'Invalid data format'
+    }
+    return res.json(response)
+  }
+  else{
+    userservice.addApprover(req.body).then((data)=>{
+      return res.json(data)
+    }).catch((err)=>{
+      next(err)
+    })
+  }
+})
+
 module.exports = router

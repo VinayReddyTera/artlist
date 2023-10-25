@@ -1,0 +1,9 @@
+::ng-deep .p-multiselect .p-multiselect-trigger{
+    position: absolute;
+    right: 0px;
+    bottom: 15px;
+}
+
+::ng-deep .p-multiselect{
+    display: block !important;
+}

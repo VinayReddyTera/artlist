@@ -33,7 +33,7 @@ export class ApiService {
   }
 
   login(data : any):Observable<any>{
-    return this.http.post(environment.domain+"/login",data)
+    return this.http.post(environment.domain+"login",data)
   }
 
   isLoggedIn(){
@@ -66,47 +66,51 @@ export class ApiService {
   }
 
   fetchDashboardData(data : any):Observable<any>{
-    return this.http.post(environment.domain+"/fetchDashboardData",data)
+    return this.http.post(environment.domain+"fetchDashboardData",data)
   }
 
   register(payload:any):Observable<any>{
-    return this.http.post(environment.domain+"/register",payload)
+    return this.http.post(environment.domain+"register",payload)
   }
 
   forgotPassword(payload:any):Observable<any>{
-    return this.http.post(environment.domain+"/forgotPassword",payload)
+    return this.http.post(environment.domain+"forgotPassword",payload)
   }
 
   resetPassword(payload:any):Observable<any>{
-    return this.http.post(environment.domain+"/resetPassword",payload)
+    return this.http.post(environment.domain+"resetPassword",payload)
   }
 
   giveFeedback(payload:any):Observable<any>{
-    return this.http.post(environment.domain+"/giveFeedback",payload)
+    return this.http.post(environment.domain+"giveFeedback",payload)
   }
 
   changePassword(payload:any):Observable<any>{
-    return this.http.post(environment.domain+"/changePassword",payload)
+    return this.http.post(environment.domain+"changePassword",payload)
   }
 
   updateProfile(payload:any):Observable<any>{
-    return this.http.post(environment.domain+"/updateProfile",payload)
+    return this.http.post(environment.domain+"updateProfile",payload)
   }
 
   sendVerifyEmail(payload:any):Observable<any>{
-    return this.http.post(environment.domain+"/sendVerifyEmail",payload)
+    return this.http.post(environment.domain+"sendVerifyEmail",payload)
   }
 
   addSkill(payload:any):Observable<any>{
-    return this.http.post(environment.domain+"/addSkill",payload)
+    return this.http.post(environment.domain+"addSkill",payload)
   }
 
   getArtistSkill():Observable<any>{
-    return this.http.get(environment.domain+"/getArtistSkill")
+    return this.http.get(environment.domain+"getArtistSkill")
   }
 
   updateArtistSkill(payload:any):Observable<any>{
-    return this.http.post(environment.domain+"/updateArtistSkill",payload)
+    return this.http.post(environment.domain+"updateArtistSkill",payload)
+  }
+
+  addApprover(payload:any):Observable<any>{
+    return this.http.post(environment.domain+"addApprover",payload)
   }
 
 }

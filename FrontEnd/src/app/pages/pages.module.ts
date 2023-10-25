@@ -38,6 +38,7 @@ import { editRenderer } from './skill-data/editRenderer';
 import { AddApproverComponent } from './add-approver/add-approver.component';
 import { AllApproversComponent } from './all-approvers/all-approvers.component';
 import { TagHistoryComponent } from './tag-history/tag-history.component';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { TagHistoryComponent } from './tag-history/tag-history.component';
     NgChartsModule,
     AgGridModule,
     SpeedDialModule,
-    ChipsModule
+    ChipsModule,
+    MultiSelectModule
   ]
 })
 export class PagesModule { }

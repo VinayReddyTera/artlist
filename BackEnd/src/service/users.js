@@ -545,4 +545,19 @@ userService.updateArtistSkill=(payload,id)=>{
   })
 }
 
+userService.addApprover=(payload)=>{
+  return userDB.addApprover(payload).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let response = {
+        status : 204,
+        data : 'unable to add approver'
+      }
+      return response
+    }
+  })
+}
+
 module.exports = userService

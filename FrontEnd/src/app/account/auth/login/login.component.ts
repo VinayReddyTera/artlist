@@ -105,13 +105,6 @@ export class LoginComponent implements OnInit {
         }
         else if(res.status == 204){
           this.errorMessage = res.data;
-          let msgData = {
-            severity : "error",
-            summary : 'Error',
-            detail : res.data,
-            life : 5000
-          }
-          this.apiService.sendMessage(msgData);
         }
       },
       (err:any)=>{

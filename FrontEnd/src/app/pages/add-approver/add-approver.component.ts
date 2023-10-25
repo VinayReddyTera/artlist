@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/pages/services/api.service';
 import { environment } from 'src/environments/environment.prod';
 
@@ -11,7 +10,7 @@ declare const $:any;
   templateUrl: './add-approver.component.html',
   styleUrls: ['./add-approver.component.css']
 })
-export class AddApproverComponent {
+export class AddApproverComponent implements OnInit{
 
   signupForm:any;
   submitted = false;
@@ -19,21 +18,85 @@ export class AddApproverComponent {
   successmsg = false;
   successMessage:any;
   errorMessage:any;
-  // set the currenr year
-  year: number = new Date().getFullYear();
+skillList = [
+  { name: "Director" },
+  { name: "Producer" },
+  { name: "Screenwriter" },
+  { name: "Cinematographer/Director of Photography (DP)" },
+  { name: "Actor/Actress" },
+  { name: "Editor" },
+  { name: "Costume Designer" },
+  { name: "Makeup and Hair Stylists" },
+  { name: "Production Designer/Art Director" },
+  { name: "Location Manager" },
+  { name: "Sound Engineer" },
+  { name: "Composer" },
+  { name: "Music Director" },
+  { name: "Choreographer" },
+  { name: "Dancer" },
+  { name: "Stunt Coordinator" },
+  { name: "Special Effects Supervisor" },
+  { name: "Visual Effects (VFX) Artists" },
+  { name: "Dialect Coach" },
+  { name: "Production Manager" },
+  { name: "Casting Director" },
+  { name: "Script Supervisor" },
+  { name: "Gaffer" },
+  { name: "Key Grip" },
+  { name: "Assistant Director (1st AD, 2nd AD)" },
+  { name: "Production Assistant (PA)" },
+  { name: "Set Decorator" },
+  { name: "Wardrobe Supervisor" },
+  { name: "Animal Wrangler" },
+  { name: "DIT (Digital Imaging Technician)" },
+  { name: "Colorist" },
+  { name: "Grip" },
+  { name: "Best Boy" },
+  { name: "Boom Operator" },
+  { name: "Caterer/Craft Service" },
+  { name: "Legal and Clearance Team" },
+  { name: "Publicist" },
+  { name: "Singer" },
+  { name: "Musician" },
+  { name: "Sound Recordist" },
+  { name: "Sound designer" },
+  { name: "Lighting Designer" },
+  { name: "Prop Master" },
+  { name: "Storyboard Artist" },
+  { name: "Location Scout" },
+  { name: "Dance Instructor" },
+  { name: "Fight Choreographer" },
+  { name: "SFX Makeup Artist" },
+  { name: "Foley Artist" },
+  { name: "ADR Supervisor" },
+  { name: "Post-Production Supervisor" },
+  { name: "Public Relations Manager" },
+  { name: "Film Editor" },
+  { name: "Line producer" },
+  { name: "Marketing Director" },
+  { name: "Set Builder" },
+  { name: "Cinematographer's Assistant" },
+  { name: "Background performers" }
+];
 
-  // tslint:disable-next-line: max-line-length
-  constructor(private formBuilder: FormBuilder, private activeRoute : ActivatedRoute,
-     private router: Router,private apiService:ApiService) { }
+  constructor(private formBuilder: FormBuilder,private apiService:ApiService) { }
 
   ngOnInit() {
     this.signupForm = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: ['', [Validators.required,this.validateName]],
       email: ['', [Validators.required,this.validateEmail]],
       phoneNo: ['', [Validators.required,this.validatePhone]],
-      role : ['tag', Validators.required]
+      role : ['tag', Validators.required],
+      skillName: ['', Validators.required]
     });
-
+    // $(document).ready(()=> {
+    //   $('.select2').select2({width: '100%'});
+    // });
+    // $('.select2').on('change',(e:any)=>{
+    //   let index = e.target.id;
+    //   let skillName : any = (<HTMLSelectElement>document.getElementById(index))?.value;
+    //   (this.signupForm.get('skillName'))?.setValue(skillName);
+    // });
   }
 
   validateEmail(c:FormControl): { emailError: { message: string; }; } | null{
@@ -81,62 +144,44 @@ validatePassword(c:FormGroup){
 
   onSubmit() {
     this.submitted = true;
+    this.signupForm.value.skillName = this.signupForm.value.skillName.map((obj:any) => obj.name);
     console.log(this.signupForm.value);
-    if(this.signupForm.value.role == 'artist' || this.signupForm.value.role == 'user'){
-      if(this.signupForm.valid){
-        this.apiService.initiateLoading(true)
-        this.apiService.register(this.signupForm.value).subscribe(
-          (res:any)=>{
-            if(res.status == 200){
-              this.successMessage = res.data;
-              let msgData = {
-                severity : "success",
-                summary : 'Success',
-                detail : res.data,
-                life : 5000
-              }
-              this.apiService.sendMessage(msgData);
+    if(this.signupForm.valid){
+      this.apiService.initiateLoading(true)
+      this.apiService.addApprover(this.signupForm.value).subscribe(
+        (res:any)=>{
+          if(res.status == 200){
+            this.successMessage = res.data;
+            let msgData = {
+              severity : "success",
+              summary : 'Success',
+              detail : res.data,
+              life : 5000
             }
-            else if(res.status == 204){
-              this.errorMessage = res.data;
-              let msgData = {
-                severity : "error",
-                summary : 'Error',
-                detail : res.data,
-                life : 5000
-              }
-              this.apiService.sendMessage(msgData);
-            }
-          },
-          (err:any)=>{
-            console.log(err)
+            this.apiService.sendMessage(msgData);
           }
-        ).add(()=>{
-          this.apiService.initiateLoading(false)
-          setTimeout(()=>{
-            this.successMessage = null;
-            this.errorMessage = null;
-          },4000)
-        })
-      }
+          else if(res.status == 204){
+            this.errorMessage = res.data;
+            let msgData = {
+              severity : "error",
+              summary : 'Error',
+              detail : res.data,
+              life : 5000
+            }
+            this.apiService.sendMessage(msgData);
+          }
+        },
+        (err:any)=>{
+          console.log(err)
+        }
+      ).add(()=>{
+        this.apiService.initiateLoading(false)
+        setTimeout(()=>{
+          this.successMessage = null;
+          this.errorMessage = null;
+        },4000)
+      })
     }
-    else{
-      $('#invalidRoleModal').modal('show')
-    }
-  }
-
-  navigateUser(){
-    this.router.navigateByUrl('/account/signup/user').then(()=>{
-      $('#invalidRoleModal').modal('hide');
-      this.signupForm.controls['role'].setValue(this.activeRoute.snapshot.params['type'])
-    })
-  }
-
-  navigateArtist(){
-    this.router.navigateByUrl('/account/signup/artist').then(()=>{
-      $('#invalidRoleModal').modal('hide')
-      this.signupForm.controls['role'].setValue(this.activeRoute.snapshot.params['type'])
-    })
   }
 
 }

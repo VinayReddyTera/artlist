@@ -34,6 +34,7 @@ const tag = Schema({
     phoneNo:String,
     password:String,
     role:String,
+    skillNames:[String],
     otp:Number,
     history : [
         {
