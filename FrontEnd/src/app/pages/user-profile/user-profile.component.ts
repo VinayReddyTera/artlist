@@ -85,26 +85,45 @@ export class UserProfileComponent implements OnInit{
       }
       this.router.navigateByUrl('/user-profile')
     })
-    this.items = [
-      {
-          icon: 'mdi mdi-account-edit',
-          command: () => {
-              this.setKeyTrue('showProfile')
-          }
-      },
-      {
-          icon: 'mdi mdi-key-variant',
-          command: () => {
-            this.setKeyTrue('showPassword')
-          }
-      },
-      {
-          icon: 'mdi mdi-list-status',
-          command: () => {
-            this.setKeyTrue('showProfileStatus')
-          }
-      }
-  ];
+    if(this.userData.role == 'admin' || this.userData.role == 'tag'){
+      this.items = [
+        {
+            icon: 'mdi mdi-account-edit',
+            command: () => {
+                this.setKeyTrue('showProfile')
+            }
+        },
+        {
+            icon: 'mdi mdi-key-variant',
+            command: () => {
+              this.setKeyTrue('showPassword')
+            }
+        }
+    ];
+    }
+    else{
+      this.items = [
+        {
+            icon: 'mdi mdi-account-edit',
+            command: () => {
+                this.setKeyTrue('showProfile')
+            }
+        },
+        {
+            icon: 'mdi mdi-key-variant',
+            command: () => {
+              this.setKeyTrue('showPassword')
+            }
+        },
+        {
+            icon: 'mdi mdi-list-status',
+            command: () => {
+              this.setKeyTrue('showProfileStatus')
+            }
+        }
+    ];
+    }
+
     console.log(this.userData)
     this.profileForm = this.fb.group({
       email:[this.userData.email,[Validators.required,this.validateEmail]],

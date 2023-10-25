@@ -41,7 +41,7 @@ export class TopbarComponent implements OnInit {
     if(this.role == 'artist'){
       this.router.navigateByUrl('/artist-profile')
     }
-    else if(this.role == 'user'){
+    else if(this.role == 'user' || this.role == 'tag'|| this.role == 'admin'){
       this.router.navigateByUrl('/user-profile')
     }
   }

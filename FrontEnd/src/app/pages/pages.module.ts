@@ -36,6 +36,8 @@ import { dateRenderer } from './dateRenderer';
 import { genreRenderer } from './skill-data/genreRenderer';
 import { editRenderer } from './skill-data/editRenderer';
 import { AddApproverComponent } from './add-approver/add-approver.component';
+import { AllApproversComponent } from './all-approvers/all-approvers.component';
+import { TagHistoryComponent } from './tag-history/tag-history.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +58,9 @@ import { AddApproverComponent } from './add-approver/add-approver.component';
     dateRenderer,
     genreRenderer,
     editRenderer,
-    AddApproverComponent
+    AddApproverComponent,
+    AllApproversComponent,
+    TagHistoryComponent
   ],
   imports: [
     CommonModule,

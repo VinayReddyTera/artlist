@@ -13,6 +13,9 @@ import { SkillDataComponent } from './skill-data/skill-data.component';
 import { NewRequestsComponent } from './new-requests/new-requests.component';
 import { ArtistApproveComponent } from './artist-approve/artist-approve.component';
 import { AddSkillComponent } from './add-skill/add-skill.component';
+import { AddApproverComponent } from './add-approver/add-approver.component';
+import { AllApproversComponent } from './all-approvers/all-approvers.component';
+import { TagHistoryComponent } from './tag-history/tag-history.component';
 
 const routes: Routes = [
   {
@@ -100,7 +103,7 @@ const routes: Routes = [
     component: UserProfileComponent,
     canActivate: [AuthGuard],
     data: {
-      role: ['admin', 'user','access-user-profile']
+      role: ['admin', 'user','tag','access-user-profile']
     }
   },
   {
@@ -117,6 +120,30 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       role: ['admin', 'user','access-artist-data']
+    }
+  },
+  {
+    path: 'add-approver',
+    component: AddApproverComponent,
+    canActivate: [AuthGuard],
+    data: {
+      role: ['admin', 'access-add-approver']
+    }
+  },
+  {
+    path: 'all-approvers',
+    component: AllApproversComponent,
+    canActivate: [AuthGuard],
+    data: {
+      role: ['admin', 'access-add-approver']
+    }
+  },
+  {
+    path: 'tag-history',
+    component: TagHistoryComponent,
+    canActivate: [AuthGuard],
+    data: {
+      role: ['tag','access-tag-history']
     }
   },
   {

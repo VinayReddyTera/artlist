@@ -55,7 +55,7 @@ export class AuthGuard implements CanActivate {
             return false
           }
           else if(role == 'tag'){
-            if(route.routeConfig?.path === 'artist-approve'){
+            if(route.routeConfig?.path === 'artist-approve' || route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'tag-history'){
               return true
             }
             else{
@@ -65,7 +65,7 @@ export class AuthGuard implements CanActivate {
             return false
           }
           else if(role == 'admin'){
-            if(route.routeConfig?.path === 'all-artists' || route.routeConfig?.path === 'user-profile'){
+            if(route.routeConfig?.path === 'all-artists' || route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'add-approver' || route.routeConfig?.path === 'all-approvers'){
               return true
             }
             else{

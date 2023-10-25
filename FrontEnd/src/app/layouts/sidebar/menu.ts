@@ -59,23 +59,44 @@ export const MENU: MenuItem[] = [
     },
     {
         id: 9,
-        label: 'Profile',
-        icon: 'bxs-id-card',
-        link : '/user-profile',
-        role: ['admin','user','access-user-profile']
+        label: 'Add Approver',
+        icon: 'bxs-user-plus',
+        link : '/add-approver',
+        role: ['admin','access-add-approver']
     },
     {
-        id: 10,
-        label: 'History',
-        icon: 'bx-history',
-        link : '/user-history',
-        role: ['admin', 'user','access-user-history']
+        id: 9,
+        label: 'All Approvers',
+        icon: 'bxs-user-check',
+        link : '/all-approvers',
+        role: ['admin','access-all-approvers']
     },
     {
         id: 11,
         label: 'Approve Artist',
         icon: 'bxs-user-plus',
         link : '/artist-approve',
-        role: ['admin', 'tag','access-artist-approve']
+        role: ['tag','access-artist-approve']
+    },
+    {
+        id: 12,
+        label: 'History',
+        icon: 'bx-history',
+        link : '/user-history',
+        role: ['user','access-user-history']
+    },
+    {
+        id: 10,
+        label: 'Profile',
+        icon: 'bxs-id-card',
+        link : '/user-profile',
+        role: ['admin','user','tag','access-user-profile']
+    },
+    {
+        id: 10,
+        label: 'History',
+        icon: 'bx-history',
+        link : '/tag-history',
+        role: ['tag','access-tag-history']
     }
 ]
