@@ -7,3 +7,21 @@
 ::ng-deep .p-multiselect{
     display: block !important;
 }
+
+@media (min-width: 320px) {
+    ::ng-deep .p-overlay{
+        width: 225px !important;
+    }
+}
+
+@media (min-width: 375px) {
+    ::ng-deep .p-overlay{
+        width: 225px !important;
+    }
+}
+
+@media (min-width: 425px) {
+    ::ng-deep .p-overlay{
+        width: 333px !important;
+    }
+}

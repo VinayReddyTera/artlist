@@ -144,7 +144,9 @@ validatePassword(c:FormGroup){
 
   onSubmit() {
     this.submitted = true;
-    this.signupForm.value.skillName = this.signupForm.value.skillName.map((obj:any) => obj.name);
+    if(this.signupForm.value.skillName){
+      this.signupForm.value.skillName = this.signupForm.value.skillName.map((obj:any) => obj.name);
+    }
     console.log(this.signupForm.value);
     if(this.signupForm.valid){
       this.apiService.initiateLoading(true)

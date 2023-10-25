@@ -8,7 +8,7 @@
             <div class="form-group col-md-6">
                 <label for="title">Skill Name</label>
                 <!-- <input type="text" class="form-control" formControlName="name" placeholder="Enter Job Description Title"> -->
-                <select class="form-control select2" id="skillName">
+                <select class="form-control select2" id="skillName" formControlName="name">
                     <option value="0" disabled selected>--select--</option>
                     <option *ngFor="let skill of skillList" [value]="skill">{{skill}}</option>
                   </select>
