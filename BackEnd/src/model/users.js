@@ -800,7 +800,7 @@ userDB.addApprover = async(payload)=>{
 
 userDB.allApprovers = async()=>{
   const collection = await connection.getTag();
-  let data = await collection.find({role:'tag'});
+  let data = await collection.find({role:'tag'},{password:0,history:0});
   if(data.length>0){
     let res = {
       status :200,
@@ -812,6 +812,32 @@ userDB.allApprovers = async()=>{
     let res = {
       status :204,
       data : "No approver registered yet"
+  }
+  return res
+  }
+}
+
+userDB.editApprover = async(payload)=>{
+  const collection = await connection.getTag();
+  let isUpdated = await collection.updateOne({_id:new ObjectId(payload.id)},{
+    $set:{
+      name : payload.name,
+      email : payload.email,
+      phoneNo : payload.phoneNo,
+      skillName : payload.skillName
+    }
+  });
+  if(isUpdated.modifiedCount == 1 || isUpdated.acknowledged == true){
+    let res = {
+      status :200,
+      data : 'Successfully updated'
+  }
+  return res
+  }
+  else{
+    let res = {
+      status :204,
+      data : "Unable to edit"
   }
   return res
   }

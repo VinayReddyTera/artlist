@@ -83,8 +83,7 @@ export class AddSkillComponent implements OnInit {
     "Background performers",
 ]
 
-  constructor(private apiService: ApiService, private fb: FormBuilder,
-    private spinner : NgxSpinnerService,private route:ActivatedRoute,
+  constructor(private apiService: ApiService, private fb: FormBuilder,private route:ActivatedRoute,
     private encryptionService: EncryptionService,private router : Router) {}
 
   ngOnInit(): void {

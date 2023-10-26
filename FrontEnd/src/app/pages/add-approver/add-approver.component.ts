@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { ApiService } from 'src/app/pages/services/api.service';
 import { environment } from 'src/environments/environment.prod';
+import { EncryptionService } from '../services/encryption.service';
 
 declare const $:any;
 
@@ -16,9 +18,12 @@ export class AddApproverComponent implements OnInit{
   submitted = false;
   error = '';
   successmsg = false;
+  isCreating:any = true;
+  isUpdating:any = false;
   successMessage:any;
   errorMessage:any;
-skillList = [
+  updateData : any;
+  skillList = [
   { name: "Director" },
   { name: "Producer" },
   { name: "Screenwriter" },
@@ -77,9 +82,10 @@ skillList = [
   { name: "Set Builder" },
   { name: "Cinematographer's Assistant" },
   { name: "Background performers" }
-];
+  ];
 
-  constructor(private formBuilder: FormBuilder,private apiService:ApiService) { }
+  constructor(private formBuilder: FormBuilder,private route:ActivatedRoute,
+    private apiService:ApiService,private encryptionService: EncryptionService) { }
 
   ngOnInit() {
     this.signupForm = this.formBuilder.group({
@@ -89,14 +95,18 @@ skillList = [
       role : ['tag', Validators.required],
       skillName: ['', Validators.required]
     });
-    // $(document).ready(()=> {
-    //   $('.select2').select2({width: '100%'});
-    // });
-    // $('.select2').on('change',(e:any)=>{
-    //   let index = e.target.id;
-    //   let skillName : any = (<HTMLSelectElement>document.getElementById(index))?.value;
-    //   (this.signupForm.get('skillName'))?.setValue(skillName);
-    // });
+
+    if(localStorage.getItem('editApprover')){
+      if(this.encryptionService.deCrypt(this.route.snapshot.paramMap.get('type')) == 'edit'){
+        this.isCreating = false;
+        this.isUpdating = true;
+        this.updateData = JSON.parse(this.encryptionService.deCrypt(localStorage.getItem('editApprover')));
+        this.edit();
+      }
+      else{
+        localStorage.removeItem('editApprover')
+      }
+    }
   }
 
   validateEmail(c:FormControl): { emailError: { message: string; }; } | null{
@@ -150,40 +160,98 @@ validatePassword(c:FormGroup){
     console.log(this.signupForm.value);
     if(this.signupForm.valid){
       this.apiService.initiateLoading(true)
-      this.apiService.addApprover(this.signupForm.value).subscribe(
-        (res:any)=>{
-          if(res.status == 200){
-            this.successMessage = res.data;
-            let msgData = {
-              severity : "success",
-              summary : 'Success',
-              detail : res.data,
-              life : 5000
+      if(this.isCreating){
+        this.apiService.addApprover(this.signupForm.value).subscribe(
+          (res:any)=>{
+            if(res.status == 200){
+              this.successMessage = res.data;
+              let msgData = {
+                severity : "success",
+                summary : 'Success',
+                detail : res.data,
+                life : 5000
+              }
+              this.apiService.sendMessage(msgData);
             }
-            this.apiService.sendMessage(msgData);
-          }
-          else if(res.status == 204){
-            this.errorMessage = res.data;
-            let msgData = {
-              severity : "error",
-              summary : 'Error',
-              detail : res.data,
-              life : 5000
+            else if(res.status == 204){
+              this.errorMessage = res.data;
+              let msgData = {
+                severity : "error",
+                summary : 'Error',
+                detail : res.data,
+                life : 5000
+              }
+              this.apiService.sendMessage(msgData);
             }
-            this.apiService.sendMessage(msgData);
+          },
+          (err:any)=>{
+            console.log(err)
           }
-        },
-        (err:any)=>{
-          console.log(err)
-        }
-      ).add(()=>{
-        this.apiService.initiateLoading(false)
-        setTimeout(()=>{
-          this.successMessage = null;
-          this.errorMessage = null;
-        },4000)
-      })
+        ).add(()=>{
+          this.apiService.initiateLoading(false)
+          setTimeout(()=>{
+            this.successMessage = null;
+            this.errorMessage = null;
+          },4000)
+        })
+      }
+      else{
+        this.apiService.editApprover(this.signupForm.value).subscribe(
+          (res:any)=>{
+            if(res.status == 200){
+              this.successMessage = res.data;
+              let msgData = {
+                severity : "success",
+                summary : 'Success',
+                detail : res.data,
+                life : 5000
+              }
+              this.apiService.sendMessage(msgData);
+            }
+            else if(res.status == 204){
+              this.errorMessage = res.data;
+              let msgData = {
+                severity : "error",
+                summary : 'Error',
+                detail : res.data,
+                life : 5000
+              }
+              this.apiService.sendMessage(msgData);
+            }
+          },
+          (err:any)=>{
+            console.log(err)
+          }
+        ).add(()=>{
+          this.apiService.initiateLoading(false)
+          setTimeout(()=>{
+            this.successMessage = null;
+            this.errorMessage = null;
+          },4000)
+        })
+      }
     }
+  }
+
+  edit(){
+    const arrayOfObjects = this.updateData.skillName.map((str:any) => ({ name: str }));
+    console.log(this.updateData)
+    this.signupForm.patchValue({
+      name: this.updateData.name,
+      email : this.updateData.email,
+      phoneNo : this.updateData.phoneNo,
+      skillName: arrayOfObjects
+    });
+
+    this.signupForm.get('name').setValidators([Validators.required,this.validateName]);
+    this.signupForm.get('name').updateValueAndValidity();
+    this.signupForm.get('email').setValidators([Validators.required,this.validateEmail]);
+    this.signupForm.get('email').updateValueAndValidity();
+    this.signupForm.get('phoneNo').setValidators([Validators.required,this.validatePhone]);
+    this.signupForm.get('phoneNo').updateValueAndValidity();
+    this.signupForm.get('skillName').setValidators(Validators.required);
+    this.signupForm.get('skillName').updateValueAndValidity();
+    this.signupForm.addControl('id', new FormControl(this.updateData._id, Validators.required));
   }
 
 }

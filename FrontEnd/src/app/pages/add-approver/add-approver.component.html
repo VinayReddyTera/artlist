@@ -4,7 +4,8 @@
       <div class="col-md-8 col-lg-6 col-xl-5">
         <div class="card overflow-hidden">
           <div class="card-body">
-            <h5>Add Approver</h5>
+            <h5 *ngIf="isCreating" class="card-title">Add Approver</h5>
+            <h5 *ngIf="isUpdating" class="card-title">Edit Approver</h5>
             <div class="p-2">
 
               <form class="needs-validation" name="signupForm" [formGroup]="signupForm" (ngSubmit)="onSubmit()"
@@ -55,10 +56,6 @@
 
                 <div class="mb-3">
                     <label for="title">Skill Name</label> <br>
-                    <!-- <select class="form-control select2" id="skillName" formControlName="skillName">
-                        <option value="0" disabled selected>--select--</option>
-                        <option *ngFor="let skill of skillList" [value]="skill">{{skill}}</option>
-                      </select> -->
                       <p-multiSelect [options]="skillList" formControlName="skillName" optionLabel="name"></p-multiSelect>
                       <div *ngIf="submitted && f.skillName.errors" class="text-danger required-message">
                         <div *ngIf="f.skillName.errors.required"><small>Required field</small></div>
@@ -66,7 +63,8 @@
                 </div>
 
                 <div class="mt-4 d-grid">
-                  <button class="btn btn-primary" type="submit">Add Approver</button>
+                  <button *ngIf="isCreating" type="submit" name="update_brand" id="saveApprover" class="btn btn-success">Add Approver</button>
+                  <button *ngIf="isUpdating" type="submit" name="update_brand" id="updateApprover" class="btn btn-success">Edit Approver</button>
                 </div>
                 <div class="mt-4 text-center">
                   <p *ngIf="successMessage" class="mb-0 text-success font-weight-bold">{{successMessage}}</p>

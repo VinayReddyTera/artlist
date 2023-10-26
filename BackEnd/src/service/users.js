@@ -575,4 +575,18 @@ userService.allApprovers=()=>{
   })
 }
 
+userService.editApprover=(payload)=>{
+  return userDB.editApprover(payload).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let response = {
+        status : 204,
+        data : 'unable to update'
+      }
+      return response
+    }
+  })
+}
 module.exports = userService

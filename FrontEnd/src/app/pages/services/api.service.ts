@@ -117,4 +117,8 @@ export class ApiService {
     return this.http.get(environment.domain+"allApprovers")
   }
 
+  editApprover(payload:any):Observable<any>{
+    return this.http.post(environment.domain+"editApprover",payload)
+  }
+
 }

@@ -604,4 +604,65 @@ router.get('/allApprovers',verifyToken,(req,res,next)=>{
   }
 })
 
+//router to edit approver
+router.post('/editApprover',verifyToken,(req,res,next)=>{
+  for(let i of req.body.skillName){
+    if(!skillList.includes(i)){
+      let response = {
+        status : 204,
+        data : 'Invalid data format'
+      }
+      return res.json(response)
+    }
+  }
+  if(!req.body.email
+    || !req.body.role
+    || !req.body.name
+    || !req.body.phoneNo
+    || !req.body.id
+    || !req.body.skillName?.length
+    ){
+    let response = {
+      status : 204,
+      data : 'Required fields missing'
+    }
+    return res.json(response)
+  }
+  else if(!validate.validateEmail(req.body.email)){
+    let response = {
+      status : 204,
+      data : 'Invalid email format'
+    }
+    return res.json(response)
+  }
+  else if(!validate.validatePhone(req.body.phoneNo)){
+    let response = {
+      status : 204,
+      data : 'Invalid Phone Number format'
+    }
+    return res.json(response)
+  }
+  else if(!validate.validateName(req.body.name)){
+    let response = {
+      status : 204,
+      data : 'Invalid Name format'
+    }
+    return res.json(response)
+  }
+  else if(!validate.validateXss(req.body.name)){
+    let response = {
+      status : 204,
+      data : 'Invalid data format'
+    }
+    return res.json(response)
+  }
+  else{
+    userservice.editApprover(req.body).then((data)=>{
+      return res.json(data)
+    }).catch((err)=>{
+      next(err)
+    })
+  }
+})
+
 module.exports = router
