@@ -560,4 +560,19 @@ userService.addApprover=(payload)=>{
   })
 }
 
+userService.allApprovers=()=>{
+  return userDB.allApprovers().then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let response = {
+        status : 204,
+        data : 'unable to fetch approvers'
+      }
+      return response
+    }
+  })
+}
+
 module.exports = userService

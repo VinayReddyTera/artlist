@@ -131,6 +131,14 @@ const routes: Routes = [
     }
   },
   {
+    path: 'add-approver/:type',
+    component: AddApproverComponent,
+    canActivate: [AuthGuard],
+    data: {
+      role: ['admin', 'access-add-approver']
+    }
+  },
+  {
     path: 'all-approvers',
     component: AllApproversComponent,
     canActivate: [AuthGuard],

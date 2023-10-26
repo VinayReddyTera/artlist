@@ -798,4 +798,23 @@ userDB.addApprover = async(payload)=>{
   }
 }
 
+userDB.allApprovers = async()=>{
+  const collection = await connection.getTag();
+  let data = await collection.find({role:'tag'});
+  if(data.length>0){
+    let res = {
+      status :200,
+      data : data
+  }
+  return res
+  }
+  else{
+    let res = {
+      status :204,
+      data : "No approver registered yet"
+  }
+  return res
+  }
+}
+
 module.exports = userDB

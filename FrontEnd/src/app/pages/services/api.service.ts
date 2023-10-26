@@ -113,4 +113,8 @@ export class ApiService {
     return this.http.post(environment.domain+"addApprover",payload)
   }
 
+  allApprovers():Observable<any>{
+    return this.http.get(environment.domain+"allApprovers")
+  }
+
 }

@@ -527,10 +527,21 @@ router.get('/getArtistSkill',verifyToken,(req,res,next)=>{
 
 //router to add approver
 router.post('/addApprover',verifyToken,(req,res,next)=>{
+  for(let i of req.body.skillName){
+    if(!skillList.includes(i)){
+      let response = {
+        status : 204,
+        data : 'Invalid data format'
+      }
+      return res.json(response)
+    }
+  }
   if(!req.body.email
     || !req.body.role
     || !req.body.name
-    || !req.body.phoneNo){
+    || !req.body.phoneNo
+    || !req.body.skillName?.length
+    ){
     let response = {
       status : 204,
       data : 'Required fields missing'
@@ -565,19 +576,31 @@ router.post('/addApprover',verifyToken,(req,res,next)=>{
     }
     return res.json(response)
   }
-  else if(!skillList.includes(req.body.name)){
-    let response = {
-      status : 204,
-      data : 'Invalid data format'
-    }
-    return res.json(response)
-  }
   else{
     userservice.addApprover(req.body).then((data)=>{
       return res.json(data)
     }).catch((err)=>{
       next(err)
     })
+  }
+})
+
+//router to fetch all approvers
+router.get('/allApprovers',verifyToken,(req,res,next)=>{
+  let role = jwt.decode(req.headers.authorization).data.data.role;
+  if(role == 'admin'){
+    userservice.allApprovers().then((data)=>{
+      return res.json(data)
+    }).catch((err)=>{
+      next(err)
+    })
+  }
+  else{
+    let response = {
+      status : 204,
+      data : 'Unauthorized request'
+    }
+    return res.json(response)
   }
 })
 

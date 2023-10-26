@@ -99,6 +99,10 @@ export class VerticalComponent implements OnInit, AfterViewInit {
         document.body.setAttribute('data-sidebar', 'dark');
         break;
     }
+    if (window.screen.width <= 768) {
+      document.body.classList.remove('sidebar-enable');
+      document.body.classList.remove('vertical-collpsed');
+    }
   }
 
   /**

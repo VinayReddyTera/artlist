@@ -65,7 +65,7 @@ export class AuthGuard implements CanActivate {
             return false
           }
           else if(role == 'admin'){
-            if(route.routeConfig?.path === 'all-artists' || route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'add-approver' || route.routeConfig?.path === 'all-approvers'){
+            if(route.routeConfig?.path === 'all-artists' || route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'add-approver' || route.routeConfig?.path === 'add-approver/:type' || route.routeConfig?.path === 'all-approvers'){
               return true
             }
             else{

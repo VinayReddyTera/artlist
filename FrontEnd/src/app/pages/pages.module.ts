@@ -39,6 +39,7 @@ import { AddApproverComponent } from './add-approver/add-approver.component';
 import { AllApproversComponent } from './all-approvers/all-approvers.component';
 import { TagHistoryComponent } from './tag-history/tag-history.component';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { editRenderer1 } from './all-approvers/editRenderer';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
     dateRenderer,
     genreRenderer,
     editRenderer,
+    editRenderer1,
     AddApproverComponent,
     AllApproversComponent,
     TagHistoryComponent
