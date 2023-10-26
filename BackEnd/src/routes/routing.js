@@ -121,7 +121,7 @@ router.post('/login',(req,res,next)=>{
     userservice.login(req.body).then((data)=>{
       if(data.status == 200){
         const expirationTime = Math.floor(Date.now() / 1000) + 21600;
-        const token = jwt.sign({data:data,exp : expirationTime},process.env.JWT_Secret);
+        const token = jwt.sign({data:data.data,exp : expirationTime},process.env.JWT_Secret);
         let obj;
         if(req.body.role == 'artist'){
           obj = {
@@ -386,7 +386,7 @@ router.get('/verifyEmail/:token',(req,res,next)=>{
     jwt.verify(req.params.token,process.env.JWT_Secret,(err,user)=>{
       if(err){
           let userdata = jwt.decode(req.params.token)
-          let url = `${process.env.redirect_Url}/${userdata.data.role}-profile?status=204&data=Email verification link expired`
+          let url = `${process.env.redirect_Url}/${userdata.role}-profile?status=204&data=Email verification link expired`
           return res.redirect(url)
       }
       else{
@@ -487,7 +487,7 @@ router.post('/addSkill',verifyToken,(req,res,next)=>{
     return res.json(response)
   }
   else{
-    let id = jwt.decode(req.headers.authorization).data.data._id;
+    let id = jwt.decode(req.headers.authorization).data._id;
     userservice.addSkill(req.body,id).then((data)=>{
       return res.json(data)
     }).catch((err)=>{
@@ -498,7 +498,7 @@ router.post('/addSkill',verifyToken,(req,res,next)=>{
 
 //router to get artist skill
 router.get('/getArtistSkill',verifyToken,(req,res,next)=>{
-  let id = jwt.decode(req.headers.authorization).data.data._id;
+  let id = jwt.decode(req.headers.authorization).data._id;
   userservice.getArtistSkill(id).then((data)=>{
     return res.json(data)
   }).catch((err)=>{
@@ -508,7 +508,7 @@ router.get('/getArtistSkill',verifyToken,(req,res,next)=>{
 
 //router to update artist skill
 router.post('/updateArtistSkill',verifyToken,(req,res,next)=>{
-  let id = jwt.decode(req.headers.authorization).data.data._id;
+  let id = jwt.decode(req.headers.authorization).data._id;
   userservice.updateArtistSkill(req.body,id).then((data)=>{
     return res.json(data)
   }).catch((err)=>{
@@ -587,7 +587,7 @@ router.post('/addApprover',verifyToken,(req,res,next)=>{
 
 //router to fetch all approvers
 router.get('/allApprovers',verifyToken,(req,res,next)=>{
-  let role = jwt.decode(req.headers.authorization).data.data.role;
+  let role = jwt.decode(req.headers.authorization).data?.role;
   if(role == 'admin'){
     userservice.allApprovers().then((data)=>{
       return res.json(data)

@@ -86,6 +86,7 @@ export class UserProfileComponent implements OnInit{
       this.router.navigateByUrl('/user-profile')
     })
     if(this.userData.role == 'admin' || this.userData.role == 'tag'){
+      this.profileStatus = 'NA'
       this.items = [
         {
             icon: 'mdi mdi-account-edit',
