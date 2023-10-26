@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, Validators, FormControl } from '@angular/forms';
 
 import { Router } from '@angular/router';
 
@@ -86,7 +86,7 @@ export class LoginComponent implements OnInit {
               pincode : res.add.pincode
             }
           }
-          else{
+          else if(this.loginForm.value.role == 'user'){
             data = {
               name : res.data.name,
               email : res.data.email,
@@ -96,6 +96,15 @@ export class LoginComponent implements OnInit {
               profileStatus : res.data?.status,
               emailVerified: res.data?.emailVerified,
               phoneVerified: res.data?.phoneVerified
+            }
+          }
+          else{
+            data = {
+              name : res.data.name,
+              email : res.data.email,
+              phoneNo : res.data.phoneNo,
+              id : res.data._id,
+              role : res.data.role
             }
           }
           localStorage.setItem('data', this.encrypt.enCrypt(JSON.stringify(data)));

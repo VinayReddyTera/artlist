@@ -361,12 +361,8 @@ export class UserProfileComponent implements OnInit{
   }
 
   verifyEmail(){
-    let payload = {
-      email : this.userData.email,
-      role : this.userData.role
-    }
     this.apiService.initiateLoading(true);
-    this.apiService.sendVerifyEmail(payload).subscribe(
+    this.apiService.sendVerifyEmail().subscribe(
     (res : any)=>{
       console.log(res)
       if(res.status == 200){

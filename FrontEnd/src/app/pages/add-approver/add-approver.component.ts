@@ -180,9 +180,6 @@ validatePassword(c:FormGroup){
 
   onSubmit() {
     this.submitted = true;
-    // if(this.signupForm.value.skillName){
-    //   this.signupForm.value.skillName = this.signupForm.value.skillName.map((obj:any) => obj.name);
-    // }
     console.log(this.signupForm.value);
     if(this.signupForm.valid){
       this.apiService.initiateLoading(true)
@@ -260,15 +257,13 @@ validatePassword(c:FormGroup){
   }
 
   edit(){
-    const arrayOfObjects = this.updateData.skillName.map((str:any) => ({ name: str }));
-    const arrayOfLang = this.updateData.language.map((str:any) => ({ name: str }));
     console.log(this.updateData)
     this.signupForm.patchValue({
       name: this.updateData.name,
       email : this.updateData.email,
       phoneNo : this.updateData.phoneNo,
-      skillName: arrayOfObjects,
-      language : arrayOfLang
+      skillName: this.updateData.skillName,
+      language : this.updateData.language
     });
 
     this.signupForm.get('name').setValidators([Validators.required,this.validateName]);

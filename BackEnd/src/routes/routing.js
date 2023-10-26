@@ -370,38 +370,25 @@ router.post('/updateProfile', verifyToken, (req, res, next)=>{
 })
 
 //router to sendVerifyEmail
-router.post('/sendVerifyEmail', verifyToken, (req, res, next)=>{
-  if(req.body.email && req.body.role){
-    if(
-         !validate.validateEmail(req.body.email)
-      ){
-      let response = {
-        status : 204,
-        data : 'Invalid email address'
-      }
-      return res.json(response)
-    }
-    else if(req.body.role != 'artist' && req.body.role != 'user'){
-      let response = {
-        status : 204,
-        data : 'Invalid role'
-      }
-      return res.json(response)
-    }
-    else{
-      userservice.sendVerifyEmail(req.body,req.headers.host).then((data)=>{
-        return res.json(data)
-      }).catch((err)=>{
-        next(err)
-      })
-    }
+router.get('/sendVerifyEmail', verifyToken, (req, res, next)=>{
+  let userdata = jwt.decode(req.headers.authorization)
+  let payload = {
+    email : userdata.data.email,
+    role : userdata.data.role
   }
-  else{
+  if(payload.role != 'artist' && payload.role != 'user'){
     let response = {
       status : 204,
-      data : 'Required fields missing'
+      data : 'Invalid role'
     }
     return res.json(response)
+  }
+  else{
+    userservice.sendVerifyEmail(payload,req.headers.host).then((data)=>{
+      return res.json(data)
+    }).catch((err)=>{
+      next(err)
+    })
   }
 })
 

@@ -212,6 +212,13 @@ userDB.checkPassword = async (data1) => {
   else if(data1.role == "tag" || userData.role == 'admin'){
     const collection = await connection.getTag();
     const data = await collection.findOne({"email" : data1.email});
+    if(data.status != 'active'){
+      let res = {
+        status : 204,
+        data : 'You are not an active approver, connect with admin'
+      }
+      return res
+    }
     if(data.password){
       const checkPassword = await bcrypt.compare(data1.password,data.password);
       if (checkPassword) {
@@ -621,10 +628,7 @@ userDB.updateProfile = async (userData) => {
               phoneNo : userData.phoneNo,
               email : userData.email,
               role : userData.role,
-              status : userData.profileStatus,
-              _id : userData.id,
-              emailVerified: userData.emailVerified,
-              phoneVerified: userData.phoneVerified
+              _id : userData.id
             }
         }
         return res

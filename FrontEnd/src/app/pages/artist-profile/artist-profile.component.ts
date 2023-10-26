@@ -281,22 +281,7 @@ export class ArtistProfileComponent implements OnInit{
           }
           this.apiService.sendMessage(msgData);
           localStorage.setItem('token',res.token);
-          let data : any = {
-            name : this.profileForm.value.name,
-            email : this.profileForm.value.email,
-            phoneNo : this.profileForm.value.phoneNo,
-            profileStatus : this.profileStatus,
-            role: this.userData.role,
-            id : this.userData.id,
-            emailVerified : emailVerified,
-            phoneVerified : phoneVerified,
-            address : this.profileForm.value.address,
-            mandal : this.profileForm.value.mandal,
-            district : this.profileForm.value.district,
-            state : this.profileForm.value.state,
-            pincode : this.profileForm.value.pincode
-          }
-          localStorage.setItem('data', this.encrypt.enCrypt(JSON.stringify(data)));
+          localStorage.setItem('data', this.encrypt.enCrypt(JSON.stringify(payload)));
           let now = new Date();
           let time = now.getTime();
           let expireTime = time + 600 * 36000;
@@ -395,12 +380,8 @@ export class ArtistProfileComponent implements OnInit{
   }
 
   verifyEmail(){
-    let payload = {
-      email : this.userData.email,
-      role : this.userData.role
-    }
     this.apiService.initiateLoading(true);
-    this.apiService.sendVerifyEmail(payload).subscribe(
+    this.apiService.sendVerifyEmail().subscribe(
     (res : any)=>{
       console.log(res)
       if(res.status == 200){
