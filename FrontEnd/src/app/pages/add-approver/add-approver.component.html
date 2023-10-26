@@ -56,7 +56,7 @@
 
                 <div class="mb-3">
                     <label for="title">Skill Name</label> <br>
-                      <p-multiSelect [options]="skillList" formControlName="skillName" optionLabel="name"></p-multiSelect>
+                      <p-multiSelect [options]="skillList" formControlName="skillName" optionLabel="name" display="chip"></p-multiSelect>
                       <div *ngIf="submitted && f.skillName.errors" class="text-danger required-message">
                         <div *ngIf="f.skillName.errors.required"><small>Required field</small></div>
                       </div>

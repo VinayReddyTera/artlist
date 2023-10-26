@@ -58,3 +58,12 @@
     -o-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
 }
+
+.email{
+    color: #007BFF !important;
+    cursor: pointer !important;
+}
+
+.email:hover{
+   opacity: 0.5 !important;
+}

@@ -1,16 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../services/api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { Router } from '@angular/router';
 import { editRenderer1 } from './editRenderer';
+import { contactDetailsRenderer } from './contactRenderer';
+import { dateRenderer } from '../dateRenderer';
 
 @Component({
   selector: 'app-all-approvers',
   templateUrl: './all-approvers.component.html',
   styleUrls: ['./all-approvers.component.css']
 })
-export class AllApproversComponent {
+export class AllApproversComponent implements OnInit {
 
   constructor(private apiService : ApiService,
     private spinner : NgxSpinnerService,private router:Router) { }
@@ -26,35 +28,12 @@ export class AllApproversComponent {
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
-      field: "phoneNo",
+      field: "action",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
-      headerName: "Phone No",
-      cellRenderer: (params:any)=> {
-        if(params.value == null){
-          return 'N/A'
-        }
-        else{
-          let link = `<a href="tel:${params.value}">${params.value}</a>`;
-          return link
-        }
-      }
-    },
-    {
-      field: "email",
-      filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
-      headerName: "Email",
-      cellRenderer: (params:any)=> {
-        if(params.value == null){
-          return 'N/A'
-        }
-        else{
-          let link = `<a href="mailto:${params.value}">${params.value}</a>`;
-          return link
-        }
-      },
-      width : 250
+      headerName: "Contact",
+      cellRenderer: contactDetailsRenderer,
+      width:150
     },
     {
       field: "status",
@@ -83,6 +62,13 @@ export class AllApproversComponent {
       filterParams: { suppressAndOrCondition: true },
       headerName: "Skills",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value.toString()}`
+    },
+    {
+      field: "createdOn",
+      filter: "agDateColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Date of Joining",
+      cellRenderer: dateRenderer
     },
     {
       field: "action",

@@ -40,6 +40,7 @@ import { AllApproversComponent } from './all-approvers/all-approvers.component';
 import { TagHistoryComponent } from './tag-history/tag-history.component';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { editRenderer1 } from './all-approvers/editRenderer';
+import { contactDetailsRenderer } from './all-approvers/contactRenderer';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { editRenderer1 } from './all-approvers/editRenderer';
     genreRenderer,
     editRenderer,
     editRenderer1,
+    contactDetailsRenderer,
     AddApproverComponent,
     AllApproversComponent,
     TagHistoryComponent
