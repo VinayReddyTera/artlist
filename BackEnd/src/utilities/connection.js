@@ -35,6 +35,7 @@ const tag = Schema({
     password:String,
     role:String,
     skillName:[String],
+    language:[String],
     status : {type:String,default:'active'},
     otp:Number,
     history : [
@@ -56,6 +57,7 @@ const artistDetails = Schema({
     phoneNo:String,
     password:String,
     otp:Number,
+    language:[String],
     address : String,
     mandal : String,
     district:String,

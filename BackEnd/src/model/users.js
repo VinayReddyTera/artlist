@@ -52,6 +52,7 @@ userDB.register = async (data1) => {
       email : data1.email,
       password : hashpassword,
       phoneNo : data1.phoneNo,
+      role: data1.role,
       address : data1.address,
       mandal : data1.mandal,
       district:data1.district,
@@ -792,6 +793,7 @@ userDB.addApprover = async(payload)=>{
   else{
     let res = {
       status :204,
+      sendMail:false,
       data : "Unable to add approver"
   }
   return res

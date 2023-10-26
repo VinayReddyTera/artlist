@@ -100,6 +100,31 @@ let states = [
   "Delhi",
   "Puducherry"
 ];
+let languages = [
+  "Hindi",
+  "Bengali",
+  "English",
+  "Telugu",
+  "Marathi",
+  "Tamil",
+  "Urdu",
+  "Gujarati",
+  "Kannada",
+  "Odia",
+  "Punjabi",
+  "Malayalam",
+  "Assamese",
+  "Sanskrit",
+  "Konkani",
+  "Nepali",
+  "Manipuri",
+  "Sindhi",
+  "Maithili",
+  "Dogri",
+  "Bodo",
+  "Kashmiri",
+  "Santhali"
+];
 
 // api to login users
 router.post('/login',(req,res,next)=>{
@@ -527,8 +552,17 @@ router.get('/getArtistSkill',verifyToken,(req,res,next)=>{
 
 //router to add approver
 router.post('/addApprover',verifyToken,(req,res,next)=>{
-  for(let i of req.body.skillName){
+  for(let i of req.body?.skillName){
     if(!skillList.includes(i)){
+      let response = {
+        status : 204,
+        data : 'Invalid data format'
+      }
+      return res.json(response)
+    }
+  }
+  for(let i of req.body?.language){
+    if(!languages.includes(i)){
       let response = {
         status : 204,
         data : 'Invalid data format'
@@ -541,6 +575,7 @@ router.post('/addApprover',verifyToken,(req,res,next)=>{
     || !req.body.name
     || !req.body.phoneNo
     || !req.body.skillName?.length
+    || !req.body.language?.length
     ){
     let response = {
       status : 204,
@@ -615,12 +650,22 @@ router.post('/editApprover',verifyToken,(req,res,next)=>{
       return res.json(response)
     }
   }
+  for(let i of req.body?.language){
+    if(!languages.includes(i)){
+      let response = {
+        status : 204,
+        data : 'Invalid data format'
+      }
+      return res.json(response)
+    }
+  }
   if(!req.body.email
     || !req.body.role
     || !req.body.name
     || !req.body.phoneNo
     || !req.body.id
     || !req.body.skillName?.length
+    || !req.body.language?.length
     ){
     let response = {
       status : 204,

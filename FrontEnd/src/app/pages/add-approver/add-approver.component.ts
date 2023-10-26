@@ -83,6 +83,31 @@ export class AddApproverComponent implements OnInit{
   { name: "Cinematographer's Assistant" },
   { name: "Background performers" }
   ];
+  languages = [
+    {"name": "Hindi"},
+    {"name": "Bengali"},
+    {"name": "English"},
+    {"name": "Telugu"},
+    {"name": "Marathi"},
+    {"name": "Tamil"},
+    {"name": "Urdu"},
+    {"name": "Gujarati"},
+    {"name": "Kannada"},
+    {"name": "Odia"},
+    {"name": "Punjabi"},
+    {"name": "Malayalam"},
+    {"name": "Assamese"},
+    {"name": "Sanskrit"},
+    {"name": "Konkani"},
+    {"name": "Nepali"},
+    {"name": "Manipuri"},
+    {"name": "Sindhi"},
+    {"name": "Maithili"},
+    {"name": "Dogri"},
+    {"name": "Bodo"},
+    {"name": "Kashmiri"},
+    {"name": "Santhali"}
+  ];
 
   constructor(private formBuilder: FormBuilder,private route:ActivatedRoute,
     private apiService:ApiService,private encryptionService: EncryptionService) { }
@@ -93,7 +118,8 @@ export class AddApproverComponent implements OnInit{
       email: ['', [Validators.required,this.validateEmail]],
       phoneNo: ['', [Validators.required,this.validatePhone]],
       role : ['tag', Validators.required],
-      skillName: ['', Validators.required]
+      skillName: ['', Validators.required],
+      language: ['', Validators.required]
     });
 
     if(localStorage.getItem('editApprover')){
@@ -154,9 +180,9 @@ validatePassword(c:FormGroup){
 
   onSubmit() {
     this.submitted = true;
-    if(this.signupForm.value.skillName){
-      this.signupForm.value.skillName = this.signupForm.value.skillName.map((obj:any) => obj.name);
-    }
+    // if(this.signupForm.value.skillName){
+    //   this.signupForm.value.skillName = this.signupForm.value.skillName.map((obj:any) => obj.name);
+    // }
     console.log(this.signupForm.value);
     if(this.signupForm.valid){
       this.apiService.initiateLoading(true)
@@ -235,12 +261,14 @@ validatePassword(c:FormGroup){
 
   edit(){
     const arrayOfObjects = this.updateData.skillName.map((str:any) => ({ name: str }));
+    const arrayOfLang = this.updateData.language.map((str:any) => ({ name: str }));
     console.log(this.updateData)
     this.signupForm.patchValue({
       name: this.updateData.name,
       email : this.updateData.email,
       phoneNo : this.updateData.phoneNo,
-      skillName: arrayOfObjects
+      skillName: arrayOfObjects,
+      language : arrayOfLang
     });
 
     this.signupForm.get('name').setValidators([Validators.required,this.validateName]);
@@ -251,6 +279,8 @@ validatePassword(c:FormGroup){
     this.signupForm.get('phoneNo').updateValueAndValidity();
     this.signupForm.get('skillName').setValidators(Validators.required);
     this.signupForm.get('skillName').updateValueAndValidity();
+    this.signupForm.get('language').setValidators(Validators.required);
+    this.signupForm.get('language').updateValueAndValidity();
     this.signupForm.addControl('id', new FormControl(this.updateData._id, Validators.required));
   }
 
