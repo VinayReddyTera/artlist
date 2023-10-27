@@ -121,4 +121,8 @@ export class ApiService {
     return this.http.post(environment.domain+"editApprover",payload)
   }
 
+  pendingArtists():Observable<any>{
+    return this.http.get(environment.domain+"pendingArtists")
+  }
+
 }

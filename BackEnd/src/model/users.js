@@ -854,4 +854,77 @@ userDB.editApprover = async(payload)=>{
   }
 }
 
+userDB.getSkill = async(id)=>{
+  const collection = await connection.getTag();
+  let skillData = await collection.findOne({'_id':new ObjectId(id)},{skillName:1,_id:0});
+  if(skillData.skillName.length>0){
+    return skillData.skillName
+  }
+  else{
+    return null
+  }
+}
+
+userDB.pendingArtists = async(skillarray)=>{
+  const collection = await connection.getArtist();
+  let artistData = await collection.aggregate([
+    {
+        $match: {
+            "skills": {
+                $elemMatch: {
+                    "name": { $in: skillarray },
+                    $or: [
+                        { "validated": false },
+                        { "genre.validated": false }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        $addFields: {
+            "skills": {
+                $filter: {
+                    input: "$skills",
+                    as: "skill",
+                    cond: {
+                        $and: [
+                            { $in: ["$$skill.name", skillarray] },
+                            {
+                                $or: [
+                                    { $eq: ["$$skill.validated", false] },
+                                    { $in: [false, "$$skill.genre.validated"] }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    {
+        $project: {
+            "name": 1,
+            "email": 1,
+            "phoneNo": 1,
+            "skills": 1
+        }
+    }
+])
+  if(artistData.length>0){
+    let res = {
+      status :200,
+      data : artistData
+  }
+  return res
+  }
+  else{
+    let res = {
+      status :204,
+      data : "No Pending Artists"
+  }
+  return res
+  }
+}
+
 module.exports = userDB

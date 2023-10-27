@@ -708,4 +708,23 @@ router.post('/editApprover',verifyToken,(req,res,next)=>{
   }
 })
 
+//router to fetch unapproved artists
+router.get('/pendingArtists',verifyToken,(req,res,next)=>{
+  let userData = jwt.decode(req.headers.authorization).data;
+  if(userData.role == 'tag'){
+    userservice.pendingArtists(userData._id).then((data)=>{
+      return res.json(data)
+    }).catch((err)=>{
+      next(err)
+    })
+  }
+  else{
+    let response = {
+      status : 204,
+      data : 'Unauthorized request'
+    }
+    return res.json(response)
+  }
+})
+
 module.exports = router

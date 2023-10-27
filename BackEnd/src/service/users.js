@@ -658,4 +658,31 @@ userService.editApprover=(payload)=>{
     }
   })
 }
+
+userService.pendingArtists=(id)=>{
+  return userDB.getSkill(id).then((skillData)=>{
+    if(skillData){
+      return userDB.pendingArtists(skillData).then((data)=>{
+        if(data){
+          return data
+        }
+        else{
+          let response = {
+            status : 204,
+            data : 'unable to fetch artists'
+          }
+          return response
+        }
+      })
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to fetch approver skill data'
+      }
+      return res
+    }
+  })
+}
+
 module.exports = userService
