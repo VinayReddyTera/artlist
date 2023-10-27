@@ -95,7 +95,7 @@ export class ArtistProfileComponent implements OnInit{
           this.userData.phoneVerified = true
         }
         this.apiService.sendMessage(msgData);
-        if(this.userData.phoneVerified){
+        if(this.userData.phoneVerified && this.userData.emailVerified){
           this.profileStatus = "complete"
         }
         let encryptData : any = {
@@ -105,8 +105,13 @@ export class ArtistProfileComponent implements OnInit{
           profileStatus : this.profileStatus,
           role: this.userData.role,
           id : this.userData.id,
-          emailVerified : true,
-          phoneVerified : this.userData.phoneVerified
+          emailVerified : this.userData.emailVerified,
+          phoneVerified : this.userData.phoneVerified,
+          address : this.userData.address,
+          mandal : this.userData.mandal,
+          district : this.userData.district,
+          state : this.userData.state,
+          pincode : this.userData.pincode
         }
         localStorage.setItem('data', this.encrypt.enCrypt(JSON.stringify(encryptData)));
       }

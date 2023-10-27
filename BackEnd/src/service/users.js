@@ -385,7 +385,7 @@ userService.updateProfile=(payload)=>{
   })
 }
 
-userService.sendVerifyEmail=(userData,host)=>{
+userService.sendVerifyEmail=(userData,host,protocol)=>{
   return userDB.checkLoginUser(userData).then((data)=>{
     if(data.status == 204){
         return data
@@ -430,7 +430,7 @@ userService.sendVerifyEmail=(userData,host)=>{
             <p style='font-size: 24px;
             color:black;'>
             Click below link verify email. The below link expires in 2 hours<br>
-            <a href=${host}/verifyEmail/${token} target='_blank'><button style="display: inline-block;
+            <a href=${protocol}://${host}/verifyEmail/${token} target='_blank'><button style="display: inline-block;
             font-weight: 400;
             text-align: center;
             white-space: nowrap;
@@ -451,7 +451,6 @@ userService.sendVerifyEmail=(userData,host)=>{
             Click Here!
             </button></a>
 </p>
-
         </td>
         </tr>
         <tr>

@@ -384,7 +384,8 @@ router.get('/sendVerifyEmail', verifyToken, (req, res, next)=>{
     return res.json(response)
   }
   else{
-    userservice.sendVerifyEmail(payload,req.headers.host).then((data)=>{
+    let protocol = req.headers.origin.split(':')[0]
+    userservice.sendVerifyEmail(payload,req.headers.host,protocol).then((data)=>{
       return res.json(data)
     }).catch((err)=>{
       next(err)
