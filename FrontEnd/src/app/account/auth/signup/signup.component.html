@@ -48,8 +48,8 @@
                     <div *ngIf="f.name.errors.required">Name is required</div>
                   </div>
 
-                  <div *ngIf="signupForm.controls.name.errors?.nameError && !signupForm.controls.name.errors?.required && signupForm.controls.name.dirty" class="required-message text-danger">
-                    <small>{{signupForm.controls.name.errors.nameError.message}}</small>
+                  <div *ngIf="f.name.errors?.nameError && !f.name.errors?.required && f.name.dirty" class="required-message text-danger">
+                    <small>{{f.name.errors.nameError.message}}</small>
                   </div>
                 </div>
 
@@ -58,11 +58,11 @@
 
                   <input type="email" formControlName="email" class="form-control"
                     [ngClass]="{ 'is-invalid': submitted && f.email.errors }" id="email" placeholder="Email" />
-                    <div *ngIf="signupForm.controls.email.errors?.required && signupForm.controls.email.dirty" class="required-message text-danger">
+                    <div *ngIf="f.email.errors?.required && f.email.dirty" class="required-message text-danger">
                       <small>Required Field!</small>
                     </div>
-                    <div *ngIf="signupForm.controls.email.errors?.emailError && !signupForm.controls.email.errors?.required && signupForm.controls.email.dirty" class="required-message text-danger">
-                      <small>{{signupForm.controls.email.errors.emailError.message}}</small>
+                    <div *ngIf="f.email.errors?.emailError && !f.email.errors?.required && f.email.dirty" class="required-message text-danger">
+                      <small>{{f.email.errors.emailError.message}}</small>
                     </div>
                 </div>
 
@@ -72,11 +72,11 @@
                   <input type="tel" formControlName="phoneNo" class="form-control"
                     [ngClass]="{ 'is-invalid': submitted && f.phoneNo.errors }" id="phoneNo" placeholder="Phone Number" />
 
-                    <div *ngIf="signupForm.controls.phoneNo.errors?.required && signupForm.controls.phoneNo.dirty" class="required-message text-danger">
+                    <div *ngIf="f.phoneNo.errors?.required && f.phoneNo.dirty" class="required-message text-danger">
                       <small>Required Field!</small>
                     </div>
-                    <div *ngIf="signupForm.controls.phoneNo.errors?.phoneError && !signupForm.controls.phoneNo.errors?.required && signupForm.controls.phoneNo.dirty" class="required-message text-danger">
-                      <small>{{signupForm.controls.phoneNo.errors.phoneError.message}}</small>
+                    <div *ngIf="f.phoneNo.errors?.phoneError && !f.phoneNo.errors?.required && f.phoneNo.dirty" class="required-message text-danger">
+                      <small>{{f.phoneNo.errors.phoneError.message}}</small>
                     </div>
                 </div>
 
@@ -84,14 +84,14 @@
                   <label for="password">Password</label>
                   <div class="input-group auth-pass-inputgroup">
                     <input type="password" id="password" class="form-control" formControlName="password" placeholder="Enter password"
-                      aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': submitted && signupForm.controls.password.errors }">
+                      aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
   
                     <button class="btn btn-light ms-0" type="button" id="cPassword-addon" (click)="togglePasswordVisibility()">
                       <i class="mdi mdi-eye" *ngIf="!showPassword"></i>
                       <i class="mdi mdi-eye-off" *ngIf="showPassword"></i>
                     </button>
                     </div>
-                    <div *ngIf="signupForm.controls.password.errors?.required && signupForm.controls.password.dirty" class="text-danger">
+                    <div *ngIf="f.password.errors?.required && f.password.dirty" class="text-danger">
                       <small>Required Field!</small>
                      </div>
                 </div>
@@ -100,19 +100,27 @@
                     <label for="password">Confirm Password</label>
                     <div class="input-group auth-pass-inputgroup">
                       <input type="password" id="cPassword" class="form-control" formControlName="cPassword" placeholder="Enter password"
-                        aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': submitted && signupForm.controls.cPassword.errors }">
+                        aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': submitted && f.cPassword.errors }">
   
                       <button class="btn btn-light ms-0" type="button" id="password-addon" (click)="toggleConfirmPasswordVisibility()">
                         <i class="mdi mdi-eye" *ngIf="!showConfirmPassword"></i>
                         <i class="mdi mdi-eye-off" *ngIf="showConfirmPassword"></i>
                       </button>
                       </div>
-                      <div *ngIf="signupForm.controls.cPassword.errors?.required && signupForm.controls.cPassword.dirty" class="text-danger">
+                      <div *ngIf="f.cPassword.errors?.required && f.cPassword.dirty" class="text-danger">
                         <small>Required Field!</small>
                         </div>
-                        <div *ngIf="signupForm.errors?.passwordError && !signupForm.controls.cPassword.errors?.required && signupForm.controls.cPassword.dirty" class="required-message text-danger">
+                        <div *ngIf="signupForm.errors?.passwordError && !f.cPassword.errors?.required && f.cPassword.dirty" class="required-message text-danger">
                         <small>{{signupForm.errors.passwordError.message}}</small>
                       </div>
+                </div>
+
+                <div *ngIf="signupForm.get('role').value === 'artist'" class="mb-3">
+                  <label for="title">Languages Known</label> <br>
+                    <p-multiSelect [options]="languages" formControlName="language" optionLabel="name" optionValue="name" display="chip"></p-multiSelect>
+                    <div *ngIf="submitted && f.language.errors" class="text-danger required-message">
+                      <div *ngIf="f.language.errors.required"><small>Required field</small></div>
+                    </div>
                 </div>
 
                 <div *ngIf="signupForm.get('role').value === 'artist'" class="mb-3">

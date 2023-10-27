@@ -185,6 +185,7 @@ router.post('/register',(req,res,next)=>{
     if(!req.body.address 
       || !req.body.mandal 
       || !req.body.district
+      || !req.body.language
       || !req.body.state
       || !req.body.pincode){
       let response = {
@@ -199,6 +200,15 @@ router.post('/register',(req,res,next)=>{
         data : 'Invalid State Name'
       }
       return res.json(response)
+    }
+    for(let i of req.body.language){
+      if(!languages.includes(i)){
+        let response = {
+          status : 204,
+          data : 'Invalid Language Name'
+        }
+        return res.json(response)
+      }
     }
   }
   if(!req.body.email 

@@ -60,6 +60,31 @@ export class SignupComponent implements OnInit {
     "Delhi",
     "Puducherry"
   ];
+  languages = [
+    {"name": "Hindi"},
+    {"name": "Bengali"},
+    {"name": "English"},
+    {"name": "Telugu"},
+    {"name": "Marathi"},
+    {"name": "Tamil"},
+    {"name": "Urdu"},
+    {"name": "Gujarati"},
+    {"name": "Kannada"},
+    {"name": "Odia"},
+    {"name": "Punjabi"},
+    {"name": "Malayalam"},
+    {"name": "Assamese"},
+    {"name": "Sanskrit"},
+    {"name": "Konkani"},
+    {"name": "Nepali"},
+    {"name": "Manipuri"},
+    {"name": "Sindhi"},
+    {"name": "Maithili"},
+    {"name": "Dogri"},
+    {"name": "Bodo"},
+    {"name": "Kashmiri"},
+    {"name": "Santhali"}
+  ];
 
   // tslint:disable-next-line: max-line-length
   constructor(private formBuilder: FormBuilder, private activeRoute : ActivatedRoute,
@@ -84,6 +109,7 @@ export class SignupComponent implements OnInit {
         this.signupForm.addControl('district', new FormControl('', Validators.required));
         this.signupForm.addControl('state', new FormControl('', Validators.required));
         this.signupForm.addControl('pincode', new FormControl('', Validators.required));
+        this.signupForm.addControl('language', new FormControl('', Validators.required));
       }
     } else {
       if (addressControl) {
@@ -92,6 +118,7 @@ export class SignupComponent implements OnInit {
         this.signupForm.removeControl('district');
         this.signupForm.removeControl('state');
         this.signupForm.removeControl('pincode');
+        this.signupForm.removeControl('language');
       }
     }
 

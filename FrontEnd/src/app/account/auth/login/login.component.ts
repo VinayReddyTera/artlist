@@ -83,7 +83,8 @@ export class LoginComponent implements OnInit {
               mandal : res.add.mandal,
               district : res.add.district,
               state : res.add.state,
-              pincode : res.add.pincode
+              pincode : res.add.pincode,
+              language : res.add.language,
             }
           }
           else if(this.loginForm.value.role == 'user'){

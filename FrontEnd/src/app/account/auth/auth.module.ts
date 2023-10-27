@@ -11,6 +11,7 @@ import { AuthRoutingModule } from './auth-routing';
 import { PasswordresetComponent } from './passwordreset/passwordreset.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @NgModule({
   declarations: [LoginComponent, SignupComponent, PasswordresetComponent, ResetPasswordComponent],
@@ -21,7 +22,8 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     NgbAlertModule,
     AuthRoutingModule,
     CarouselModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    MultiSelectModule
   ]
 })
 export class AuthModule { }

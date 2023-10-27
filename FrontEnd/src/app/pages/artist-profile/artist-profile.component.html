@@ -51,6 +51,14 @@
                 </div>
 
                 <div class="mb-3">
+                  <label for="title">Languages Known</label> <br>
+                    <p-multiSelect [options]="languages" formControlName="language" optionLabel="name" optionValue="name" display="chip"></p-multiSelect>
+                    <div *ngIf="submitted && f.language.errors" class="text-danger required-message">
+                      <div *ngIf="f.language.errors.required"><small>Required field</small></div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
                   <label for="address" class="form-label">Address</label>
 
                   <input type="text" formControlName="address" class="form-control"

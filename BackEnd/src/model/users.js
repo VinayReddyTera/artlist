@@ -53,6 +53,7 @@ userDB.register = async (data1) => {
       password : hashpassword,
       phoneNo : data1.phoneNo,
       role: data1.role,
+      language:data1.language,
       address : data1.address,
       mandal : data1.mandal,
       district:data1.district,
@@ -168,7 +169,8 @@ userDB.checkPassword = async (data1) => {
         mandal : data.mandal,
         district : data.district,
         state : data.state,
-        pincode : data.pincode
+        pincode : data.pincode,
+        language : data.language
       }
       }
         return userData;
@@ -549,6 +551,7 @@ userDB.updateProfile = async (userData) => {
       "profileStatus":userData.profileStatus,
       "emailVerified": userData.emailVerified,
       "phoneVerified": userData.phoneVerified,
+      "language" : userData.language,
       "address" : userData.address,
       "mandal" : userData.mandal,
       "district" : userData.district,
