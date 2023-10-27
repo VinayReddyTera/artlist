@@ -548,7 +548,12 @@ userDB.updateProfile = async (userData) => {
       "phoneNo":userData.phoneNo,
       "profileStatus":userData.profileStatus,
       "emailVerified": userData.emailVerified,
-      "phoneVerified": userData.phoneVerified
+      "phoneVerified": userData.phoneVerified,
+      "address" : userData.address,
+      "mandal" : userData.mandal,
+      "district" : userData.district,
+      "state" : userData.state,
+      "pincode" : userData.pincode
     }
   });
     if (data.modifiedCount == 1 || data.acknowledged == true) {
@@ -613,10 +618,7 @@ userDB.updateProfile = async (userData) => {
     {
       "name" : userData.name,
       "email":userData.email,
-      "phoneNo":userData.phoneNo,
-      "profileStatus":userData.profileStatus,
-      "emailVerified": userData.emailVerified,
-      "phoneVerified": userData.phoneVerified
+      "phoneNo":userData.phoneNo
     }
   });
     if (data.modifiedCount == 1 || data.acknowledged == true) {
