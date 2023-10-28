@@ -45,13 +45,20 @@ export class SkillDataComponent {
           return 'N/A'
         }
         else{
-          if(params.value == true){
+          if(params.value == 'a'){
             let link = `<span class="badge badge-soft-success" style="font-size:13px">${params.value}</span>`;
             return link
           }
-          else{
+          else if(params.value == 'r'){
             let link = `<span class="badge badge-soft-danger" style="font-size:13px">${params.value}</span>`;
             return link
+          }
+          else if(params.value == 'nv'){
+            let link = `<span class="badge badge-soft-warning" style="font-size:13px">${params.value}</span>`;
+            return link
+          }
+          else{
+            return 'N/A'
           }
         }
       }
@@ -147,13 +154,20 @@ export class SkillDataComponent {
           return 'N/A'
         }
         else{
-          if(params.value == true){
+          if(params.value == 'a'){
             let link = `<span class="badge badge-soft-success" style="font-size:13px">${params.value}</span>`;
             return link
           }
-          else{
+          else if(params.value == 'r'){
             let link = `<span class="badge badge-soft-danger" style="font-size:13px">${params.value}</span>`;
             return link
+          }
+          else if(params.value == 'nv'){
+            let link = `<span class="badge badge-soft-warning" style="font-size:13px">${params.value}</span>`;
+            return link
+          }
+          else{
+            return 'N/A'
           }
         }
       }

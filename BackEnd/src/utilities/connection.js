@@ -84,7 +84,7 @@ const artistDetails = Schema({
                     feedback:String
                 }
             ],
-            validated : {type:Boolean,default:false},
+            validated : {type:String,default:'nv'},
             experience : Number,
             portfolio : [String],
             approverId : String,

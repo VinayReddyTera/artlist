@@ -55,7 +55,7 @@ export class AuthGuard implements CanActivate {
             return false
           }
           else if(role == 'tag'){
-            if(route.routeConfig?.path === 'artist-approve' || route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'tag-history'){
+            if(route.routeConfig?.path === 'artist-approve' || route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'tag-history' || route.routeConfig?.path === 'artist-validation'){
               return true
             }
             else{

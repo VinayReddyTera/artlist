@@ -91,7 +91,7 @@ export class AddSkillComponent implements OnInit {
     this.skillForm = this.fb.group({
       name: ['', [Validators.required]],
       status : ['active',[Validators.required]],
-      validated : [false,[Validators.required]],
+      validated : ['nv',[Validators.required]],
       experience: ['', [Validators.required,Validators.min(0.1),Validators.max(150)]],
       portfolio : ['',[Validators.required]],
       genre: this.fb.array([]),
@@ -152,7 +152,7 @@ export class AddSkillComponent implements OnInit {
       experience : ['',[Validators.required,Validators.min(0.1),Validators.max(150)]],
       portfolio : ['',[Validators.required]],
       status : ['active',[Validators.required]],
-      validated : [false,[Validators.required]]
+      validated : ['nv',[Validators.required]]
     });
   }
 
@@ -319,9 +319,9 @@ export class AddSkillComponent implements OnInit {
       this.updateData.genre.forEach((i:any) => {
         genreFormArray.push(
           this.fb.group({
-            name: [{value:i.name,disabled:i.validated},[Validators.required]],
+            name: [{value:i.name,disabled:(i.validated == 'a')},[Validators.required]],
             experience : [{value:i.experience,disabled:false},[Validators.required,Validators.min(0.1),Validators.max(150)]],
-            status : [{value:i.status,disabled:i.validated},[Validators.required]],
+            status : [{value:i.status,disabled:(i.validated == 'a')},[Validators.required]],
             portfolio : [{value:i.portfolio,disabled:false},[Validators.required]],
             validated : [{value:i.validated,disabled:false},[Validators.required]]
           })

@@ -874,8 +874,8 @@ userDB.pendingArtists = async(skillarray)=>{
                 $elemMatch: {
                     "name": { $in: skillarray },
                     $or: [
-                        { "validated": false },
-                        { "genre.validated": false }
+                        { "validated": "nv" },
+                        { "genre.validated": "nv" }
                     ]
                 }
             }
@@ -892,8 +892,8 @@ userDB.pendingArtists = async(skillarray)=>{
                             { $in: ["$$skill.name", skillarray] },
                             {
                                 $or: [
-                                    { $eq: ["$$skill.validated", false] },
-                                    { $in: [false, "$$skill.genre.validated"] }
+                                    { $eq: ["$$skill.validated", "nv"] },
+                                    { $in: ["nv", "$$skill.genre.validated"] }
                                 ]
                             }
                         ]

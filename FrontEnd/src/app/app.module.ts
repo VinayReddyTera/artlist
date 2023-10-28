@@ -15,12 +15,14 @@ import { LoaderComponent } from './loader/loader.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MessageComponent } from './common/message/message.component';
 import { TokenInterceptorService } from './pages/services/token-interceptor.service';
+import { ArtistValidateComponent } from './artist-validate/artist-validate.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoaderComponent,
-    MessageComponent
+    MessageComponent,
+    ArtistValidateComponent
   ],
   imports: [
     BrowserModule,

@@ -16,6 +16,7 @@ import { AddSkillComponent } from './add-skill/add-skill.component';
 import { AddApproverComponent } from './add-approver/add-approver.component';
 import { AllApproversComponent } from './all-approvers/all-approvers.component';
 import { TagHistoryComponent } from './tag-history/tag-history.component';
+import { ArtistValidateComponent } from '../artist-validate/artist-validate.component';
 
 const routes: Routes = [
   {
@@ -152,6 +153,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       role: ['tag','access-tag-history']
+    }
+  },
+  {
+    path: 'artist-validation',
+    component: ArtistValidateComponent,
+    canActivate: [AuthGuard],
+    data: {
+      role: ['tag','access-artist-validation']
     }
   },
   {

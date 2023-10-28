@@ -3,9 +3,9 @@ import { ApiService } from '../services/api.service';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { dateRenderer } from '../dateRenderer';
 import { Router } from '@angular/router';
-import { genreRenderer } from '../skill-data/genreRenderer';
-import { editRenderer } from '../skill-data/editRenderer';
 import { contactDetailsRenderer } from '../all-approvers/contactRenderer';
+import { genreRendererArtistApprove } from './genreRenderer';
+import { editRendererArtistApprove } from './editRenderer';
 
 declare const $:any;
 
@@ -51,13 +51,20 @@ export class ArtistApproveComponent implements OnInit{
           return 'N/A'
         }
         else{
-          if(params.value == true){
+          if(params.value == 'a'){
             let link = `<span class="badge badge-soft-success" style="font-size:13px">${params.value}</span>`;
             return link
           }
-          else{
+          else if(params.value == 'r'){
             let link = `<span class="badge badge-soft-danger" style="font-size:13px">${params.value}</span>`;
             return link
+          }
+          else if(params.value == 'nv'){
+            let link = `<span class="badge badge-soft-warning" style="font-size:13px">${params.value}</span>`;
+            return link
+          }
+          else{
+            return 'N/A'
           }
         }
       }
@@ -105,18 +112,11 @@ export class ArtistApproveComponent implements OnInit{
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
     },
     {
-      field: "skill.portfolio",
-      filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
-      headerName: "Portfolio",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value.toString()}`
-    },
-    {
       field: "action",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "View Genre",
-      cellRenderer: genreRenderer,
+      cellRenderer: genreRendererArtistApprove,
       cellRendererParams: { onStatusChange: this.viewGenre.bind(this) }
     },
     {
@@ -124,7 +124,7 @@ export class ArtistApproveComponent implements OnInit{
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "Edit",
-      cellRenderer: editRenderer,
+      cellRenderer: editRendererArtistApprove,
       // cellRendererParams: { onStatusChange: this.viewJD.bind(this) }
     }
   ];
@@ -153,13 +153,20 @@ export class ArtistApproveComponent implements OnInit{
           return 'N/A'
         }
         else{
-          if(params.value == true){
+          if(params.value == 'a'){
             let link = `<span class="badge badge-soft-success" style="font-size:13px">${params.value}</span>`;
             return link
           }
-          else{
+          else if(params.value == 'r'){
             let link = `<span class="badge badge-soft-danger" style="font-size:13px">${params.value}</span>`;
             return link
+          }
+          else if(params.value == 'nv'){
+            let link = `<span class="badge badge-soft-warning" style="font-size:13px">${params.value}</span>`;
+            return link
+          }
+          else{
+            return 'N/A'
           }
         }
       }
@@ -184,13 +191,6 @@ export class ArtistApproveComponent implements OnInit{
           }
         }
       }
-    },
-    {
-      field: "portfolio",
-      filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
-      headerName: "Portfolio",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value.toString()}`
     }
   ];
   genreRowData:any;
