@@ -79,7 +79,7 @@
     
         <div class="col-xl-8">
     
-          <div *ngFor="let genre of updateData.skill.genre;let j = index" class="card">
+          <div class="card">
             <div formArrayName="genre" *ngFor="let skill of skillForm.get('genre').controls; let i = index" class="card-body">
               <h4 class="card-title mb-4">Genre Details</h4>
               <div [formGroupName]="i" class="table-responsive">
@@ -87,23 +87,23 @@
                     <tbody>
                       <tr>
                         <th scope="row">Skill Name :</th>
-                        <td>{{genre.name}}</td>
+                        <td>{{updateData.skill.genre[i].name}}</td>
                       </tr>
                       <tr>
                         <th scope="row">Experience :</th>
-                        <td>{{genre.experience}} years</td>
+                        <td>{{updateData.skill.genre[i].experience}} years</td>
                       </tr>
                       <tr>
                         <th scope="row">Portfolio :</th>
                         <td>
-                          <a class="mr-2" *ngFor="let link of genre.portfolio;let k = index" href="{{link}}" target="_blank">{{link}}</a><br>
+                          <a class="mr-2" *ngFor="let link of updateData.skill.genre[i].portfolio;let k = index" href="{{link}}" target="_blank">{{link}}</a><br>
                         </td>
                       </tr>
                     </tbody>
                   </table>
-                  <div *ngIf="genre.validated == 'nv'" class="mt-3 mb-3">
+                  <div *ngIf="updateData.skill.genre[i].validated == 'nv'" class="mt-3 mb-3">
                       <label for="genreSkill">Validate : </label>
-                      <select class="form-control" formControlName="status" name="genreSkill" [id]="'genreSkill'+j">
+                      <select class="form-control" formControlName="status" name="genreSkill" [id]="'genreSkill'+i">
                           <option value="0" selected disabled>--select--</option>
                           <option value="a">Approve</option>
                           <option value="r">Reject</option>

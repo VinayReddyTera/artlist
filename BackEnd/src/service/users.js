@@ -685,4 +685,19 @@ userService.pendingArtists=(id)=>{
   })
 }
 
+userService.approveSkill=(payload)=>{
+  return userDB.approveSkill(payload).then((skillData)=>{
+    if(skillData){
+      return skillData
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to approver skill data'
+      }
+      return res
+    }
+  })
+}
+
 module.exports = userService

@@ -22,6 +22,7 @@ export class AddSkillComponent implements OnInit {
   role:any;
   updateData : any;
   showTable:boolean = false;
+  disableDelete:Boolean = false;
   skillList : String[] = [
     "Director",
     "Producer",

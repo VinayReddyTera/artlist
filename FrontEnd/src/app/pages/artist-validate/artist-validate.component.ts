@@ -30,6 +30,7 @@ export class ArtistValidateComponent implements OnInit{
     if(this.updateData.skill.validated == 'nv'){
       this.skillForm.addControl('status', new FormControl('', Validators.required));
       this.skillForm.addControl('id', new FormControl(this.updateData.skill._id, Validators.required));
+      this.skillForm.addControl('name', new FormControl(this.updateData.skill.name, Validators.required));
     }
     if(this.updateData.skill.genre.length>0){
       const genreFormArray = this.skillForm.get('genre') as FormArray;
@@ -38,7 +39,8 @@ export class ArtistValidateComponent implements OnInit{
         genreFormArray.push(
           this.fb.group({
             status: ['',[Validators.required]],
-            id: [i._id,[Validators.required]]
+            id: [i._id,[Validators.required]],
+            name: [i.name,[Validators.required]]
           })
         );
       });
@@ -47,14 +49,11 @@ export class ArtistValidateComponent implements OnInit{
 
   submit(){
     console.log(this.skillForm.value);
-    // if((<HTMLSelectElement>document.getElementById('mainSkill'))?.value == '0'){
-    //   (<HTMLSelectElement>document.getElementById('mainSkill')).style.borderColor = '#f46a6a'
-    // }
-    console.log(this.skillForm.getRawValue())
     if(this.skillForm.valid){
       this.apiService.initiateLoading(true)
       this.apiService.approveSkill(this.skillForm.value).subscribe(
         (res:any)=>{
+          console.log(res)
           if(res.status == 200){
             let msgData = {
               severity : "success",

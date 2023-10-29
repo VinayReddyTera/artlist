@@ -106,7 +106,7 @@
                   <td>
                   <div style="display:flex;">
                     <button type="button" class="btn btn-soft-success btn-rounded btn-icon" (click)="addGenreButtonClick()"><i class="fa fa-plus"></i></button>&nbsp; &nbsp;
-                    <button type="button" [disabled]="skill.controls.validated.value" class="btn btn-soft-danger btn-rounded btn-icon" (click)="delete(i)">
+                    <button type="button" [disabled]="isUpdating && disableDelete" class="btn btn-soft-danger btn-rounded btn-icon" (click)="delete(i)">
                       <i class="fa fa-trash"></i>
                     </button>
                   </div>

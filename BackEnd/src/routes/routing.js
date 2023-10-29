@@ -731,7 +731,7 @@ router.get('/pendingArtists',verifyToken,(req,res,next)=>{
 router.post('/approveSkill',verifyToken,(req,res,next)=>{
   if(req.body.genre.length > 0){
     for(let i of req.body.genre){
-      if(i.status != 'a' || i.status != 'r'){
+      if(i.status != 'a' && i.status != 'r'){
         let response = {
           status : 204,
           data : 'Invalid data format'
@@ -762,20 +762,20 @@ router.post('/approveSkill',verifyToken,(req,res,next)=>{
       }
       return res.json(response)
     }
-    else if(req.body.status != 'a' || req.body.status != 'r'){
+    else if(req.body.status != 'a' && req.body.status != 'r'){
       let response = {
         status : 204,
         data : 'Invalid data format'
       }
       return res.json(response)
     }
-  }
-  else{
-    userservice.approveSkill(req.body).then((data)=>{
-      return res.json(data)
-    }).catch((err)=>{
-      next(err)
-    })
+    else{
+      userservice.approveSkill(req.body).then((data)=>{
+        return res.json(data)
+      }).catch((err)=>{
+        next(err)
+      })
+    }
   }
 })
 
