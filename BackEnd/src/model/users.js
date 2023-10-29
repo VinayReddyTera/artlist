@@ -951,62 +951,31 @@ if (mainUpdate.modifiedCount > 0) {
   response.data.push(`MainStatus update failed.`);
 }
 
-// // Update genre statuses
-// const genreUpdateResults = payload.genre.map(async (genre) => {
-//   const result =  await collection.updateOne(
-//       { "skills._id": new ObjectId(payload.id), "skills.genre._id": new ObjectId(genre.id) },
-//       {
-//           $set: {
-//               "skills.$[outer].genre.$[inner].validated": genre.status
-//           }
-//       },
-//       {
-//           arrayFilters: [
-//               { "outer._id": payload.id },
-//               { "inner._id": genre.id }
-//           ]
-//       }
-//   )
-//   return result
-// });
-// Function to update genre statuses
-async function updateGenreStatus(genre) {
+for(i in payload.genre){
   const result = await collection.updateOne(
-    { "skills._id": new ObjectId(payload.id), "skills.genre._id": new ObjectId(genre.id) },
+    { "skills._id": new ObjectId(payload.id), "skills.genre._id": new ObjectId(payload.genre[i].id) },
     {
         $set: {
-            "skills.$[outer].genre.$[inner].validated": genre.status
+            "skills.$[outer].genre.$[inner].validated": payload.genre[i].status
         }
     },
     {
         arrayFilters: [
             { "outer._id": payload.id },
-            { "inner._id": genre.id }
+            { "inner._id": payload.genre[i].id }
         ]
     }
 )
-  return result;
+if(result.modifiedCount == 1){
+  response.data.push(`Genre update ${payload.genre[i].name} was successful.`);
 }
-
-// Update the mainStatus and genre statuses asynchronously
-(async () => {
-  try {
-
-      const genreUpdateResults = await Promise.all(payload.genre.map(updateGenreStatus));
-
-      genreUpdateResults.forEach((result, index) => {
-          if (result.modifiedCount > 0) {
-              response.data.push(`Genre update ${payload.genre[index].name} was successful.`);
-          } else {
-            response.data.push(`Genre update ${payload.genre[index].name} failed.`);
-          }
-      });
-  } catch (error) {
-      console.error("An error occurred:", error);
-  }
-})().then(()=>{
+else{
+  response.data.push(`Genre update ${payload.genre[i].name} was failed.`);
+}
+if(i == payload.genre.length-1){
   return response
-});
+}
+}
 
 }
 
