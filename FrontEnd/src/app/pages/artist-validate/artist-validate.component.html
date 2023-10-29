@@ -1,1 +1,125 @@
-<p>artist-validate works!</p>
+<div class="container-fluid">
+  <form [formGroup]="skillForm" (ngSubmit) = "submit()">
+    <div class="row">
+        <div class="col-xl-4">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title mb-4">Personal Information</h4>
+              <div class="table-responsive">
+                <table class="table table-nowrap mb-0">
+                  <tbody>
+                    <tr>
+                      <th scope="row">Full Name :</th>
+                      <td>{{updateData.name}}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Mobile :</th>
+                      <td><a href="tel:{{updateData.phoneNo}}">{{updateData.phoneNo}}</a></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">E-mail :</th>
+                      <td><a href="mailto:{{updateData.email}}">{{updateData.email}}</a></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Skill Name :</th>
+                      <td>{{updateData.skill.name}}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Experience :</th>
+                      <td>{{updateData.skill.experience}} years</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Portfolio :</th>
+                      <td>
+                          <a class="mr-2" *ngFor="let link of updateData.skill.portfolio;let i = index" href="{{link}}" target="_blank">{{link}}</a><br>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div *ngIf="updateData.skill.validated == 'nv'" class="mt-3 mb-3">
+                  <label for="mainSkill">Validate : </label>
+                  <select class="form-control" formControlName="status" name="mainSkill" id="mainSkill">
+                      <option value="0" selected disabled>--select--</option>
+                      <option value="a">Approve</option>
+                      <option value="r">Reject</option>
+                  </select>
+                  <div *ngIf="skillForm.controls.status.errors?.required && skillForm.controls.status.dirty" class="required-message text-danger">
+                    <small>Required Field!</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="card">
+              <div class="card-body">
+                <h4 class="card-title mb-4">Pricing</h4>
+                <div class="table-responsive">
+                  <table class="table table-nowrap mb-0">
+                    <tbody>
+                      <tr>
+                        <th scope="row">Hourly :</th>
+                        <td>{{updateData.skill.pricing.hourly}} ₹</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Full Day(9-5) :</th>
+                        <td>{{updateData.skill.pricing.fullDay}} ₹</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Event Based :</th>
+                        <td>{{updateData.skill.pricing.event}} ₹</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          <!-- end card -->
+        </div>
+    
+        <div class="col-xl-8">
+    
+          <div *ngFor="let genre of updateData.skill.genre;let j = index" class="card">
+            <div formArrayName="genre" *ngFor="let skill of skillForm.get('genre').controls; let i = index" class="card-body">
+              <h4 class="card-title mb-4">Genre Details</h4>
+              <div [formGroupName]="i" class="table-responsive">
+                  <table class="table table-nowrap mb-0">
+                    <tbody>
+                      <tr>
+                        <th scope="row">Skill Name :</th>
+                        <td>{{genre.name}}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Experience :</th>
+                        <td>{{genre.experience}} years</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Portfolio :</th>
+                        <td>
+                          <a class="mr-2" *ngFor="let link of genre.portfolio;let k = index" href="{{link}}" target="_blank">{{link}}</a><br>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div *ngIf="genre.validated == 'nv'" class="mt-3 mb-3">
+                      <label for="genreSkill">Validate : </label>
+                      <select class="form-control" formControlName="status" name="genreSkill" [id]="'genreSkill'+j">
+                          <option value="0" selected disabled>--select--</option>
+                          <option value="a">Approve</option>
+                          <option value="r">Reject</option>
+                      </select>
+                      <div *ngIf="skill.get('status').errors?.required &&
+                      skill.get('status').dirty" class="text-danger">
+                      <small>Genre status is required</small>
+                      </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+  
+        </div>
+      </div>
+      <!-- end row -->
+      <button class="btn btn-success" type="submit">Update</button>
+  </form>
+</div>

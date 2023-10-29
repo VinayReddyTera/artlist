@@ -727,4 +727,56 @@ router.get('/pendingArtists',verifyToken,(req,res,next)=>{
   }
 })
 
+//router to edit approver
+router.post('/approveSkill',verifyToken,(req,res,next)=>{
+  if(req.body.genre.length > 0){
+    for(let i of req.body.genre){
+      if(i.status != 'a' || i.status != 'r'){
+        let response = {
+          status : 204,
+          data : 'Invalid data format'
+        }
+        return res.json(response)
+      }
+      else if(!i.id){
+        let response = {
+          status : 204,
+          data : 'Required fields missing'
+        }
+        return res.json(response)
+      }
+    }
+  }
+  else{
+    let response = {
+      status : 204,
+      data : 'Required fields missing'
+    }
+    return res.json(response)
+  }
+  if(req.body.status){
+    if(!req.body.id){
+      let response = {
+        status : 204,
+        data : 'Required fields missing'
+      }
+      return res.json(response)
+    }
+    else if(req.body.status != 'a' || req.body.status != 'r'){
+      let response = {
+        status : 204,
+        data : 'Invalid data format'
+      }
+      return res.json(response)
+    }
+  }
+  else{
+    userservice.approveSkill(req.body).then((data)=>{
+      return res.json(data)
+    }).catch((err)=>{
+      next(err)
+    })
+  }
+})
+
 module.exports = router

@@ -304,6 +304,7 @@
               color: $primary;
               background-color: darken($sidebar-bg, 4%);
               transition: none;
+              border-radius: 10px;
 
               i {
                 color: $primary;

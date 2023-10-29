@@ -74,7 +74,7 @@
                 </div>
                 </td>
                   <td>
-                    <input type="text" class="form-control" [id]="'skill' + i" placeholder="Enter Genre"  formControlName="name">
+                    <input type="text" class="form-control" [id]="'skill' + i" placeholder="Enter Genre" formControlName="name">
                     <div *ngIf="skill.get('name').errors?.required &&
                             skill.get('name').dirty" class="text-danger">
                             <small>Genre Name is required</small>
