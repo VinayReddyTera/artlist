@@ -700,4 +700,19 @@ userService.approveSkill=(payload,id)=>{
   })
 }
 
+userService.getArtistHistory=(id)=>{
+  return userDB.getArtistHistory(id).then((artistHistory)=>{
+    if(artistHistory){
+      return artistHistory
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to fetch history data'
+      }
+      return res
+    }
+  })
+}
+
 module.exports = userService

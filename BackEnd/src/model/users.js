@@ -1023,4 +1023,28 @@ if(i == payload.genre.length-1){
 
 }
 
+userDB.getArtistHistory = async(approverId)=>{
+  const collection = await connection.getArtist();
+  let data = await collection.find({
+    $and: [
+      { "skills.approverId": approverId },
+      { "skills.genre.approverId": approverId }
+    ]
+  },{name:1,email:1,phoneNo:1,skills:1})
+if(data){
+  let res = {
+    status : 200,
+    data:data
+  }
+  return res
+}
+else{
+  let res = {
+    status : 204,
+    data:'Not approved anyone yet!'
+  }
+  return res
+}
+}
+
 module.exports = userDB

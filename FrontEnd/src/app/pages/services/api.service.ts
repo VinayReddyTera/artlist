@@ -129,4 +129,8 @@ export class ApiService {
     return this.http.post(environment.domain+"approveSkill",payload)
   }
 
+  getArtistHistory():Observable<any>{
+    return this.http.get(environment.domain+"getArtistHistory")
+  }
+
 }

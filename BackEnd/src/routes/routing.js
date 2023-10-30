@@ -780,4 +780,14 @@ router.post('/approveSkill',verifyToken,(req,res,next)=>{
   }
 })
 
+//router to get past approves
+router.get('/getArtistHistory',verifyToken,(req,res,next)=>{
+  let id = jwt.decode(req.headers.authorization).data._id;
+  userservice.getArtistHistory(id).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 module.exports = router
