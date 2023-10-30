@@ -52,15 +52,15 @@ export class ArtistApproveComponent implements OnInit{
         }
         else{
           if(params.value == 'a'){
-            let link = `<span class="badge badge-soft-success" style="font-size:13px">${params.value}</span>`;
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">Approved</span>`;
             return link
           }
           else if(params.value == 'r'){
-            let link = `<span class="badge badge-soft-danger" style="font-size:13px">${params.value}</span>`;
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">Rejected</span>`;
             return link
           }
           else if(params.value == 'nv'){
-            let link = `<span class="badge badge-soft-warning" style="font-size:13px">${params.value}</span>`;
+            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Not Validated</span>`;
             return link
           }
           else{
@@ -154,15 +154,15 @@ export class ArtistApproveComponent implements OnInit{
         }
         else{
           if(params.value == 'a'){
-            let link = `<span class="badge badge-soft-success" style="font-size:13px">${params.value}</span>`;
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">Approved</span>`;
             return link
           }
           else if(params.value == 'r'){
-            let link = `<span class="badge badge-soft-danger" style="font-size:13px">${params.value}</span>`;
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">Rejected</span>`;
             return link
           }
           else if(params.value == 'nv'){
-            let link = `<span class="badge badge-soft-warning" style="font-size:13px">${params.value}</span>`;
+            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Not Validated</span>`;
             return link
           }
           else{

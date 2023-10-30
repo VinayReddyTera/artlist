@@ -38,7 +38,7 @@
                 </table>
                 <div *ngIf="updateData.skill.validated == 'nv'" class="mt-3 mb-3">
                   <label for="mainSkill">Validate : </label>
-                  <select class="form-control" formControlName="status" name="mainSkill" id="mainSkill">
+                  <select class="form-control" formControlName="status" name="mainSkill" id="mainSkill" (change)="statusChange()">
                       <option value="0" selected disabled>--select--</option>
                       <option value="a">Approve</option>
                       <option value="r">Reject</option>
@@ -46,6 +46,13 @@
                   <div *ngIf="skillForm.controls.status.errors?.required && skillForm.controls.status.dirty" class="required-message text-danger">
                     <small>Required Field!</small>
                   </div>
+                </div>
+                <div *ngIf="skillForm.value.status == 'r'" class="mt-3 mb-3">
+                    <label for="genreSkill">Feedback : </label>
+                    <input class="form-control" formControlName="feedback" name="genreSkill" id="mainFeedback">
+                    <div *ngIf="skillForm.controls.feedback.errors?.required && skillForm.controls.feedback.dirty" class="required-message text-danger">
+                        <small>feedback is required</small>
+                    </div>
                 </div>
               </div>
             </div>
@@ -79,31 +86,31 @@
     
         <div class="col-xl-8">
     
-          <div class="card">
-            <div formArrayName="genre" *ngFor="let skill of skillForm.get('genre').controls; let i = index" class="card-body">
+          <div class="card" *ngFor="let skill of skillForm.get('genre').controls; let i = index">
+            <div formArrayName="genre" class="card-body">
               <h4 class="card-title mb-4">Genre Details</h4>
               <div [formGroupName]="i" class="table-responsive">
                   <table class="table table-nowrap mb-0">
                     <tbody>
                       <tr>
                         <th scope="row">Skill Name :</th>
-                        <td>{{updateData.skill.genre[i].name}}</td>
+                        <td>{{genreData[i].name}}</td>
                       </tr>
                       <tr>
                         <th scope="row">Experience :</th>
-                        <td>{{updateData.skill.genre[i].experience}} years</td>
+                        <td>{{genreData[i].experience}} years</td>
                       </tr>
                       <tr>
                         <th scope="row">Portfolio :</th>
                         <td>
-                          <a class="mr-2" *ngFor="let link of updateData.skill.genre[i].portfolio;let k = index" href="{{link}}" target="_blank">{{link}}</a><br>
+                          <a class="mr-2" *ngFor="let link of genreData[i].portfolio;let k = index" href="{{link}}" target="_blank">{{link}}</a><br>
                         </td>
                       </tr>
                     </tbody>
                   </table>
-                  <div *ngIf="updateData.skill.genre[i].validated == 'nv'" class="mt-3 mb-3">
+                  <div *ngIf="genreData[i].validated == 'nv'" class="mt-3 mb-3">
                       <label for="genreSkill">Validate : </label>
-                      <select class="form-control" formControlName="status" name="genreSkill" [id]="'genreSkill'+i">
+                      <select class="form-control" formControlName="status" name="genreSkill" [id]="'genreSkill'+i" (change)="statusChange()">
                           <option value="0" selected disabled>--select--</option>
                           <option value="a">Approve</option>
                           <option value="r">Reject</option>
@@ -112,6 +119,14 @@
                       skill.get('status').dirty" class="text-danger">
                       <small>Genre status is required</small>
                       </div>
+                    </div>
+                    <div *ngIf="skill.get('status').value == 'r'" class="mt-3 mb-3">
+                        <label for="genreSkill">Feedback : </label>
+                        <input class="form-control" formControlName="feedback" name="genreSkill" [id]="'genreFeedback'+i">
+                        <div *ngIf="skill.get('feedback').errors?.required &&
+                        skill.get('feedback').dirty" class="text-danger">
+                        <small>feedback is required</small>
+                        </div>
                     </div>
                 </div>
             </div>

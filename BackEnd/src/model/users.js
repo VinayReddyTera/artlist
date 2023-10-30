@@ -927,52 +927,96 @@ userDB.pendingArtists = async(skillarray)=>{
   }
 }
 
-userDB.approveSkill = async(payload)=>{
+userDB.approveSkill = async(payload,id)=>{
   const collection = await connection.getArtist();
   let mainUpdate;
+  isFailed = false;
   if(payload.id){
-    mainUpdate = await collection.updateOne(
-      { "skills._id": new ObjectId(payload.id)},
-      {
-          $set: {
-              "skills.$.validated": payload.status
-          }
-      }
-    );
+    if(payload.feedback){
+      mainUpdate = await collection.updateOne(
+        { "skills._id": new ObjectId(payload.id)},
+        {
+            $set: {
+                "skills.$.validated": payload.status,
+                "skills.$.feedback": payload.feedback,
+                "skills.$.approverId": id
+            }
+        }
+      );
+    }
+    else{
+      mainUpdate = await collection.updateOne(
+        { "skills._id": new ObjectId(payload.id)},
+        {
+            $set: {
+                "skills.$.validated": payload.status,
+                "skills.$.approverId": id
+            }
+        }
+      );
+    }
   }
   let response = {
-    status : 200,
     data : []
   }
   // Check the results of each update
-if (mainUpdate.modifiedCount > 0) {
-  response.data.push(`MainStatus update was successful.`);
-} else {
-  response.data.push(`MainStatus update failed.`);
+if (mainUpdate.modifiedCount == 0) {
+  isFailed = true
+  response.data.push(`${payload.name} status,update failed.`);
 }
 
 for(i in payload.genre){
-  const result = await collection.updateOne(
-    { "skills._id": new ObjectId(payload.id), "skills.genre._id": new ObjectId(payload.genre[i].id) },
-    {
-        $set: {
-            "skills.$[outer].genre.$[inner].validated": payload.genre[i].status
-        }
-    },
-    {
-        arrayFilters: [
-            { "outer._id": payload.id },
-            { "inner._id": payload.genre[i].id }
-        ]
-    }
-)
+  let result;
+  if(payload.genre[i].feedback){
+    result = await collection.updateOne(
+      { "skills._id": new ObjectId(payload.id), "skills.genre._id": new ObjectId(payload.genre[i].id) },
+      {
+          $set: {
+              "skills.$[outer].genre.$[inner].validated": payload.genre[i].status,
+              "skills.$[outer].genre.$[inner].feedback": payload.genre[i].feedback,
+              "skills.$[outer].genre.$[inner].approverId": id
+          }
+      },
+      {
+          arrayFilters: [
+              { "outer._id": payload.id },
+              { "inner._id": payload.genre[i].id }
+          ]
+      }
+  )
+  }
+  else{
+    result = await collection.updateOne(
+      { "skills._id": new ObjectId(payload.id), "skills.genre._id": new ObjectId(payload.genre[i].id) },
+      {
+          $set: {
+              "skills.$[outer].genre.$[inner].validated": payload.genre[i].status,
+              "skills.$[outer].genre.$[inner].approverId": id
+          }
+      },
+      {
+          arrayFilters: [
+              { "outer._id": payload.id },
+              { "inner._id": payload.genre[i].id }
+          ]
+      }
+  )
+  }
 if(result.modifiedCount == 1){
-  response.data.push(`Genre update ${payload.genre[i].name} was successful.`);
+  isFailed = false
 }
 else{
-  response.data.push(`Genre update ${payload.genre[i].name} was failed.`);
+  isFailed = true
+  response.data.push(`Genre update ${payload.genre[i].name} failed.`);
 }
 if(i == payload.genre.length-1){
+  if(isFailed){
+    response.status = 204;
+  }
+  else{
+    response.status = 200;
+    response.data = 'successfully updated'
+  }
   return response
 }
 }

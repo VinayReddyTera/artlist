@@ -685,8 +685,8 @@ userService.pendingArtists=(id)=>{
   })
 }
 
-userService.approveSkill=(payload)=>{
-  return userDB.approveSkill(payload).then((skillData)=>{
+userService.approveSkill=(payload,id)=>{
+  return userDB.approveSkill(payload,id).then((skillData)=>{
     if(skillData){
       return skillData
     }

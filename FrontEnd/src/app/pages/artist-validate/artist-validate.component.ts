@@ -16,11 +16,16 @@ export class ArtistValidateComponent implements OnInit{
 
   updateData:any;
   skillForm:any;
+  genreData:any=[];
 
   ngOnInit(): void {
     if(localStorage.getItem('approveSkill')){
       this.updateData = JSON.parse(this.encryptionService.deCrypt(localStorage.getItem('approveSkill')));
       console.log(this.updateData)
+    }
+    else{
+      localStorage.removeItem('approveSkill')
+      this.router.navigateByUrl('artist-approve')
     }
 
     this.skillForm = this.fb.group({
@@ -31,18 +36,23 @@ export class ArtistValidateComponent implements OnInit{
       this.skillForm.addControl('status', new FormControl('', Validators.required));
       this.skillForm.addControl('id', new FormControl(this.updateData.skill._id, Validators.required));
       this.skillForm.addControl('name', new FormControl(this.updateData.skill.name, Validators.required));
+      this.skillForm.addControl('feedback', new FormControl({value:'',disabled:true}));
     }
     if(this.updateData.skill.genre.length>0){
       const genreFormArray = this.skillForm.get('genre') as FormArray;
       genreFormArray.clear();
       this.updateData.skill.genre.forEach((i:any) => {
-        genreFormArray.push(
-          this.fb.group({
-            status: ['',[Validators.required]],
-            id: [i._id,[Validators.required]],
-            name: [i.name,[Validators.required]]
-          })
-        );
+        if(i.validated == 'nv'){
+          this.genreData.push(i)
+          genreFormArray.push(
+            this.fb.group({
+              status: ['',[Validators.required]],
+              id: [i._id,[Validators.required]],
+              name: [i.name,[Validators.required]],
+              feedback: [{value:'',disabled:true}]
+            })
+          );
+        }
       });
     }
   }
@@ -77,7 +87,12 @@ export class ArtistValidateComponent implements OnInit{
           console.log(err)
         }
       ).add(()=>{
-        this.apiService.initiateLoading(false)
+        this.apiService.initiateLoading(false);
+        this.skillForm.reset()
+        setTimeout(()=>{
+          localStorage.removeItem('approveSkill')
+          this.router.navigateByUrl('artist-approve')
+        },5000)
       })
     }
     else{
@@ -111,6 +126,29 @@ export class ArtistValidateComponent implements OnInit{
         life : 5000
       }
       this.apiService.sendMessage(msgData);
+    }
+  }
+
+  statusChange(){
+    if(this.skillForm.getRawValue().status == 'r'){
+      this.skillForm.get('feedback')?.enable();
+      this.skillForm.get('feedback')?.setValidators([Validators.required]);
+      this.skillForm.get('feedback')?.updateValueAndValidity();
+    }
+    else{
+      this.skillForm.get('feedback')?.disable();
+      this.skillForm.get('feedback')?.setValue(null);
+    }
+    for(let i in this.skillForm.getRawValue().genre){
+      if(this.skillForm.getRawValue().genre[i].status == 'r'){
+        (<FormArray>this.skillForm.get('genre')).at(Number(i)).get('feedback')?.enable();
+        (<FormArray>this.skillForm.get('genre')).at(Number(i)).get('feedback')?.setValidators([Validators.required]);
+        (<FormArray>this.skillForm.get('genre')).at(Number(i)).get('feedback')?.updateValueAndValidity();
+      }
+      else{
+        (<FormArray>this.skillForm.get('genre')).at(Number(i)).get('feedback')?.disable();
+        (<FormArray>this.skillForm.get('genre')).at(Number(i)).get('feedback')?.setValue(null);
+      }
     }
   }
 }
