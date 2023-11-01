@@ -13,7 +13,7 @@ declare const $:any;
   templateUrl: './skill-data.component.html',
   styleUrls: ['./skill-data.component.css']
 })
-export class SkillDataComponent {
+export class SkillDataComponent implements OnInit{
 
   constructor(private apiService : ApiService,
     private spinner : NgxSpinnerService,private router:Router) { }

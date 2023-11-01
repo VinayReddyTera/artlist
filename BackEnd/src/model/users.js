@@ -1025,16 +1025,46 @@ if(i == payload.genre.length-1){
 
 userDB.getArtistHistory = async(approverId)=>{
   const collection = await connection.getArtist();
-  let data = await collection.find({
-    $and: [
+  let filteredArray=[];
+  await collection.find({
+    $or: [
       { "skills.approverId": approverId },
       { "skills.genre.approverId": approverId }
     ]
-  },{name:1,email:1,phoneNo:1,skills:1})
-if(data){
+  },{name:1,email:1,phoneNo:1,skills:1}).then((inputArray)=>{
+    if(inputArray.length>0){
+      let data = inputArray.map((item) => {
+        item.skills = item.skills.filter((skill) => {
+            if (skill?.approverId === approverId) {
+                return true;
+            } else {
+                skill.name = "N/A";
+                skill.experience = 0;
+                skill.portfolio = "N/A";
+                skill.approverId = "N/A";
+                skill.validated = "N/A";
+                skill.status = "N/A";
+                return true;
+            }
+        });
+        
+        item.skills.forEach((skill) => {
+            skill.genre = skill.genre.filter((genre) => genre.approverId === approverId);
+        });
+        return item;
+    });
+    filteredArray = data.map((item) => {
+      item.skills = item.skills.filter((skill) => skill.genre.length > 0);
+      return item;
+  });  
+    }
+  })
+
+
+if(filteredArray.length>0){
   let res = {
     status : 200,
-    data:data
+    data:filteredArray
   }
   return res
 }

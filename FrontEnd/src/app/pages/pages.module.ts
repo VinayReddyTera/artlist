@@ -44,6 +44,7 @@ import { contactDetailsRenderer } from './all-approvers/contactRenderer';
 import { editRendererArtistApprove } from './artist-approve/editRenderer';
 import { genreRendererArtistApprove } from './artist-approve/genreRenderer';
 import { ArtistValidateComponent } from './artist-validate/artist-validate.component';
+import { genreRendererTagHistory } from './tag-history/genreRenderer';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { ArtistValidateComponent } from './artist-validate/artist-validate.compo
     AddApproverComponent,
     AllApproversComponent,
     TagHistoryComponent,
-    ArtistValidateComponent
+    ArtistValidateComponent,
+    genreRendererTagHistory
   ],
   imports: [
     CommonModule,

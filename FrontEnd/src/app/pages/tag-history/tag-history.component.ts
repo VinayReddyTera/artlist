@@ -3,7 +3,8 @@ import { ApiService } from '../services/api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { Router } from '@angular/router';
-import { genreRenderer } from '../skill-data/genreRenderer';
+import { contactDetailsRenderer } from '../all-approvers/contactRenderer';
+import { genreRendererTagHistory } from './genreRenderer';
 
 declare const $:any;
 
@@ -24,18 +25,26 @@ export class TagHistoryComponent {
       field: "name",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
-      headerName: "Skill Name",
+      headerName: "Name",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
-      field: "experience",
+      field: "action",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Contact",
+      cellRenderer: contactDetailsRenderer,
+      width:150
+    },
+    {
+      field: "skill.experience",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "Experience",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} years`
     },
     {
-      field: "validated",
+      field: "skill.validated",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "Validated",
@@ -45,15 +54,15 @@ export class TagHistoryComponent {
         }
         else{
           if(params.value == 'a'){
-            let link = `<span class="badge badge-soft-success" style="font-size:13px">${params.value}</span>`;
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">Approved</span>`;
             return link
           }
           else if(params.value == 'r'){
-            let link = `<span class="badge badge-soft-danger" style="font-size:13px">${params.value}</span>`;
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">Rejected</span>`;
             return link
           }
           else if(params.value == 'nv'){
-            let link = `<span class="badge badge-soft-warning" style="font-size:13px">${params.value}</span>`;
+            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Not Validated</span>`;
             return link
           }
           else{
@@ -63,7 +72,7 @@ export class TagHistoryComponent {
       }
     },
     {
-      field: "status",
+      field: "skill.status",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "Status",
@@ -84,28 +93,28 @@ export class TagHistoryComponent {
       }
     },
     {
-      field: "pricing.hourly",
+      field: "skill.pricing.hourly",
       filter: "agDateColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "Hourly Pricing",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
     },
     {
-      field: "pricing.fullDay",
+      field: "skill.pricing.fullDay",
       filter: "agDateColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "Full Day Pricing",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
     },
     {
-      field: "pricing.event",
+      field: "skill.pricing.event",
       filter: "agDateColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "Event based Pricing",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
     },
     {
-      field: "portfolio",
+      field: "skill.portfolio",
       filter: "agDateColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "Portfolio",
@@ -116,7 +125,7 @@ export class TagHistoryComponent {
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "View Genre",
-      cellRenderer: genreRenderer,
+      cellRenderer: genreRendererTagHistory,
       cellRendererParams: { onStatusChange: this.viewGenre.bind(this) }
     }
   ];
@@ -146,15 +155,15 @@ export class TagHistoryComponent {
         }
         else{
           if(params.value == 'a'){
-            let link = `<span class="badge badge-soft-success" style="font-size:13px">${params.value}</span>`;
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">Approved</span>`;
             return link
           }
           else if(params.value == 'r'){
-            let link = `<span class="badge badge-soft-danger" style="font-size:13px">${params.value}</span>`;
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">Rejected</span>`;
             return link
           }
           else if(params.value == 'nv'){
-            let link = `<span class="badge badge-soft-warning" style="font-size:13px">${params.value}</span>`;
+            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Not Validated</span>`;
             return link
           }
           else{
@@ -204,9 +213,20 @@ export class TagHistoryComponent {
     this.spinner.show()
     this.apiService.getArtistHistory().subscribe(
       (res : any)=>{
-        console.log(res)
         if(res.status == 200){
-          this.usersRowData = res.data;
+          let transformedArray:any = [];
+          res.data.forEach((item:any) => {
+            item.skills.forEach((skill:any) => {
+                transformedArray.push({
+                    name: item.name,
+                    email: item.email,
+                    phoneNo: item.phoneNo,
+                    skill: skill,
+                });
+            });
+          });
+          console.log(transformedArray)
+          this.usersRowData=transformedArray;
         }
         else if(res.status == 204){
           if(res.data == 'Invalid token'){
