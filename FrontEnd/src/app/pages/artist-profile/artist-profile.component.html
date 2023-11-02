@@ -1,6 +1,7 @@
 <p-speedDial [model]="items" direction="right" showIcon="pi pi-bars" hideIcon="pi pi-times" buttonClassName="p-button-outlined"></p-speedDial>
 <div class="button-container">
     <button class="btn btn-primary" [disabled]="show.showProfile" (click)="setKeyTrue('showProfile')">Update Profile</button>
+    <button class="btn btn-success" [disabled]="show.showAvailable" (click)="setKeyTrue('showAvailable')">Available Days</button>
     <button class="btn btn-success" [disabled]="show.showPassword" (click)="setKeyTrue('showPassword')">Update Password</button>
     <button class="btn btn-pink" [disabled]="show.showProfileStatus" (click)="setKeyTrue('showProfileStatus')">Profile Status</button>
 </div>
@@ -137,6 +138,93 @@
   </div>
 
   <!-- end container -->
+</div>
+
+<div *ngIf="show.showAvailable" class="account-pages my-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6 col-xl-5">
+        <div class="card overflow-hidden">
+          <div class="card-body">
+            <div>
+              <h5>Available Days : </h5>
+            </div>
+            <div class="br-5">
+              <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">Day</th>
+                    <th scope="col">Available</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Monday</th>
+                    <td>
+                      <!-- <div class="form-check form-switch form-switch-md mb-3">
+                        <input class="form-check-input" type="checkbox" checked (click)="changeActive('mon')">
+                      </div> -->
+                      <div class="form-check form-checkbox-outline form-check-primary mb-3">
+                        <input class="form-check-input" type="checkbox" id="customCheckcolor1">
+                    </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Tuesday</th>
+                    <td>
+                      <div class="form-check form-switch form-switch-md mb-3">
+                        <input class="form-check-input" type="checkbox" checked (click)="changeActive('tue')">
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Wednesday</th>
+                    <td>
+                      <div class="form-check form-switch form-switch-md mb-3">
+                        <input class="form-check-input" type="checkbox" checked (click)="changeActive('wed')">
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Thursday</th>
+                    <td>
+                      <div class="form-check form-switch form-switch-md mb-3">
+                        <input class="form-check-input" type="checkbox" checked (click)="changeActive('thu')">
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Friday</th>
+                    <td>
+                      <div class="form-check form-switch form-switch-md mb-3">
+                        <input class="form-check-input" type="checkbox" checked (click)="changeActive('fri')">
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Saturday</th>
+                    <td>
+                      <div class="form-check form-switch form-switch-md mb-3">
+                        <input class="form-check-input" type="checkbox" checked (click)="changeActive('sat')">
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Sunday</th>
+                    <td>
+                      <div class="form-check form-switch form-switch-md mb-3">
+                        <input class="form-check-input" type="checkbox" (click)="changeActive('sun')">
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div *ngIf="show.showPassword" class="account-pages my-5">

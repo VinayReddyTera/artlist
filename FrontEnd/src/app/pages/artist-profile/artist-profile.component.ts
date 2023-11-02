@@ -26,6 +26,7 @@ export class ArtistProfileComponent implements OnInit{
   profileStatus : any;
   show:any={
     'showProfile':true,
+    'showAvailable':false,
     'showPassword':false,
     'showProfileStatus':false
   }
@@ -91,6 +92,36 @@ export class ArtistProfileComponent implements OnInit{
     {"name": "Kashmiri"},
     {"name": "Santhali"}
   ];
+  availableDays:any = [
+    {
+      day : 'mon',
+      available:true
+    },
+    {
+      day : 'tue',
+      available:true
+    },
+    {
+      day : 'wed',
+      available:true
+    },
+    {
+      day : 'thu',
+      available:true
+    },
+    {
+      day : 'fri',
+      available:true
+    },
+    {
+      day : 'sat',
+      available:true
+    },
+    {
+      day : 'sun',
+      available:false
+    }
+  ]
 
   constructor(public http: HttpClient, public router: Router,
     private apiService : ApiService,private fb: FormBuilder,
@@ -158,6 +189,12 @@ export class ArtistProfileComponent implements OnInit{
           command: () => {
               this.setKeyTrue('showProfile')
           }
+      },
+      {
+        icon: 'mdi mdi-calendar-check',
+        command: () => {
+          this.setKeyTrue('showAvailable')
+        }
       },
       {
           icon: 'mdi mdi-key-variant',
@@ -451,6 +488,10 @@ export class ArtistProfileComponent implements OnInit{
 
   verifyPhone(){
 
+  }
+
+  changeActive(day:any){
+    console.log(day)
   }
 
 }
