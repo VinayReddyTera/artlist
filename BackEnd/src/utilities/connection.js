@@ -67,12 +67,15 @@ const artistDetails = Schema({
     emailVerified : {type:Boolean,default:false},
     phoneVerified : {type:Boolean,default:false},
     profileStatus :{type:String,default:'Incomplete'},
-    availableDays : [
-        {
-            day: String,
-            available: Boolean
-        }
-    ],
+    availableDays : {type:Object,default:{
+        'mon':true,
+        'tue':true,
+        'wed':true,
+        'thu':true,
+        'fri':true,
+        'sat':true,
+        'sun':false
+      }},
     currency : {type:String,default:'inr'},
     skills : [
         {

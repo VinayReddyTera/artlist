@@ -715,4 +715,19 @@ userService.getArtistHistory=(id)=>{
   })
 }
 
+userService.getAvailable=(id)=>{
+  return userDB.getAvailable(id).then((available)=>{
+    if(available){
+      return available
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to fetch available days data'
+      }
+      return res
+    }
+  })
+}
+
 module.exports = userService

@@ -1077,4 +1077,23 @@ else{
 }
 }
 
+userDB.getAvailable = async(id)=>{
+  const collection = await connection.getArtist();
+  let data = await collection.findOne({"_id":new ObjectId(id)},{_id:0,availableDays:1})
+if(data){
+  let res = {
+    status : 200,
+    data:data
+  }
+  return res
+}
+else{
+  let res = {
+    status : 204,
+    data:'Unable to fetch available days data'
+  }
+  return res
+}
+}
+
 module.exports = userDB

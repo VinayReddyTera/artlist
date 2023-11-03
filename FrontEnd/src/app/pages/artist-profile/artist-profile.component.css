@@ -61,3 +61,21 @@
       width: 333px !important;
   }
 }
+
+table.table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+}
+table.table thead th:first-child {
+  border-radius: 10px 0 0 0;
+}
+table.table thead th:last-child {
+  border-radius: 0 10px 0 0;
+}
+table.table tbody tr:last-child td:first-child {
+  border-radius: 0 0 0 10px;
+}
+table.table tbody tr:last-child td:last-child {
+  border-radius: 0 0 10px 0;
+}

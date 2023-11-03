@@ -92,42 +92,54 @@ export class ArtistProfileComponent implements OnInit{
     {"name": "Kashmiri"},
     {"name": "Santhali"}
   ];
-  availableDays:any = [
-    {
-      day : 'mon',
-      available:true
-    },
-    {
-      day : 'tue',
-      available:true
-    },
-    {
-      day : 'wed',
-      available:true
-    },
-    {
-      day : 'thu',
-      available:true
-    },
-    {
-      day : 'fri',
-      available:true
-    },
-    {
-      day : 'sat',
-      available:true
-    },
-    {
-      day : 'sun',
-      available:false
-    }
-  ]
+  availableDays:any;
+  availableArray:any;
+  dayMappings:any = {
+    "mon": "Monday",
+    "tue": "Tuesday",
+    "wed": "Wednesday",
+    "thu": "Thursday",
+    "fri": "Friday",
+    "sat": "Saturday",
+    "sun": "Sunday"
+  };
 
   constructor(public http: HttpClient, public router: Router,
     private apiService : ApiService,private fb: FormBuilder,
     private encrypt:EncryptionService,private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
+    this.apiService.initiateLoading(true)
+    this.apiService.getAvailable().subscribe(
+      (res:any)=>{
+        console.log(res)
+        if(res.status == 200){
+          this.availableDays = res.data.availableDays;
+          this.availableArray = Object.entries(this.availableDays);
+        }
+        else if(res.status == 204){
+          if(res.data == 'Invalid token'){
+            localStorage.clear();
+            this.router.navigate(['/account/login']);
+          }
+          else{
+            let msgData = {
+              severity : "error",
+              summary : 'Error',
+              detail : res.data,
+              life : 5000
+            }
+            this.apiService.sendMessage(msgData);
+          }
+        }
+      },
+      (err:any)=>{
+        console.log(err)
+      }
+    ).add(()=>{
+      this.apiService.initiateLoading(false)
+    })
+
     if(localStorage.getItem('data')){
       this.userData = JSON.parse(this.encrypt.deCrypt(localStorage.getItem('data')));
       this.profileStatus = this.userData.profileStatus
@@ -447,6 +459,15 @@ export class ArtistProfileComponent implements OnInit{
         this.show[prop] = prop === key;
       }
     }
+    setTimeout(() => {
+      if(key == 'showAvailable'){
+        Object.keys(this.availableDays).forEach(key => {
+          const value = this.availableDays[key];
+          let ele = (<HTMLInputElement>document.getElementById(key));
+          ele.checked = value;
+        });
+      } 
+    }, 100);
   }
 
   verifyEmail(){
@@ -490,8 +511,8 @@ export class ArtistProfileComponent implements OnInit{
 
   }
 
-  changeActive(day:any){
-    console.log(day)
+  changeActive(){
+    console.log(this.availableDays)
   }
 
 }

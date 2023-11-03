@@ -149,7 +149,7 @@
             <div>
               <h5>Available Days : </h5>
             </div>
-            <div class="br-5">
+            <div>
               <table class="table table-bordered table-hover">
                 <thead class="thead-dark">
                   <tr>
@@ -158,65 +158,13 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th scope="row">Monday</th>
+                  <tr *ngFor="let key of availableArray">
+                    <th scope="row">{{dayMappings[key[0]]}}</th>
                     <td>
-                      <!-- <div class="form-check form-switch form-switch-md mb-3">
-                        <input class="form-check-input" type="checkbox" checked (click)="changeActive('mon')">
-                      </div> -->
-                      <div class="form-check form-checkbox-outline form-check-primary mb-3">
-                        <input class="form-check-input" type="checkbox" id="customCheckcolor1">
-                    </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Tuesday</th>
-                    <td>
-                      <div class="form-check form-switch form-switch-md mb-3">
-                        <input class="form-check-input" type="checkbox" checked (click)="changeActive('tue')">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" [id]="key[0]" [(ngModel)]="availableDays[key[0]]" (change)="changeActive()">
                       </div>
                     </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Wednesday</th>
-                    <td>
-                      <div class="form-check form-switch form-switch-md mb-3">
-                        <input class="form-check-input" type="checkbox" checked (click)="changeActive('wed')">
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Thursday</th>
-                    <td>
-                      <div class="form-check form-switch form-switch-md mb-3">
-                        <input class="form-check-input" type="checkbox" checked (click)="changeActive('thu')">
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Friday</th>
-                    <td>
-                      <div class="form-check form-switch form-switch-md mb-3">
-                        <input class="form-check-input" type="checkbox" checked (click)="changeActive('fri')">
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Saturday</th>
-                    <td>
-                      <div class="form-check form-switch form-switch-md mb-3">
-                        <input class="form-check-input" type="checkbox" checked (click)="changeActive('sat')">
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Sunday</th>
-                    <td>
-                      <div class="form-check form-switch form-switch-md mb-3">
-                        <input class="form-check-input" type="checkbox" (click)="changeActive('sun')">
-                      </div>
-                    </td>
-                  </tr>
                 </tbody>
               </table>
             </div>

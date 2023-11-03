@@ -133,4 +133,8 @@ export class ApiService {
     return this.http.get(environment.domain+"getArtistHistory")
   }
 
+  getAvailable():Observable<any>{
+    return this.http.get(environment.domain+"getAvailable")
+  }
+
 }

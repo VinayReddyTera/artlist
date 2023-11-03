@@ -790,4 +790,14 @@ router.get('/getArtistHistory',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to fetch available days
+router.get('/getAvailable',verifyToken,(req,res,next)=>{
+  let id = jwt.decode(req.headers.authorization).data._id;
+  userservice.getAvailable(id).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 module.exports = router
