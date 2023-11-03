@@ -112,9 +112,8 @@ export class ArtistProfileComponent implements OnInit{
     this.apiService.initiateLoading(true)
     this.apiService.getAvailable().subscribe(
       (res:any)=>{
-        console.log(res)
         if(res.status == 200){
-          this.availableDays = res.data.availableDays;
+          this.availableDays = res.data;
           this.availableArray = Object.entries(this.availableDays);
         }
         else if(res.status == 204){
@@ -511,8 +510,41 @@ export class ArtistProfileComponent implements OnInit{
 
   }
 
-  changeActive(){
-    console.log(this.availableDays)
+  updateDay(){
+    this.apiService.initiateLoading(true);
+    this.apiService.updateAvailable(this.availableDays).subscribe(
+    (res : any)=>{
+      console.log(res)
+      if(res.status == 200){
+        let msgData = {
+          severity : "success",
+          summary : 'Success',
+          detail : res.data,
+          life : 5000
+        }
+        this.apiService.sendMessage(msgData);
+      }
+      else if(res.status == 204){
+        this.errorMessage = res.data;
+        let msgData = {
+          severity : "error",
+          summary : 'Error',
+          detail : res.data,
+          life : 5000
+        }
+        this.apiService.sendMessage(msgData);
+      }
+    },
+    (err:any)=>{
+      this.errorMessage = err.error
+      console.log(err);
+    }
+  ).add(()=>{
+    this.apiService.initiateLoading(false)
+    setTimeout(()=>{
+      this.errorMessage = null;
+    },5000)
+  })
   }
 
 }

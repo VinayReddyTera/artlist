@@ -800,4 +800,14 @@ router.get('/getAvailable',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to update Available days
+router.post('/updateAvailable',verifyToken,(req,res,next)=>{
+  let id = jwt.decode(req.headers.authorization).data._id;
+  userservice.updateAvailable(req.body,id).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 module.exports = router

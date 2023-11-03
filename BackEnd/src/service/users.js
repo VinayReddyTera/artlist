@@ -730,4 +730,19 @@ userService.getAvailable=(id)=>{
   })
 }
 
+userService.updateAvailable=(payload,id)=>{
+  return userDB.updateAvailable(payload,id).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to update available days data'
+      }
+      return res
+    }
+  })
+}
+
 module.exports = userService

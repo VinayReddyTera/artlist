@@ -1083,7 +1083,7 @@ userDB.getAvailable = async(id)=>{
 if(data){
   let res = {
     status : 200,
-    data:data
+    data:data.availableDays
   }
   return res
 }
@@ -1091,6 +1091,25 @@ else{
   let res = {
     status : 204,
     data:'Unable to fetch available days data'
+  }
+  return res
+}
+}
+
+userDB.updateAvailable = async(payload,id)=>{
+  const collection = await connection.getArtist();
+  let data = await collection.updateOne({"_id":new ObjectId(id)},{$set:{availableDays:payload}})
+if(data.modifiedCount == 1 || data.acknowledged == true){
+  let res = {
+    status : 200,
+    data:'successfully updated'
+  }
+  return res
+}
+else{
+  let res = {
+    status : 204,
+    data:'Unable to update available days data'
   }
   return res
 }

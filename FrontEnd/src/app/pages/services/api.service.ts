@@ -137,4 +137,8 @@ export class ApiService {
     return this.http.get(environment.domain+"getAvailable")
   }
 
+  updateAvailable(payload:any):Observable<any>{
+    return this.http.post(environment.domain+"updateAvailable",payload)
+  }
+
 }
