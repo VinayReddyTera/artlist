@@ -15,13 +15,6 @@ const users = Schema({
     profileStatus :{type:String,default:'Incomplete'},
     emailVerified : {type:Boolean,default:false},
     phoneVerified : {type:Boolean,default:false},
-    history : [
-        {
-            date : Date,
-            artistId : String,
-            feedback : String
-        }
-    ],
     createdOn: {
          type: Date,
          default: moment().format("YYYY-MM-DD HH:mm:ss")
@@ -79,7 +72,7 @@ const artistDetails = Schema({
         'fri':true,
         'sat':true,
         'sun':false
-      }},
+    }},
     currency : {type:String,default:'inr'},
     skills : [
         {
@@ -108,17 +101,24 @@ const artistDetails = Schema({
             }
         }
     ],
-    history : [
-        {
-            date : Date,
-            userId : String
-        }
-    ],
     createdOn: {
          type: Date,
          default: moment().format("YYYY-MM-DD HH:mm:ss")
     }
 },{collection : "artistDetails"});
+
+const history = Schema({
+    date : Date,
+    userId : String,
+    artistId : String,
+    feedback : String,
+    type : String,
+    noOfHours : Number,
+    name:String,
+    price : Number,
+    paid : {type:Boolean,default:false},
+    paymentType : String
+},{collection : "history"});
 
 const feedback = Schema({
     name: String,
@@ -168,6 +168,16 @@ collection.getTag = () => {
 collection.feedback = () => {
     return Mongoose.connect(url,{useNewUrlParser:true,useUnifiedTopology:true}).then((database)=>{
         return database.model('feedback',feedback)
+    }).catch((error)=>{
+        let err = new Error("Could not connect to database " + error);
+        err.status = 500;
+        throw err;
+    })
+}
+
+collection.history = () => {
+    return Mongoose.connect(url,{useNewUrlParser:true,useUnifiedTopology:true}).then((database)=>{
+        return database.model('history',history)
     }).catch((error)=>{
         let err = new Error("Could not connect to database " + error);
         err.status = 500;
