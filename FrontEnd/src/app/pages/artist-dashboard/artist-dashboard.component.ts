@@ -167,11 +167,11 @@ export class ArtistDashboardComponent implements OnInit{
 
   ngOnInit() {
     this.inaugForm = this.fb.group({
-      status: ['', [Validators.required]],
+      status: [true],
       price: ['', [Validators.required]]
     })
     this.wishForm = this.fb.group({
-      status: ['', [Validators.required]],
+      status: [true],
       price: ['', [Validators.required]]
     })
     this.userData = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('data')));
@@ -293,7 +293,7 @@ export class ArtistDashboardComponent implements OnInit{
   }
 
   updateInaug(){
-    console.log(this.inaugForm.valid,this.inaugForm.value)
+    console.log(this.inaugForm.value)
     if(this.inaugForm.valid){
       this.apiService.initiateLoading(true);
       this.apiService.updateinaug(this.inaugForm.value).subscribe(
