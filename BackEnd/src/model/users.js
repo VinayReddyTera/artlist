@@ -1115,4 +1115,48 @@ else{
 }
 }
 
+userDB.updateinaug = async(payload,id)=>{
+  const collection = await connection.getArtist();
+  let data = await collection.updateOne({"_id":new ObjectId(id)},{$set:{
+    inaug : payload.status,
+    inaugPrice: payload.price
+  }})
+if(data.modifiedCount == 1 || data.acknowledged == true){
+  let res = {
+    status : 200,
+    data:'successfully updated'
+  }
+  return res
+}
+else{
+  let res = {
+    status : 204,
+    data:'Unable to update inauguration data'
+  }
+  return res
+}
+}
+
+userDB.updatewishes = async(payload,id)=>{
+  const collection = await connection.getArtist();
+  let data = await collection.updateOne({"_id":new ObjectId(id)},{$set:{
+    wishes : payload.status,
+    wishesPrice: payload.price
+  }})
+if(data.modifiedCount == 1 || data.acknowledged == true){
+  let res = {
+    status : 200,
+    data:'successfully updated'
+  }
+  return res
+}
+else{
+  let res = {
+    status : 204,
+    data:'Unable to update wishes data'
+  }
+  return res
+}
+}
+
 module.exports = userDB

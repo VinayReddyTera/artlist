@@ -810,4 +810,34 @@ router.post('/updateAvailable',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to update Available days
+router.post('/updateAvailable',verifyToken,(req,res,next)=>{
+  let id = jwt.decode(req.headers.authorization).data._id;
+  userservice.updateAvailable(req.body,id).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
+//router to update Inauguration data
+router.post('/updateinaug',verifyToken,(req,res,next)=>{
+  let id = jwt.decode(req.headers.authorization).data._id;
+  userservice.updateinaug(req.body,id).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
+//router to update wishes data
+router.post('/updatewishes',verifyToken,(req,res,next)=>{
+  let id = jwt.decode(req.headers.authorization).data._id;
+  userservice.updatewishes(req.body,id).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 module.exports = router

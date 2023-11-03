@@ -155,47 +155,9 @@ export class UserDashboardComponent {
     if(this.activeRoute.snapshot.params['redirected'] == 'success'){
       localStorage.setItem('microsoftInt','true')
     }
-
-    let payload;
-    let role = this.userData.role;
-    if(role.includes('admin')){
-      this.role = 'Admin'
-      payload = {
-        role : 'admin'
-      }
-    }
-    else if(role.includes('manager')){
-      this.role = 'Manager'
-      payload = {
-        role : 'manager',
-        email : this.userData.email,
-        userId : this.userData.id
-      }
-    }
-    else if(role.includes('rmg')){
-      this.role = 'Rmg'
-      payload = {
-        "role" : "rmg",
-        "userId" : this.userData.id
-      }
-    }
-    else if(role.includes('taghead')){
-      this.role = 'Tag Head'
-      payload = {
-        role : 'taghead',
-        userId : this.userData.id
-      }
-    }
-    else if(role.includes('tag')){
-      this.role = 'Tag Executive'
-      payload = {
-        role : 'tag',
-        userId : this.userData.id
-      }
-    }
     
     this.spinner.show();
-    this.apiService.fetchDashboardData(payload).subscribe(
+    this.apiService.fetchUserDashboardData().subscribe(
       (res:any)=>{
         if(res.status == 200){
           console.log(res.data)

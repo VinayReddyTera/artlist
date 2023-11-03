@@ -65,8 +65,12 @@ export class ApiService {
     }
   }
 
-  fetchDashboardData(data : any):Observable<any>{
-    return this.http.post(environment.domain+"fetchDashboardData",data)
+  fetchArtistDashboardData():Observable<any>{
+    return this.http.get(environment.domain+"fetchArtistDashboardData")
+  }
+
+  fetchUserDashboardData():Observable<any>{
+    return this.http.get(environment.domain+"fetchArtistDashboardData")
   }
 
   register(payload:any):Observable<any>{
@@ -139,6 +143,14 @@ export class ApiService {
 
   updateAvailable(payload:any):Observable<any>{
     return this.http.post(environment.domain+"updateAvailable",payload)
+  }
+
+  updateinaug(payload:any):Observable<any>{
+    return this.http.post(environment.domain+"updateinaug",payload)
+  }
+
+  updatewishes(payload:any):Observable<any>{
+    return this.http.post(environment.domain+"updatewishes",payload)
   }
 
 }

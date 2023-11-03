@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
 import { ApiService } from '../services/api.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { contactRenderer } from './contactRenderer';
 import { ActivatedRoute, Router } from '@angular/router';
 import { timeRenderer } from './timeRenderer';
 import { EncryptionService } from '../services/encryption.service';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 
 declare const $ : any;
 
@@ -14,7 +14,7 @@ declare const $ : any;
   templateUrl: './artist-dashboard.component.html',
   styleUrls: ['./artist-dashboard.component.css']
 })
-export class ArtistDashboardComponent {
+export class ArtistDashboardComponent implements OnInit{
 
   userStatistics = {
     inProgress : 0,
@@ -159,61 +159,35 @@ export class ArtistDashboardComponent {
     googleConnected :any;
     openings:any = 0;
     onboarded:any = 0;
+    inaugForm:any;
+    wishForm:any;
 
-  constructor(private activeRoute : ActivatedRoute,private apiService : ApiService,
-    private spinner : NgxSpinnerService,private router:Router,private decrypt:EncryptionService) {}
+  constructor(private activeRoute : ActivatedRoute,private fb: FormBuilder,private apiService : ApiService,
+    private router:Router,private decrypt:EncryptionService) {}
 
   ngOnInit() {
+    this.inaugForm = this.fb.group({
+      status: ['', [Validators.required]],
+      price: ['', [Validators.required]]
+    })
+    this.wishForm = this.fb.group({
+      status: ['', [Validators.required]],
+      price: ['', [Validators.required]]
+    })
     this.userData = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('data')));
+    console.log(this.userData)
     this.name = this.userData.name;
-    this.profileStatus = this.userData.profileStatus
-    if(this.profileStatus == "Incomplete"){
-      $('#profileComplete').modal('show')
-    }
+    this.role = this.userData.role;
+    this.profileStatus = this.userData.profileStatus;
+    // if(this.profileStatus == "Incomplete"){
+    //   $('#profileComplete').modal('show')
+    // }
     if(this.activeRoute.snapshot.params['redirected'] == 'success'){
       localStorage.setItem('microsoftInt','true')
     }
-
-    let payload;
-    let role = this.userData.role;
-    if(role.includes('admin')){
-      this.role = 'Admin'
-      payload = {
-        role : 'admin'
-      }
-    }
-    else if(role.includes('manager')){
-      this.role = 'Manager'
-      payload = {
-        role : 'manager',
-        email : this.userData.email,
-        userId : this.userData.id
-      }
-    }
-    else if(role.includes('rmg')){
-      this.role = 'Rmg'
-      payload = {
-        "role" : "rmg",
-        "userId" : this.userData.id
-      }
-    }
-    else if(role.includes('taghead')){
-      this.role = 'Tag Head'
-      payload = {
-        role : 'taghead',
-        userId : this.userData.id
-      }
-    }
-    else if(role.includes('tag')){
-      this.role = 'Tag Executive'
-      payload = {
-        role : 'tag',
-        userId : this.userData.id
-      }
-    }
     
     // this.spinner.show();
-    // this.apiService.fetchDashboardData(payload).subscribe(
+    // this.apiService.fetchArtistDashboardData().subscribe(
     //   (res:any)=>{
     //     if(res.status == 200){
     //       console.log(res.data)
@@ -315,6 +289,101 @@ export class ArtistDashboardComponent {
       this.gridApi2.setQuickFilter(
         (document.getElementById('filter-text-box2') as HTMLInputElement).value
       );
+    }
+  }
+
+  updateInaug(){
+    console.log(this.inaugForm.valid,this.inaugForm.value)
+    if(this.inaugForm.valid){
+      this.apiService.initiateLoading(true);
+      this.apiService.updateinaug(this.inaugForm.value).subscribe(
+      (res : any)=>{
+        console.log(res)
+        if(res.status == 200){
+          let msgData = {
+            severity : "success",
+            summary : 'Success',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
+        }
+        else if(res.status == 204){
+          this.errorMessage = res.data;
+          let msgData = {
+            severity : "error",
+            summary : 'Error',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
+        }
+      },
+      (err:any)=>{
+        this.errorMessage = err.error
+        console.log(err);
+      }
+    ).add(()=>{
+      this.apiService.initiateLoading(false)
+      setTimeout(()=>{
+        this.errorMessage = null;
+      },5000)
+    })
+    }
+    else{
+      const controls = this.inaugForm.controls;
+      for (const name in controls) {
+          if (controls[name].invalid) {
+              controls[name].markAsDirty()
+          }
+      }
+    }
+  }
+
+  updateWishes(){
+    if(this.wishForm.valid){
+      this.apiService.initiateLoading(true);
+      this.apiService.updatewishes(this.wishForm.value).subscribe(
+      (res : any)=>{
+        console.log(res)
+        if(res.status == 200){
+          let msgData = {
+            severity : "success",
+            summary : 'Success',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
+        }
+        else if(res.status == 204){
+          this.errorMessage = res.data;
+          let msgData = {
+            severity : "error",
+            summary : 'Error',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
+        }
+      },
+      (err:any)=>{
+        this.errorMessage = err.error
+        console.log(err);
+      }
+    ).add(()=>{
+      this.apiService.initiateLoading(false)
+      setTimeout(()=>{
+        this.errorMessage = null;
+      },5000)
+    })
+    }
+    else{
+      const controls = this.wishForm.controls;
+      for (const name in controls) {
+          if (controls[name].invalid) {
+              controls[name].markAsDirty()
+          }
+      }
     }
   }
 

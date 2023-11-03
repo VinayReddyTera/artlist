@@ -1,5 +1,3 @@
-<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="medium" color="#20b04b" type="ball-clip-rotate"></ngx-spinner>
-
 <div class="container-fluid">
     <!-- start page title -->
     <div class="row">
@@ -23,7 +21,7 @@
                     <div class="row">
                         <div class="col-7">
                             <div class="text-primary p-3">
-                                <h5 class="text-primary">Welcome Back !</h5>
+                                <h5 class="text-primary">Welcome Back</h5>
                                 <p>{{role}} Dashboard</p>
                             </div>
                         </div>
@@ -78,28 +76,71 @@
             </div>
         </div>
         <div class="col-xl-8">
-            <div class="row">
-                <div *ngFor="let stat of statData" class="col-md-4">
-                  <a [routerLink]="stat.link">
-                    <div class="card mini-stats-wid main">
-                      <div class="card-body">
-                        <div class="media">
-                          <div class="media-body">
-                            <p class="text-muted fw-medium">{{stat.title}}</p>
-                            <h4 class="mb-0">{{stat.value}}</h4>
+          <div class="row">
+            <div class="col-sm-6">
+              <form [formGroup]="inaugForm" (ngSubmit)="updateInaug()">
+                <div class="card">
+                  <div class="card-body">
+                      <div class="d-flex align-items-center mb-3">
+                          <div class="avatar-xs me-3">
+                              <span
+                                  class="avatar-title rounded-circle bg-primary bg-soft text-primary font-size-18">
+                                  <i class="mdi mdi-scissors-cutting"></i>
+                              </span>
                           </div>
-                    
-                          <div class="mini-stat-icon avatar-sm rounded-circle bg-primary align-self-center">
-                            <span class="avatar-title">
-                              <i class="bx {{stat.icon}} font-size-24"></i>
-                            </span>
+                          <h5 class="font-size-14 mb-0">Inaugurations</h5>
+                      </div>
+                      <div class="text-muted mt-4">
+                        <div class="form-check form-switch form-switch-lg mb-3">
+                          <input class="form-check-input" formControlName="status" type="checkbox" id="inaug">
+                          <label class="form-check-label" for="inaug">Active</label>
+                        </div>
+                        <div class="mb-3">
+                          <label for="inaugPrice">Price</label>
+                          <input type="number" formControlName="price" class="form-control" id="inaugPrice"/>
+                          <div *ngIf="inaugForm.controls.price.errors?.required && inaugForm.controls.price.dirty" class="required-message text-danger">
+                            <small>Required Field!</small>
                           </div>
                         </div>
+                        <button class="btn btn-soft-success">Update</button>
                       </div>
-                    </div>
-                  </a>
-                </div>
+                  </div>
+              </div>
+              </form>
             </div>
+
+            <div class="col-sm-6">
+              <form [formGroup]="wishForm" (ngSubmit)="updateWishes()">
+                <div class="card">
+                  <div class="card-body">
+                      <div class="d-flex align-items-center mb-3">
+                          <div class="avatar-xs me-3">
+                              <span
+                                  class="avatar-title rounded-circle bg-primary bg-soft text-primary font-size-18">
+                                  <i class="mdi mdi-cake-layered"></i>
+                              </span>
+                          </div>
+                          <h5 class="font-size-14 mb-0">Wishes</h5>
+                      </div>
+                      <div class="text-muted mt-4">
+                        <div class="form-check form-switch form-switch-lg mb-3">
+                          <input class="form-check-input" formControlName="status" type="checkbox" id="inaug">
+                          <label class="form-check-label" for="inaug">Active</label>
+                        </div>
+                        <div class="mb-3">
+                          <label for="wishesPrice">Price</label>
+                          <input type="number" formControlName="price" class="form-control" id="wishesPrice"/>
+                          <div *ngIf="wishForm.controls.price.errors?.required && wishForm.controls.price.dirty" class="required-message text-danger">
+                            <small>Required Field!</small>
+                          </div>
+                        </div>
+                        <button class="btn btn-soft-success">Update</button>
+                      </div>
+                  </div>
+              </div>
+              </form>
+            </div>
+        </div>
             <!-- end row -->
             <div class="card">
                 <div class="card-body">

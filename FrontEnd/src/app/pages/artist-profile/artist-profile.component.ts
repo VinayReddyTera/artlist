@@ -143,7 +143,7 @@ export class ArtistProfileComponent implements OnInit{
       this.userData = JSON.parse(this.encrypt.deCrypt(localStorage.getItem('data')));
       this.profileStatus = this.userData.profileStatus
     }
-    console.log(this.userData)
+    
     this.activatedRoute.queryParamMap.subscribe(params => {
       // Optional parameter
       const status:any = params.get('status');
@@ -220,7 +220,6 @@ export class ArtistProfileComponent implements OnInit{
           }
       }
     ];
-    console.log(this.userData)
     this.profileForm = this.fb.group({
       email:[this.userData.email,[Validators.required,this.validateEmail]],
       name:[this.userData.name,[Validators.required]],

@@ -745,4 +745,34 @@ userService.updateAvailable=(payload,id)=>{
   })
 }
 
+userService.updateinaug=(payload,id)=>{
+  return userDB.updateinaug(payload,id).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to update Inauguration data'
+      }
+      return res
+    }
+  })
+}
+
+userService.updatewishes=(payload,id)=>{
+  return userDB.updatewishes(payload,id).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to update wishes data'
+      }
+      return res
+    }
+  })
+}
+
 module.exports = userService
