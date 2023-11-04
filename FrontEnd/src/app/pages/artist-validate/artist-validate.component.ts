@@ -72,6 +72,11 @@ export class ArtistValidateComponent implements OnInit{
               life : 5000
             }
             this.apiService.sendMessage(msgData);
+            this.skillForm.reset()
+            setTimeout(()=>{
+              localStorage.removeItem('approveSkill')
+              this.router.navigateByUrl('artist-approve')
+            },5000)
           }
           else if(res.status == 204){
             let msgData = {
@@ -88,11 +93,6 @@ export class ArtistValidateComponent implements OnInit{
         }
       ).add(()=>{
         this.apiService.initiateLoading(false);
-        this.skillForm.reset()
-        setTimeout(()=>{
-          localStorage.removeItem('approveSkill')
-          this.router.navigateByUrl('artist-approve')
-        },5000)
       })
     }
     else{

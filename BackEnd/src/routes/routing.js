@@ -748,13 +748,6 @@ router.post('/approveSkill',verifyToken,(req,res,next)=>{
       }
     }
   }
-  else{
-    let response = {
-      status : 204,
-      data : 'Required fields missing'
-    }
-    return res.json(response)
-  }
   if(req.body.status){
     if(!req.body.id){
       let response = {

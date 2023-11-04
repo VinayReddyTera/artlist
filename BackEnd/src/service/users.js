@@ -546,86 +546,100 @@ userService.updateArtistSkill=(payload,id)=>{
 }
 
 userService.addApprover=(payload)=>{
-  return userDB.addApprover(payload).then((data)=>{
-    if(data){
-      let payload1;
-      if(data.sendMail == true){
-        if(data.status == 200){
-          payload1 = {
-              "subject" : `Successfully Registered`,
-              "email" : payload.email,
-              "body" : ` <table align='center' border='0' cellpadding='0' cellspacing='0' width='550' bgcolor='white'
-              style='border:2px solid black;border-radius:5px;'>
-              <tbody>
-                <tr>
-                  <td align='center'>
-                    <table align='center' border='0' cellpadding='0' cellspacing='0' class='col-550' width='550'>
-                      <tbody>
-                        <tr>
-                          <td align='center' style='background-color: #d5dafa;
-                                              height: 50px;'>
-            
-                            <a href='#' style='text-decoration: none;'>
-                              <p style='color:#556ee6;
-                                                      font-weight:bold;'>
-                                Artlist
-                              </p>
-                            </a>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </td>
+  return userDB.checkLoginUser(payload).then((userData)=>{
+    if(userData.status == 204 && userData.data == "User Doesn't Exist"){
+      return userDB.addApprover(payload).then((data)=>{
+        if(data){
+          let payload1;
+          if(data.sendMail == true){
+            if(data.status == 200){
+              payload1 = {
+                  "subject" : `Successfully Registered`,
+                  "email" : payload.email,
+                  "body" : ` <table align='center' border='0' cellpadding='0' cellspacing='0' width='550' bgcolor='white'
+                  style='border:2px solid black;border-radius:5px;'>
+                  <tbody>
+                    <tr>
+                      <td align='center'>
+                        <table align='center' border='0' cellpadding='0' cellspacing='0' class='col-550' width='550'>
+                          <tbody>
+                            <tr>
+                              <td align='center' style='background-color: #d5dafa;
+                                                  height: 50px;'>
+                
+                                <a href='#' style='text-decoration: none;'>
+                                  <p style='color:#556ee6;
+                                                          font-weight:bold;'>
+                                    Artlist
+                                  </p>
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr style='height: 300px;'>
+                      <td align='center' style='border: none;
+                                  border-bottom: 2px solid #d5dafa; 
+                                  padding-right: 20px;padding-left:20px'>
+                
+                        <p style='font-size: 24px;
+                                      color:black;'>
+                          Hello ${payload.name}
+                        </p>
+                        <p style='font-size: 24px;
+                        color:black;'>You have successfully registered as an Approver for Artlist</p>
+              
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style='
+                  font-size:11px; line-height:18px; 
+                  color:#999999;' valign='top' align='center'>
+                        <a href='#' style='color:#999999; 
+                  text-decoration:underline;'>PRIVACY STATEMENT</a>
+                        | <a href='#' style='color:#999999; text-decoration:underline;'>TERMS OF SERVICE</a>
+                        | <a href='#' style='color:#999999; text-decoration:underline;'>RETURNS</a><br>
+                        © 2023 Artlist. All Rights Reserved.<br>
+                        If you do not wish to receive any further
+                        emails from us, please
+                        <a href='#' style='text-decoration:none; 
+                                color:#999999;'>unsubscribe</a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                </td>
                 </tr>
-                <tr style='height: 300px;'>
-                  <td align='center' style='border: none;
-                              border-bottom: 2px solid #d5dafa; 
-                              padding-right: 20px;padding-left:20px'>
-            
-                    <p style='font-size: 24px;
-                                  color:black;'>
-                      Hello ${payload.name}
-                    </p>
-                    <p style='font-size: 24px;
-                    color:black;'>You have successfully registered as an Approver for Artlist</p>
-          
-                  </td>
-                </tr>
-                <tr>
-                  <td style='
-              font-size:11px; line-height:18px; 
-              color:#999999;' valign='top' align='center'>
-                    <a href='#' style='color:#999999; 
-              text-decoration:underline;'>PRIVACY STATEMENT</a>
-                    | <a href='#' style='color:#999999; text-decoration:underline;'>TERMS OF SERVICE</a>
-                    | <a href='#' style='color:#999999; text-decoration:underline;'>RETURNS</a><br>
-                    © 2023 Artlist. All Rights Reserved.<br>
-                    If you do not wish to receive any further
-                    emails from us, please
-                    <a href='#' style='text-decoration:none; 
-                            color:#999999;'>unsubscribe</a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            </td>
-            </tr>
-            </tbody>
-            </table>`,
-              "attachment" : ""
+                </tbody>
+                </table>`,
+                  "attachment" : ""
+              }
           }
-      }
-      userService.sendMail(payload1)
-      }
-      return data
-    }
-    else{
-      let response = {
+          userService.sendMail(payload1)
+          }
+          return data
+        }
+        else{
+          let response = {
+            status : 204,
+            data : 'unable to add approver'
+          }
+          return response
+        }
+      })
+  }
+  else{
+    if(userData.status == 200){
+      let res = {
         status : 204,
-        data : 'unable to add approver'
+        data : "Approver already exists"
       }
-      return response
+      return res
     }
+    return userData
+  }
   })
 }
 

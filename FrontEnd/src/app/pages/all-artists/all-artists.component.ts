@@ -107,9 +107,20 @@ ngOnInit() {
    this.apiService.initiateLoading(true);
    this.apiService.getArtists().subscribe(
     (res:any)=>{
-        console.log(res)
       if(res.status == 200){
-        this.artists = res.data
+        const newArray:any = [];
+        res.data.forEach((person:any) => {
+            person.skills.forEach((skill:any) => {
+                newArray.push({
+                    name: person.name,
+                    email: person.email,
+                    phoneNo: person.phoneNo,
+                    skill: skill
+                });
+            });
+        });
+        console.log(newArray)
+        this.artists = newArray;
       }
       else if(res.status == 204){
         let msgData = {
