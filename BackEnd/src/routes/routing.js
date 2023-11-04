@@ -840,4 +840,14 @@ router.post('/updatewishes',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to update wishes data
+router.get('/getArtists',verifyToken,(req,res,next)=>{
+  // let role = jwt.decode(req.headers.authorization).data.role;
+  userservice.getArtists().then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 module.exports = router

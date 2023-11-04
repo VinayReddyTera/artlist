@@ -1159,4 +1159,105 @@ else{
 }
 }
 
+userDB.getArtists = async()=>{
+  const collection = await connection.getArtist();
+  let inputArray = await collection.aggregate([
+    {
+      $match: {
+        'skills.status': 'active',
+        'skills.validated': 'a'
+      }
+    },
+    {
+      $project: {
+        name: 1,
+        email: 1,
+        phoneNo: 1,
+        language: 1,
+        address: 1,
+        mandal: 1,
+        district: 1,
+        state: 1,
+        pincode: 1,
+        'skills': {
+          $map: {
+            input: '$skills',
+            as: 'skill',
+            in: {
+              name: '$$skill.name',
+              experience: '$$skill.experience',
+              portfolio: '$$skill.portfolio',
+              pricing: '$$skill.pricing',
+              status: '$$skill.status',
+              validated: '$$skill.validated',
+              genre: {
+                $map: {
+                  input: '$$skill.genre',
+                  as: 'g',
+                  in: {
+                    name: '$$g.name',
+                    experience: '$$g.experience',
+                    portfolio: '$$g.portfolio',
+                    status: '$$g.status',
+                    validated: '$$g.validated'
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ])
+
+  let filteredArray = []
+function removeSkillsAndGenre(array) {
+  for(let i of array){
+    const filteredSkills = i.skills.filter(skill => skill.status === 'active' && skill.validated === 'a');
+    i.skills = filteredSkills;
+    filteredArray.push(i)
+  }
+  for(let i of filteredArray){
+    for(let j of i.skills){
+      const filteredGenre = j.genre.filter(genre => genre.status === 'active' && genre.validated === 'a');
+      j.genre = filteredGenre;
+    }
+  }
+
+}
+removeSkillsAndGenre(inputArray)
+
+// function filterSkillsAndGenre(artist) {
+//   const filteredSkills = artist.skills.filter(
+//     (skill) => skill.status === 'active' && skill.validated === 'a'
+//   );
+//   const filteredSkillsWithGenre = filteredSkills.map((skill) => ({
+//     ...skill,
+//     genre: skill.genre.filter((genre) => genre.status === 'active' && genre.validated === 'a'),
+//   }));
+
+//   return {
+//     ...artist,
+//     skills: filteredSkillsWithGenre,
+//   };
+// }
+
+// const filteredArray = inputArray.map(filterSkillsAndGenre);
+  
+if(filteredArray.length > 0){
+  let res = {
+    status : 200,
+    data:filteredArray
+  }
+  return res
+}
+else{
+  let res = {
+    status : 204,
+    data:'No artist registered yet'
+  }
+  return res
+}
+}
+
 module.exports = userDB

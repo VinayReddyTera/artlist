@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-all-artists',
   templateUrl: './all-artists.component.html',
   styleUrls: ['./all-artists.component.css']
 })
-export class AllArtistsComponent {
+export class AllArtistsComponent implements OnInit{
   projectData = [
     {
         id: 1,
@@ -98,8 +99,34 @@ export class AllArtistsComponent {
         comment: 106
     }
 ];
+artists:any;
+
+constructor(private apiService:ApiService){}
 
 ngOnInit() {
+   this.apiService.initiateLoading(true);
+   this.apiService.getArtists().subscribe(
+    (res:any)=>{
+        console.log(res)
+      if(res.status == 200){
+        this.artists = res.data
+      }
+      else if(res.status == 204){
+        let msgData = {
+          severity : "error",
+          summary : 'Error',
+          detail : res.data,
+          life : 5000
+        }
+        this.apiService.sendMessage(msgData);
+      }
+    },
+    (err:any)=>{
+      console.log(err)
+    }
+  ).add(()=>{
+    this.apiService.initiateLoading(false)
+  })
 }
 
 }

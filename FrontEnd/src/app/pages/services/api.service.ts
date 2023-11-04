@@ -153,4 +153,8 @@ export class ApiService {
     return this.http.post(environment.domain+"updatewishes",payload)
   }
 
+  getArtists():Observable<any>{
+    return this.http.get(environment.domain+"getArtists")
+  }
+
 }
