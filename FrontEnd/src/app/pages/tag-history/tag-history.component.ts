@@ -213,6 +213,7 @@ export class TagHistoryComponent {
     this.spinner.show()
     this.apiService.getArtistHistory().subscribe(
       (res : any)=>{
+        console.log(res)
         if(res.status == 200){
           let transformedArray:any = [];
           res.data.forEach((item:any) => {

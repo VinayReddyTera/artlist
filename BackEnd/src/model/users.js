@@ -959,68 +959,77 @@ userDB.approveSkill = async(payload,id)=>{
   let response = {
     data : []
   }
-  // Check the results of each update
-if (mainUpdate.modifiedCount == 0) {
-  isFailed = true
-  response.data.push(`${payload.name} status,update failed.`);
-}
-
-for(i in payload.genre){
-  let result;
-  if(payload.genre[i].feedback){
-    result = await collection.updateOne(
-      { "skills._id": new ObjectId(payload.id), "skills.genre._id": new ObjectId(payload.genre[i].id) },
-      {
-          $set: {
-              "skills.$[outer].genre.$[inner].validated": payload.genre[i].status,
-              "skills.$[outer].genre.$[inner].feedback": payload.genre[i].feedback,
-              "skills.$[outer].genre.$[inner].approverId": id
-          }
-      },
-      {
-          arrayFilters: [
-              { "outer._id": payload.id },
-              { "inner._id": payload.genre[i].id }
-          ]
-      }
-  )
+  if (mainUpdate.modifiedCount == 0) {
+    isFailed = true
+    response.data.push(`${payload.name} status,update failed.`);
+  }
+if(payload.genre.length>0){
+  for(i in payload.genre){
+    let result;
+    if(payload.genre[i].feedback){
+      result = await collection.updateOne(
+        { "skills._id": new ObjectId(payload.id), "skills.genre._id": new ObjectId(payload.genre[i].id) },
+        {
+            $set: {
+                "skills.$[outer].genre.$[inner].validated": payload.genre[i].status,
+                "skills.$[outer].genre.$[inner].feedback": payload.genre[i].feedback,
+                "skills.$[outer].genre.$[inner].approverId": id
+            }
+        },
+        {
+            arrayFilters: [
+                { "outer._id": payload.id },
+                { "inner._id": payload.genre[i].id }
+            ]
+        }
+    )
+    }
+    else{
+      result = await collection.updateOne(
+        { "skills._id": new ObjectId(payload.id), "skills.genre._id": new ObjectId(payload.genre[i].id) },
+        {
+            $set: {
+                "skills.$[outer].genre.$[inner].validated": payload.genre[i].status,
+                "skills.$[outer].genre.$[inner].approverId": id
+            }
+        },
+        {
+            arrayFilters: [
+                { "outer._id": payload.id },
+                { "inner._id": payload.genre[i].id }
+            ]
+        }
+    )
+    }
+  if(result.modifiedCount == 1){
+    isFailed = false
   }
   else{
-    result = await collection.updateOne(
-      { "skills._id": new ObjectId(payload.id), "skills.genre._id": new ObjectId(payload.genre[i].id) },
-      {
-          $set: {
-              "skills.$[outer].genre.$[inner].validated": payload.genre[i].status,
-              "skills.$[outer].genre.$[inner].approverId": id
-          }
-      },
-      {
-          arrayFilters: [
-              { "outer._id": payload.id },
-              { "inner._id": payload.genre[i].id }
-          ]
-      }
-  )
+    isFailed = true
+    response.data.push(`Genre update ${payload.genre[i].name} failed.`);
   }
-if(result.modifiedCount == 1){
-  isFailed = false
+  if(i == payload.genre.length-1){
+    if(isFailed){
+      response.status = 204;
+    }
+    else{
+      response.status = 200;
+      response.data = 'successfully updated'
+    }
+    return response
+  }
+  }
 }
 else{
-  isFailed = true
-  response.data.push(`Genre update ${payload.genre[i].name} failed.`);
-}
-if(i == payload.genre.length-1){
-  if(isFailed){
-    response.status = 204;
+  if (mainUpdate.modifiedCount == 0) {
+    return response
   }
   else{
     response.status = 200;
     response.data = 'successfully updated'
+    return response
   }
-  return response
 }
-}
-
 }
 
 userDB.getArtistHistory = async(approverId)=>{
@@ -1033,7 +1042,7 @@ userDB.getArtistHistory = async(approverId)=>{
     ]
   },{name:1,email:1,phoneNo:1,skills:1}).then((inputArray)=>{
     if(inputArray.length>0){
-      let data = inputArray.map((item) => {
+      filteredArray = inputArray.map((item) => {
         item.skills = item.skills.filter((skill) => {
             if (skill?.approverId === approverId) {
                 return true;
@@ -1053,13 +1062,18 @@ userDB.getArtistHistory = async(approverId)=>{
         });
         return item;
     });
-    filteredArray = data.map((item) => {
-      item.skills = item.skills.filter((skill) => skill.genre.length > 0);
-      return item;
-  });  
-    }
-  })
 
+    for(let i of filteredArray){
+      for(let j in i.skills){
+        if(i.skills[j].name == 'N/A'){
+          if(i.skills[j].genre.length==0){
+            i.skills.splice(j,1)
+          }
+        }
+      }
+    }
+  }
+})
 
 if(filteredArray.length>0){
   let res = {
