@@ -1,38 +1,40 @@
 <div class="row">
-    <div *ngFor="let grid of artists" class="col-xl-4 col-sm-6">
+    <div *ngFor="let artist of artists" class="col-xl-4 col-sm-6">
       <div class="card">
         <div class="card-body">
           <div class="media">
-            <div class="avatar-md me-4">
+            <div class="avatar-md me-2">
               <span class="avatar-title rounded-circle bg-light text-danger font-size-16">
-                <img class="rounded-circle" src="{{grid.image}}" alt height="65" />
+                <img class="rounded-circle" src="assets/images/users/avatar-1.jpg" alt height="65" />
               </span>
             </div>
 
-            <div class="media-body overflow-hidden">
+            <div class="media-body pl-2 pb-2 overflow-hidden">
               <h5 class="text-truncate font-size-15">
-                <a href="javascript: void(0);" class="text-dark">{{grid.name}}</a>
+                <a class="text-dark">{{artist.name}}</a>
               </h5>
-              <p class="text-muted mb-4">{{grid.subtext}}</p>
+              <div class="text-muted">{{artist.skill.name}}</div>
+              <div class="text-muted">{{artist.skill.experience}} years experience</div>
+              <div class="text-muted">
+                <i class="mdi mdi-map-marker" style="font-size:18px;color:#556ee6;"></i>
+                <span> {{artist.district}}</span>
+              </div>
+              <div class="badge bg-success font-size-11 mt-2"><i class="bx bxs-star me-1"></i>{{artist.skill.rating}}</div>
+              <div class="mt-2">
+                <a href="tel:{{artist.phoneNo}}" [pTooltip]="artist.phoneNo" tooltipPosition="top">
+                  <button class="btn btn-success btn-rounded btn-icon icon">
+                  <i class="mdi mdi-phone edit"></i>
+                  </button>
+                  </a> &nbsp;
+                  <a href="mailto:{{artist.email}}" [pTooltip]="artist.email" tooltipPosition="top">
+                  <button class="btn btn-info btn-rounded btn-icon icon">
+                  <i class="mdi mdi-email edit"></i>
+                  </button>
+                  </a> &nbsp;
+                  <button class="btn btn-primary" style="height: 30px;" (click)="view(artist)"><span class="button-text">view</span></button>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="px-4 py-3 border-top">
-          <ul class="list-inline mb-0">
-            <li class="list-inline-item me-3">
-              <span class="badge" [ngClass]="{ 'bg-success': grid.status === 'Completed',
-                    'bg-warning': grid.status === 'Pending',
-                    'bg-danger': grid.status === 'Delay' }">{{grid.status}}</span>
-            </li>
-            <li class="list-inline-item me-3" title="Due Date" ngbTooltip="Due Date">
-              <i class="bx bx-calendar me-1"></i>
-              {{grid.date}}
-            </li>
-            <li class="list-inline-item me-3" title="Comments" ngbTooltip="Comments">
-              <i class="bx bx-comment-dots me-1"></i>
-              {{grid.comment}}
-            </li>
-          </ul>
         </div>
       </div>
     </div>

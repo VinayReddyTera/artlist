@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ApiService } from '../services/api.service';
+import { EncryptionService } from '../services/encryption.service';
 
 @Component({
   selector: 'app-all-artists',
@@ -9,7 +11,7 @@ import { ApiService } from '../services/api.service';
 export class AllArtistsComponent implements OnInit{
 artists:any;
 
-constructor(private apiService:ApiService){}
+constructor(private apiService:ApiService,private router:Router,private encrypt:EncryptionService){}
 
 ngOnInit() {
    this.apiService.initiateLoading(true);
@@ -23,6 +25,12 @@ ngOnInit() {
                     name: person.name,
                     email: person.email,
                     phoneNo: person.phoneNo,
+                    address: person.address,
+                    mandal: person.mandal,
+                    district: person.district,
+                    state: person.state,
+                    pincode: person.pincode,
+                    language: person.language,
                     skill: skill
                 });
             });
@@ -46,6 +54,12 @@ ngOnInit() {
   ).add(()=>{
     this.apiService.initiateLoading(false)
   })
+}
+
+view(data:any){
+    localStorage.setItem('artistData',this.encrypt.enCrypt(JSON.stringify(data)));
+    // this.router.navigateByUrl('artist-data');
+    window.open(`${window.location.origin}/artist-data`)
 }
 
 }
