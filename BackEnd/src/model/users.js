@@ -1204,6 +1204,7 @@ userDB.getArtists = async()=>{
               pricing: '$$skill.pricing',
               status: '$$skill.status',
               validated: '$$skill.validated',
+              rating: '$$skill.rating',
               genre: {
                 $map: {
                   input: '$$skill.genre',
@@ -1212,6 +1213,7 @@ userDB.getArtists = async()=>{
                     name: '$$g.name',
                     experience: '$$g.experience',
                     portfolio: '$$g.portfolio',
+                    rating: '$$g.rating',
                     status: '$$g.status',
                     validated: '$$g.validated'
                   }

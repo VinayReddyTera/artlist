@@ -78,6 +78,7 @@ const artistDetails = Schema({
         {
             name : String,
             status : String,
+            rating : {type:Number,default:0},
             genre : [
                 {
                     name : String,
