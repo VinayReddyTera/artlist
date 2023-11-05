@@ -17,6 +17,7 @@ export class ArtistDataComponent implements OnInit{
   artistData:any;
   apiCalled:boolean=false;
   bookingForm:any;
+  showFrom:boolean=false;
 
   ngOnInit(): void {
     if(localStorage.getItem('artistData')){
@@ -27,8 +28,7 @@ export class ArtistDataComponent implements OnInit{
     }
     console.log(this.artistData)
     this.bookingForm = this.fb.group({
-      type:['',[Validators.required]],
-      date : ['',[Validators.required]]
+      type:['',[Validators.required]]
     })
   }
 
@@ -64,6 +64,7 @@ export class ArtistDataComponent implements OnInit{
   }
 
   bookNow(){
+    console.log(this.bookingForm.value)
     if(this.bookingForm.valid){
       this.apiservice.initiateLoading(true);
       this.apiservice.login(this.bookingForm.value).subscribe(
@@ -96,6 +97,19 @@ export class ArtistDataComponent implements OnInit{
         }
     }
   }
+  }
+
+  addField(){
+    if(this.bookingForm.value.type == 'hourly'){
+      this.bookingForm.addControl('from', new FormControl('', Validators.required));
+      this.bookingForm.addControl('to', new FormControl('', Validators.required));
+      this.showFrom = true;
+    }
+    else{
+      this.bookingForm.removeControl('from');
+      this.bookingForm.removeControl('to');
+      this.showFrom = false;
+    }
   }
 
 }

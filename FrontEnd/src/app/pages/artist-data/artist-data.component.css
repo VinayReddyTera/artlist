@@ -39,3 +39,21 @@
     position: absolute;
     bottom: -4px;
   }
+
+  input[type="time"] {
+    position: relative;
+  }
+  
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    display: block;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background: transparent;
+  }
+
+  .custom-box{
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }

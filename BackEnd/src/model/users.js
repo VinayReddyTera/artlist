@@ -1279,9 +1279,14 @@ else{
 
 userDB.fetchAvailable = async(id)=>{
   const collection = await connection.getArtist();
+  const collection1 = await connection.history();
   let data = await collection.findOne({"_id":new ObjectId(id)},{availableDays:1})
   let availableDays = data.availableDays
-  console.log(availableDays)
+  let historyData = await collection1.find({"approverId":id})
+  console.log(historyData)
+  if(historyData.length == 0){
+    
+  }
 if(data){
   let res = {
     status : 200,
