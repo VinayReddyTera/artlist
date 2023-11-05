@@ -22,6 +22,7 @@ ngOnInit() {
         res.data.forEach((person:any) => {
             person.skills.forEach((skill:any) => {
                 newArray.push({
+                    id: person._id,
                     name: person.name,
                     email: person.email,
                     phoneNo: person.phoneNo,

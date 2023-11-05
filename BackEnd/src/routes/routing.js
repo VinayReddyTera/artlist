@@ -833,10 +833,20 @@ router.post('/updatewishes',verifyToken,(req,res,next)=>{
   })
 })
 
-//router to update wishes data
+//router to get artists data
 router.get('/getArtists',verifyToken,(req,res,next)=>{
   // let role = jwt.decode(req.headers.authorization).data.role;
   userservice.getArtists().then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
+//router to fetch avilable
+router.post('/fetchAvailable',verifyToken,(req,res,next)=>{
+  // let role = jwt.decode(req.headers.authorization).data.role;
+  userservice.fetchAvailable(req.body.id).then((data)=>{
     return res.json(data)
   }).catch((err)=>{
     next(err)

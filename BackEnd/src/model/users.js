@@ -1184,6 +1184,7 @@ userDB.getArtists = async()=>{
     },
     {
       $project: {
+        _id:1,
         name: 1,
         email: 1,
         phoneNo: 1,
@@ -1271,6 +1272,27 @@ else{
   let res = {
     status : 204,
     data:'No artist registered yet'
+  }
+  return res
+}
+}
+
+userDB.fetchAvailable = async(id)=>{
+  const collection = await connection.getArtist();
+  let data = await collection.findOne({"_id":new ObjectId(id)},{availableDays:1})
+  let availableDays = data.availableDays
+  console.log(availableDays)
+if(data){
+  let res = {
+    status : 200,
+    data:'ok'
+  }
+  return res
+}
+else{
+  let res = {
+    status : 204,
+    data:'Unable to update wishes data'
   }
   return res
 }
