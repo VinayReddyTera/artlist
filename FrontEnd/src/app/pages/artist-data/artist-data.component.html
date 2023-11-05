@@ -161,7 +161,52 @@
           <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
       </div>
         <div class="modal-body">
-          
+            <div class="account-pages">
+                <div class="container">
+                  <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6 col-xl-5">
+                      <div class="card overflow-hidden">
+                        <div class="card-body">
+                          <div class="p-2">
+                            <form class="form-horizontal" [formGroup]="bookingForm" (ngSubmit)="bookNow()">
+                                <div class="mb-3">
+                                  <label for="password">Select Booking Type</label>
+                                  <div class="input-group auth-pass-inputgroup">
+                                      <select id="role" class="form-control" formControlName="type">
+                                        <option value="" disabled selected>--select booking type--</option>
+                                        <option value="hourly">Hourly</option>
+                                        <option value="fullDay">Full Day</option>
+                                        <option value="event">Event</option>
+                                      </select>
+                                    </div>
+                                    <div *ngIf="f.type.errors?.required && f.type.dirty" class="text-danger">
+                                      <small>Required Field!</small>
+                                     </div>
+                                  </div>
+
+                                  <div class="mb-3">
+                                    <label for="date">Date</label>
+                                    <input type="date" formControlName="date" class="form-control" id="date"/>
+                                      <div *ngIf="f.date.errors?.required && f.date.dirty" class="required-message text-danger">
+                                        <small>Required Field!</small>
+                                      </div>
+                                  </div>
+              
+                              <div class="mt-3 d-grid">
+                                <button class="btn btn-primary" type="submit">Book Now</button>
+                              </div>
+                            </form>
+                          </div>
+              
+                        </div>
+                      </div>
+              
+                    </div>
+                  </div>
+                </div>
+              
+                <!-- end container -->
+              </div>
       </div>
       </div>
     </div>
