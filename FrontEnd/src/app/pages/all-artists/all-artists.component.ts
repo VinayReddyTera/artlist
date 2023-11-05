@@ -58,8 +58,8 @@ ngOnInit() {
 
 view(data:any){
     localStorage.setItem('artistData',this.encrypt.enCrypt(JSON.stringify(data)));
-    // this.router.navigateByUrl('artist-data');
-    window.open(`${window.location.origin}/artist-data`)
+    this.router.navigateByUrl('artist-data');
+    // window.open(`${window.location.origin}/artist-data`)
 }
 
 }
