@@ -505,6 +505,31 @@ export class ArtistDataComponent implements OnInit{
   }
 
   bookNow(){
+    if(this.bookingForm.valid && this.bookingForm.value.type == 'hourly'){
+      const start = this.bookingForm.value.from.split(':')[0];
+      const end = this.bookingForm.value.to.split(':')[0];
+      let availability:any;
+      for(let i of this.availableData.hourly){
+        if(new Date(this.bookingForm.value.date).toDateString() == new Date(i.date).toDateString()){
+          availability = i.availability;
+          break;
+        }
+      }
+      for(let i=start;i<end;i++){
+        if(availability[i] == 0){
+          let msgData = {
+            severity : "error",
+            summary : 'Error',
+            detail : 'Slot already booked',
+            life : 5000
+          }
+          this.apiservice.sendMessage(msgData);
+          this.bookingForm.controls.from.setValue('');
+          this.bookingForm.controls.to.setValue('');
+          break;
+        }
+      }
+    }
     console.log(this.bookingForm.valid,this.bookingForm.value)
     if(this.bookingForm.valid){
       if(this.bookingForm.value.type == 'hourly'){

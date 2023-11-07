@@ -226,6 +226,7 @@
                             </div>
 
                             <div *ngIf="bookingForm.value.type == 'hourly'">
+                              <div class="font-weight-bold"><h5>Check Availability</h5></div>
                               <div *ngFor="let slot of availableData.hourly;let i = index">
                                 <div class="font-weight-bold">{{slot.date | date : 'mediumDate'}}</div>
                                 <div class="timeSlots">
