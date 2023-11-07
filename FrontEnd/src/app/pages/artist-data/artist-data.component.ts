@@ -456,6 +456,8 @@ export class ArtistDataComponent implements OnInit{
       }
     ]
   };
+  price:any;
+  checkAvailability : boolean = false;
 
   ngOnInit(): void {
     if(localStorage.getItem('artistData')){
@@ -576,6 +578,7 @@ export class ArtistDataComponent implements OnInit{
   addField(){
     this.bookingForm.controls.date.setValue('');
     if(this.bookingForm.value.type == 'hourly'){
+      this.price = '0'
       this.bookingForm.addControl('from', new FormControl('', Validators.required));
       this.bookingForm.addControl('to', new FormControl('', Validators.required));
       this.showFrom = true;
@@ -586,10 +589,14 @@ export class ArtistDataComponent implements OnInit{
       this.showFrom = false;
     }
     if(this.bookingForm.value.type == 'event'){
+      this.price = this.artistData.skill.pricing.event
       this.bookingForm.addControl('slot', new FormControl('', Validators.required));
     }
     else{
       this.bookingForm.removeControl('slot');
+    }
+    if(this.bookingForm.value.type == 'fullDay'){
+      this.price = this.artistData.skill.pricing.fullDay
     }
   }
 
@@ -619,6 +626,31 @@ export class ArtistDataComponent implements OnInit{
     const [year, month, day] = dateString.split('-').map(Number);
     const combinedDate = new Date(year, month - 1, day, hours, minutes);
     return combinedDate;
+  }
+
+  calPrice(){
+    if(this.bookingForm.value.from && this.bookingForm.value.to){
+      let minutes = this.calTimeDiff(this.bookingForm.value.from,this.bookingForm.value.to);
+      this.price = this.artistData.skill.pricing.hourly*(minutes/60)
+    }
+  }
+
+  calTimeDiff(start:any,end:any){
+    // Split the time strings into hours and minutes
+    const fromTimeParts = start.split(':');
+    const toTimeParts = end.split(':');
+
+    // Convert the time parts to integers
+    const fromHours = parseInt(fromTimeParts[0], 10);
+    const fromMinutes = parseInt(fromTimeParts[1], 10);
+    const toHours = parseInt(toTimeParts[0], 10);
+    const toMinutes = parseInt(toTimeParts[1], 10);
+
+    // Calculate the time difference in minutes
+    const totalMinutesFrom = fromHours * 60 + fromMinutes;
+    const totalMinutesTo = toHours * 60 + toMinutes;
+    const timeDifferenceMinutes = totalMinutesTo - totalMinutesFrom;
+    return timeDifferenceMinutes
   }
 
 }
