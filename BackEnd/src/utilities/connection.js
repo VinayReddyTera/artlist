@@ -115,6 +115,7 @@ const history = Schema({
     feedback : String,
     type : String,
     noOfHours : Number,
+    status : {type:String,default:'pending'},
     name:String,
     price : Number,
     paid : {type:Boolean,default:false},

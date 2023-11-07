@@ -1281,26 +1281,236 @@ userDB.fetchAvailable = async(id)=>{
   const collection = await connection.getArtist();
   const collection1 = await connection.history();
   let data = await collection.findOne({"_id":new ObjectId(id)},{availableDays:1})
-  let availableDays = data.availableDays
-  let historyData = await collection1.find({"approverId":id})
-  console.log(historyData)
-  if(historyData.length == 0){
-    
+  let available = data.availableDays
+  let bookings = await collection1.find({"approverId":id})
+
+  let converted = {};
+
+  for (const day in available) {
+    if (day === 'mon') {
+      converted[1] = available[day];
+    } else if (day === 'tue') {
+      converted[2] = available[day];
+    } else if (day === 'wed') {
+      converted[3] = available[day];
+    } else if (day === 'thu') {
+      converted[4] = available[day];
+    } else if (day === 'fri') {
+      converted[5] = available[day];
+    } else if (day === 'sat') {
+      converted[6] = available[day];
+    } else if (day === 'sun') {
+      converted[0] = available[day];
+    }
   }
-if(data){
-  let res = {
-    status : 200,
-    data:'ok'
+
+  let bookedDates = {}
+
+  let response = {
+    hourly : [],
+    fullDay : [],
+    event : []
   }
-  return res
-}
-else{
-  let res = {
-    status : 204,
-    data:'Unable to update wishes data'
+
+  for(let i of bookings){
+    if(bookedDates[i.date] == null){
+      bookedDates[i.date] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      generateAvailable(i)
+    }
+    else{
+      generateAvailable(i)
+    }
   }
-  return res
-}
+
+  function generateAvailable(data){
+    if(data.type == 'fullDay'){
+      bookedDates[data.date] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    }
+    else if(data.type == 'event'){
+      let mapper = {
+        1 : [4,9],
+        2 : [9,14],
+        3 : [14,19],
+        4 : [19,24],
+        5 : [0,4]
+      }
+      let start = mapper[data.slot][0];
+      let end = mapper[data.slot][1];
+      for(let i = start;i<end;i++){
+        bookedDates[data.date][i] = 0
+      }
+    }
+    else if(data.type == 'hourly'){
+      let start = new Date(data.from).getHours();
+      let end = new Date(data.to).getHours();
+      for(let i = start;i<end;i++){
+        bookedDates[data.date][i] = 0
+      }
+    }
+  }
+  let tomorrow = new Date(new Date().setDate(new Date().getDate()+1))
+  while(response.fullDay.length < 10){
+    let found = false;
+    for(i in bookedDates){
+      if(new Date(i).toDateString() == tomorrow.toDateString()){
+        found = true;
+        break;
+      }
+    }
+    if(!found){
+      let day = tomorrow.getDay();
+      if(converted[day]){
+        response.fullDay.push(new Date(tomorrow))
+      }
+    }
+    tomorrow = new Date(tomorrow.setDate(tomorrow.getDate() + 1))
+  }
+  for(let i in bookedDates){
+    if(JSON.stringify(bookedDates[i]) != JSON.stringify([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])){
+      let obj = {
+        date : new Date(i),
+        availableSlots : [],
+        availability : bookedDates[i]
+      }
+      function fetchAvailableTimeSlots(arr) {
+        const availableTimeSlots = [];
+        let startHour = null;
+        let endHour = null;
+      
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i] === 1) {
+            // If the slot is available
+            if (startHour === null) {
+              startHour = i;
+              endHour = i;
+            } else {
+              endHour = i;
+            }
+          } else if (arr[i] === 0 && startHour !== null) {
+            // If the slot is booked
+            availableTimeSlots.push(formatTimeSlot(startHour, endHour));
+            startHour = null;
+            endHour = null;
+          }
+        }
+      
+        if (startHour !== null) {
+          availableTimeSlots.push(formatTimeSlot(startHour, endHour));
+        }
+      
+        return availableTimeSlots;
+      }
+      
+      function formatTimeSlot(startHour, endHour) {
+        // Convert hours to AM/PM format
+        const startTime = formatHour(startHour);
+        const endTime = formatHour(endHour+1);
+      
+        return `${startTime}-${endTime}`;
+      }
+      
+      function formatHour(hour) {
+        if (hour === 0) return '12 a.m';
+        if (hour === 12) return '12 p.m';
+        if (hour < 12) return `${hour} a.m`;
+        return `${hour - 12} p.m`;
+      }
+      obj.availableSlots = fetchAvailableTimeSlots(bookedDates[i]);
+      response.hourly.push(obj)
+
+      let mapper = {
+        1 : [4,9],
+        2 : [9,14],
+        3 : [14,19],
+        4 : [19,24],
+        5 : [0,4]
+      }
+      for(let j in mapper){
+        let found = false;
+        for(let k=mapper[j][0];k<mapper[j][1];k++){
+          if(bookedDates[i][k] == 0){
+            found = true;
+            break;
+          }
+        }
+        if(!found){
+          let isFound = false
+          for(let l of response.event){
+            if(new Date(l.date).toDateString() == new Date(i).toDateString()){
+              l.slots.push(j)
+              isFound = true;
+              break;
+            }
+          }
+          if(!isFound){
+            let obj = {
+              date : new Date(i),
+              slots : [j]
+            }
+            response.event.push(obj)
+          }
+        }
+      }
+    }
+  }
+  tomorrow = new Date(new Date().setDate(new Date().getDate()+1))
+  while(response.event.length < 10){
+    let found = false
+    for(let i in bookedDates){
+      if(new Date(i).toDateString() == tomorrow.toDateString()){
+        found = true;
+        break;
+      }
+    }
+    if(!found){
+      let day = tomorrow.getDay();
+      if(converted[day]){
+        let obj = {
+          date : new Date(tomorrow),
+          slots : [1,2,3,4,5]
+        }
+        response.event.push(obj)
+      }
+    }
+    tomorrow = new Date(tomorrow.setDate(tomorrow.getDate() + 1))
+  }
+  tomorrow = new Date(new Date().setDate(new Date().getDate()+1))
+  while(response.hourly.length < 10){
+    let found = false
+    for(let i in bookedDates){
+      if(new Date(i).toDateString() == tomorrow.toDateString()){
+        found = true;
+        break;
+      }
+    }
+    if(!found){
+      let day = tomorrow.getDay();
+      if(converted[day]){
+        let obj = {
+          date : new Date(tomorrow),
+          availableSlots : ['full day available'],
+          availability : [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        }
+        response.hourly.push(obj)
+      }
+    }
+    tomorrow = new Date(tomorrow.setDate(tomorrow.getDate() + 1))
+  }
+
+  if(data){
+    let res = {
+      status : 200,
+      data:response
+    }
+    return res
+  }
+  else{
+    let res = {
+      status : 204,
+      data:'Unable to fetch available data'
+    }
+    return res
+  }
 }
 
 module.exports = userDB
