@@ -45,6 +45,7 @@ import { editRendererArtistApprove } from './artist-approve/editRenderer';
 import { genreRendererArtistApprove } from './artist-approve/genreRenderer';
 import { ArtistValidateComponent } from './artist-validate/artist-validate.component';
 import { genreRendererTagHistory } from './tag-history/genreRenderer';
+import { EventPipe } from './artist-data/event.pipe';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import { genreRendererTagHistory } from './tag-history/genreRenderer';
     AllApproversComponent,
     TagHistoryComponent,
     ArtistValidateComponent,
-    genreRendererTagHistory
+    genreRendererTagHistory,
+    EventPipe
   ],
   imports: [
     CommonModule,

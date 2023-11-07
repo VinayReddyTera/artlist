@@ -57,3 +57,36 @@
   .custom-box{
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   }
+
+  .timeSlots{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  @media screen  and ( max-width:425px ) {
+    .timeSlots{
+      padding-top: 5px;
+      padding-bottom: 5px;
+      display: inline-grid;
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .date-button{
+    margin:5px;
+    border-color: #556ee6 !important;
+    cursor:pointer;
+    font-size: 14px;
+  }
+  
+  .date-button:hover{
+    background-color: #556ee6 !important;
+    color: white;
+  }
+
+  .btn-clicked{
+    background-color : #556ee6;
+    color : #fff;
+  }
