@@ -1513,4 +1513,22 @@ userDB.fetchAvailable = async(id)=>{
   }
 }
 
+userDB.bookArtist = async (payload) => {
+  const collection = await connection.history();
+  let data = await collection.create(payload)
+  if (data) {
+    let res = {
+      status: 200,
+      data: 'Booking Successfull'
+    }
+    return res
+  }
+  else {
+    let res = {
+      status: 204,
+      data: 'Unable to book artist'
+    }
+    return res
+  }
+}
 module.exports = userDB

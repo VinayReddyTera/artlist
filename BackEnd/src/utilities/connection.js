@@ -110,11 +110,13 @@ const artistDetails = Schema({
 
 const history = Schema({
     date : Date,
+    from : Date,
+    to : Date,
+    slot : Number,
     userId : String,
     artistId : String,
     feedback : String,
     type : String,
-    noOfHours : Number,
     status : {type:String,default:'pending'},
     name:String,
     price : Number,

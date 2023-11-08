@@ -10,36 +10,6 @@
     bottom: 4px;
   }
 
-  input#session-date {
-    display: inline-block;
-    position: relative;
-    padding-left: 30px;
-  }
-
-  input[type="date"]::-webkit-calendar-picker-indicator {
-    background: transparent;
-    bottom: 0;
-    color: transparent;
-    cursor: pointer;
-    height: auto;
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: auto;
-  }
-  
-  .fa-calendar{
-    position: relative;
-    bottom: 26px;
-    left: 10px;
-  }
-
-  .date{
-    position: absolute;
-    bottom: -4px;
-  }
-
   input[type="time"] {
     position: relative;
   }
@@ -94,3 +64,10 @@
   .price-text{
     font-size: 22px;
   }
+
+  @media (min-width: 320px) and (max-width: 370px){
+    ::ng-deep .p-calendar .p-datepicker{
+      position: absolute;
+      left: -23px !important;
+    }
+}

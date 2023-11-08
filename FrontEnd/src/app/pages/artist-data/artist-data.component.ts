@@ -18,446 +18,10 @@ export class ArtistDataComponent implements OnInit{
   apiCalled:boolean=false;
   bookingForm:any;
   showFrom:boolean=false;
-  availableData: any = {
-    "hourly": [
-      {
-        "date": "2023-11-08T09:25:52.910Z",
-        "availableSlots": [
-          "full day available"
-        ],
-        "availability": [
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1
-        ]
-      },
-      {
-        "date": "2023-11-09T09:25:52.910Z",
-        "availableSlots": [
-          "full day available"
-        ],
-        "availability": [
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1
-        ]
-      },
-      {
-        "date": "2023-11-10T09:25:52.910Z",
-        "availableSlots": [
-          "full day available"
-        ],
-        "availability": [
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1
-        ]
-      },
-      {
-        "date": "2023-11-11T09:25:52.910Z",
-        "availableSlots": [
-          "full day available"
-        ],
-        "availability": [
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1
-        ]
-      },
-      {
-        "date": "2023-11-13T09:25:52.910Z",
-        "availableSlots": [
-          "full day available"
-        ],
-        "availability": [
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1
-        ]
-      },
-      {
-        "date": "2023-11-14T09:25:52.910Z",
-        "availableSlots": [
-          "full day available"
-        ],
-        "availability": [
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1
-        ]
-      },
-      {
-        "date": "2023-11-15T09:25:52.910Z",
-        "availableSlots": [
-          "full day available"
-        ],
-        "availability": [
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1
-        ]
-      },
-      {
-        "date": "2023-11-16T09:25:52.910Z",
-        "availableSlots": [
-          "full day available"
-        ],
-        "availability": [
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1
-        ]
-      },
-      {
-        "date": "2023-11-17T09:25:52.910Z",
-        "availableSlots": [
-          "full day available"
-        ],
-        "availability": [
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1
-        ]
-      },
-      {
-        "date": "2023-11-18T09:25:52.910Z",
-        "availableSlots": [
-          "full day available"
-        ],
-        "availability": [
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1
-        ]
-      }
-    ],
-    "fullDay": [
-      "2023-11-08T09:25:52.910Z",
-      "2023-11-09T09:25:52.910Z",
-      "2023-11-10T09:25:52.910Z",
-      "2023-11-11T09:25:52.910Z",
-      "2023-11-13T09:25:52.910Z",
-      "2023-11-14T09:25:52.910Z",
-      "2023-11-15T09:25:52.910Z",
-      "2023-11-16T09:25:52.910Z",
-      "2023-11-17T09:25:52.910Z",
-      "2023-11-18T09:25:52.910Z"
-    ],
-    "event": [
-      {
-        "date": "2023-11-08T09:25:52.910Z",
-        "slots": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      {
-        "date": "2023-11-09T09:25:52.910Z",
-        "slots": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      {
-        "date": "2023-11-10T09:25:52.910Z",
-        "slots": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      {
-        "date": "2023-11-11T09:25:52.910Z",
-        "slots": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      {
-        "date": "2023-11-13T09:25:52.910Z",
-        "slots": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      {
-        "date": "2023-11-14T09:25:52.910Z",
-        "slots": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      {
-        "date": "2023-11-15T09:25:52.910Z",
-        "slots": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      {
-        "date": "2023-11-16T09:25:52.910Z",
-        "slots": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      {
-        "date": "2023-11-17T09:25:52.910Z",
-        "slots": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      {
-        "date": "2023-11-18T09:25:52.910Z",
-        "slots": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      }
-    ]
-  };
+  availableData: any;
   price:any;
   checkAvailability : boolean = false;
+  minDate : Date = new Date(new Date().setDate(new Date().getDate()+1))
 
   ngOnInit(): void {
     if(localStorage.getItem('artistData')){
@@ -469,45 +33,47 @@ export class ArtistDataComponent implements OnInit{
     console.log(this.artistData)
     this.bookingForm = this.fb.group({
       type:['',[Validators.required]],
-      date:['',[Validators.required]]
+      date:['',[Validators.required]],
+      name:[this.artistData.skill.name],
+      artistId:[this.artistData.id],
+      price:['']
     })
   }
 
-  // convenience getter for easy access to form fields
   get f() { return this.bookingForm.controls; }
 
   fetchAvailable(){
-    // if(!this.apiCalled){
-    //   this.apiservice.initiateLoading(true);
-    //   this.apiservice.fetchAvailable({'id':this.artistData.id}).subscribe(
-    //     (res:any)=>{
-    //       if(res.status == 200){
-    //         this.availableData = res.data
-    //         console.log(this.availableData)
-    //         this.apiCalled = true;
-    //       }
-    //       else if(res.status == 204){
-    //         let msgData = {
-    //           severity : "error",
-    //           summary : 'Error',
-    //           detail : res.data,
-    //           life : 5000
-    //         }
-    //         this.apiservice.sendMessage(msgData);
-    //       }
-    //     },
-    //     (err:any)=>{
-    //       console.log(err)
-    //     }
-    //   ).add(()=>{
-    //     this.apiservice.initiateLoading(false);
-    //   })
-    // }
-    console.log(this.availableData)
+    if(!this.apiCalled){
+      this.apiservice.initiateLoading(true);
+      this.apiservice.fetchAvailable({'id':this.artistData.id}).subscribe(
+        (res:any)=>{
+          if(res.status == 200){
+            this.availableData = res.data
+            console.log(this.availableData)
+            this.apiCalled = true;
+          }
+          else if(res.status == 204){
+            let msgData = {
+              severity : "error",
+              summary : 'Error',
+              detail : res.data,
+              life : 5000
+            }
+            this.apiservice.sendMessage(msgData);
+          }
+        },
+        (err:any)=>{
+          console.log(err)
+        }
+      ).add(()=>{
+        this.apiservice.initiateLoading(false);
+      })
+    }
   }
 
   bookNow(){
     if(this.bookingForm.valid && this.bookingForm.value.type == 'hourly'){
+      this.calPrice();
       const start = this.bookingForm.value.from.split(':')[0];
       const end = this.bookingForm.value.to.split(':')[0];
       let availability:any;
@@ -528,34 +94,48 @@ export class ArtistDataComponent implements OnInit{
           this.apiservice.sendMessage(msgData);
           this.bookingForm.controls.from.setValue('');
           this.bookingForm.controls.to.setValue('');
-          break;
+          return
         }
       }
+      let minutes = this.calTimeDiff(this.bookingForm.value.from,this.bookingForm.value.to);
+      if(minutes<=0){
+        let msgData = {
+          severity : "error",
+          summary : 'Error',
+          detail : 'end time should be greater than start time',
+          life : 5000
+        }
+        this.apiservice.sendMessage(msgData);
+        return
+      }
+      let from = this.format(this.bookingForm.value.from,this.bookingForm.value.date);
+      let to = this.format(this.bookingForm.value.to,this.bookingForm.value.date);
+      this.bookingForm.controls.from.setValue(from);
+      this.bookingForm.controls.to.setValue(to);
     }
     console.log(this.bookingForm.valid,this.bookingForm.value)
     if(this.bookingForm.valid){
-      if(this.bookingForm.value.type == 'hourly'){
-        let from = this.format(this.bookingForm.value.from,this.bookingForm.value.date);
-        let to = this.format(this.bookingForm.value.to,this.bookingForm.value.date);
-        this.bookingForm.controls.from.setValue(from);
-        this.bookingForm.controls.to.setValue(to);
-        this.bookingForm.controls.date.setValue(new Date(this.bookingForm.value.date));
-      }
-      console.log(this.bookingForm.value)
       this.apiservice.initiateLoading(true);
-      this.apiservice.login(this.bookingForm.value).subscribe(
+      this.apiservice.bookArtist(this.bookingForm.value).subscribe(
       (res : any)=>{
         console.log(res)
         if(res.status == 200){
+          let msgData = {
+            severity : "success",
+            summary : 'Success',
+            detail : res.data,
+            life : 5000
+          }
+        this.apiservice.sendMessage(msgData);
         }
         else if(res.status == 204){
-        let msgData = {
+          let msgData = {
               severity : "error",
               summary : 'Error',
               detail : res.data,
               life : 5000
             }
-            this.apiservice.sendMessage(msgData);
+          this.apiservice.sendMessage(msgData);
         }
       },
       (err:any)=>{
@@ -578,7 +158,8 @@ export class ArtistDataComponent implements OnInit{
   addField(){
     this.bookingForm.controls.date.setValue('');
     if(this.bookingForm.value.type == 'hourly'){
-      this.price = '0'
+      this.price = '0';
+      this.bookingForm.controls.price.setValue(this.price);
       this.bookingForm.addControl('from', new FormControl('', Validators.required));
       this.bookingForm.addControl('to', new FormControl('', Validators.required));
       this.showFrom = true;
@@ -590,6 +171,7 @@ export class ArtistDataComponent implements OnInit{
     }
     if(this.bookingForm.value.type == 'event'){
       this.price = this.artistData.skill.pricing.event
+      this.bookingForm.controls.price.setValue(this.price);
       this.bookingForm.addControl('slot', new FormControl('', Validators.required));
     }
     else{
@@ -597,6 +179,7 @@ export class ArtistDataComponent implements OnInit{
     }
     if(this.bookingForm.value.type == 'fullDay'){
       this.price = this.artistData.skill.pricing.fullDay
+      this.bookingForm.controls.price.setValue(this.price);
     }
   }
 
@@ -622,16 +205,35 @@ export class ArtistDataComponent implements OnInit{
   }
 
   format(timeString:any,dateString:any){
+    const originalDate = new Date(dateString);
     const [hours, minutes] = timeString.split(':').map(Number);
-    const [year, month, day] = dateString.split('-').map(Number);
-    const combinedDate = new Date(year, month - 1, day, hours, minutes);
-    return combinedDate;
+    let newDate = new Date(originalDate);
+    newDate.setHours(hours);
+    newDate.setMinutes(minutes);
+    newDate = new Date(newDate)
+    return newDate;
   }
 
   calPrice(){
     if(this.bookingForm.value.from && this.bookingForm.value.to){
       let minutes = this.calTimeDiff(this.bookingForm.value.from,this.bookingForm.value.to);
-      this.price = this.artistData.skill.pricing.hourly*(minutes/60)
+      if(minutes<=0){
+        let msgData = {
+          severity : "warn",
+          summary : 'warning',
+          detail : 'end time should be greater than start time',
+          life : 5000
+        }
+        this.apiservice.sendMessage(msgData);
+      }
+      else{
+        this.price = Math.round(this.artistData.skill.pricing.hourly*(minutes/60))
+        this.bookingForm.controls.price.setValue(this.price);
+      }
+    }
+    else{
+      this.bookingForm.controls.from.markAsDirty();
+      this.bookingForm.controls.to.markAsDirty();
     }
   }
 

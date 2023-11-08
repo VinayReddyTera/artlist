@@ -161,4 +161,8 @@ export class ApiService {
     return this.http.post(environment.domain+"fetchAvailable",payload)
   }
 
+  bookArtist(payload:any):Observable<any>{
+    return this.http.post(environment.domain+"bookArtist",payload);
+  }
+
 }

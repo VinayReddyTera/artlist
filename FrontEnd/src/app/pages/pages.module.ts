@@ -46,6 +46,7 @@ import { genreRendererArtistApprove } from './artist-approve/genreRenderer';
 import { ArtistValidateComponent } from './artist-validate/artist-validate.component';
 import { genreRendererTagHistory } from './tag-history/genreRenderer';
 import { EventPipe } from './artist-data/event.pipe';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { EventPipe } from './artist-data/event.pipe';
     AgGridModule,
     SpeedDialModule,
     ChipsModule,
-    MultiSelectModule
+    MultiSelectModule,
+    CalendarModule
   ]
 })
 export class PagesModule { }

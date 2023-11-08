@@ -68,15 +68,15 @@
                   <tbody>
                     <tr>
                       <th scope="row">Hourly :</th>
-                      <td>{{artistData.skill.pricing.hourly}}<span class="text-success"> ₹</span></td>
+                      <td><span class="text-success">{{artistData.skill.pricing.hourly}} ₹</span></td>
                     </tr>
                     <tr>
                       <th scope="row">Full Day :</th>
-                      <td>{{artistData.skill.pricing.fullDay}}<span class="text-success"> ₹</span></td>
+                      <td><span class="text-success">{{artistData.skill.pricing.fullDay}} ₹</span></td>
                     </tr>
                     <tr>
                       <th scope="row">Event basis :</th>
-                      <td>{{artistData.skill.pricing.event}}<span class="text-success"> ₹</span></td>
+                      <td><span class="text-success">{{artistData.skill.pricing.event}} ₹</span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -195,8 +195,9 @@
                             </div>
                           </div>
                           <div *ngIf="bookingForm.value.type == 'hourly'" class="mb-3">
-                            <label for="date">Date</label>
-                            <input type="date" formControlName="date" class="form-control" id="date"/>
+                            <label for="date">Date</label> <br>
+                            <p-calendar [minDate]="minDate" formControlName="date" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [readonlyInput]="true"></p-calendar>
+                            <!-- <input type="date" formControlName="date" class="form-control" id="date"/> -->
                               <div *ngIf="f.date.errors?.required && f.date.dirty" class="required-message text-danger">
                                 <small>Required Field!</small>
                               </div>
@@ -239,7 +240,7 @@
                             </div>
                           </div>
                           <button *ngIf="showFrom" type="button" class="btn btn-primary" (click)="calPrice()">Check Price</button>
-                          <div *ngIf="bookingForm.value.type" class="font-weight-bold price-text">Price : {{price}}<span class="text-success"> ₹</span></div>
+                          <div *ngIf="bookingForm.value.type" class="font-weight-bold price-text">Price : <span class="text-success">{{price}} ₹</span></div>
                       <div class="mt-3 d-grid">
                         <button class="btn btn-primary" type="submit">Book Now</button>
                       </div>

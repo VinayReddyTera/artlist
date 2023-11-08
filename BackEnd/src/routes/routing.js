@@ -853,4 +853,15 @@ router.post('/fetchAvailable',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to book artist
+router.post('/bookArtist',verifyToken,(req,res,next)=>{
+  let userId = jwt.decode(req.headers.authorization).data._id;
+  let payload = req.body;
+  payload.userId = userId;
+  userservice.bookArtist(payload).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
 module.exports = router

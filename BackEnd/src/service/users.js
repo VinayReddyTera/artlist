@@ -819,4 +819,19 @@ userService.fetchAvailable=(id)=>{
   })
 }
 
+userService.bookArtist=(payload)=>{
+  return userDB.bookArtist(payload).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to book artist now'
+      }
+      return res
+    }
+  })
+}
+
 module.exports = userService
