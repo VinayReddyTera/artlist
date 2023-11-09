@@ -47,6 +47,8 @@ import { ArtistValidateComponent } from './artist-validate/artist-validate.compo
 import { genreRendererTagHistory } from './tag-history/genreRenderer';
 import { EventPipe } from './artist-data/event.pipe';
 import { CalendarModule } from 'primeng/calendar';
+import { slotRenderer } from './user-history/slotRenderer';
+import { userHistoryTimeRenderer } from './user-history/userHistoryTimeRenderer';
 
 @NgModule({
   declarations: [
@@ -76,7 +78,9 @@ import { CalendarModule } from 'primeng/calendar';
     TagHistoryComponent,
     ArtistValidateComponent,
     genreRendererTagHistory,
-    EventPipe
+    EventPipe,
+    slotRenderer,
+    userHistoryTimeRenderer
   ],
   imports: [
     CommonModule,

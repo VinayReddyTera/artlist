@@ -4,6 +4,8 @@ import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { contactDetailsRenderer } from '../all-approvers/contactRenderer';
 import { dateRenderer } from '../dateRenderer';
 import { ApiService } from '../services/api.service';
+import { slotRenderer } from './slotRenderer';
+import { userHistoryTimeRenderer } from './userHistoryTimeRenderer';
 
 @Component({
   selector: 'app-user-history',
@@ -84,6 +86,27 @@ export class UserHistoryComponent implements OnInit{
       filterParams: { suppressAndOrCondition: true },
       headerName: "Date",
       cellRenderer: dateRenderer
+    },
+    {
+      field: "from",
+      filter: "agDateColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "From",
+      cellRenderer: userHistoryTimeRenderer
+    },
+    {
+      field: "to",
+      filter: "agDateColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "To",
+      cellRenderer: userHistoryTimeRenderer
+    },
+    {
+      field: "slot",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Slot",
+      cellRenderer: slotRenderer
     },
     {
       field: "price",
