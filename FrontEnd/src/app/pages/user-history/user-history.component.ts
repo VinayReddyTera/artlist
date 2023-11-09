@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
+import { contactDetailsRenderer } from '../all-approvers/contactRenderer';
+import { dateRenderer } from '../dateRenderer';
 import { ApiService } from '../services/api.service';
 
 @Component({
@@ -16,46 +18,26 @@ export class UserHistoryComponent implements OnInit{
   usersRowData:any = [];
   usersColumnDefs = [
     {
+      field: "candName",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Artist Name",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "action",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Contact",
+      cellRenderer: contactDetailsRenderer,
+      width:150
+    },
+    {
       field: "name",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "Skill Name",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-    },
-    {
-      field: "experience",
-      filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
-      headerName: "Experience",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} years`
-    },
-    {
-      field: "validated",
-      filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
-      headerName: "Validated",
-      cellRenderer: (params:any)=> {
-        if(params.value == null){
-          return 'N/A'
-        }
-        else{
-          if(params.value == 'a'){
-            let link = `<span class="badge badge-soft-success" style="font-size:13px">Approved</span>`;
-            return link
-          }
-          else if(params.value == 'r'){
-            let link = `<span class="badge badge-soft-danger" style="font-size:13px">Rejected</span>`;
-            return link
-          }
-          else if(params.value == 'nv'){
-            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Not Validated</span>`;
-            return link
-          }
-          else{
-            return 'N/A'
-          }
-        }
-      }
     },
     {
       field: "status",
@@ -67,44 +49,80 @@ export class UserHistoryComponent implements OnInit{
           return 'N/A'
         }
         else{
-          if(params.value == 'active'){
-            let link = `<span class="badge badge-soft-success" style="font-size:13px">${params.value}</span>`;
+          if(params.value == 'pending'){
+            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Pending</span>`;
+            return link
+          }
+          else if(params.value == 'a'){
+            let link = `<span class="badge badge-soft-info" style="font-size:13px">Accepted</span>`;
+            return link
+          }
+          else if(params.value == 'r'){
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">rejected</span>`;
+            return link
+          }
+          else if(params.value == 'c'){
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">Completed</span>`;
             return link
           }
           else{
-            let link = `<span class="badge badge-soft-danger" style="font-size:13px">${params.value}</span>`;
-            return link
+            return 'N/A'
           }
         }
       }
     },
     {
-      field: "pricing.hourly",
-      filter: "agDateColumnFilter",
+      field: "type",
+      filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
-      headerName: "Hourly Pricing",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
+      headerName: "Booking Type",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
-      field: "pricing.fullDay",
+      field: "date",
       filter: "agDateColumnFilter",
       filterParams: { suppressAndOrCondition: true },
-      headerName: "Full Day Pricing",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
+      headerName: "Date",
+      cellRenderer: dateRenderer
     },
     {
-      field: "pricing.event",
-      filter: "agDateColumnFilter",
+      field: "price",
+      filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
-      headerName: "Event based Pricing",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
+      headerName: "Price",
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          let data = `<span class="text-success">${params.value} ₹</span>`
+          return data
+        }
+      }
     },
     {
-      field: "portfolio",
+      field: "paid",
       filter: "agDateColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "Portfolio",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value.toString()}`
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          if(params.value == false){
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">Not Paid</span>`;
+            return link
+          }
+          else if(params.value == true){
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">Paid</span>`;
+            return link
+          }
+          else{
+            return 'N/A'
+          }
+        }
+      }
     }
   ];
   defaultColDef : ColDef = {
