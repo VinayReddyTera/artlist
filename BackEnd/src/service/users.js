@@ -837,7 +837,49 @@ userService.bookArtist=(payload)=>{
 userService.fetchHistory=(payload)=>{
   return userDB.fetchHistory(payload).then((data)=>{
     if(data){
-      return data
+      if(data.status == 200){
+        let userData = data.userData;
+        let history = data.history;
+        function generateOutput(){
+          // Create a mapping of userData based on _id
+          const userDataMap = new Map(userData.map(user => [String(user._id), user]));
+  
+          history = history.map(entry => {
+            let newData;
+            if(payload.role == 'user'){
+              newData = userDataMap.get(entry.artistId);
+            }
+            else{
+              newData = userDataMap.get(entry.userId);
+            }
+            if (newData) {
+              entry.candName = newData.name;
+              entry.email = newData.email;
+              entry.phoneNo = newData.phoneNo;
+            }
+            if(payload.role == 'user'){
+              delete entry.artistId;
+            }
+            else{
+              delete entry.userId;
+            }
+            return entry;
+          });
+        }
+        generateOutput()
+        let res= {
+          status : 200,
+          data: history
+        }
+        return res
+      }
+      else{
+        let res= {
+          status : 204,
+          data: 'Unable to fetch history'
+        }
+        return res
+      }
     }
     else{
       let res= {

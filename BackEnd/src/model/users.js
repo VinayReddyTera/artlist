@@ -1533,20 +1533,20 @@ userDB.bookArtist = async (payload) => {
 }
 
 userDB.fetchHistory = async (payload) => {
-  const collection = await connection.history();
+  const collection1 = await connection.history();
   let data;
   let userData;
   if(payload.role == 'user'){
-    data = await collection.find({"userId" : payload.id},{'userId':0});
-    const idsArray = inputArray.map(item => item._id);
+    data = await collection1.find({"userId" : payload.id},{'userId':0,'__v':0}).lean();
+    const idsArray = data.map(item => item.artistId);
     const collection = await connection.getArtist();
-    userData = await collection.find({ _id: { $in: idsArray } })
+    userData = await collection.find({ _id: { $in: idsArray } },{name:1,email:1,phoneNo:1,_id:1})
   }
   else if(payload.role == 'artist'){
-    data = await collection.find({"artistId" : payload.id},{'artistId':0});
-    const idsArray = inputArray.map(item => item._id);
+    data = await collection1.find({"artistId" : payload.id},{'artistId':0,'__v':0}).lean();
+    const idsArray = data.map(item => item.userId);
     const collection = await connection.getUsers();
-    userData = await collection.find({ _id: { $in: idsArray } })
+    userData = await collection.find({ _id: { $in: idsArray } },{name:1,email:1,phoneNo:1,_id:1})
   }
   else{
     let res = {
@@ -1555,10 +1555,12 @@ userDB.fetchHistory = async (payload) => {
     }
     return res
   }
+
   if (data.length > 0) {
     let res = {
       status: 200,
-      data: data
+      userData: userData,
+      history : data
     }
     return res
   }
