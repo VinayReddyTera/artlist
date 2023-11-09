@@ -150,7 +150,7 @@ export class UserDashboardComponent {
     this.name = this.userData.name;
     this.profileStatus = this.userData.profileStatus
     if(this.profileStatus == "Incomplete"){
-      $('#profileComplete').modal('show')
+      // $('#profileComplete').modal('show')
     }
     if(this.activeRoute.snapshot.params['redirected'] == 'success'){
       localStorage.setItem('microsoftInt','true')

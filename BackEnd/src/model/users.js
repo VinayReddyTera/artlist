@@ -1282,7 +1282,12 @@ userDB.fetchAvailable = async(id)=>{
   const collection1 = await connection.history();
   let data = await collection.findOne({"_id":new ObjectId(id)},{availableDays:1})
   let available = data.availableDays
-  let bookings = await collection1.find({"approverId":id})
+  let today = new Date()
+  let bookings = await collection1.find({
+    artistId: id,
+    date: { $gt: today },
+    status: { $in: ['a', 'pending'] }
+  })
 
   let converted = {};
 
@@ -1343,7 +1348,7 @@ userDB.fetchAvailable = async(id)=>{
     else if(data.type == 'hourly'){
       let start = new Date(data.from).getHours();
       let end = new Date(data.to).getHours();
-      for(let i = start;i<end;i++){
+      for(let i = start;i<=end;i++){
         bookedDates[data.date][i] = 0
       }
     }
@@ -1412,6 +1417,7 @@ userDB.fetchAvailable = async(id)=>{
       function formatHour(hour) {
         if (hour === 0) return '12 a.m';
         if (hour === 12) return '12 p.m';
+        if (hour === 24) return '12 a.m';
         if (hour < 12) return `${hour} a.m`;
         return `${hour - 12} p.m`;
       }
