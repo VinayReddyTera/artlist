@@ -1582,7 +1582,7 @@ userDB.fetchHistory = async (payload) => {
 userDB.giveArtistFeedback = async (payload) => {
   const collection = await connection.history();
   let data = await collection.updateOne({"_id":payload.id},{$set:{feedback:payload.feedback}})
-  if (data.modifiedCount == 1) {
+  if (data.modifiedCount == 1 || data.acknowledged == true) {
     let res = {
       status: 200,
       data: 'Successfully took feedback'

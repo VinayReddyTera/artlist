@@ -34,3 +34,19 @@
       </ag-grid-angular>
     </div>
   </div>
+
+  <div class="modal fade" id="viewFeedback" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header border-bottom-0">
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
+      </div>
+        <div class="modal-body">
+            <div *ngIf="feedback;else elseBlock" class="text-center">{{feedback}}</div>
+            <ng-template #elseBlock>
+                <span class="text-danger text-center font-weight-bold">No feedback given yet!</span>
+            </ng-template>
+      </div>
+      </div>
+    </div>
+  </div>

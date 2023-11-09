@@ -6,13 +6,13 @@ import { ICellRendererParams } from "ag-grid-community";
 @Component({
   selector: "status-component",
   template: `
-  <button class="btn btn-info btn-rounded btn-icon icon" (click)="changeStatus()">
-  <i class="mdi mdi-circle-edit-outline edit"></i>
-  </button>
+  <i class="fa fa-eye eye" aria-hidden="true" 
+  (click)="changeStatus()">
+  </i>
   `,
-  styleUrls: ['./user-history.component.css'],
+  styleUrls: ['./artist-history.component.css'],
 })
-export class feedbackRenderer implements AgRendererComponent {
+export class artistfeedbackRenderer implements AgRendererComponent {
   params: any;
   data:any;
 

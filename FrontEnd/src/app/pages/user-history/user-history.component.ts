@@ -212,9 +212,19 @@ export class UserHistoryComponent implements OnInit{
   }
 
   viewFeedback(data:any){
-    console.log(data)
-    this.feedbackForm.controls.id.setValue(data._id);
-    $('#giveFeedback').modal('show')
+    if(data.date>new Date()){
+      this.feedbackForm.controls.id.setValue(data._id);
+      if(data.feedback){
+        this.feedbackForm.controls.feedback.setValue(data.feedback);
+      }
+      else{
+        this.feedbackForm.controls.feedback.setValue('');
+      }
+      $('#giveFeedback').modal('show')
+    }
+    else{
+      $('#noFeedback').modal('show')
+    }
   }
 
   submitFeedback(){

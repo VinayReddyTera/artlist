@@ -6,6 +6,9 @@ import { dateRenderer } from '../dateRenderer';
 import { ApiService } from '../services/api.service';
 import { slotRenderer } from '../user-history/slotRenderer';
 import { userHistoryTimeRenderer } from '../user-history/userHistoryTimeRenderer';
+import { artistfeedbackRenderer } from './feedbackRenderer';
+
+declare const $:any;
 
 @Component({
   selector: 'app-artist-history',
@@ -146,6 +149,14 @@ export class ArtistHistoryComponent  implements OnInit{
           }
         }
       }
+    },
+    {
+      field: "action",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "View Feedback",
+      cellRenderer: artistfeedbackRenderer,
+      cellRendererParams: { onStatusChange: this.viewFeedback.bind(this) }
     }
   ];
   defaultColDef : ColDef = {
@@ -153,6 +164,7 @@ export class ArtistHistoryComponent  implements OnInit{
   }
   pagination:any = true;
   gridApi:any;
+  feedback:any;
 
   ngOnInit(): void {
     this.apiService.initiateLoading(true);
@@ -192,6 +204,16 @@ export class ArtistHistoryComponent  implements OnInit{
 
   refresh(){
     this.ngOnInit();
+  }
+
+  viewFeedback(data:any){
+    if(data.feedback){
+      this.feedback = data.feedback
+    }
+    else{
+      this.feedback = ''
+    }
+    $('#viewFeedback').modal('show')
   }
 
 }

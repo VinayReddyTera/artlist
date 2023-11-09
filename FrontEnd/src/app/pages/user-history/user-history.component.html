@@ -44,8 +44,8 @@
         <div class="modal-body">
             <form [formGroup]="feedbackForm" (ngSubmit)="submitFeedback()">
                 <div class="mb-3">
-                    <label for="feedback">Feedback</label>
-                    <textarea id="feedback" formControlName="feedback" cols="30" rows="10"></textarea>
+                    <label for="feedback"><h5>Submit Feedback</h5></label>
+                    <textarea id="feedback" formControlName="feedback" class="form-control"></textarea>
                       <div *ngIf="feedbackForm.controls.feedback.errors?.required && feedbackForm.controls.feedback.dirty" class="required-message text-danger">
                         <small>Required Field!</small>
                       </div>
@@ -54,6 +54,19 @@
                     <button class="btn btn-success" type="submit">Submit</button>
                   </div>
             </form>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="noFeedback" tabindex="-1" role="dialog" aria-labelledby="noFeedback" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header border-bottom-0">
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
+      </div>
+        <div class="modal-body">
+            <div class="text-danger text-center font-weight-bold">Feedback cannot be provided for incomplete or future events.</div>
       </div>
       </div>
     </div>

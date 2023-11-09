@@ -50,6 +50,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { slotRenderer } from './user-history/slotRenderer';
 import { userHistoryTimeRenderer } from './user-history/userHistoryTimeRenderer';
 import { feedbackRenderer } from './user-history/feedback';
+import { artistfeedbackRenderer } from './artist-history/feedbackRenderer';
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import { feedbackRenderer } from './user-history/feedback';
     EventPipe,
     slotRenderer,
     userHistoryTimeRenderer,
-    feedbackRenderer
+    feedbackRenderer,
+    artistfeedbackRenderer
   ],
   imports: [
     CommonModule,
