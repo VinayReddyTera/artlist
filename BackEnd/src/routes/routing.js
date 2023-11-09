@@ -879,4 +879,13 @@ router.get('/fetchHistory',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to give artist feedback
+router.post('/giveArtistFeedback',verifyToken,(req,res,next)=>{
+  userservice.giveArtistFeedback(req.body).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 module.exports = router

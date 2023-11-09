@@ -4,8 +4,12 @@ import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { contactDetailsRenderer } from '../all-approvers/contactRenderer';
 import { dateRenderer } from '../dateRenderer';
 import { ApiService } from '../services/api.service';
+import { feedbackRenderer } from './feedback';
 import { slotRenderer } from './slotRenderer';
 import { userHistoryTimeRenderer } from './userHistoryTimeRenderer';
+import { FormBuilder, FormControl, Validators, FormArray, AbstractControl, FormGroup  } from '@angular/forms';
+
+declare const $:any;
 
 @Component({
   selector: 'app-user-history',
@@ -14,7 +18,7 @@ import { userHistoryTimeRenderer } from './userHistoryTimeRenderer';
 })
 export class UserHistoryComponent implements OnInit{
 
-  constructor(private apiService : ApiService,private router:Router){}
+  constructor(private apiService : ApiService,private router:Router,private fb: FormBuilder){}
 
   errorMessage : any;
   usersRowData:any = [];
@@ -146,6 +150,14 @@ export class UserHistoryComponent implements OnInit{
           }
         }
       }
+    },
+    {
+      field: "action",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Give/View Feedback",
+      cellRenderer: feedbackRenderer,
+      cellRendererParams: { onStatusChange: this.viewFeedback.bind(this) }
     }
   ];
   defaultColDef : ColDef = {
@@ -153,8 +165,13 @@ export class UserHistoryComponent implements OnInit{
   }
   pagination:any = true;
   gridApi:any;
+  feedbackForm:any;
 
   ngOnInit(): void {
+    this.feedbackForm = this.fb.group({
+      feedback:['',[Validators.required]],
+      id:['',[Validators.required]]
+    })
     this.apiService.initiateLoading(true);
     this.apiService.fetchHistory().subscribe(
       (res:any)=>{
@@ -176,7 +193,7 @@ export class UserHistoryComponent implements OnInit{
         console.log(err)
       }
     ).add(()=>{
-      this.apiService.initiateLoading(false)
+      this.apiService.initiateLoading(false);
     })
   }
 
@@ -192,6 +209,58 @@ export class UserHistoryComponent implements OnInit{
 
   refresh(){
     this.ngOnInit();
+  }
+
+  viewFeedback(data:any){
+    console.log(data)
+    this.feedbackForm.controls.id.setValue(data._id);
+    $('#giveFeedback').modal('show')
+  }
+
+  submitFeedback(){
+    if(this.feedbackForm.valid){
+      this.apiService.initiateLoading(true);
+      this.apiService.giveArtistFeedback(this.feedbackForm.value).subscribe(
+      (res : any)=>{
+        console.log(res)
+        if(res.status == 200){
+          let msgData = {
+            severity : "success",
+            summary : 'Success',
+            detail : res.data,
+            life : 5000
+          }
+        this.apiService.sendMessage(msgData);
+        }
+        else if(res.status == 204){
+          let msgData = {
+              severity : "error",
+              summary : 'Error',
+              detail : res.data,
+              life : 5000
+            }
+          this.apiService.sendMessage(msgData);
+        }
+      },
+      (err:any)=>{
+        this.errorMessage = err.error
+        console.log(err);
+      }
+    ).add(()=>{
+      this.apiService.initiateLoading(false)
+      setTimeout(()=>{
+        this.errorMessage = null;
+      },5000)
+    })
+  }
+  else{
+    const controls = this.feedbackForm.controls;
+    for (const name in controls) {
+        if (controls[name].invalid) {
+            controls[name].markAsDirty()
+        }
+    }
+  }
   }
 
 }

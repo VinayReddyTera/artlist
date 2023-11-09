@@ -34,3 +34,27 @@
       </ag-grid-angular>
     </div>
   </div>
+
+  <div class="modal fade" id="giveFeedback" tabindex="-1" role="dialog" aria-labelledby="giveFeedback" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header border-bottom-0">
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
+      </div>
+        <div class="modal-body">
+            <form [formGroup]="feedbackForm" (ngSubmit)="submitFeedback()">
+                <div class="mb-3">
+                    <label for="feedback">Feedback</label>
+                    <textarea id="feedback" formControlName="feedback" cols="30" rows="10"></textarea>
+                      <div *ngIf="feedbackForm.controls.feedback.errors?.required && feedbackForm.controls.feedback.dirty" class="required-message text-danger">
+                        <small>Required Field!</small>
+                      </div>
+                  </div>
+                  <div class="mt-3 d-grid">
+                    <button class="btn btn-success" type="submit">Submit</button>
+                  </div>
+            </form>
+      </div>
+      </div>
+    </div>
+  </div>

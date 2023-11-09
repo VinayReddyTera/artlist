@@ -1579,4 +1579,23 @@ userDB.fetchHistory = async (payload) => {
   }
 }
 
+userDB.giveArtistFeedback = async (payload) => {
+  const collection = await connection.history();
+  let data = await collection.updateOne({"_id":payload.id},{$set:{feedback:payload.feedback}})
+  if (data.modifiedCount == 1) {
+    let res = {
+      status: 200,
+      data: 'Successfully took feedback'
+    }
+    return res
+  }
+  else {
+    let res = {
+      status: 204,
+      data: 'Unable to take feedback'
+    }
+    return res
+  }
+}
+
 module.exports = userDB

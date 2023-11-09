@@ -891,4 +891,19 @@ userService.fetchHistory=(payload)=>{
   })
 }
 
+userService.giveArtistFeedback=(payload)=>{
+  return userDB.giveArtistFeedback(payload).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to take feedback'
+      }
+      return res
+    }
+  })
+}
+
 module.exports = userService
