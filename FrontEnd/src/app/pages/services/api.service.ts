@@ -165,4 +165,8 @@ export class ApiService {
     return this.http.post(environment.domain+"bookArtist",payload);
   }
 
+  fetchHistory():Observable<any>{
+    return this.http.get(environment.domain+"fetchHistory")
+  }
+
 }

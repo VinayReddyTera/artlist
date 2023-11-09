@@ -864,4 +864,19 @@ router.post('/bookArtist',verifyToken,(req,res,next)=>{
     next(err)
   })
 })
+
+//router to fetch history
+router.get('/fetchHistory',verifyToken,(req,res,next)=>{
+  let data = jwt.decode(req.headers.authorization).data;
+  let payload = {
+    id : data._id,
+    role : data.role
+  }
+  userservice.fetchHistory(payload).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 module.exports = router

@@ -834,4 +834,19 @@ userService.bookArtist=(payload)=>{
   })
 }
 
+userService.fetchHistory=(payload)=>{
+  return userDB.fetchHistory(payload).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to fetch history'
+      }
+      return res
+    }
+  })
+}
+
 module.exports = userService

@@ -1531,4 +1531,44 @@ userDB.bookArtist = async (payload) => {
     return res
   }
 }
+
+userDB.fetchHistory = async (payload) => {
+  const collection = await connection.history();
+  let data;
+  let userData;
+  if(payload.role == 'user'){
+    data = await collection.find({"userId" : payload.id},{'userId':0});
+    const idsArray = inputArray.map(item => item._id);
+    const collection = await connection.getArtist();
+    userData = await collection.find({ _id: { $in: idsArray } })
+  }
+  else if(payload.role == 'artist'){
+    data = await collection.find({"artistId" : payload.id},{'artistId':0});
+    const idsArray = inputArray.map(item => item._id);
+    const collection = await connection.getUsers();
+    userData = await collection.find({ _id: { $in: idsArray } })
+  }
+  else{
+    let res = {
+      status: 204,
+      data: 'Invalid role'
+    }
+    return res
+  }
+  if (data.length > 0) {
+    let res = {
+      status: 200,
+      data: data
+    }
+    return res
+  }
+  else {
+    let res = {
+      status: 204,
+      data: 'Unable to fetch history'
+    }
+    return res
+  }
+}
+
 module.exports = userDB
