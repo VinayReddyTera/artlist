@@ -880,8 +880,22 @@ router.get('/fetchHistory',verifyToken,(req,res,next)=>{
 })
 
 //router to give artist feedback
-router.post('/giveArtistFeedback',verifyToken,(req,res,next)=>{
+router.get('/giveArtistFeedback',verifyToken,(req,res,next)=>{
   userservice.giveArtistFeedback(req.body).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
+//router to fetch upcoming requests
+router.get('/fetchNewRequests',verifyToken,(req,res,next)=>{
+  let id = jwt.decode(req.headers.authorization).data._id;
+  let payload = {
+    role : 'artist',
+    id : id
+  }
+  userservice.fetchNewRequests(payload).then((data)=>{
     return res.json(data)
   }).catch((err)=>{
     next(err)

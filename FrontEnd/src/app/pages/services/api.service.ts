@@ -173,4 +173,8 @@ export class ApiService {
     return this.http.post(environment.domain+"giveArtistFeedback",payload);
   }
 
+  fetchNewRequests():Observable<any>{
+    return this.http.get(environment.domain+"fetchNewRequests")
+  }
+
 }

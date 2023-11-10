@@ -906,4 +906,18 @@ userService.giveArtistFeedback=(payload)=>{
   })
 }
 
+userService.fetchNewRequests=(payload)=>{
+  return userDB.fetchNewRequests(payload).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to fetch new requests'
+      }
+      return res
+    }
+  })
+}
 module.exports = userService

@@ -1598,4 +1598,23 @@ userDB.giveArtistFeedback = async (payload) => {
   }
 }
 
+userDB.fetchNewRequests = async (payload) => {
+  const collection = await connection.history();
+  let data = await collection.find({"artistId":payload.id,status:'pending'})
+  if (data.length > 0) {
+    let res = {
+      status: 200,
+      data: data
+    }
+    return res
+  }
+  else {
+    let res = {
+      status: 204,
+      data: 'Unable to fetch new requests'
+    }
+    return res
+  }
+}
+
 module.exports = userDB
