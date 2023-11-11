@@ -840,36 +840,10 @@ userService.fetchHistory=(payload)=>{
       if(data.status == 200){
         let userData = data.userData;
         let history = data.history;
-        function generateOutput(){
-          // Create a mapping of userData based on _id
-          const userDataMap = new Map(userData.map(user => [String(user._id), user]));
-  
-          history = history.map(entry => {
-            let newData;
-            if(payload.role == 'user'){
-              newData = userDataMap.get(entry.artistId);
-            }
-            else{
-              newData = userDataMap.get(entry.userId);
-            }
-            if (newData) {
-              entry.candName = newData.name;
-              entry.email = newData.email;
-              entry.phoneNo = newData.phoneNo;
-            }
-            if(payload.role == 'user'){
-              delete entry.artistId;
-            }
-            else{
-              delete entry.userId;
-            }
-            return entry;
-          });
-        }
-        generateOutput()
+        let output = userService.generateOutput(payload.role,userData,history)
         let res= {
           status : 200,
-          data: history
+          data: output
         }
         return res
       }
@@ -891,6 +865,34 @@ userService.fetchHistory=(payload)=>{
   })
 }
 
+userService.generateOutput = (role,userData,history)=>{
+  // Create a mapping of userData based on _id
+  const userDataMap = new Map(userData.map(user => [String(user._id), user]));
+
+  let output = history.map(entry => {
+    let newData;
+    if(role == 'user'){
+      newData = userDataMap.get(entry.artistId);
+    }
+    else{
+      newData = userDataMap.get(entry.userId);
+    }
+    if (newData) {
+      entry.candName = newData.name;
+      entry.email = newData.email;
+      entry.phoneNo = newData.phoneNo;
+    }
+    if(role == 'user'){
+      delete entry.artistId;
+    }
+    {
+      delete entry.userId;
+    }
+    return entry;
+  });
+  return output
+}
+
 userService.giveArtistFeedback=(payload)=>{
   return userDB.giveArtistFeedback(payload).then((data)=>{
     if(data){
@@ -909,7 +911,23 @@ userService.giveArtistFeedback=(payload)=>{
 userService.fetchNewRequests=(payload)=>{
   return userDB.fetchNewRequests(payload).then((data)=>{
     if(data){
-      return data
+      if(data.status == 200){
+        let userData = data.userData;
+        let history = data.history;
+        let output = userService.generateOutput(payload.role,userData,history)
+        let res= {
+          status : 200,
+          data: output
+        }
+        return res
+      }
+      else{
+        let res= {
+          status : 204,
+          data: 'Unable to fetch new requests'
+        }
+        return res
+      }
     }
     else{
       let res= {

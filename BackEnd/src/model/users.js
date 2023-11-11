@@ -1600,11 +1600,15 @@ userDB.giveArtistFeedback = async (payload) => {
 
 userDB.fetchNewRequests = async (payload) => {
   const collection = await connection.history();
-  let data = await collection.find({"artistId":payload.id,status:'pending'})
+  let data = await collection.find({"artistId":payload.id,status:'pending'}).lean()
+  const idsArray = data.map(item => item.userId);
+  const collection1 = await connection.getUsers();
+  let userData = await collection1.find({ _id: { $in: idsArray } },{name:1,email:1,phoneNo:1,_id:1})
   if (data.length > 0) {
     let res = {
       status: 200,
-      data: data
+      userData : userData,
+      history: data
     }
     return res
   }
