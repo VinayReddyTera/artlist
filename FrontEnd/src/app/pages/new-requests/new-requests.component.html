@@ -50,3 +50,117 @@
       </div>
     </div>
   </div>
+
+  <div class="modal fade" id="approve" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header border-bottom-0">
+          <h5>Approve Event</h5>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
+      </div>
+        <div class="modal-body">
+          <button class="btn btn-block btn-success" (click)="changeStatus('approve')">Approve</button>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="reject" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header border-bottom-0">
+          <h5>Reject Event</h5>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
+      </div>
+        <div class="modal-body">
+          <button class="btn btn-block btn-danger" (click)="changeStatus('reject')">Reject</button>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="reschedule" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header border-bottom-0">
+          <h5>Reschedule Event</h5>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
+        </div>
+        <div class="modal-body">
+          <div class="account-pages">
+            <div class="container">
+              <div class="p-2">
+                <form class="form-horizontal" [formGroup]="bookingForm" (ngSubmit)="reschedule()">
+                      <div *ngIf="bookingForm.value.type == 'fullDay'" class="timeSlots">
+                        <button type="button" *ngFor="let date of availableData.fullDay; let i = index" class="btn date-button"
+                        (click)="buttonFullDay(date,$event)" [id]="'btn'+ i">{{date | date : 'mediumDate'}}</button>
+                      </div>
+
+                      <div *ngIf="bookingForm.value.type == 'event'">
+                        <div *ngFor="let slot of availableData.event;let i = index">
+                          <div class="font-weight-bold">{{slot.date | date : 'mediumDate'}}</div>
+                          <div class="timeSlots">
+                            <button type="button" *ngFor="let date of slot.slots; let j = index" class="btn date-button"
+                              (click)="buttonEvent(j,slot.date,$event)" [id]="'btn'+ i + j">{{date | event}}</button>
+                          </div>
+                        </div>
+                      </div>
+                      <div *ngIf="bookingForm.value.type == 'hourly'" class="mb-3">
+                        <label for="date">Date</label> <br>
+                        <p-calendar [minDate]="minDate" formControlName="date" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [readonlyInput]="true"></p-calendar>
+                        <!-- <input type="date" formControlName="date" class="form-control" id="date"/> -->
+                          <div *ngIf="f.date.errors?.required && f.date.dirty" class="required-message text-danger">
+                            <small>Required Field!</small>
+                          </div>
+                      </div>
+                      <div *ngIf="f.date.errors?.required && f.date.dirty && (bookingForm.value.type == 'fullDay' || bookingForm.value.type == 'event')" class="required-message text-danger">
+                        <small>Date is required</small>
+                      </div>
+                      <div *ngIf="showFrom" class="form-row">
+                        <div class="form-group col-md-6">
+                            <div class="mb-3">
+                                <label for="from">From</label>
+                                <input type="time" formControlName="from" step="3600" class="form-control" id="from"/>
+                                  <div *ngIf="f.from.errors?.required && f.from.dirty" class="required-message text-danger">
+                                    <small>Required Field!</small>
+                                  </div>
+                            </div>
+                        </div>
+                  
+                        <div class="form-group col-md-6" style="position: relative;">
+                            <div class="mb-3">
+                                <label for="to">To</label>
+                                <input type="time" formControlName="to" step="3600" class="form-control" id="to"/>
+                                  <div *ngIf="f.to.errors?.required && f.to.dirty" class="required-message text-danger">
+                                    <small>Required Field!</small>
+                                  </div>
+                            </div>
+                        </div>
+                      </div>
+                      <div>
+                        <button *ngIf="!checkAvailability && showFrom" class="btn btn-primary mb-2" (click)="checkAvailability = !checkAvailability">Check availability</button>
+                        <button *ngIf="checkAvailability && showFrom" class="btn btn-danger mb-2" (click)="checkAvailability = !checkAvailability">Hide availability</button>
+                      </div>
+                      <div *ngIf="bookingForm.value.type == 'hourly' && showFrom && checkAvailability">
+                        <div *ngFor="let slot of availableData.hourly;let i = index">
+                          <div class="font-weight-bold">{{slot.date | date : 'mediumDate'}}</div>
+                          <div class="timeSlots">
+                            <button type="button" *ngFor="let date of slot.availableSlots; let j = index" class="btn date-button"
+                              [id]="'btn'+ i + j">{{date}}</button>
+                          </div>
+                        </div>
+                      </div>
+                      <div *ngIf="bookingForm.value.type" class="font-weight-bold price-text">Price : <span class="text-success">{{eventData.price}} ₹</span></div>
+                  <div class="mt-3 d-grid">
+                    <button class="btn btn-success" type="submit">Reschedule</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          
+            <!-- end container -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

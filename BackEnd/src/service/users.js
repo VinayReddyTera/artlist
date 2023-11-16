@@ -921,6 +921,9 @@ userService.fetchNewRequests=(payload)=>{
         }
         return res
       }
+      else if(data.status == 204){
+        return data
+      }
       else{
         let res= {
           status : 204,
@@ -938,4 +941,35 @@ userService.fetchNewRequests=(payload)=>{
     }
   })
 }
+
+userService.updateEvent=(payload)=>{
+  return userDB.updateEvent(payload).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to update now'
+      }
+      return res
+    }
+  })
+}
+
+userService.updateBooking=(payload)=>{
+  return userDB.updateBooking(payload).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to reschedule'
+      }
+      return res
+    }
+  })
+}
+
 module.exports = userService

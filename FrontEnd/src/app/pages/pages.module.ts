@@ -51,6 +51,7 @@ import { slotRenderer } from './user-history/slotRenderer';
 import { userHistoryTimeRenderer } from './user-history/userHistoryTimeRenderer';
 import { feedbackRenderer } from './user-history/feedback';
 import { artistfeedbackRenderer } from './artist-history/feedbackRenderer';
+import { approverRenderer } from './new-requests/approverRenderer';
 
 @NgModule({
   declarations: [
@@ -84,7 +85,8 @@ import { artistfeedbackRenderer } from './artist-history/feedbackRenderer';
     slotRenderer,
     userHistoryTimeRenderer,
     feedbackRenderer,
-    artistfeedbackRenderer
+    artistfeedbackRenderer,
+    approverRenderer
   ],
   imports: [
     CommonModule,

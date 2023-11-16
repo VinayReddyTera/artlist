@@ -1600,7 +1600,7 @@ userDB.giveArtistFeedback = async (payload) => {
 
 userDB.fetchNewRequests = async (payload) => {
   const collection = await connection.history();
-  let data = await collection.find({"artistId":payload.id,status:'pending'}).lean()
+  let data = await collection.find({"artistId":payload.id,status:'pending'},{status:0}).lean()
   const idsArray = data.map(item => item.userId);
   const collection1 = await connection.getUsers();
   let userData = await collection1.find({ _id: { $in: idsArray } },{name:1,email:1,phoneNo:1,_id:1})
@@ -1615,7 +1615,45 @@ userDB.fetchNewRequests = async (payload) => {
   else {
     let res = {
       status: 204,
-      data: 'Unable to fetch new requests'
+      data: 'No new requests'
+    }
+    return res
+  }
+}
+
+userDB.updateEvent = async (payload) => {
+  const collection = await connection.history();
+  let data = await collection.updateOne({"_id":payload.id},{$set:{status:payload.status}})
+  if (data.modifiedCount == 1 || data.acknowledged == true) {
+    let res = {
+      status: 200,
+      data: 'Successfully updated'
+    }
+    return res
+  }
+  else {
+    let res = {
+      status: 204,
+      data: 'Unable to update'
+    }
+    return res
+  }
+}
+
+userDB.updateBooking = async (payload) => {
+  const collection = await connection.history();
+  let data = await collection.updateOne({"_id":payload.id},{$set:{status:payload.status}})
+  if (data.modifiedCount == 1 || data.acknowledged == true) {
+    let res = {
+      status: 200,
+      data: 'Successfully Rescheduled'
+    }
+    return res
+  }
+  else {
+    let res = {
+      status: 204,
+      data: 'Unable to reschedule'
     }
     return res
   }

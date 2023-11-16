@@ -165,6 +165,10 @@ export class ApiService {
     return this.http.post(environment.domain+"bookArtist",payload);
   }
 
+  updateBooking(payload:any):Observable<any>{
+    return this.http.post(environment.domain+"updateBooking",payload);
+  }
+
   fetchHistory():Observable<any>{
     return this.http.get(environment.domain+"fetchHistory")
   }
@@ -175,6 +179,10 @@ export class ApiService {
 
   fetchNewRequests():Observable<any>{
     return this.http.get(environment.domain+"fetchNewRequests")
+  }
+
+  updateEvent(payload:any):Observable<any>{
+    return this.http.post(environment.domain+"updateEvent",payload)
   }
 
 }

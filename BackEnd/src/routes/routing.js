@@ -902,4 +902,22 @@ router.get('/fetchNewRequests',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to update event status
+router.post('/updateEvent',verifyToken,(req,res,next)=>{
+  userservice.updateEvent(req.body).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
+//router to Reschedule Event
+router.post('/updateBooking',verifyToken,(req,res,next)=>{
+  userservice.updateBooking(req.body).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 module.exports = router
