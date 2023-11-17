@@ -315,7 +315,9 @@ export class NewRequestsComponent  implements OnInit{
         }
       this.apiService.sendMessage(msgData);
       $(`#${status}`).modal('hide');
-      this.refresh()
+      this.usersRowData = [];
+      this.errorMessage = null;
+      this.refresh();
       }
       else if(res.status == 204){
         let msgData = {
@@ -405,6 +407,10 @@ export class NewRequestsComponent  implements OnInit{
             life : 5000
           }
         this.apiService.sendMessage(msgData);
+        $(`#reschedule`).modal('hide');
+        this.usersRowData = [];
+        this.errorMessage = null;
+        this.ngOnInit();
         }
         else if(res.status == 204){
           let msgData = {

@@ -882,12 +882,12 @@ userService.generateOutput = (role,userData,history)=>{
       entry.email = newData.email;
       entry.phoneNo = newData.phoneNo;
     }
-    if(role == 'user'){
-      delete entry.artistId;
-    }
-    {
-      delete entry.userId;
-    }
+    // if(role == 'user'){
+    //   delete entry.artistId;
+    // }
+    // {
+    //   delete entry.userId;
+    // }
     return entry;
   });
   return output

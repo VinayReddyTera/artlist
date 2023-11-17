@@ -913,6 +913,9 @@ router.post('/updateEvent',verifyToken,(req,res,next)=>{
 
 //router to Reschedule Event
 router.post('/updateBooking',verifyToken,(req,res,next)=>{
+  let role = jwt.decode(req.headers.authorization).data.role;
+  let payload = req.body;
+  payload.role = role;
   userservice.updateBooking(req.body).then((data)=>{
     return res.json(data)
   }).catch((err)=>{

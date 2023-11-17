@@ -116,6 +116,8 @@ const history = Schema({
     userId : String,
     artistId : String,
     feedback : String,
+    remarks:String,
+    rescheduledBy:String,
     type : String,
     status : {type:String,default:'pending'},
     name:String,

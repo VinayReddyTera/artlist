@@ -1650,20 +1650,23 @@ userDB.updateBooking = async (payload) => {
       date : payload.data.date,
       from : payload.data.from,
       to : payload.data.to,
-      status : 'rescheduled'
+      status : 'rescheduled',
+      rescheduledBy : payload.role
     }})
   }
   else if(payload.data.type == 'event'){
     data = await collection.updateOne({"_id":payload.id},{$set:{
       date : payload.data.date,
       status : 'rescheduled',
-      slot : payload.data.slot
+      slot : payload.data.slot,
+      rescheduledBy : payload.role
     }})
   }
   else if(payload.data.type == 'fullDay'){
     data = await collection.updateOne({"_id":payload.id},{$set:{
       status : 'rescheduled',
-      date : payload.data.date
+      date : payload.data.date,
+      rescheduledBy : payload.role
     }})
   }
 

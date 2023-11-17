@@ -52,6 +52,7 @@ import { userHistoryTimeRenderer } from './user-history/userHistoryTimeRenderer'
 import { feedbackRenderer } from './user-history/feedback';
 import { artistfeedbackRenderer } from './artist-history/feedbackRenderer';
 import { approverRenderer } from './new-requests/approverRenderer';
+import { UserApproverRenderer } from './user-history/userApproverRenderer';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import { approverRenderer } from './new-requests/approverRenderer';
     userHistoryTimeRenderer,
     feedbackRenderer,
     artistfeedbackRenderer,
-    approverRenderer
+    approverRenderer,
+    UserApproverRenderer
   ],
   imports: [
     CommonModule,

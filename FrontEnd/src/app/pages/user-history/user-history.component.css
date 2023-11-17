@@ -58,3 +58,65 @@
     -o-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
 }
+
+input[type="time"] {
+    position: relative;
+  }
+  
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    display: block;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background: transparent;
+  }
+
+  .custom-box{
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+
+  .timeSlots{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  @media screen  and ( max-width:425px ) {
+    .timeSlots{
+      padding-top: 5px;
+      padding-bottom: 5px;
+      display: inline-grid;
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .date-button{
+    margin:5px;
+    border-color: #556ee6 !important;
+    cursor:pointer;
+    font-size: 14px;
+  }
+  
+  .date-button:hover{
+    background-color: #556ee6 !important;
+    color: white;
+  }
+
+  .btn-clicked{
+    background-color : #556ee6;
+    color : #fff;
+  }
+
+  .price-text{
+    font-size: 22px;
+  }
+
+  @media (min-width: 320px) and (max-width: 370px){
+    ::ng-deep .p-calendar .p-datepicker{
+      position: absolute;
+      left: -23px !important;
+    }
+}
