@@ -1642,7 +1642,29 @@ userDB.updateEvent = async (payload) => {
 
 userDB.updateBooking = async (payload) => {
   const collection = await connection.history();
-  let data = await collection.updateOne({"_id":payload.id},{$set:{status:payload.status}})
+  let data;
+  if(payload.data.type == 'hourly'){
+    data = await collection.updateOne({"_id":payload.id},{$set:{
+      date : payload.data.date,
+      from : payload.data.from,
+      to : payload.data.to,
+      status : 'rescheduled'
+    }})
+  }
+  else if(payload.data.type == 'event'){
+    data = await collection.updateOne({"_id":payload.id},{$set:{
+      date : payload.data.date,
+      status : 'rescheduled',
+      slot : payload.data.slot
+    }})
+  }
+  else if(payload.data.type == 'fullDay'){
+    data = await collection.updateOne({"_id":payload.id},{$set:{
+      status : 'rescheduled',
+      date : payload.data.date
+    }})
+  }
+
   if (data.modifiedCount == 1 || data.acknowledged == true) {
     let res = {
       status: 200,

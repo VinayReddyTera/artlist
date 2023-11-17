@@ -71,7 +71,7 @@ export class ArtistHistoryComponent  implements OnInit{
             return link
           }
           else{
-            return 'N/A'
+            return params.value
           }
         }
       }

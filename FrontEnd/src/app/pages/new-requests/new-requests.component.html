@@ -121,7 +121,7 @@
                             <div class="mb-3">
                                 <label for="from">From</label>
                                 <input type="time" formControlName="from" step="3600" class="form-control" id="from"/>
-                                  <div *ngIf="f.from.errors?.required && f.from.dirty" class="required-message text-danger">
+                                  <div *ngIf="f.from?.errors?.required && f.from?.dirty" class="required-message text-danger">
                                     <small>Required Field!</small>
                                   </div>
                             </div>
@@ -131,7 +131,7 @@
                             <div class="mb-3">
                                 <label for="to">To</label>
                                 <input type="time" formControlName="to" step="3600" class="form-control" id="to"/>
-                                  <div *ngIf="f.to.errors?.required && f.to.dirty" class="required-message text-danger">
+                                  <div *ngIf="f.to?.errors?.required && f.to?.dirty" class="required-message text-danger">
                                     <small>Required Field!</small>
                                   </div>
                             </div>

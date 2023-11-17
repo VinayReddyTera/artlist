@@ -9,6 +9,7 @@ import { slotRenderer } from '../user-history/slotRenderer';
 import { userHistoryTimeRenderer } from '../user-history/userHistoryTimeRenderer';
 import { approverRenderer } from './approverRenderer';
 import { FormBuilder, Validators, FormControl } from '@angular/forms';
+import { formatDate } from '@angular/common';
 
 declare const $:any;
 
@@ -144,6 +145,7 @@ export class NewRequestsComponent  implements OnInit{
   checkAvailability : boolean = false;
   minDate : Date = new Date(new Date().setDate(new Date().getDate()+1))
   showFrom:boolean=false;
+  timeDiff:any;
 
   ngOnInit(): void {
     this.bookingForm = this.fb.group({
@@ -208,36 +210,18 @@ export class NewRequestsComponent  implements OnInit{
     console.log(data)
     this.eventData = data;
     if(status == 'reschedule'){
+      this.bookingForm = this.fb.group({
+        type:[data.type,[Validators.required]],
+        date:[new Date(data.date),[Validators.required]]
+      })
       if(data.type == 'hourly'){
-        this.showFrom = true
-        this.bookingForm = this.fb.group({
-          type:['hourly',[Validators.required]],
-          date:[data.date,[Validators.required]],
-          name:[data.name],
-          artistId:[data.artistId],
-          price:[data.price],
-          from:[data.from],
-          to:[data.to]
-        })
-      }
-      else if(data.type == 'fullDay'){
-        this.bookingForm = this.fb.group({
-          type:['fullDay',[Validators.required]],
-          date:[data.date,[Validators.required]],
-          name:[data.name],
-          artistId:[data.artistId],
-          price:[data.price]
-        })
+        this.timeDiff = this.calTimeDiff(formatDate(new Date(data.from), 'HH:mm', 'en-US'),formatDate(new Date(data.to), 'HH:mm', 'en-US'))
+        this.showFrom = true;
+        this.bookingForm.addControl('from', new FormControl(formatDate(new Date(data.from), 'HH:mm', 'en-US'), Validators.required));
+        this.bookingForm.addControl('to', new FormControl(formatDate(new Date(data.to), 'HH:mm', 'en-US'), Validators.required));
       }
       else if(data.type == 'event'){
-        this.bookingForm = this.fb.group({
-          type:['event',[Validators.required]],
-          date:[data.date,[Validators.required]],
-          name:[data.name],
-          artistId:[data.artistId],
-          price:[data.price],
-          slot:[data.slot],
-        })
+        this.bookingForm.addControl('slot', new FormControl(data.slot, Validators.required));
       }
     }
     if(status == 'reschedule' && !this.apiCalled){
@@ -317,6 +301,17 @@ export class NewRequestsComponent  implements OnInit{
 
   reschedule(){
     if(this.bookingForm.valid && this.bookingForm.value.type == 'hourly'){
+      let newTimeDiff = this.calTimeDiff(this.bookingForm.value.from,this.bookingForm.value.to);
+      if(this.timeDiff != newTimeDiff){
+        let msgData = {
+          severity : "error",
+          summary : 'Error',
+          detail : `Time difference should match ${this.convertMinutesToHoursAndMinutes(this.timeDiff)}`,
+          life : 5000
+        }
+        this.apiService.sendMessage(msgData);
+        return
+      }
       const start = this.bookingForm.value.from.split(':')[0];
       const end = this.bookingForm.value.to.split(':')[0];
       let availability:any;
@@ -359,7 +354,11 @@ export class NewRequestsComponent  implements OnInit{
     console.log(this.bookingForm.valid,this.bookingForm.value)
     if(this.bookingForm.valid){
       this.apiService.initiateLoading(true);
-      this.apiService.updateBooking(this.bookingForm.value).subscribe(
+      let payload = {
+        id : this.eventData._id,
+        data : this.bookingForm.value
+      }
+      this.apiService.updateBooking(payload).subscribe(
       (res : any)=>{
         console.log(res)
         if(res.status == 200){
@@ -445,6 +444,19 @@ export class NewRequestsComponent  implements OnInit{
     const totalMinutesTo = toHours * 60 + toMinutes;
     const timeDifferenceMinutes = totalMinutesTo - totalMinutesFrom;
     return timeDifferenceMinutes
+  }
+
+  convertMinutesToHoursAndMinutes(minutes: number): string {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+  
+    if (hours > 0 && remainingMinutes > 0) {
+      return `${hours} hours ${remainingMinutes} minutes`;
+    } else if (hours > 0) {
+      return `${hours} hours`;
+    } else {
+      return `${remainingMinutes} minutes`;
+    }
   }
 
 }
