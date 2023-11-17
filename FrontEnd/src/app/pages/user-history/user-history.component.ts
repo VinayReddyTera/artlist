@@ -71,6 +71,10 @@ export class UserHistoryComponent implements OnInit{
             let link = `<span class="badge badge-soft-success" style="font-size:13px">Completed</span>`;
             return link
           }
+          else if(params.value == 'rescheduled'){
+            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Rescheduled</span>`;
+            return link
+          }
           else{
             return 'N/A'
           }
@@ -131,7 +135,7 @@ export class UserHistoryComponent implements OnInit{
       field: "paid",
       filter: "agDateColumnFilter",
       filterParams: { suppressAndOrCondition: true },
-      headerName: "Portfolio",
+      headerName: "Payment Status",
       cellRenderer: (params:any)=> {
         if(params.value == null){
           return 'N/A'

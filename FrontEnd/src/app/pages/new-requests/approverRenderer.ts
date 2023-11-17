@@ -5,13 +5,13 @@ import { ICellRendererParams } from "ag-grid-community";
 @Component({
   selector: "status-component",
   template: `
-  <button class="btn btn-success btn-rounded btn-icon icon" (click)="changeStatus('approve')">
+  <button class="btn btn-success btn-rounded btn-icon icon" pTooltip="approve" tooltipPosition="top" (click)="changeStatus('approve')">
   <i class="mdi mdi-check edit"></i>
   </button>&nbsp;
-  <button class="btn btn-danger btn-rounded btn-icon icon" (click)="changeStatus('reject')">
+  <button class="btn btn-danger btn-rounded btn-icon icon" pTooltip="reject" tooltipPosition="top" (click)="changeStatus('reject')">
   <i class="mdi mdi-close edit"></i>
   </button>&nbsp;
-  <button class="btn btn-info btn-rounded btn-icon icon" (click)="changeStatus('reschedule')">
+  <button class="btn btn-info btn-rounded btn-icon icon" pTooltip="reschedule" tooltipPosition="top" (click)="changeStatus('reschedule')">
   <i class="mdi mdi-calendar-clock edit"></i>
   </button>
   `,

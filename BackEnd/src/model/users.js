@@ -1286,7 +1286,7 @@ userDB.fetchAvailable = async(id)=>{
   let bookings = await collection1.find({
     artistId: id,
     date: { $gt: today },
-    status: { $in: ['a', 'pending'] }
+    status: { $in: ['a', 'pending','rescheduled'] }
   })
 
   let converted = {};
@@ -1599,8 +1599,10 @@ userDB.giveArtistFeedback = async (payload) => {
 }
 
 userDB.fetchNewRequests = async (payload) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); 
   const collection = await connection.history();
-  let data = await collection.find({"artistId":payload.id,status:'pending'},{status:0}).lean()
+  let data = await collection.find({"artistId":payload.id,date: { $gt: today }}).lean()
   const idsArray = data.map(item => item.userId);
   const collection1 = await connection.getUsers();
   let userData = await collection1.find({ _id: { $in: idsArray } },{name:1,email:1,phoneNo:1,_id:1})

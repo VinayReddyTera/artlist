@@ -49,6 +49,42 @@ export class NewRequestsComponent  implements OnInit{
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
+      field: "status",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Status",
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          if(params.value == 'pending'){
+            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Pending</span>`;
+            return link
+          }
+          else if(params.value == 'a'){
+            let link = `<span class="badge badge-soft-info" style="font-size:13px">Accepted</span>`;
+            return link
+          }
+          else if(params.value == 'r'){
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">rejected</span>`;
+            return link
+          }
+          else if(params.value == 'c'){
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">Completed</span>`;
+            return link
+          }
+          else if(params.value == 'rescheduled'){
+            let link = `<span class="badge badge-soft-warning" style="font-size:13px">${params.value}</span>`;
+            return link
+          }
+          else{
+            return params.value
+          }
+        }
+      }
+    },
+    {
       field: "type",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
