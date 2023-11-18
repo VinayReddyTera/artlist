@@ -186,10 +186,7 @@ export class NewRequestsComponent  implements OnInit{
   ngOnInit(): void {
     this.bookingForm = this.fb.group({
       type:['',[Validators.required]],
-      date:['',[Validators.required]],
-      name:[''],
-      artistId:[''],
-      price:['']
+      date:['',[Validators.required]]
     })
     this.apiService.initiateLoading(true);
     this.apiService.fetchNewRequests().subscribe(
@@ -338,106 +335,138 @@ export class NewRequestsComponent  implements OnInit{
   }
 
   reschedule(){
-    if(this.bookingForm.valid && this.bookingForm.value.type == 'hourly'){
-      let newTimeDiff = this.calTimeDiff(this.bookingForm.value.from,this.bookingForm.value.to);
-      if(this.timeDiff != newTimeDiff){
-        let msgData = {
-          severity : "error",
-          summary : 'Error',
-          detail : `Time difference should match ${this.convertMinutesToHoursAndMinutes(this.timeDiff)}`,
-          life : 5000
-        }
-        this.apiService.sendMessage(msgData);
-        return
-      }
-      const start = this.bookingForm.value.from.split(':')[0];
-      const end = this.bookingForm.value.to.split(':')[0];
-      let availability:any;
-      for(let i of this.availableData.hourly){
-        if(new Date(this.bookingForm.value.date).toDateString() == new Date(i.date).toDateString()){
-          availability = i.availability;
-          break;
-        }
-      }
-      for(let i=start;i<end;i++){
-        if(availability[i] == 0){
-          let msgData = {
-            severity : "error",
-            summary : 'Error',
-            detail : 'Slot already booked',
-            life : 5000
-          }
-          this.apiService.sendMessage(msgData);
-          this.bookingForm.controls.from.setValue('');
-          this.bookingForm.controls.to.setValue('');
-          return
-        }
-      }
-      let minutes = this.calTimeDiff(this.bookingForm.value.from,this.bookingForm.value.to);
-      if(minutes<=0){
-        let msgData = {
-          severity : "error",
-          summary : 'Error',
-          detail : 'end time should be greater than start time',
-          life : 5000
-        }
-        this.apiService.sendMessage(msgData);
-        return
-      }
-      let from = this.format(this.bookingForm.value.from,this.bookingForm.value.date);
-      let to = this.format(this.bookingForm.value.to,this.bookingForm.value.date);
-      this.bookingForm.controls.from.setValue(from);
-      this.bookingForm.controls.to.setValue(to);
-    }
+    let date = this.bookingForm.value.date;
+    let type = this.eventData.type;
+    let dates = this.availableData[type];
+    let isFound = false;
     console.log(this.bookingForm.valid,this.bookingForm.value)
     if(this.bookingForm.valid){
-      this.apiService.initiateLoading(true);
-      let payload = {
-        id : this.eventData._id,
-        data : this.bookingForm.value
-      }
-      this.apiService.updateBooking(payload).subscribe(
-      (res : any)=>{
-        console.log(res)
-        if(res.status == 200){
-          let msgData = {
-            severity : "success",
-            summary : 'Success',
-            detail : res.data,
-            life : 5000
+      if(type == 'fullDay'){
+        for(let i of dates){
+          if(new Date(i).toLocaleDateString() == new Date(date).toLocaleDateString()){
+            isFound = true;
+            break
           }
-        this.apiService.sendMessage(msgData);
-        $(`#reschedule`).modal('hide');
-        this.usersRowData = [];
-        this.errorMessage = null;
-        this.ngOnInit();
-        this.apiCalled=false
         }
-        else if(res.status == 204){
-          let msgData = {
+      }
+      else{
+        for(let i of dates){
+          if(new Date(i.date).toLocaleDateString() == new Date(date).toLocaleDateString()){
+            isFound = true;
+            break
+          }
+        }
+      }
+      if(isFound){
+        if(this.eventData.type == 'hourly'){
+          let newTimeDiff = this.calTimeDiff(this.bookingForm.value.from,this.bookingForm.value.to);
+          if(this.timeDiff != newTimeDiff){
+            let msgData = {
               severity : "error",
               summary : 'Error',
+              detail : `Time difference should match ${this.convertMinutesToHoursAndMinutes(this.timeDiff)}`,
+              life : 5000
+            }
+            this.apiService.sendMessage(msgData);
+            return
+          }
+          const start = this.bookingForm.value.from.split(':')[0];
+          const end = this.bookingForm.value.to.split(':')[0];
+          let availability:any;
+          for(let i of this.availableData.hourly){
+            if(new Date(this.bookingForm.value.date).toDateString() == new Date(i.date).toDateString()){
+              availability = i.availability;
+              break;
+            }
+          }
+          for(let i=start;i<end;i++){
+            if(availability[i] == 0){
+              let msgData = {
+                severity : "error",
+                summary : 'Error',
+                detail : 'Slot already booked',
+                life : 5000
+              }
+              this.apiService.sendMessage(msgData);
+              this.bookingForm.controls.from.setValue('');
+              this.bookingForm.controls.to.setValue('');
+              return
+            }
+          }
+          let minutes = this.calTimeDiff(this.bookingForm.value.from,this.bookingForm.value.to);
+          if(minutes<=0){
+            let msgData = {
+              severity : "error",
+              summary : 'Error',
+              detail : 'end time should be greater than start time',
+              life : 5000
+            }
+            this.apiService.sendMessage(msgData);
+            return
+          }
+          let from = this.format(this.bookingForm.value.from,this.bookingForm.value.date);
+          let to = this.format(this.bookingForm.value.to,this.bookingForm.value.date);
+          this.bookingForm.controls.from.setValue(from);
+          this.bookingForm.controls.to.setValue(to);
+        }
+        this.apiService.initiateLoading(true);
+        let payload = {
+          id : this.eventData._id,
+          data : this.bookingForm.value
+        }
+        this.apiService.updateBooking(payload).subscribe(
+        (res : any)=>{
+          console.log(res)
+          if(res.status == 200){
+            let msgData = {
+              severity : "success",
+              summary : 'Success',
               detail : res.data,
               life : 5000
             }
           this.apiService.sendMessage(msgData);
+          $(`#reschedule`).modal('hide');
+          this.usersRowData = [];
+          this.errorMessage = null;
+          this.ngOnInit();
+          this.apiCalled=false
+          }
+          else if(res.status == 204){
+            let msgData = {
+                severity : "error",
+                summary : 'Error',
+                detail : res.data,
+                life : 5000
+              }
+            this.apiService.sendMessage(msgData);
+          }
+        },
+        (err:any)=>{
+          console.log(err);
         }
-      },
-      (err:any)=>{
-        console.log(err);
+      ).add(()=>{
+        this.apiService.initiateLoading(false)
+      })
       }
-    ).add(()=>{
-      this.apiService.initiateLoading(false)
-    })
-  }
-  else{
-    const controls = this.bookingForm.controls;
-    for (const name in controls) {
-        if (controls[name].invalid) {
-            controls[name].markAsDirty()
+      else{
+        let msgData = {
+          severity : "error",
+          summary : 'Error',
+          detail : 'date should be present in available dates',
+          life : 5000
         }
+        this.apiService.sendMessage(msgData);
+        return
+      }
     }
-  }
+    else{
+      const controls = this.bookingForm.controls;
+      for (const name in controls) {
+          if (controls[name].invalid) {
+              controls[name].markAsDirty()
+          }
+      }
+    }
   }
 
   buttonFullDay(date:any,event:any){

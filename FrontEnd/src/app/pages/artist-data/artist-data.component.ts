@@ -172,7 +172,7 @@ export class ArtistDataComponent implements OnInit{
         let msgData = {
           severity : "error",
           summary : 'Error',
-          detail : 'date should be present in given dates',
+          detail : 'date should be present in available dates',
           life : 5000
         }
         this.apiservice.sendMessage(msgData);
@@ -201,7 +201,6 @@ export class ArtistDataComponent implements OnInit{
     else{
       this.bookingForm.removeControl('from');
       this.bookingForm.removeControl('to');
-      this.bookingForm.removeControl('hourlyPrice');
       this.showFrom = false;
     }
     if(this.bookingForm.value.type == 'event'){

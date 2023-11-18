@@ -1645,29 +1645,69 @@ userDB.updateEvent = async (payload) => {
 userDB.updateBooking = async (payload) => {
   const collection = await connection.history();
   let data;
-  if(payload.data.type == 'hourly'){
-    data = await collection.updateOne({"_id":payload.id},{$set:{
-      date : payload.data.date,
-      from : payload.data.from,
-      to : payload.data.to,
-      status : 'rescheduled',
-      rescheduledBy : payload.role
-    }})
+  if(payload.role == 'artist'){
+    if(payload.data.type == 'hourly'){
+      data = await collection.updateOne({"_id":payload.id},{$set:{
+        date : payload.data.date,
+        from : payload.data.from,
+        to : payload.data.to,
+        status : 'rescheduled',
+        rescheduledBy : payload.role
+      }})
+    }
+    else if(payload.data.type == 'event'){
+      data = await collection.updateOne({"_id":payload.id},{$set:{
+        date : payload.data.date,
+        status : 'rescheduled',
+        slot : payload.data.slot,
+        rescheduledBy : payload.role
+      }})
+    }
+    else if(payload.data.type == 'fullDay'){
+      data = await collection.updateOne({"_id":payload.id},{$set:{
+        status : 'rescheduled',
+        date : payload.data.date,
+        rescheduledBy : payload.role
+      }})
+    }
   }
-  else if(payload.data.type == 'event'){
-    data = await collection.updateOne({"_id":payload.id},{$set:{
-      date : payload.data.date,
-      status : 'rescheduled',
-      slot : payload.data.slot,
-      rescheduledBy : payload.role
-    }})
-  }
-  else if(payload.data.type == 'fullDay'){
-    data = await collection.updateOne({"_id":payload.id},{$set:{
-      status : 'rescheduled',
-      date : payload.data.date,
-      rescheduledBy : payload.role
-    }})
+  else if(payload.role == 'user'){
+    if(payload.data.type == 'hourly'){
+      data = await collection.updateOne({"_id":payload.id},{$set:{
+        type : payload.data.type,
+        date : payload.data.date,
+        from : payload.data.from,
+        to : payload.data.to,
+        slot : '',
+        price : payload.data.price,
+        status : 'rescheduled',
+        rescheduledBy : payload.role
+      }})
+    }
+    else if(payload.data.type == 'event'){
+      data = await collection.updateOne({"_id":payload.id},{$set:{
+        date : payload.data.date,
+        status : 'rescheduled',
+        slot : payload.data.slot,
+        price : payload.data.price,
+        from : '',
+        to : '',
+        type : payload.data.type,
+        rescheduledBy : payload.role
+      }})
+    }
+    else if(payload.data.type == 'fullDay'){
+      data = await collection.updateOne({"_id":payload.id},{$set:{
+        status : 'rescheduled',
+        date : payload.data.date,
+        price : payload.data.price,
+        type : payload.data.type,
+        from : '',
+        to : '',
+        slot : '',
+        rescheduledBy : payload.role
+      }})
+    }
   }
 
   if (data.modifiedCount == 1 || data.acknowledged == true) {
