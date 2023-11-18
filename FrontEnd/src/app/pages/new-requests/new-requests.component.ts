@@ -411,6 +411,7 @@ export class NewRequestsComponent  implements OnInit{
         this.usersRowData = [];
         this.errorMessage = null;
         this.ngOnInit();
+        this.apiCalled=false
         }
         else if(res.status == 204){
           let msgData = {

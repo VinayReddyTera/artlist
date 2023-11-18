@@ -36,7 +36,8 @@ export class ArtistDataComponent implements OnInit{
       date:['',[Validators.required]],
       name:[this.artistData.skill.name],
       artistId:[this.artistData.id],
-      price:['']
+      price:[''],
+      pricing:[this.artistData.skill.pricing]
     })
   }
 
@@ -72,87 +73,120 @@ export class ArtistDataComponent implements OnInit{
   }
 
   bookNow(){
-    if(this.bookingForm.valid && this.bookingForm.value.type == 'hourly'){
-      this.calPrice();
-      const start = this.bookingForm.value.from.split(':')[0];
-      const end = this.bookingForm.value.to.split(':')[0];
-      let availability:any;
-      for(let i of this.availableData.hourly){
-        if(new Date(this.bookingForm.value.date).toDateString() == new Date(i.date).toDateString()){
-          availability = i.availability;
-          break;
-        }
-      }
-      for(let i=start;i<end;i++){
-        if(availability[i] == 0){
-          let msgData = {
-            severity : "error",
-            summary : 'Error',
-            detail : 'Slot already booked',
-            life : 5000
+    let date = this.bookingForm.value.date;
+    let type = this.bookingForm.value.type;
+    let dates = this.availableData[type];
+    let isFound = false;
+    console.log(this.bookingForm.valid,this.bookingForm.value)
+    if(this.bookingForm.valid){
+      if(type == 'fullDay'){
+        for(let i of dates){
+          if(new Date(i).toLocaleDateString() == new Date(date).toLocaleDateString()){
+            isFound = true;
+            break
           }
-          this.apiservice.sendMessage(msgData);
-          this.bookingForm.controls.from.setValue('');
-          this.bookingForm.controls.to.setValue('');
-          return
         }
       }
-      let minutes = this.calTimeDiff(this.bookingForm.value.from,this.bookingForm.value.to);
-      if(minutes<=0){
+      else{
+        for(let i of dates){
+          if(new Date(i.date).toLocaleDateString() == new Date(date).toLocaleDateString()){
+            isFound = true;
+            break
+          }
+        }
+      }
+      if(isFound){
+        if(this.bookingForm.value.type == 'hourly'){
+          this.calPrice();
+          const start = this.bookingForm.value.from.split(':')[0];
+          const end = this.bookingForm.value.to.split(':')[0];
+          let availability:any;
+          for(let i of this.availableData.hourly){
+            if(new Date(this.bookingForm.value.date).toDateString() == new Date(i.date).toDateString()){
+              availability = i.availability;
+              break;
+            }
+          }
+          for(let i=start;i<end;i++){
+            if(availability[i] == 0){
+              let msgData = {
+                severity : "error",
+                summary : 'Error',
+                detail : 'Slot already booked',
+                life : 5000
+              }
+              this.apiservice.sendMessage(msgData);
+              this.bookingForm.controls.from.setValue('');
+              this.bookingForm.controls.to.setValue('');
+              return
+            }
+          }
+          let minutes = this.calTimeDiff(this.bookingForm.value.from,this.bookingForm.value.to);
+          if(minutes<=0){
+            let msgData = {
+              severity : "error",
+              summary : 'Error',
+              detail : 'end time should be greater than start time',
+              life : 5000
+            }
+            this.apiservice.sendMessage(msgData);
+            return
+          }
+          let from = this.format(this.bookingForm.value.from,this.bookingForm.value.date);
+          let to = this.format(this.bookingForm.value.to,this.bookingForm.value.date);
+          this.bookingForm.controls.from.setValue(from);
+          this.bookingForm.controls.to.setValue(to);
+        }
+        this.apiservice.initiateLoading(true);
+        this.apiservice.bookArtist(this.bookingForm.value).subscribe(
+        (res : any)=>{
+          console.log(res)
+          if(res.status == 200){
+            let msgData = {
+              severity : "success",
+              summary : 'Success',
+              detail : res.data,
+              life : 5000
+            }
+          this.apiservice.sendMessage(msgData);
+          this.apiCalled = false;
+          }
+          else if(res.status == 204){
+            let msgData = {
+                severity : "error",
+                summary : 'Error',
+                detail : res.data,
+                life : 5000
+              }
+            this.apiservice.sendMessage(msgData);
+          }
+        },
+        (err:any)=>{
+          console.log(err);
+        }
+      ).add(()=>{
+        this.apiservice.initiateLoading(false)
+      })
+      }
+      else{
         let msgData = {
           severity : "error",
           summary : 'Error',
-          detail : 'end time should be greater than start time',
+          detail : 'date should be present in given dates',
           life : 5000
         }
         this.apiservice.sendMessage(msgData);
         return
       }
-      let from = this.format(this.bookingForm.value.from,this.bookingForm.value.date);
-      let to = this.format(this.bookingForm.value.to,this.bookingForm.value.date);
-      this.bookingForm.controls.from.setValue(from);
-      this.bookingForm.controls.to.setValue(to);
     }
-    console.log(this.bookingForm.valid,this.bookingForm.value)
-    if(this.bookingForm.valid){
-      this.apiservice.initiateLoading(true);
-      this.apiservice.bookArtist(this.bookingForm.value).subscribe(
-      (res : any)=>{
-        console.log(res)
-        if(res.status == 200){
-          let msgData = {
-            severity : "success",
-            summary : 'Success',
-            detail : res.data,
-            life : 5000
+    else{
+      const controls = this.bookingForm.controls;
+      for (const name in controls) {
+          if (controls[name].invalid) {
+              controls[name].markAsDirty()
           }
-        this.apiservice.sendMessage(msgData);
-        }
-        else if(res.status == 204){
-          let msgData = {
-              severity : "error",
-              summary : 'Error',
-              detail : res.data,
-              life : 5000
-            }
-          this.apiservice.sendMessage(msgData);
-        }
-      },
-      (err:any)=>{
-        console.log(err);
       }
-    ).add(()=>{
-      this.apiservice.initiateLoading(false)
-    })
-  }
-  else{
-    const controls = this.bookingForm.controls;
-    for (const name in controls) {
-        if (controls[name].invalid) {
-            controls[name].markAsDirty()
-        }
     }
-  }
   }
 
   addField(){
@@ -167,6 +201,7 @@ export class ArtistDataComponent implements OnInit{
     else{
       this.bookingForm.removeControl('from');
       this.bookingForm.removeControl('to');
+      this.bookingForm.removeControl('hourlyPrice');
       this.showFrom = false;
     }
     if(this.bookingForm.value.type == 'event'){

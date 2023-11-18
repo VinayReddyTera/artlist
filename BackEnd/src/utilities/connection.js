@@ -118,6 +118,7 @@ const history = Schema({
     feedback : String,
     remarks:String,
     rescheduledBy:String,
+    pricing : Object,
     type : String,
     status : {type:String,default:'pending'},
     name:String,

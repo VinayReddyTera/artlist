@@ -183,12 +183,11 @@ export class UserHistoryComponent implements OnInit{
   feedbackForm:any;
   eventData:any;
   availableData: any;
-  apiCalled:boolean=false;
   bookingForm:any;
   checkAvailability : boolean = false;
   minDate : Date = new Date(new Date().setDate(new Date().getDate()+1))
   showFrom:boolean=false;
-  timeDiff:any;
+  price:any;
 
   ngOnInit(): void {
     this.feedbackForm = this.fb.group({
@@ -314,23 +313,22 @@ export class UserHistoryComponent implements OnInit{
         date:[new Date(data.date),[Validators.required]]
       })
       if(data.type == 'hourly'){
-        this.timeDiff = this.calTimeDiff(formatDate(new Date(data.from), 'HH:mm', 'en-US'),formatDate(new Date(data.to), 'HH:mm', 'en-US'))
         this.showFrom = true;
         this.bookingForm.addControl('from', new FormControl(formatDate(new Date(data.from), 'HH:mm', 'en-US'), Validators.required));
         this.bookingForm.addControl('to', new FormControl(formatDate(new Date(data.to), 'HH:mm', 'en-US'), Validators.required));
+        this.bookingForm.addControl('price', new FormControl(data.price, Validators.required));
       }
       else if(data.type == 'event'){
         this.bookingForm.addControl('slot', new FormControl(data.slot, Validators.required));
       }
     }
-    if(status == 'reschedule' && !this.apiCalled){
+    if(status == 'reschedule'){
       this.apiService.initiateLoading(true);
       this.apiService.fetchAvailable({'id':data.artistId}).subscribe(
         (res:any)=>{
           if(res.status == 200){
             this.availableData = res.data
-            console.log(this.availableData);
-            this.apiCalled = true;
+            console.log(this.availableData)
           }
           else if(res.status == 204){
             let msgData = {
@@ -400,17 +398,6 @@ export class UserHistoryComponent implements OnInit{
 
   reschedule(){
     if(this.bookingForm.valid && this.bookingForm.value.type == 'hourly'){
-      let newTimeDiff = this.calTimeDiff(this.bookingForm.value.from,this.bookingForm.value.to);
-      if(this.timeDiff != newTimeDiff){
-        let msgData = {
-          severity : "error",
-          summary : 'Error',
-          detail : `Time difference should match ${this.convertMinutesToHoursAndMinutes(this.timeDiff)}`,
-          life : 5000
-        }
-        this.apiService.sendMessage(msgData);
-        return
-      }
       const start = this.bookingForm.value.from.split(':')[0];
       const end = this.bookingForm.value.to.split(':')[0];
       let availability:any;
@@ -531,6 +518,29 @@ export class UserHistoryComponent implements OnInit{
     return newDate;
   }
 
+  calPrice(){
+    if(this.bookingForm.value.from && this.bookingForm.value.to){
+      let minutes = this.calTimeDiff(this.bookingForm.value.from,this.bookingForm.value.to);
+      if(minutes<=0){
+        let msgData = {
+          severity : "warn",
+          summary : 'warning',
+          detail : 'end time should be greater than start time',
+          life : 5000
+        }
+        this.apiService.sendMessage(msgData);
+      }
+      else{
+        this.price = Math.round(this.eventData.hourlyPrice*(minutes/60))
+        this.bookingForm.controls.price.setValue(this.price);
+      }
+    }
+    else{
+      this.bookingForm.controls.from.markAsDirty();
+      this.bookingForm.controls.to.markAsDirty();
+    }
+  }
+
   calTimeDiff(start:any,end:any){
     // Split the time strings into hours and minutes
     const fromTimeParts = start.split(':');
@@ -549,16 +559,32 @@ export class UserHistoryComponent implements OnInit{
     return timeDifferenceMinutes
   }
 
-  convertMinutesToHoursAndMinutes(minutes: number): string {
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-  
-    if (hours > 0 && remainingMinutes > 0) {
-      return `${hours} hours ${remainingMinutes} minutes`;
-    } else if (hours > 0) {
-      return `${hours} hours`;
-    } else {
-      return `${remainingMinutes} minutes`;
+  addField(){
+    this.bookingForm.controls.date.setValue('');
+    if(this.bookingForm.value.type == 'hourly'){
+      this.price = '0';
+      this.bookingForm.controls.price.setValue(this.price);
+      this.bookingForm.addControl('from', new FormControl('', Validators.required));
+      this.bookingForm.addControl('to', new FormControl('', Validators.required));
+      this.showFrom = true;
+    }
+    else{
+      this.bookingForm.removeControl('from');
+      this.bookingForm.removeControl('to');
+      this.bookingForm.removeControl('hourlyPrice');
+      this.showFrom = false;
+    }
+    if(this.bookingForm.value.type == 'event'){
+      this.price = this.eventData.pricing.event
+      this.bookingForm.controls.price.setValue(this.price);
+      this.bookingForm.addControl('slot', new FormControl('', Validators.required));
+    }
+    else{
+      this.bookingForm.removeControl('slot');
+    }
+    if(this.bookingForm.value.type == 'fullDay'){
+      this.price = this.eventData.pricing.fullDay
+      this.bookingForm.controls.price.setValue(this.price);
     }
   }
 
