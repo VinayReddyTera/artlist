@@ -94,7 +94,18 @@
           <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
       </div>
         <div class="modal-body">
-          <button class="btn btn-block btn-danger" (click)="changeStatus('reject')">Reject</button>
+          <form [formGroup]="rejectionForm" (ngSubmit)="changeStatus('reject')">
+            <div class="mb-3">
+                <label for="remarks"><h5>Remarks</h5></label>
+                <textarea id="remarks" formControlName="remarks" class="form-control"></textarea>
+                  <div *ngIf="rejectionForm.controls.remarks.errors?.required && rejectionForm.controls.remarks.dirty" class="required-message text-danger">
+                    <small>Required Field!</small>
+                  </div>
+              </div>
+              <div class="mt-3 d-grid">
+                <button type="submit" class="btn btn-block btn-danger">Reject</button>
+              </div>
+        </form>
       </div>
       </div>
     </div>

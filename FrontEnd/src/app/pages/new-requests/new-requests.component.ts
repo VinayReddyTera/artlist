@@ -259,31 +259,7 @@ export class NewRequestsComponent  implements OnInit{
       }
     }
     if(status == 'reschedule' && !this.apiCalled){
-      this.apiService.initiateLoading(true);
-      this.apiService.fetchAvailable({'id':data.artistId}).subscribe(
-        (res:any)=>{
-          if(res.status == 200){
-            this.availableData = res.data
-            console.log(this.availableData);
-            this.apiCalled = true;
-          }
-          else if(res.status == 204){
-            let msgData = {
-              severity : "error",
-              summary : 'Error',
-              detail : res.data,
-              life : 5000
-            }
-            this.apiService.sendMessage(msgData);
-          }
-        },
-        (err:any)=>{
-          console.log(err)
-        }
-      ).add(()=>{
-        this.apiService.initiateLoading(false);
-        console.log(this.bookingForm.value.type)
-      })
+      this.fetchAvailable()
     }
     $(`#${status}`).modal('show');
   }
@@ -333,6 +309,34 @@ export class NewRequestsComponent  implements OnInit{
   ).add(()=>{
     this.apiService.initiateLoading(false)
   })
+  }
+
+  fetchAvailable(){
+    this.apiService.initiateLoading(true);
+    this.apiService.fetchAvailable({'id':this.eventData.artistId}).subscribe(
+      (res:any)=>{
+        if(res.status == 200){
+          this.availableData = res.data
+          console.log(this.availableData);
+          this.apiCalled = true;
+        }
+        else if(res.status == 204){
+          let msgData = {
+            severity : "error",
+            summary : 'Error',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
+        }
+      },
+      (err:any)=>{
+        console.log(err)
+      }
+    ).add(()=>{
+      this.apiService.initiateLoading(false);
+      console.log(this.bookingForm.value.type)
+    })
   }
 
   reschedule(){
@@ -440,6 +444,9 @@ export class NewRequestsComponent  implements OnInit{
                 life : 5000
               }
             this.apiService.sendMessage(msgData);
+            if(res.data == 'Slot already booked'){
+              this.fetchAvailable();
+            }
           }
         },
         (err:any)=>{

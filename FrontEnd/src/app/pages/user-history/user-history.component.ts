@@ -190,11 +190,15 @@ export class UserHistoryComponent implements OnInit{
   minDate : Date = new Date(new Date().setDate(new Date().getDate()+1))
   showFrom:boolean=false;
   price:any;
+  rejectionForm:any;
 
   ngOnInit(): void {
     this.feedbackForm = this.fb.group({
       feedback:['',[Validators.required]],
       id:['',[Validators.required]]
+    })
+    this.rejectionForm = this.fb.group({
+      remarks:['',[Validators.required]]
     })
     this.bookingForm = this.fb.group({
       type:['',[Validators.required]],
@@ -325,8 +329,15 @@ export class UserHistoryComponent implements OnInit{
       }
     }
     if(status == 'reschedule'){
+      this.fetchAvailable()
+    }
+    $(`#${status}`).modal('show');
+  }
+
+  fetchAvailable(){
+    if(this.eventData.artistId){
       this.apiService.initiateLoading(true);
-      this.apiService.fetchAvailable({'id':data.artistId}).subscribe(
+      this.apiService.fetchAvailable({'id':this.eventData?.artistId}).subscribe(
         (res:any)=>{
           if(res.status == 200){
             this.availableData = res.data
@@ -349,7 +360,12 @@ export class UserHistoryComponent implements OnInit{
         this.apiService.initiateLoading(false);
       })
     }
-    $(`#${status}`).modal('show');
+    else{
+      this.checkAvailability = false;
+      this.minDate = new Date(new Date().setDate(new Date().getDate()+1))
+      this.showFrom=false;
+      this.ngOnInit();
+    }
   }
 
   changeStatus(status:any){
@@ -360,7 +376,19 @@ export class UserHistoryComponent implements OnInit{
       payload.status = 'a'
     }
     else if(status == 'reject'){
-      payload.status = 'r'
+      payload.status = 'r';
+      if(this.rejectionForm.valid){
+        payload.remarks = this.rejectionForm.value.remarks;
+      }
+      else{
+        const controls = this.rejectionForm.controls;
+        for (const name in controls) {
+            if (controls[name].invalid) {
+                controls[name].markAsDirty()
+            }
+        }
+        return
+      }
     }
     this.apiService.initiateLoading(true);
     this.apiService.updateEvent(payload).subscribe(
@@ -490,6 +518,9 @@ export class UserHistoryComponent implements OnInit{
                 life : 5000
               }
             this.apiService.sendMessage(msgData);
+            if(res.data == 'Slot already booked'){
+              this.fetchAvailable();
+            }
           }
         },
         (err:any)=>{
