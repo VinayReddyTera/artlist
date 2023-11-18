@@ -4,6 +4,8 @@ import { ApiService } from '../services/api.service';
 import { EncryptionService } from '../services/encryption.service';
 import { FormBuilder, Validators, FormControl } from '@angular/forms';
 
+declare const $:any;
+
 @Component({
   selector: 'app-artist-data',
   templateUrl: './artist-data.component.html',
@@ -150,6 +152,7 @@ export class ArtistDataComponent implements OnInit{
             }
           this.apiservice.sendMessage(msgData);
           this.apiCalled = false;
+          $('#booking').modal('hide')
           }
           else if(res.status == 204){
             let msgData = {
@@ -161,7 +164,7 @@ export class ArtistDataComponent implements OnInit{
             this.apiservice.sendMessage(msgData);
             if(res.data == 'Slot already booked'){
               this.apiCalled = false;
-              this.fetchAvailable()
+              this.fetchAvailable();
             }
           }
         },

@@ -864,8 +864,12 @@ userService.bookArtist=async (payload)=>{
       let isFound = false;
       for(let i of availableData.event){
         if(new Date(i.date).toDateString() == new Date(payload.date).toDateString()){
-          isFound = true;
-          break;
+          for(let j of i.slots){
+            if(j == payload.slot){
+              isFound = true;
+              break;
+            }
+          }
         }
       }
       if(!isFound){
@@ -1021,19 +1025,87 @@ userService.updateEvent=(payload)=>{
   })
 }
 
-userService.updateBooking=(payload)=>{
-  return userDB.updateBooking(payload).then((data)=>{
-    if(data){
-      return data
-    }
-    else{
-      let res= {
-        status : 204,
-        data: 'Unable to reschedule'
+userService.updateBooking=async(payload)=>{
+  let available= await userDB.fetchAvailable(payload.data.artistId);
+  let availableData;
+  if(available.status == 200){
+    availableData = available.data;
+    if(payload.data.type == 'hourly'){
+      let availability;
+      const start = new Date(payload.data.from).getHours()
+      const end = new Date(payload.data.to).getHours()
+      for(let i of availableData.hourly){
+        if(new Date(payload.data.date).toDateString() == new Date(i.date).toDateString()){
+          availability = i.availability;
+          break;
+        }
       }
-      return res
+      for(let i=start;i<end;i++){
+        if(availability[i] == 0){
+          let res= {
+            status : 204,
+            data: 'Slot already booked'
+          }
+          return res
+        }
+      }
     }
-  })
+    else if(payload.data.type == 'fullDay'){
+      let isFound = false;
+      for(let i of availableData.fullDay){
+        if(new Date(i).toDateString() == new Date(payload.data.date).toDateString()){
+          isFound = true;
+          break;
+        }
+      }
+      if(!isFound){
+        let res= {
+          status : 204,
+          data: 'Slot already booked'
+        }
+        return res
+      }
+    }
+    else if(payload.data.type == 'event'){
+      let isFound = false;
+      for(let i of availableData.event){
+        if(new Date(i.date).toDateString() == new Date(payload.data.date).toDateString()){
+          for(let j of i.slots){
+            if(j == payload.data.slot){
+              isFound = true;
+              break;
+            }
+          }
+        }
+      }
+      if(!isFound){
+        let res= {
+          status : 204,
+          data: 'Slot already booked'
+        }
+        return res
+      }
+    }
+    return userDB.updateBooking(payload).then((data)=>{
+      if(data){
+        return data
+      }
+      else{
+        let res= {
+          status : 204,
+          data: 'Unable to reschedule'
+        }
+        return res
+      }
+    })
+  }
+  else{
+    let res= {
+      status : 204,
+      data: 'Unable to verify slot and update booking'
+    }
+    return res
+  }
 }
 
 module.exports = userService

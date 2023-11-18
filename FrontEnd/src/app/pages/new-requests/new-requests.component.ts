@@ -245,6 +245,7 @@ export class NewRequestsComponent  implements OnInit{
     if(status == 'reschedule'){
       this.bookingForm = this.fb.group({
         type:[data.type,[Validators.required]],
+        artistId:[data.artistId,[Validators.required]],
         date:[new Date(data.date),[Validators.required]]
       })
       if(data.type == 'hourly'){

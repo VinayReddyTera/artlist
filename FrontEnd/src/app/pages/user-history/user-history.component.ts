@@ -311,6 +311,7 @@ export class UserHistoryComponent implements OnInit{
     if(status == 'reschedule'){
       this.bookingForm = this.fb.group({
         type:[data.type,[Validators.required]],
+        artistId:[data.artistId,[Validators.required]],
         price:[data.price,[Validators.required]],
         date:[new Date(data.date),[Validators.required]]
       })
