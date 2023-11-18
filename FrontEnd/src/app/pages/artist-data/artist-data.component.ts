@@ -228,7 +228,22 @@ export class ArtistDataComponent implements OnInit{
 
   buttonEvent(i:any,date:any,event:any){
     this.bookingForm.controls.date.setValue(date);
-    this.bookingForm.controls.slot.setValue(i+1);
+    let text = event.target.innerText[0];
+    if(text == '4'){
+      this.bookingForm.controls.slot.setValue(1);
+    }
+    else if(text == '9'){
+      this.bookingForm.controls.slot.setValue(2);
+    }
+    else if(text == '2'){
+      this.bookingForm.controls.slot.setValue(3);
+    }
+    else if(text == '7'){
+      this.bookingForm.controls.slot.setValue(4);
+    }
+    else if(text == '1'){
+      this.bookingForm.controls.slot.setValue(5);
+    }
     for(let i in this.availableData.event){
       for(let j in this.availableData.event[i].slots){
         let id = 'btn' + i + j
