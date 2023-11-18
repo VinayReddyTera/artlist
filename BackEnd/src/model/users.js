@@ -1502,7 +1502,9 @@ userDB.fetchAvailable = async(id)=>{
     }
     tomorrow = new Date(tomorrow.setDate(tomorrow.getDate() + 1))
   }
-
+  response.event.sort((a, b) => new Date(a.date) - new Date(b.date));
+  response.hourly.sort((a, b) => new Date(a.date) - new Date(b.date));
+  response.fullDay.sort((a, b) => new Date(a) - new Date(b));
   if(data){
     let res = {
       status : 200,

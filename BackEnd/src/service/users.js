@@ -819,19 +819,83 @@ userService.fetchAvailable=(id)=>{
   })
 }
 
-userService.bookArtist=(payload)=>{
-  return userDB.bookArtist(payload).then((data)=>{
-    if(data){
-      return data
-    }
-    else{
-      let res= {
-        status : 204,
-        data: 'Unable to book artist now'
+userService.bookArtist=async (payload)=>{
+  let available= await userDB.fetchAvailable(payload.artistId);
+  let availableData;
+  if(available.status == 200){
+    availableData = available.data;
+    if(payload.type == 'hourly'){
+      let availability;
+      const start = new Date(payload.from).getHours()
+      const end = new Date(payload.to).getHours()
+      for(let i of availableData.hourly){
+        if(new Date(payload.date).toDateString() == new Date(i.date).toDateString()){
+          availability = i.availability;
+          break;
+        }
       }
-      return res
+      for(let i=start;i<end;i++){
+        if(availability[i] == 0){
+          let res= {
+            status : 204,
+            data: 'Slot already booked'
+          }
+          return res
+        }
+      }
     }
-  })
+    else if(payload.type == 'fullDay'){
+      let isFound = false;
+      for(let i of availableData.fullDay){
+        if(new Date(i).toDateString() == new Date(payload.date).toDateString()){
+          isFound = true;
+          break;
+        }
+      }
+      if(!isFound){
+        let res= {
+          status : 204,
+          data: 'Slot already booked'
+        }
+        return res
+      }
+    }
+    else if(payload.type == 'event'){
+      let isFound = false;
+      for(let i of availableData.event){
+        if(new Date(i.date).toDateString() == new Date(payload.date).toDateString()){
+          isFound = true;
+          break;
+        }
+      }
+      if(!isFound){
+        let res= {
+          status : 204,
+          data: 'Slot already booked'
+        }
+        return res
+      }
+    }
+    return userDB.bookArtist(payload).then((data)=>{
+      if(data){
+        return data
+      }
+      else{
+        let res= {
+          status : 204,
+          data: 'Unable to book artist now'
+        }
+        return res
+      }
+    })
+  }
+  else{
+    let res= {
+      status : 204,
+      data: 'Unable to verify slot and book artist'
+    }
+    return res
+  }
 }
 
 userService.fetchHistory=(payload)=>{

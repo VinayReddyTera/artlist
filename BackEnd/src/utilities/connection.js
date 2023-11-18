@@ -71,7 +71,7 @@ const artistDetails = Schema({
         'thu':true,
         'fri':true,
         'sat':true,
-        'sun':false
+        'sun':true
     }},
     currency : {type:String,default:'inr'},
     skills : [

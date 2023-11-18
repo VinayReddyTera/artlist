@@ -159,6 +159,10 @@ export class ArtistDataComponent implements OnInit{
                 life : 5000
               }
             this.apiservice.sendMessage(msgData);
+            if(res.data == 'Slot already booked'){
+              this.apiCalled = false;
+              this.fetchAvailable()
+            }
           }
         },
         (err:any)=>{
@@ -279,10 +283,6 @@ export class ArtistDataComponent implements OnInit{
         this.price = Math.round(this.artistData.skill.pricing.hourly*(minutes/60))
         this.bookingForm.controls.price.setValue(this.price);
       }
-    }
-    else{
-      this.bookingForm.controls.from.markAsDirty();
-      this.bookingForm.controls.to.markAsDirty();
     }
   }
 

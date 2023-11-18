@@ -209,7 +209,7 @@
                             <div class="form-group col-md-6">
                                 <div class="mb-3">
                                     <label for="from">From</label>
-                                    <input type="time" formControlName="from" step="3600" class="form-control" id="from"/>
+                                    <input type="time" formControlName="from" step="3600" (change)="calPrice()" class="form-control" id="from"/>
                                       <div *ngIf="f.from.errors?.required && f.from.dirty" class="required-message text-danger">
                                         <small>Required Field!</small>
                                       </div>
@@ -219,7 +219,7 @@
                             <div class="form-group col-md-6" style="position: relative;">
                                 <div class="mb-3">
                                     <label for="to">To</label>
-                                    <input type="time" formControlName="to" step="3600" class="form-control" id="to"/>
+                                    <input type="time" formControlName="to" step="3600" (change)="calPrice()" class="form-control" id="to"/>
                                       <div *ngIf="f.to.errors?.required && f.to.dirty" class="required-message text-danger">
                                         <small>Required Field!</small>
                                       </div>
@@ -239,7 +239,6 @@
                               </div>
                             </div>
                           </div>
-                          <button *ngIf="showFrom" type="button" class="btn btn-primary" (click)="calPrice()">Check Price</button>
                           <div *ngIf="bookingForm.value.type" class="font-weight-bold price-text">Price : <span class="text-success">{{price}} ₹</span></div>
                       <div class="mt-3 d-grid">
                         <button class="btn btn-primary" type="submit">Book Now</button>
