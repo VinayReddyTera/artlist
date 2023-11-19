@@ -176,7 +176,7 @@ export class AddSkillComponent implements OnInit {
   submit() {
     console.log(this.skillForm.getRawValue())
     if(this.skillForm.valid){
-      // this.apiService.initiateLoading(true)
+      this.apiService.initiateLoading(true)
       if(this.isCreating){
         this.apiService.addSkill(this.skillForm.getRawValue()).subscribe(
           (res:any)=>{
@@ -207,8 +207,44 @@ export class AddSkillComponent implements OnInit {
         })
       }
       else{
-        // console.log('here')
-        this.apiService.updateArtistSkill(this.skillForm.getRawValue()).subscribe(
+        let newData = this.skillForm.getRawValue()
+        if(newData.validated == 'r'){
+          if(newData.experience != this.updateData.experience){
+            newData.validated = 'nv'
+            newData.feedback = 'N/A'
+          }
+          else if(JSON.stringify(newData.portfolio.slice().sort()) != JSON.stringify(this.updateData.portfolio.slice().sort())){
+            newData.validated = 'nv'
+            newData.feedback = 'N/A'
+          }
+        }
+        const genreMap = new Map();
+        this.updateData.genre.forEach((genreItem:any) => {
+          genreMap.set(genreItem.name, genreItem);
+        });
+        if(newData.genre.length>0){
+          for(let i of newData.genre){
+            if(i.validated == 'r'){
+              const existingItem = genreMap.get(i.name);
+              if(existingItem){
+                if(i.experience != existingItem.experience){
+                  i.validated = 'nv'
+                  i.feedback = 'N/A'
+                }
+                else if(JSON.stringify(i.portfolio.slice().sort()) != JSON.stringify(existingItem.portfolio.slice().sort())){
+                  i.validated = 'nv'
+                  i.feedback = 'N/A'
+                }
+                else if(i.name != existingItem.name){
+                  i.validated = 'nv'
+                  i.feedback = 'N/A'
+                }
+              }
+            }
+          }
+        }
+        console.log(newData)
+        this.apiService.updateArtistSkill(newData).subscribe(
           (res:any)=>{
             if(res.status == 200){
               let msgData = {
@@ -288,6 +324,9 @@ export class AddSkillComponent implements OnInit {
         event: this.updateData.pricing.event
       }
     });
+    if(this.updateData.feedback){
+      this.skillForm.addControl('feedback', new FormControl(this.updateData.feedback, Validators.required));
+    }
     setTimeout(()=>{
       if(this.updateData.status == 'active'){
         (<HTMLInputElement>document.getElementById('activeMain')).checked = true;
@@ -319,15 +358,29 @@ export class AddSkillComponent implements OnInit {
       const genreFormArray = this.skillForm.get('genre') as FormArray;
       genreFormArray.clear();
       this.updateData.genre.forEach((i:any) => {
-        genreFormArray.push(
-          this.fb.group({
-            name: [{value:i.name,disabled:(i.validated == 'a')},[Validators.required]],
-            experience : [{value:i.experience,disabled:false},[Validators.required,Validators.min(0.1),Validators.max(150)]],
-            status : [{value:i.status,disabled:(i.validated == 'a')},[Validators.required]],
-            portfolio : [{value:i.portfolio,disabled:false},[Validators.required]],
-            validated : [{value:i.validated,disabled:false},[Validators.required]]
-          })
-        );
+        if(i.feedback){
+          genreFormArray.push(
+            this.fb.group({
+              name: [{value:i.name,disabled:(i.validated == 'a')},[Validators.required]],
+              experience : [{value:i.experience,disabled:false},[Validators.required,Validators.min(0.1),Validators.max(150)]],
+              status : [{value:i.status,disabled:(i.validated == 'a')},[Validators.required]],
+              portfolio : [{value:i.portfolio,disabled:false},[Validators.required]],
+              validated : [{value:i.validated,disabled:false},[Validators.required]],
+              feedback : [{value:i.feedback,disabled:false},[Validators.required]]
+            })
+          );
+        }
+        else{
+          genreFormArray.push(
+            this.fb.group({
+              name: [{value:i.name,disabled:(i.validated == 'a')},[Validators.required]],
+              experience : [{value:i.experience,disabled:false},[Validators.required,Validators.min(0.1),Validators.max(150)]],
+              status : [{value:i.status,disabled:(i.validated == 'a')},[Validators.required]],
+              portfolio : [{value:i.portfolio,disabled:false},[Validators.required]],
+              validated : [{value:i.validated,disabled:false},[Validators.required]]
+            })
+          );
+        }
       });
       setTimeout(()=>{
         for(let i in this.updateData.genre){
