@@ -481,7 +481,7 @@ router.post('/addSkill',verifyToken,(req,res,next)=>{
     }
     return res.json(response)
   }
-  else if((req.body.status != 'active') || (req.body.validated != false) || (req.body.experience<0) ||  (req.body.experience>150) || (req.body.pricing.event <=0)  || (req.body.pricing.hourly <=0) || (req.body.pricing.fullDay <=0)){
+  else if((req.body.status != 'active') || (req.body.validated != 'nv') || (req.body.experience<0) ||  (req.body.experience>150) || (req.body.pricing.event <=0)  || (req.body.pricing.hourly <=0) || (req.body.pricing.fullDay <=0)){
     let response = {
       status : 204,
       data : 'Incorrect Data'

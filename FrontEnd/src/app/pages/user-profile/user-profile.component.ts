@@ -27,6 +27,7 @@ export class UserProfileComponent implements OnInit{
   show:any={
     'showProfile':true,
     'showPassword':false,
+    'showSkills':false,
     'showProfileStatus':false
   }
   items: any;
@@ -85,7 +86,7 @@ export class UserProfileComponent implements OnInit{
       }
       this.router.navigateByUrl('/user-profile')
     })
-    if(this.userData.role == 'admin' || this.userData.role == 'tag'){
+    if(this.userData.role == 'admin'){
       this.profileStatus = 'NA'
       this.items = [
         {
@@ -100,6 +101,29 @@ export class UserProfileComponent implements OnInit{
               this.setKeyTrue('showPassword')
             }
         }
+    ];
+    }
+    else if(this.userData.role == 'tag'){
+      this.profileStatus = 'NA'
+      this.items = [
+        {
+            icon: 'mdi mdi-account-edit',
+            command: () => {
+                this.setKeyTrue('showProfile')
+            }
+        },
+        {
+            icon: 'mdi mdi-key-variant',
+            command: () => {
+              this.setKeyTrue('showPassword')
+            }
+        },
+        {
+          icon: 'mdi mdi-book-clock',
+          command: () => {
+            this.setKeyTrue('showSkills')
+          }
+      }
     ];
     }
     else{

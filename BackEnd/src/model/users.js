@@ -231,6 +231,8 @@ userDB.checkPassword = async (data1) => {
           phoneNo : data.phoneNo,
           role:data.role,
           email : data.email,
+          language : data.language,
+          skillName : data.skillName,
           _id : data._id
         }
       }
@@ -777,44 +779,70 @@ userDB.updateArtistSkill = async(payload,id)=>{
   // Merge the existing array element with the payload
   const plainObject = existingSkills.toObject();
   // console.log(JSON.stringify(plainObject.skills[0]))
+  // function mergeObjects(object1, object2) {
+  //   const result = { ...object1 };
+  
+  //   if (Array.isArray(object1.genre) && Array.isArray(object2.genre)) {
+  //     const mergedGenre = [];
+  //     const genreMap = new Map();
+  
+  //     // Populate the map with existing items from object1
+  //     object1.genre.forEach(item => genreMap.set(item.name, item));
+  
+  //     // Update existing items and add new ones from object2
+  //     object2.genre.forEach(item => {
+  //       const existingItem = genreMap.get(item.name);
+  //       if (existingItem) {
+  //         // Update existing item in the "genre" array, prioritizing values from object1
+  //         const updatedItem = { ...item, ...existingItem };
+  //         mergedGenre.push(updatedItem);
+  //         genreMap.set(item.name, updatedItem); // Update map with the latest values
+  //       } else {
+  //         // Add new item
+  //         mergedGenre.push(item);
+  //       }
+  //     });
+  
+  //     result.genre = mergedGenre;
+  //   }
+  
+  //   // Replace other properties in object1 with those from object2
+  //   for (const key in object2) {
+  //     if (object2.hasOwnProperty(key) && key !== 'genre') {
+  //       // Prioritize values from object1
+  //       result[key] = object1[key] !== undefined ? object1[key] : object2[key];
+  //     }
+  //   }
+  
+  //   return result;
+  // }
   function mergeObjects(object1, object2) {
-    const result = { ...object1 };
-  
-    if (Array.isArray(object1.genre) && Array.isArray(object2.genre)) {
-      const mergedGenre = [];
-      const genreMap = new Map();
-  
-      // Populate the map with existing items from object1
-      object1.genre.forEach(item => genreMap.set(item.name, item));
-  
-      // Update existing items and add new ones from object2
-      object2.genre.forEach(item => {
-        const existingItem = genreMap.get(item.name);
-        if (existingItem) {
-          // Update existing item in the "genre" array, prioritizing values from object1
-          const updatedItem = { ...item, ...existingItem };
-          mergedGenre.push(updatedItem);
-          genreMap.set(item.name, updatedItem); // Update map with the latest values
-        } else {
-          // Add new item
-          mergedGenre.push(item);
+    object1.rating = object2.rating;
+    if(object2.approverId){
+      object1.approverId = object2.approverId;
+    }
+    if(object2.genre.length == 0){
+        return object1
+    }
+    else{
+        if(object1.genre.length==0){
+            return object1;
         }
-      });
-  
-      result.genre = mergedGenre;
+        else{
+            const genreMap = new Map();
+            object2.genre.forEach(item => genreMap.set(item.name, item));
+            object1.genre.forEach((item)=>{
+                const existingItem = genreMap.get(item.name);
+                if (existingItem) {
+                    if(existingItem?.approverId){
+                        item.approverId = existingItem.approverId 
+                    }
+                }
+            })
+            return object1;
+        }
     }
-  
-    // Replace other properties in object1 with those from object2
-    for (const key in object2) {
-      if (object2.hasOwnProperty(key) && key !== 'genre') {
-        // Prioritize values from object1
-        result[key] = object1[key] !== undefined ? object1[key] : object2[key];
-      }
-    }
-  
-    return result;
   }
-  
   const mergedObject = mergeObjects(payload, plainObject.skills[0]);
   let isUpdated = await collection.updateOne(
     {
@@ -1109,22 +1137,14 @@ userDB.getArtistHistory = async(approverId)=>{
                 return true;
             }
         });
-        
         item.skills.forEach((skill) => {
             skill.genre = skill.genre.filter((genre) => genre.approverId === approverId);
         });
         return item;
     });
-
-    for(let i of filteredArray){
-      for(let j in i.skills){
-        if(i.skills[j].name == 'N/A'){
-          if(i.skills[j].genre.length==0){
-            i.skills.splice(j,1)
-          }
-        }
-      }
-    }
+    filteredArray.forEach(item => {
+      item.skills = item.skills.filter(skill => skill.name !== "N/A" || skill.genre.length > 0);
+  });
   }
 })
 

@@ -105,7 +105,13 @@ export class LoginComponent implements OnInit {
               email : res.data.email,
               phoneNo : res.data.phoneNo,
               id : res.data._id,
-              role : res.data.role
+              role : res.data.role,
+            }
+            if(res.data?.skillName){
+              data.skillName = res.data?.skillName
+            }
+            if(res.data?.language){
+              data.language = res.data?.language
             }
           }
           localStorage.setItem('data', this.encrypt.enCrypt(JSON.stringify(data)));

@@ -3,6 +3,7 @@
 <div class="button-container">
     <button class="btn btn-primary" [disabled]="show.showProfile" (click)="setKeyTrue('showProfile')">Update Profile</button>
     <button class="btn btn-success" [disabled]="show.showPassword" (click)="setKeyTrue('showPassword')">Update Password</button>
+    <button class="btn btn-success" *ngIf="userData.role == 'tag'" [disabled]="show.showSkills" (click)="setKeyTrue('showSkills')">View Skills</button>
     <button class="btn btn-pink" *ngIf="userData.role == 'user'" [disabled]="show.showProfileStatus" (click)="setKeyTrue('showProfileStatus')">Profile Status</button>
 </div>
 
@@ -136,6 +137,31 @@
         </div>
       </div>
     </div>
+</div>
+
+<div *ngIf="show.showSkills && userData.role == 'tag'" class="account-pages my-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6 col-xl-5">
+        <div class="card overflow-hidden">
+          <div class="card-body">
+            <div class="mb-3">
+              <h5>Skills : </h5>
+              <span *ngFor="let skill of userData.skillName" class="mr-2">
+                <span class="badge badge-soft-success text-size">{{skill}}</span>
+              </span>
+            </div>
+            <div>
+              <h5>Languages Known : </h5>
+              <span *ngFor="let language of userData.language" class="mr-2">
+                <span class="badge badge-soft-primary text-size">{{language}}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div *ngIf="show.showProfileStatus && userData.role == 'user'" class="account-pages my-5">
