@@ -763,13 +763,66 @@ userDB.getArtistSkill = async(id)=>{
 
 userDB.updateArtistSkill = async(payload,id)=>{
   const collection = await connection.getArtist();
+  // Retrieve the existing skills array element
+  const existingSkills = await collection.findOne(
+    {
+      _id: new ObjectId(id),
+      "skills.name": payload.name
+    },
+    {
+      "skills.$": 1
+    }
+  );
+
+  // Merge the existing array element with the payload
+  const plainObject = existingSkills.toObject();
+  // console.log(JSON.stringify(plainObject.skills[0]))
+  function mergeObjects(object1, object2) {
+    const result = { ...object1 };
+  
+    if (Array.isArray(object1.genre) && Array.isArray(object2.genre)) {
+      const mergedGenre = [];
+      const genreMap = new Map();
+  
+      // Populate the map with existing items from object1
+      object1.genre.forEach(item => genreMap.set(item.name, item));
+  
+      // Update existing items and add new ones from object2
+      object2.genre.forEach(item => {
+        const existingItem = genreMap.get(item.name);
+        if (existingItem) {
+          // Update existing item in the "genre" array, prioritizing values from object1
+          const updatedItem = { ...item, ...existingItem };
+          mergedGenre.push(updatedItem);
+          genreMap.set(item.name, updatedItem); // Update map with the latest values
+        } else {
+          // Add new item
+          mergedGenre.push(item);
+        }
+      });
+  
+      result.genre = mergedGenre;
+    }
+  
+    // Replace other properties in object1 with those from object2
+    for (const key in object2) {
+      if (object2.hasOwnProperty(key) && key !== 'genre') {
+        // Prioritize values from object1
+        result[key] = object1[key] !== undefined ? object1[key] : object2[key];
+      }
+    }
+  
+    return result;
+  }
+  
+  const mergedObject = mergeObjects(payload, plainObject.skills[0]);
   let isUpdated = await collection.updateOne(
     {
       _id: new ObjectId(id),
       "skills.name": payload.name
     },
     {
-      $set: { "skills.$": payload }
+      $set: { "skills.$": mergedObject }
     }
   );
   if(isUpdated.modifiedCount == 1){
