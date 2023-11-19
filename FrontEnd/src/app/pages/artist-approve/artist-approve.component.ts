@@ -35,6 +35,13 @@ export class ArtistApproveComponent implements OnInit{
       width:150
     },
     {
+      field: "skill.name",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Skill Name",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
       field: "skill.experience",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },

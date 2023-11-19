@@ -37,6 +37,13 @@ export class TagHistoryComponent {
       width:150
     },
     {
+      field: "skill.name",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Skill Name",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
       field: "skill.experience",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
@@ -70,6 +77,13 @@ export class TagHistoryComponent {
           }
         }
       }
+    },
+    {
+      field: "skill.feedback",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Feedback",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "skill.status",
@@ -171,6 +185,13 @@ export class TagHistoryComponent {
           }
         }
       }
+    },
+    {
+      field: "feedback",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Feedback",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "status",

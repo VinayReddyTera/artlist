@@ -64,6 +64,13 @@ export class SkillDataComponent implements OnInit{
       }
     },
     {
+      field: "feedback",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Feedback",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
       field: "status",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
@@ -171,6 +178,13 @@ export class SkillDataComponent implements OnInit{
           }
         }
       }
+    },
+    {
+      field: "feedback",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Feedback",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "status",

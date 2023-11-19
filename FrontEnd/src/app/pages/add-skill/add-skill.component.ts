@@ -176,7 +176,7 @@ export class AddSkillComponent implements OnInit {
   submit() {
     console.log(this.skillForm.getRawValue())
     if(this.skillForm.valid){
-      this.apiService.initiateLoading(true)
+      // this.apiService.initiateLoading(true)
       if(this.isCreating){
         this.apiService.addSkill(this.skillForm.getRawValue()).subscribe(
           (res:any)=>{
@@ -207,6 +207,7 @@ export class AddSkillComponent implements OnInit {
         })
       }
       else{
+        // console.log('here')
         this.apiService.updateArtistSkill(this.skillForm.getRawValue()).subscribe(
           (res:any)=>{
             if(res.status == 200){
