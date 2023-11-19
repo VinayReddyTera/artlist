@@ -120,7 +120,7 @@
         <!-- end card -->
       </div>
   
-      <div class="col-xl-8">
+      <div *ngIf="artistData.skill.genre.length>0" class="col-xl-8">
         <h5>Genre Data</h5>
         <div *ngFor="let genre of artistData.skill.genre;let i=index" class="card">
             <div class="card-body">

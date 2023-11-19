@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { Router } from "@angular/router";
 import { AgRendererComponent } from "ag-grid-angular";
 import { ICellRendererParams } from "ag-grid-community";
 import { EncryptionService } from "../services/encryption.service";
@@ -16,7 +17,7 @@ import { EncryptionService } from "../services/encryption.service";
 })
 export class editRenderer implements AgRendererComponent{
 
-constructor(private encryptionService: EncryptionService){}
+constructor(private encryptionService: EncryptionService,private router:Router){}
 
 params:any;
 link:any;
@@ -32,7 +33,8 @@ link:any;
   navigate(){
     let encryptData = this.encryptionService.enCrypt(JSON.stringify(this.params.data));
     localStorage.setItem('editSkill',encryptData);
-    window.open(`${window.location.origin}/add-skill/${this.encryptionService.enCrypt('edit')}`)
+    let link = '/add-skill/'+this.encryptionService.enCrypt('edit');
+    this.router.navigateByUrl(link)
   }
 
 }

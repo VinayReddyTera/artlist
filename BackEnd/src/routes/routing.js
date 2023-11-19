@@ -763,14 +763,12 @@ router.post('/approveSkill',verifyToken,(req,res,next)=>{
       }
       return res.json(response)
     }
-    else{
-      userservice.approveSkill(req.body,id).then((data)=>{
-        return res.json(data)
-      }).catch((err)=>{
-        next(err)
-      })
-    }
   }
+  userservice.approveSkill(req.body,id).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
 })
 
 //router to get past approves

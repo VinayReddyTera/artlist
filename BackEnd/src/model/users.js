@@ -959,11 +959,11 @@ userDB.approveSkill = async(payload,id)=>{
   let response = {
     data : []
   }
-  if (mainUpdate.modifiedCount == 0) {
+  if (mainUpdate?.modifiedCount == 0) {
     isFailed = true
     response.data.push(`${payload.name} status,update failed.`);
   }
-if(payload.genre.length>0){
+if(payload?.genre?.length>0){
   for(i in payload.genre){
     let result;
     if(payload.genre[i].feedback){
@@ -1021,7 +1021,7 @@ if(payload.genre.length>0){
   }
 }
 else{
-  if (mainUpdate.modifiedCount == 0) {
+  if (mainUpdate?.modifiedCount == 0) {
     return response
   }
   else{

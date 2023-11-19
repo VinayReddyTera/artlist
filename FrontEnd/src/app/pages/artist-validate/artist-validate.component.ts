@@ -34,10 +34,10 @@ export class ArtistValidateComponent implements OnInit{
 
     if(this.updateData.skill.validated == 'nv'){
       this.skillForm.addControl('status', new FormControl('', Validators.required));
-      this.skillForm.addControl('id', new FormControl(this.updateData.skill._id, Validators.required));
       this.skillForm.addControl('name', new FormControl(this.updateData.skill.name, Validators.required));
       this.skillForm.addControl('feedback', new FormControl({value:'',disabled:true}));
     }
+    this.skillForm.addControl('id', new FormControl(this.updateData.skill._id, Validators.required));
     if(this.updateData.skill.genre.length>0){
       const genreFormArray = this.skillForm.get('genre') as FormArray;
       genreFormArray.clear();
