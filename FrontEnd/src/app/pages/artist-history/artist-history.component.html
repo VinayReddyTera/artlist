@@ -44,7 +44,7 @@
         <div class="modal-body">
             <div *ngIf="feedback;else elseBlock" class="text-center">{{feedback}}</div>
             <ng-template #elseBlock>
-                <span class="text-danger text-center font-weight-bold">No feedback given yet!</span>
+                <div class="text-danger text-center font-weight-bold">No feedback given yet!</div>
             </ng-template>
       </div>
       </div>

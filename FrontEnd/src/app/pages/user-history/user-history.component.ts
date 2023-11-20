@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ColDef, GridReadyEvent } from 'ag-grid-community';
+import { ColDef, GridReadyEvent, ISelectCellEditorParams } from 'ag-grid-community';
 import { contactDetailsRenderer } from '../all-approvers/contactRenderer';
 import { dateRenderer } from '../dateRenderer';
 import { ApiService } from '../services/api.service';
@@ -24,6 +24,8 @@ export class UserHistoryComponent implements OnInit{
   constructor(private apiService : ApiService,private router:Router,private fb: FormBuilder){}
 
   errorMessage : any;
+  modifiedRows:any=[]
+  public rowSelection: 'single' | 'multiple' = 'multiple';
   usersRowData:any = [];
   usersColumnDefs = [
     {
@@ -54,6 +56,21 @@ export class UserHistoryComponent implements OnInit{
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "Status",
+      editable: true,
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: (params:any) => {
+        const status = params.value;
+         if (status === 'a' || status === 'completed'){
+            return {
+                values: ['accepted', 'completed']
+            };
+        }
+        else{
+          return {
+            values: [status]
+          }
+        }
+    },
       cellRenderer: (params:any)=> {
         if(params.value == null){
           return 'N/A'
@@ -67,6 +84,10 @@ export class UserHistoryComponent implements OnInit{
             let link = `<span class="badge badge-soft-info" style="font-size:13px">Accepted</span>`;
             return link
           }
+          else if(params.value == 'accepted'){
+            let link = `<span class="badge badge-soft-info" style="font-size:13px">Accepted</span>`;
+            return link
+          }
           else if(params.value == 'r'){
             let link = `<span class="badge badge-soft-danger" style="font-size:13px">rejected</span>`;
             return link
@@ -75,12 +96,16 @@ export class UserHistoryComponent implements OnInit{
             let link = `<span class="badge badge-soft-success" style="font-size:13px">Completed</span>`;
             return link
           }
+          else if(params.value == 'completed'){
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">Completed</span>`;
+            return link
+          }
           else if(params.value == 'rescheduled'){
             let link = `<span class="badge badge-soft-warning" style="font-size:13px">Rescheduled</span>`;
             return link
           }
           else{
-            return 'N/A'
+            return params.value
           }
         }
       }
@@ -680,6 +705,14 @@ export class UserHistoryComponent implements OnInit{
       this.bookingForm.controls.date.setValue(new Date(this.eventData.date));
       this.bookingForm.controls.slot.setValue(this.eventData.slot);
     }
+  }
+
+  onRowValueChanged(event:any) {
+    // const existingRow = this.modifiedRows.find((row:any) => row.uniqueId === event.data.uniqueId);
+    // if (!existingRow) {
+    //   this.modifiedRows.push(event.data);
+    // }
+    // console.log(this.modifiedRows)
   }
 
 }
