@@ -24,7 +24,6 @@ export class ArtistDataComponent implements OnInit{
   price:any;
   checkAvailability : boolean = false;
   minDate : Date = new Date(new Date().setDate(new Date().getDate()+1));
-  showAddress:boolean = false;
   states = [
     "Andhra Pradesh",
     "Arunachal Pradesh",
@@ -373,7 +372,6 @@ export class ArtistDataComponent implements OnInit{
       this.bookingForm.addControl('district', new FormControl('', Validators.required));
       this.bookingForm.addControl('state', new FormControl('Telangana', Validators.required));
       this.bookingForm.addControl('pincode', new FormControl('', Validators.required));
-      this.showAddress = true;
     }
     else{
       this.bookingForm.removeControl('address');
@@ -381,7 +379,6 @@ export class ArtistDataComponent implements OnInit{
       this.bookingForm.removeControl('district');
       this.bookingForm.removeControl('state');
       this.bookingForm.removeControl('pincode');
-      this.showAddress = false;
     }
     if(this.bookingForm.value?.type == 'hourly'){
       this.calPrice()

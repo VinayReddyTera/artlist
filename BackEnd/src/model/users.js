@@ -1761,44 +1761,123 @@ userDB.updateBooking = async (payload) => {
     }
   }
   else if(payload.role == 'user'){
-    if(payload.data.type == 'hourly'){
-      data = await collection.updateOne({"_id":payload.id},{$set:{
-        type : payload.data.type,
-        date : payload.data.date,
-        from : payload.data.from,
-        to : payload.data.to,
-        slot : '',
-        price : payload.data.price,
-        reminderDates : arr,
-        status : 'rescheduled',
-        rescheduledBy : payload.role
-      }})
+    if(payload.data.bookingType == 'online'){
+      if(payload.data.type == 'hourly'){
+        data = await collection.updateOne({"_id":payload.id},{$set:{
+          type : payload.data.type,
+          date : payload.data.date,
+          from : payload.data.from,
+          to : payload.data.to,
+          slot : '',
+          price : payload.data.price,
+          reminderDates : arr,
+          status : 'rescheduled',
+          rescheduledBy : payload.role,
+          bookingType : payload.data.bookingType,
+          address : '',
+          mandal : '',
+          district : '',
+          state : '',
+          pincode:''
+        }})
+      }
+      else if(payload.data.type == 'event'){
+        data = await collection.updateOne({"_id":payload.id},{$set:{
+          date : payload.data.date,
+          status : 'rescheduled',
+          slot : payload.data.slot,
+          price : payload.data.price,
+          from : '',
+          to : '',
+          type : payload.data.type,
+          reminderDates : arr,
+          rescheduledBy : payload.role,
+          bookingType : payload.data.bookingType,
+          address : '',
+          mandal : '',
+          district : '',
+          state : '',
+          pincode:''
+        }})
+      }
+      else if(payload.data.type == 'fullDay'){
+        data = await collection.updateOne({"_id":payload.id},{$set:{
+          status : 'rescheduled',
+          date : payload.data.date,
+          price : payload.data.price,
+          type : payload.data.type,
+          from : '',
+          to : '',
+          slot : '',
+          reminderDates : arr,
+          rescheduledBy : payload.role,
+          bookingType : payload.data.bookingType,
+          address : '',
+          mandal : '',
+          district : '',
+          state : '',
+          pincode:''
+        }})
+      }
     }
-    else if(payload.data.type == 'event'){
-      data = await collection.updateOne({"_id":payload.id},{$set:{
-        date : payload.data.date,
-        status : 'rescheduled',
-        slot : payload.data.slot,
-        price : payload.data.price,
-        from : '',
-        to : '',
-        type : payload.data.type,
-        reminderDates : arr,
-        rescheduledBy : payload.role
-      }})
-    }
-    else if(payload.data.type == 'fullDay'){
-      data = await collection.updateOne({"_id":payload.id},{$set:{
-        status : 'rescheduled',
-        date : payload.data.date,
-        price : payload.data.price,
-        type : payload.data.type,
-        from : '',
-        to : '',
-        slot : '',
-        reminderDates : arr,
-        rescheduledBy : payload.role
-      }})
+    else{
+      if(payload.data.type == 'hourly'){
+        data = await collection.updateOne({"_id":payload.id},{$set:{
+          type : payload.data.type,
+          date : payload.data.date,
+          from : payload.data.from,
+          to : payload.data.to,
+          slot : '',
+          price : payload.data.price,
+          reminderDates : arr,
+          status : 'rescheduled',
+          rescheduledBy : payload.role,
+          bookingType : payload.data.bookingType,
+          address : payload.data.address,
+          mandal : payload.data.mandal,
+          district : payload.data.district,
+          state : payload.data.state,
+          pincode:payload.data.pincode
+        }})
+      }
+      else if(payload.data.type == 'event'){
+        data = await collection.updateOne({"_id":payload.id},{$set:{
+          date : payload.data.date,
+          status : 'rescheduled',
+          slot : payload.data.slot,
+          price : payload.data.price,
+          from : '',
+          to : '',
+          type : payload.data.type,
+          reminderDates : arr,
+          rescheduledBy : payload.role,
+          bookingType : payload.data.bookingType,
+          address : payload.data.address,
+          mandal : payload.data.mandal,
+          district : payload.data.district,
+          state : payload.data.state,
+          pincode:payload.data.pincode
+        }})
+      }
+      else if(payload.data.type == 'fullDay'){
+        data = await collection.updateOne({"_id":payload.id},{$set:{
+          status : 'rescheduled',
+          date : payload.data.date,
+          price : payload.data.price,
+          type : payload.data.type,
+          from : '',
+          to : '',
+          slot : '',
+          reminderDates : arr,
+          rescheduledBy : payload.role,
+          bookingType : payload.data.bookingType,
+          address : payload.data.address,
+          mandal : payload.data.mandal,
+          district : payload.data.district,
+          state : payload.data.state,
+          pincode:payload.data.pincode
+        }})
+      }
     }
   }
 
