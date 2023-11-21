@@ -216,6 +216,42 @@ export class UserHistoryComponent implements OnInit{
   showFrom:boolean=false;
   price:any;
   rejectionForm:any;
+  states = [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
+    "Andaman and Nicobar Islands",
+    "Chandigarh",
+    "Dadra and Nagar Haveli and Daman and Diu",
+    "Lakshadweep",
+    "Delhi",
+    "Puducherry"
+  ];
 
   ngOnInit(): void {
     this.feedbackForm = this.fb.group({
@@ -226,6 +262,7 @@ export class UserHistoryComponent implements OnInit{
       remarks:['',[Validators.required]]
     })
     this.bookingForm = this.fb.group({
+      bookingType:['',[Validators.required]],
       type:['',[Validators.required]],
       date:['',[Validators.required]],
       price:['']
@@ -339,6 +376,7 @@ export class UserHistoryComponent implements OnInit{
     this.price = data.price
     if(status == 'reschedule'){
       this.bookingForm = this.fb.group({
+        bookingType:[data.bookingType,[Validators.required]],
         type:[data.type,[Validators.required]],
         artistId:[data.artistId,[Validators.required]],
         price:[data.price,[Validators.required]],
@@ -351,6 +389,13 @@ export class UserHistoryComponent implements OnInit{
       }
       else if(data.type == 'event'){
         this.bookingForm.addControl('slot', new FormControl(data.slot, Validators.required));
+      }
+      if(data.bookingType == 'onsite'){
+        this.bookingForm.addControl('address', new FormControl(data.address, Validators.required));
+        this.bookingForm.addControl('mandal', new FormControl(data.mandal, Validators.required));
+        this.bookingForm.addControl('district', new FormControl(data.district, Validators.required));
+        this.bookingForm.addControl('state', new FormControl(data.state, Validators.required));
+        this.bookingForm.addControl('pincode', new FormControl(data.pincode, Validators.required));
       }
     }
     if(status == 'reschedule'){
@@ -678,17 +723,33 @@ export class UserHistoryComponent implements OnInit{
       this.bookingForm.removeControl('to');
       this.showFrom = false;
     }
-    if(this.bookingForm.value.type == 'event'){
-      this.price = this.eventData.pricing.event;
-      this.bookingForm.controls.price.setValue(this.price);
-      this.bookingForm.addControl('slot', new FormControl('', Validators.required));
+    if(this.bookingForm.value.bookingType == 'onsite'){
+      if(this.bookingForm.value.type == 'event'){
+        this.price = this.eventData.pricing.event
+        this.bookingForm.controls.price.setValue(this.price);
+        this.bookingForm.addControl('slot', new FormControl('', Validators.required));
+      }
+      else{
+        this.bookingForm.removeControl('slot');
+      }
+      if(this.bookingForm.value.type == 'fullDay'){
+        this.price = this.eventData.pricing.fullDay
+        this.bookingForm.controls.price.setValue(this.price);
+      }
     }
     else{
-      this.bookingForm.removeControl('slot');
-    }
-    if(this.bookingForm.value.type == 'fullDay'){
-      this.price = this.eventData.pricing.fullDay
-      this.bookingForm.controls.price.setValue(this.price);
+      if(this.bookingForm.value.type == 'event'){
+        this.price = this.eventData.pricing.oEvent
+        this.bookingForm.controls.price.setValue(this.price);
+        this.bookingForm.addControl('slot', new FormControl('', Validators.required));
+      }
+      else{
+        this.bookingForm.removeControl('slot');
+      }
+      if(this.bookingForm.value.type == 'fullDay'){
+        this.price = this.eventData.pricing.oFullDay
+        this.bookingForm.controls.price.setValue(this.price);
+      }
     }
     if(this.bookingForm.value.type == 'hourly' && this.eventData.type == 'hourly'){
       this.bookingForm.controls.from.setValue(formatDate(new Date(this.eventData.from), 'HH:mm', 'en-US'));
@@ -696,14 +757,56 @@ export class UserHistoryComponent implements OnInit{
       this.bookingForm.controls.price.setValue(this.eventData.price);
       this.bookingForm.controls.date.setValue(new Date(this.eventData.date));
     }
-    else if(this.bookingForm.value.type == 'fullDay' && this.eventData.type == 'fullDay'){
-      this.bookingForm.controls.price.setValue(this.eventData.price);
-      this.bookingForm.controls.date.setValue(new Date(this.eventData.date));
+    // else if(this.bookingForm.value.type == 'fullDay' && this.eventData.type == 'fullDay'){
+    //   this.bookingForm.controls.price.setValue(this.eventData.price);
+    //   this.bookingForm.controls.date.setValue(new Date(this.eventData.date));
+    // }
+    // else if(this.bookingForm.value.type == 'event' && this.eventData.type == 'event'){
+    //   this.bookingForm.controls.price.setValue(this.eventData.price);
+    //   this.bookingForm.controls.date.setValue(new Date(this.eventData.date));
+    //   this.bookingForm.controls.slot.setValue(this.eventData.slot);
+    // }
+  }
+
+  addAddress(){
+    if(this.bookingForm.value.bookingType == 'onsite'){
+      this.bookingForm.addControl('address', new FormControl('', Validators.required));
+      this.bookingForm.addControl('mandal', new FormControl('', Validators.required));
+      this.bookingForm.addControl('district', new FormControl('', Validators.required));
+      this.bookingForm.addControl('state', new FormControl('Telangana', Validators.required));
+      this.bookingForm.addControl('pincode', new FormControl('', Validators.required));
+      // this.showAddress = true;
     }
-    else if(this.bookingForm.value.type == 'event' && this.eventData.type == 'event'){
-      this.bookingForm.controls.price.setValue(this.eventData.price);
-      this.bookingForm.controls.date.setValue(new Date(this.eventData.date));
-      this.bookingForm.controls.slot.setValue(this.eventData.slot);
+    else{
+      this.bookingForm.removeControl('address');
+      this.bookingForm.removeControl('mandal');
+      this.bookingForm.removeControl('district');
+      this.bookingForm.removeControl('state');
+      this.bookingForm.removeControl('pincode');
+      // this.showAddress = false;
+    }
+    if(this.bookingForm.value?.type == 'hourly'){
+      this.calPrice()
+    }
+    else if(this.bookingForm.value?.type == 'fullDay'){
+      if(this.bookingForm.value.bookingType == 'onsite'){
+        this.price = this.eventData.pricing.fullDay
+        this.bookingForm.controls.price.setValue(this.price);
+      }
+      else{
+        this.price = this.eventData.pricing.oFullDay
+        this.bookingForm.controls.price.setValue(this.price);
+      }
+    }
+    else if(this.bookingForm.value?.type == 'event'){
+      if(this.bookingForm.value.bookingType == 'onsite'){
+        this.price = this.eventData.pricing.event
+        this.bookingForm.controls.price.setValue(this.price);
+      }
+      else{
+        this.price = this.eventData.pricing.oEvent
+        this.bookingForm.controls.price.setValue(this.price);
+      }
     }
   }
 
