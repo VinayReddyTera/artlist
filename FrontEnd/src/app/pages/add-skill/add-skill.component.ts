@@ -100,6 +100,9 @@ export class AddSkillComponent implements OnInit {
         hourly: ['', [Validators.required,Validators.min(0.1)]],
         event: ['', [Validators.required,Validators.min(0.1)]],
         fullDay: ['', [Validators.required,Validators.min(0.1)]],
+        oHourly: ['', [Validators.required,Validators.min(0.1)]],
+        oEvent: ['', [Validators.required,Validators.min(0.1)]],
+        oFullDay: ['', [Validators.required,Validators.min(0.1)]],
       }),
     });
 
@@ -321,7 +324,10 @@ export class AddSkillComponent implements OnInit {
       pricing : {
         hourly: this.updateData.pricing.hourly,
         fullDay: this.updateData.pricing.fullDay,
-        event: this.updateData.pricing.event
+        event: this.updateData.pricing.event,
+        oHourly: this.updateData.pricing.oHourly,
+        oFullDay: this.updateData.pricing.oFullDay,
+        oEvent: this.updateData.pricing.oEvent
       }
     });
     if(this.updateData.feedback){
@@ -338,8 +344,10 @@ export class AddSkillComponent implements OnInit {
 
     // Set 'required' validator for all fields
     Object.keys(this.skillForm.controls).forEach((key) => {
-      this.skillForm.get(key).setValidators(Validators.required);
-      this.skillForm.get(key).updateValueAndValidity();
+      if(key != 'genre'){
+        this.skillForm.get(key).setValidators(Validators.required);
+        this.skillForm.get(key).updateValueAndValidity();
+      }
     });
 
     this.skillForm.get('experience').setValidators([Validators.required, Validators.min(0.1), Validators.max(150)]);

@@ -23,7 +23,7 @@ app.use(function(req, res, next) {
 });
    
 cron.schedule('40 10 * * *', () => {
-  // userservice.getReminder(new Date().toDateString())
+  userservice.getReminder()
 });
 
 // app.use(myRequestLogger);

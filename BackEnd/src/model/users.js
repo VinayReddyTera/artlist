@@ -1596,7 +1596,13 @@ userDB.fetchAvailable = async(id)=>{
 
 userDB.bookArtist = async (payload) => {
   const collection = await connection.history();
-  let data = await collection.create(payload)
+  let date = new Date(payload.date);
+  let arr = [];
+  arr.push(new Date(date.setDate(date.getDate()-1)))
+  arr.push(new Date(date.setDate(date.getDate()-2)))
+  arr.push(new Date(date.setDate(date.getDate()-2)))
+  payload.reminderDates = arr;
+  let data = await collection.create(payload);
   if (data) {
     let res = {
       status: 200,
@@ -1720,6 +1726,12 @@ userDB.updateEvent = async (payload) => {
 userDB.updateBooking = async (payload) => {
   const collection = await connection.history();
   let data;
+  let date = new Date(payload.data.date);
+  let arr = [];
+  arr.push(new Date(date.setDate(date.getDate()-1)))
+  arr.push(new Date(date.setDate(date.getDate()-2)))
+  arr.push(new Date(date.setDate(date.getDate()-2)))
+
   if(payload.role == 'artist'){
     if(payload.data.type == 'hourly'){
       data = await collection.updateOne({"_id":payload.id},{$set:{
@@ -1727,6 +1739,7 @@ userDB.updateBooking = async (payload) => {
         from : payload.data.from,
         to : payload.data.to,
         status : 'rescheduled',
+        reminderDates : arr,
         rescheduledBy : payload.role
       }})
     }
@@ -1735,6 +1748,7 @@ userDB.updateBooking = async (payload) => {
         date : payload.data.date,
         status : 'rescheduled',
         slot : payload.data.slot,
+        reminderDates : arr,
         rescheduledBy : payload.role
       }})
     }
@@ -1742,6 +1756,7 @@ userDB.updateBooking = async (payload) => {
       data = await collection.updateOne({"_id":payload.id},{$set:{
         status : 'rescheduled',
         date : payload.data.date,
+        reminderDates : arr,
         rescheduledBy : payload.role
       }})
     }
@@ -1755,6 +1770,7 @@ userDB.updateBooking = async (payload) => {
         to : payload.data.to,
         slot : '',
         price : payload.data.price,
+        reminderDates : arr,
         status : 'rescheduled',
         rescheduledBy : payload.role
       }})
@@ -1768,6 +1784,7 @@ userDB.updateBooking = async (payload) => {
         from : '',
         to : '',
         type : payload.data.type,
+        reminderDates : arr,
         rescheduledBy : payload.role
       }})
     }
@@ -1780,6 +1797,7 @@ userDB.updateBooking = async (payload) => {
         from : '',
         to : '',
         slot : '',
+        reminderDates : arr,
         rescheduledBy : payload.role
       }})
     }
@@ -1799,6 +1817,84 @@ userDB.updateBooking = async (payload) => {
     }
     return res
   }
+}
+
+userDB.getReminder = async () => {
+  const collection = await connection.history();
+  let todayDate = new Date().toISOString().split('T')[0];
+  let data = await collection.find({
+    "$or": [
+      { "date": {
+        "$elemMatch": {
+            "$gte": new Date(todayDate + "T00:00:00.000Z"),
+            "$lt": new Date(todayDate + "T23:59:59.999Z")
+        }
+    } },
+      { "reminderDates": {
+        "$elemMatch": {
+            "$gte": new Date(todayDate + "T00:00:00.000Z"),
+            "$lt": new Date(todayDate + "T23:59:59.999Z")
+        }
+    } }
+  ]
+}, {
+    "name": 1,
+    "userId": 1,
+    "artistId": 1,
+    "date": 1,
+    "from": 1,
+    "to": 1,
+    "slot": 1,
+    "_id": 1,
+    "type":1
+  }).lean();
+  if (data) {
+    function convertToPlainObject(data) {
+      return data.map(item => {
+        const { _id, ...rest } = item;
+        return { ...rest, _id: _id.toString() };
+      });
+    }
+    
+    // Extract unique userIds
+    const userIds = [...new Set(data.map(item => item.userId))];
+
+    // Extract unique artistIds
+    const artistIds = [...new Set(data.map(item => item.artistId))];
+    const userColl = await connection.getUsers();
+    const artistColl = await connection.getArtist();
+    let userData = await userColl.find({
+      "_id": { "$in": userIds }
+      },{name:1,email:1,phoneNo:1}).lean();
+    let artistData = await artistColl.find({
+      "_id": { "$in": artistIds }
+      },{name:1,email:1,phoneNo:1}).lean();
+      userData = convertToPlainObject(userData)
+      artistData = convertToPlainObject(artistData)
+      const userMap = new Map(userData.map(user => [user._id, user]));
+      const artistMap = new Map(artistData.map(artist => [artist._id, artist]));
+      for(let i of data){
+        let userInfo = userMap.get(i.userId);
+        let artistInfo = artistMap.get(i.artistId);
+        if(userInfo){
+          i.userName = userInfo.name;
+          i.userPhone = userInfo.phoneNo;
+          i.userEmail = userInfo.email;
+        }
+        if(artistInfo){
+          i.artistName = artistInfo.name;
+          i.artistPhone = artistInfo.phoneNo;
+          i.artistEmail = artistInfo.email;
+        }
+      }
+    if(data.length>0){
+      return data
+    }
+    else{
+      return false
+    }
+  }
+  else return false;
 }
 
 module.exports = userDB

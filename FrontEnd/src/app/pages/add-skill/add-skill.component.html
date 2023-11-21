@@ -121,6 +121,7 @@
       <div class="card fileInput mb-3">
         <div class="card-body" formGroupName="pricing">
           <h5 class="card-title">Pricing in Rupees</h5>
+          <h5>On-site</h5>
           <div class="form-row">
             <div class="form-group col-md-4">
               <label>Hourly</label>
@@ -149,6 +150,39 @@
                 <small>Required Field!</small>
               </div>
               <div *ngIf="skillForm.controls.pricing.controls.event.errors?.min && skillForm.controls.pricing.controls.event.dirty" class="required-message text-danger">
+                <small>Price cannot be 0 or less</small>
+              </div>
+            </div>
+          </div>
+          <h5>Online</h5>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label>Hourly</label>
+              <input type="number" class="form-control" formControlName="oHourly" placeholder="Enter Price">
+              <div *ngIf="skillForm.controls.pricing.controls.oHourly.errors?.required && skillForm.controls.pricing.controls.oHourly.dirty" class="required-message text-danger">
+                <small>Required Field!</small>
+              </div>
+              <div *ngIf="skillForm.controls.pricing.controls.oHourly.errors?.min && skillForm.controls.pricing.controls.oHourly.dirty" class="required-message text-danger">
+                <small>Price cannot be 0 or less</small>
+              </div>
+            </div>
+            <div class="form-group col-md-4">
+              <label>Full Day(9-5)</label>
+              <input type="number" class="form-control" formControlName="oFullDay" placeholder="Enter Price">
+              <div *ngIf="skillForm.controls.pricing.controls.oFullDay.errors?.required && skillForm.controls.pricing.controls.oFullDay.dirty" class="required-message text-danger">
+                <small>Required Field!</small>
+              </div>
+              <div *ngIf="skillForm.controls.pricing.controls.oFullDay.errors?.min && skillForm.controls.pricing.controls.oFullDay.dirty" class="required-message text-danger">
+                <small>Price cannot be 0 or less</small>
+              </div>
+            </div>
+            <div class="form-group col-md-4">
+              <label>Event Basis</label>
+              <input type="number" class="form-control" formControlName="oEvent" placeholder="Enter Price">
+              <div *ngIf="skillForm.controls.pricing.controls.oEvent.errors?.required && skillForm.controls.pricing.controls.oEvent.dirty" class="required-message text-danger">
+                <small>Required Field!</small>
+              </div>
+              <div *ngIf="skillForm.controls.pricing.controls.oEvent.errors?.min && skillForm.controls.pricing.controls.oEvent.dirty" class="required-message text-danger">
                 <small>Price cannot be 0 or less</small>
               </div>
             </div>

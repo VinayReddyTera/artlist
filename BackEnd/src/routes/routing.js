@@ -921,4 +921,13 @@ router.post('/updateBooking',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to get reminder
+router.get('/reminder',(req,res,next)=>{
+  userservice.getReminder().then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 module.exports = router

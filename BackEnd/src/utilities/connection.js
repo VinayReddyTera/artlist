@@ -98,7 +98,10 @@ const artistDetails = Schema({
             pricing : {
                 hourly : Number,
                 event : Number,
-                fullDay : Number
+                fullDay : Number,
+                oHourly : Number,
+                oEvent : Number,
+                oFullDay : Number
             }
         }
     ],
@@ -120,6 +123,13 @@ const history = Schema({
     rescheduledBy:String,
     pricing : Object,
     type : String,
+    bookingType : String,
+    address : String,
+    mandal : String,
+    district:String,
+    state:String,
+    pincode:Number,
+    reminderDates : [Date],
     status : {type:String,default:'pending'},
     name:String,
     price : Number,

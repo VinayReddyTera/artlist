@@ -1108,4 +1108,324 @@ userService.updateBooking=async(payload)=>{
   }
 }
 
+userService.getReminder=()=>{
+  return userDB.getReminder().then((data)=>{
+      if(data){
+        let role = ['artist','user']
+        for(let i of data){
+          for(let j of role){
+            if(j.role == 'user'){
+              let payload;
+              if(new Date(i.date).toDateString() == new Date().toDateString()){
+                if(i.type == 'fullDay'){
+                  payload = {
+                    "subject" : `Event Reminder`,
+                    "email" : data.userEmail,
+                    "body" : ` <table align='center' border='0' cellpadding='0' cellspacing='0' width='550' bgcolor='white'
+                    style='border:2px solid black;border-radius:5px;'>
+                    <tbody>
+                      <tr>
+                        <td align='center'>
+                          <table align='center' border='0' cellpadding='0' cellspacing='0' class='col-550' width='550'>
+                            <tbody>
+                              <tr>
+                                <td align='center' style='background-color: #d5dafa;
+                                                    height: 50px;'>
+                  
+                                  <a href='#' style='text-decoration: none;'>
+                                    <p style='color:#556ee6;
+                                                            font-weight:bold;'>
+                                      Artlist
+                                    </p>
+                                  </a>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                      <tr style='height: 300px;'>
+                        <td align='center' style='border: none;
+                                    border-bottom: 2px solid #d5dafa; 
+                                    padding-right: 20px;padding-left:20px'>
+                  
+                          <p style='font-size: 24px;
+                                        color:black;'>
+                            Hello ${data.userName}
+                          </p>
+                          <p style='font-size: 24px;
+                          color:black;'>You hired ${data.artistName} as ${data.name}</p>
+                
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style='
+                    font-size:11px; line-height:18px; 
+                    color:#999999;' valign='top' align='center'>
+                          <a href='#' style='color:#999999; 
+                    text-decoration:underline;'>PRIVACY STATEMENT</a>
+                          | <a href='#' style='color:#999999; text-decoration:underline;'>TERMS OF SERVICE</a>
+                          | <a href='#' style='color:#999999; text-decoration:underline;'>RETURNS</a><br>
+                          © 2023 Artlist. All Rights Reserved.<br>
+                          If you do not wish to receive any further
+                          emails from us, please
+                          <a href='#' style='text-decoration:none; 
+                                  color:#999999;'>unsubscribe</a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  </td>
+                  </tr>
+                  </tbody>
+                  </table>`,
+                    "attachment" : ""
+                }
+                }
+                else if(i.type == 'hourly'){
+                  
+                }
+                else if(i.type == 'event'){
+                  
+                }
+              }
+              else{
+                if(i.type == 'fullDay'){
+                  payload = {
+                    "subject" : `Event Reminder`,
+                    "email" : data.userEmail,
+                    "body" : ` <table align='center' border='0' cellpadding='0' cellspacing='0' width='550' bgcolor='white'
+                    style='border:2px solid black;border-radius:5px;'>
+                    <tbody>
+                      <tr>
+                        <td align='center'>
+                          <table align='center' border='0' cellpadding='0' cellspacing='0' class='col-550' width='550'>
+                            <tbody>
+                              <tr>
+                                <td align='center' style='background-color: #d5dafa;
+                                                    height: 50px;'>
+                  
+                                  <a href='#' style='text-decoration: none;'>
+                                    <p style='color:#556ee6;
+                                                            font-weight:bold;'>
+                                      Artlist
+                                    </p>
+                                  </a>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                      <tr style='height: 300px;'>
+                        <td align='center' style='border: none;
+                                    border-bottom: 2px solid #d5dafa; 
+                                    padding-right: 20px;padding-left:20px'>
+                  
+                          <p style='font-size: 24px;
+                                        color:black;'>
+                            Hello ${data.userName}
+                          </p>
+                          <p style='font-size: 24px;
+                          color:black;'>You hired ${data.artistName} as ${data.name}</p>
+                
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style='
+                    font-size:11px; line-height:18px; 
+                    color:#999999;' valign='top' align='center'>
+                          <a href='#' style='color:#999999; 
+                    text-decoration:underline;'>PRIVACY STATEMENT</a>
+                          | <a href='#' style='color:#999999; text-decoration:underline;'>TERMS OF SERVICE</a>
+                          | <a href='#' style='color:#999999; text-decoration:underline;'>RETURNS</a><br>
+                          © 2023 Artlist. All Rights Reserved.<br>
+                          If you do not wish to receive any further
+                          emails from us, please
+                          <a href='#' style='text-decoration:none; 
+                                  color:#999999;'>unsubscribe</a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  </td>
+                  </tr>
+                  </tbody>
+                  </table>`,
+                    "attachment" : ""
+                }
+                }
+                else if(i.type == 'hourly'){
+                  
+                }
+                else if(i.type == 'event'){
+                  
+                }
+              }
+              userService.sendMail(payload)
+            }
+            else{
+              let payload;
+              if(new Date(i.date).toDateString() == new Date().toDateString()){
+                if(i.type == 'fullDay'){
+                  payload = {
+                    "subject" : `Event Reminder`,
+                    "email" : data.userEmail,
+                    "body" : ` <table align='center' border='0' cellpadding='0' cellspacing='0' width='550' bgcolor='white'
+                    style='border:2px solid black;border-radius:5px;'>
+                    <tbody>
+                      <tr>
+                        <td align='center'>
+                          <table align='center' border='0' cellpadding='0' cellspacing='0' class='col-550' width='550'>
+                            <tbody>
+                              <tr>
+                                <td align='center' style='background-color: #d5dafa;
+                                                    height: 50px;'>
+                  
+                                  <a href='#' style='text-decoration: none;'>
+                                    <p style='color:#556ee6;
+                                                            font-weight:bold;'>
+                                      Artlist
+                                    </p>
+                                  </a>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                      <tr style='height: 300px;'>
+                        <td align='center' style='border: none;
+                                    border-bottom: 2px solid #d5dafa; 
+                                    padding-right: 20px;padding-left:20px'>
+                  
+                          <p style='font-size: 24px;
+                                        color:black;'>
+                            Hello ${data.userName}
+                          </p>
+                          <p style='font-size: 24px;
+                          color:black;'>You hired ${data.artistName} as ${data.name}</p>
+                
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style='
+                    font-size:11px; line-height:18px; 
+                    color:#999999;' valign='top' align='center'>
+                          <a href='#' style='color:#999999; 
+                    text-decoration:underline;'>PRIVACY STATEMENT</a>
+                          | <a href='#' style='color:#999999; text-decoration:underline;'>TERMS OF SERVICE</a>
+                          | <a href='#' style='color:#999999; text-decoration:underline;'>RETURNS</a><br>
+                          © 2023 Artlist. All Rights Reserved.<br>
+                          If you do not wish to receive any further
+                          emails from us, please
+                          <a href='#' style='text-decoration:none; 
+                                  color:#999999;'>unsubscribe</a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  </td>
+                  </tr>
+                  </tbody>
+                  </table>`,
+                    "attachment" : ""
+                }
+                }
+                else if(i.type == 'hourly'){
+                  
+                }
+                else if(i.type == 'event'){
+                  
+                }
+              }
+              else{
+                if(i.type == 'fullDay'){
+                  payload = {
+                    "subject" : `Event Reminder`,
+                    "email" : data.userEmail,
+                    "body" : ` <table align='center' border='0' cellpadding='0' cellspacing='0' width='550' bgcolor='white'
+                    style='border:2px solid black;border-radius:5px;'>
+                    <tbody>
+                      <tr>
+                        <td align='center'>
+                          <table align='center' border='0' cellpadding='0' cellspacing='0' class='col-550' width='550'>
+                            <tbody>
+                              <tr>
+                                <td align='center' style='background-color: #d5dafa;
+                                                    height: 50px;'>
+                  
+                                  <a href='#' style='text-decoration: none;'>
+                                    <p style='color:#556ee6;
+                                                            font-weight:bold;'>
+                                      Artlist
+                                    </p>
+                                  </a>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                      <tr style='height: 300px;'>
+                        <td align='center' style='border: none;
+                                    border-bottom: 2px solid #d5dafa; 
+                                    padding-right: 20px;padding-left:20px'>
+                  
+                          <p style='font-size: 24px;
+                                        color:black;'>
+                            Hello ${data.userName}
+                          </p>
+                          <p style='font-size: 24px;
+                          color:black;'>You hired ${data.artistName} as ${data.name}</p>
+                
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style='
+                    font-size:11px; line-height:18px; 
+                    color:#999999;' valign='top' align='center'>
+                          <a href='#' style='color:#999999; 
+                    text-decoration:underline;'>PRIVACY STATEMENT</a>
+                          | <a href='#' style='color:#999999; text-decoration:underline;'>TERMS OF SERVICE</a>
+                          | <a href='#' style='color:#999999; text-decoration:underline;'>RETURNS</a><br>
+                          © 2023 Artlist. All Rights Reserved.<br>
+                          If you do not wish to receive any further
+                          emails from us, please
+                          <a href='#' style='text-decoration:none; 
+                                  color:#999999;'>unsubscribe</a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  </td>
+                  </tr>
+                  </tbody>
+                  </table>`,
+                    "attachment" : ""
+                }
+                }
+                else if(i.type == 'hourly'){
+                  
+                }
+                else if(i.type == 'event'){
+                  
+                }
+              }
+              userService.sendMail(payload)
+            }
+          }
+        }
+          return data
+      }
+      else{
+          let res = {
+              status : 204,
+              data : "failed"
+          }
+          return res
+      }
+  })
+}
+
 module.exports = userService
