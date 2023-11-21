@@ -916,11 +916,7 @@ userService.fetchHistory=(payload)=>{
         return res
       }
       else{
-        let res= {
-          status : 204,
-          data: 'Unable to fetch history'
-        }
-        return res
+        return data
       }
     }
     else{

@@ -23,7 +23,44 @@ export class ArtistDataComponent implements OnInit{
   availableData: any;
   price:any;
   checkAvailability : boolean = false;
-  minDate : Date = new Date(new Date().setDate(new Date().getDate()+1))
+  minDate : Date = new Date(new Date().setDate(new Date().getDate()+1));
+  showAddress:boolean = false;
+  states = [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
+    "Andaman and Nicobar Islands",
+    "Chandigarh",
+    "Dadra and Nagar Haveli and Daman and Diu",
+    "Lakshadweep",
+    "Delhi",
+    "Puducherry"
+  ];
 
   ngOnInit(): void {
     if(localStorage.getItem('artistData')){
@@ -34,6 +71,7 @@ export class ArtistDataComponent implements OnInit{
     }
     console.log(this.artistData)
     this.bookingForm = this.fb.group({
+      bookingType:['',[Validators.required]],
       type:['',[Validators.required]],
       date:['',[Validators.required]],
       name:[this.artistData.skill.name],
@@ -210,17 +248,33 @@ export class ArtistDataComponent implements OnInit{
       this.bookingForm.removeControl('to');
       this.showFrom = false;
     }
-    if(this.bookingForm.value.type == 'event'){
-      this.price = this.artistData.skill.pricing.event
-      this.bookingForm.controls.price.setValue(this.price);
-      this.bookingForm.addControl('slot', new FormControl('', Validators.required));
+    if(this.bookingForm.value.bookingType == 'onsite'){
+      if(this.bookingForm.value.type == 'event'){
+        this.price = this.artistData.skill.pricing.event
+        this.bookingForm.controls.price.setValue(this.price);
+        this.bookingForm.addControl('slot', new FormControl('', Validators.required));
+      }
+      else{
+        this.bookingForm.removeControl('slot');
+      }
+      if(this.bookingForm.value.type == 'fullDay'){
+        this.price = this.artistData.skill.pricing.fullDay
+        this.bookingForm.controls.price.setValue(this.price);
+      }
     }
     else{
-      this.bookingForm.removeControl('slot');
-    }
-    if(this.bookingForm.value.type == 'fullDay'){
-      this.price = this.artistData.skill.pricing.fullDay
-      this.bookingForm.controls.price.setValue(this.price);
+      if(this.bookingForm.value.type == 'event'){
+        this.price = this.artistData.skill.pricing.oEvent
+        this.bookingForm.controls.price.setValue(this.price);
+        this.bookingForm.addControl('slot', new FormControl('', Validators.required));
+      }
+      else{
+        this.bookingForm.removeControl('slot');
+      }
+      if(this.bookingForm.value.type == 'fullDay'){
+        this.price = this.artistData.skill.pricing.oFullDay
+        this.bookingForm.controls.price.setValue(this.price);
+      }
     }
   }
 
@@ -283,7 +337,12 @@ export class ArtistDataComponent implements OnInit{
         this.apiservice.sendMessage(msgData);
       }
       else{
-        this.price = Math.round(this.artistData.skill.pricing.hourly*(minutes/60))
+        if(this.bookingForm.value.bookingType == 'onsite'){
+          this.price = Math.round(this.artistData.skill.pricing.hourly*(minutes/60))
+        }
+        else{
+          this.price = Math.round(this.artistData.skill.pricing.oHourly*(minutes/60))
+        }
         this.bookingForm.controls.price.setValue(this.price);
       }
     }
@@ -305,6 +364,48 @@ export class ArtistDataComponent implements OnInit{
     const totalMinutesTo = toHours * 60 + toMinutes;
     const timeDifferenceMinutes = totalMinutesTo - totalMinutesFrom;
     return timeDifferenceMinutes
+  }
+
+  addAddress(){
+    if(this.bookingForm.value.bookingType == 'onsite'){
+      this.bookingForm.addControl('address', new FormControl('', Validators.required));
+      this.bookingForm.addControl('mandal', new FormControl('', Validators.required));
+      this.bookingForm.addControl('district', new FormControl('', Validators.required));
+      this.bookingForm.addControl('state', new FormControl('Telangana', Validators.required));
+      this.bookingForm.addControl('pincode', new FormControl('', Validators.required));
+      this.showAddress = true;
+    }
+    else{
+      this.bookingForm.removeControl('address');
+      this.bookingForm.removeControl('mandal');
+      this.bookingForm.removeControl('district');
+      this.bookingForm.removeControl('state');
+      this.bookingForm.removeControl('pincode');
+      this.showAddress = false;
+    }
+    if(this.bookingForm.value?.type == 'hourly'){
+      this.calPrice()
+    }
+    else if(this.bookingForm.value?.type == 'fullDay'){
+      if(this.bookingForm.value.bookingType == 'onsite'){
+        this.price = this.artistData.skill.pricing.fullDay
+        this.bookingForm.controls.price.setValue(this.price);
+      }
+      else{
+        this.price = this.artistData.skill.pricing.oFullDay
+        this.bookingForm.controls.price.setValue(this.price);
+      }
+    }
+    else if(this.bookingForm.value?.type == 'event'){
+      if(this.bookingForm.value.bookingType == 'onsite'){
+        this.price = this.artistData.skill.pricing.event
+        this.bookingForm.controls.price.setValue(this.price);
+      }
+      else{
+        this.price = this.artistData.skill.pricing.oEvent
+        this.bookingForm.controls.price.setValue(this.price);
+      }
+    }
   }
 
 }

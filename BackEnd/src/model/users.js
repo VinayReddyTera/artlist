@@ -1642,7 +1642,6 @@ userDB.fetchHistory = async (payload) => {
     }
     return res
   }
-
   if (data.length > 0) {
     let res = {
       status: 200,
@@ -1654,7 +1653,7 @@ userDB.fetchHistory = async (payload) => {
   else {
     let res = {
       status: 204,
-      data: 'Unable to fetch history'
+      data: 'No Bookings Yet!!'
     }
     return res
   }
