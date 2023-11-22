@@ -118,6 +118,14 @@ export class UserHistoryComponent implements OnInit{
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
+      field: "bookingType",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Event Type",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value,
+      width:130
+    },
+    {
       field: "date",
       filter: "agDateColumnFilter",
       filterParams: { suppressAndOrCondition: true },
@@ -158,7 +166,43 @@ export class UserHistoryComponent implements OnInit{
           let data = `<span class="text-success">${params.value} ₹</span>`
           return data
         }
-      }
+      },
+      width:130
+    },
+    {
+      field: "address",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Address",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "mandal",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Mandal",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "district",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "District",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "state",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "State",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "pincode",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Pincode",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "paid",
