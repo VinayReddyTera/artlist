@@ -30,9 +30,9 @@ export class ArtistDashboardComponent implements OnInit{
   jdCount = 0;
   interviewerCount = 0;
   interviewerData : any;
-  todayInterviews:any = [];
-  upComingInterviews:any = [];
-  pastInterviews:any = [];
+  todayEvents:any = [];
+  upComingEvents:any = [];
+  pastEvents:any = [];
   tooltipOptions = {
     fitContent : true
   }
@@ -195,9 +195,9 @@ export class ArtistDashboardComponent implements OnInit{
     //       this.interviewerCount = res.data.interviewerCount;
     //       this.jdCount = res.data.jdCount;
     //       this.resumeCount = res.data.resumeCount;
-    //       this.todayInterviews = res.data.todayInterviews;
-    //       this.pastInterviews = res.data.pastInterviews;
-    //       this.upComingInterviews = res.data.upComingInterviews;
+    //       this.todayEvents = res.data.todayEvents;
+    //       this.pastEvents = res.data.pastEvents;
+    //       this.upComingEvents = res.data.upComingEvents;
     //       this.openings = res.data.openings;
     //       this.onboarded = res.data.onboarded;
     //       this.lineChartData = {
