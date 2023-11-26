@@ -263,33 +263,6 @@ userDB.checkPassword = async (data1) => {
   }
 }
 
-userDB.sendMail = (payload) =>{
-    let transporter = nodemailer.createTransport({
-        service : 'gmail',
-        auth : {
-            user : process.env.mailId,
-            pass : process.env.pass
-        }
-    });
-
-    let mailOptions = {
-        from : process.env.mailId,
-        to : payload.email,
-        subject : payload.subject,
-        html : payload.body
-    }
-
-    transporter.sendMail(mailOptions,(error,info)=>{
-        if(error){
-            console.log(error)
-        }
-        else{
-            // console.log('Email sent : '+info.response);
-            console.log('ok')
-        }
-    })
-}
-
 userDB.getPassword = async (payload) => {
   if(payload.role == "artist"){
     const collection = await connection.getArtist();

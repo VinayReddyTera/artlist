@@ -34,133 +34,48 @@ userService.register=(data)=>{
                       payload1 = {
                           "subject" : `Successfully Registered`,
                           "email" : data.email,
-                          "body" : ` <table align='center' border='0' cellpadding='0' cellspacing='0' width='550' bgcolor='white'
-                          style='border:2px solid black;border-radius:5px;'>
-                          <tbody>
-                            <tr>
-                              <td align='center'>
-                                <table align='center' border='0' cellpadding='0' cellspacing='0' class='col-550' width='550'>
-                                  <tbody>
-                                    <tr>
-                                      <td align='center' style='background-color: #d5dafa;
-                                                          height: 50px;'>
-                        
-                                        <a href='#' style='text-decoration: none;'>
-                                          <p style='color:#556ee6;
-                                                                  font-weight:bold;'>
-                                            Artlist
-                                          </p>
-                                        </a>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </td>
-                            </tr>
-                            <tr style='height: 300px;'>
-                              <td align='center' style='border: none;
-                                          border-bottom: 2px solid #d5dafa; 
-                                          padding-right: 20px;padding-left:20px'>
-                        
-                                <p style='font-size: 24px;
-                                              color:black;'>
-                                  Hello ${data.name}
-                                </p>
-                                <p style='font-size: 24px;
-                                color:black;'>You have successfully registered as an ${role} for Artlist</p>
-                      
-                              </td>
-                            </tr>
-                            <tr>
-                              <td style='
-                          font-size:11px; line-height:18px; 
-                          color:#999999;' valign='top' align='center'>
-                                <a href='#' style='color:#999999; 
-                          text-decoration:underline;'>PRIVACY STATEMENT</a>
-                                | <a href='#' style='color:#999999; text-decoration:underline;'>TERMS OF SERVICE</a>
-                                | <a href='#' style='color:#999999; text-decoration:underline;'>RETURNS</a><br>
-                                © 2023 Artlist. All Rights Reserved.<br>
-                                If you do not wish to receive any further
-                                emails from us, please
-                                <a href='#' style='text-decoration:none; 
-                                        color:#999999;'>unsubscribe</a>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        </td>
-                        </tr>
-                        </tbody>
-                        </table>`,
+                          "body" : '',
                           "attachment" : ""
                       }
+                      let payload = {
+                        "button" : false,
+                        "name" : data.name,
+                        "body" : `You have successfully registered as an ${role} for Artlist`,
+                      }
+                      let templatePath = 'templates/welcome.html';
+                      ejs.renderFile(templatePath,payload,(err,html)=>{
+                        if(err){
+                          console.log(err)
+                        }
+                        else{
+                          payload1.body = html;
+                          userService.sendMail(payload1)
+                        }
+                      })
                   }
                   else{
                       payload1 = {
                           "subject" : `Artlist Registration Status`,
                           "email" : data.email,
-                          "body" : ` <table align='center' border='0' cellpadding='0' cellspacing='0' width='550' bgcolor='white'
-                          style='border:2px solid black;border-radius:5px;'>
-                          <tbody>
-                            <tr>
-                              <td align='center'>
-                                <table align='center' border='0' cellpadding='0' cellspacing='0' class='col-550' width='550'>
-                                  <tbody>
-                                    <tr>
-                                      <td align='center' style='background-color: #d5dafa;
-                                                          height: 50px;'>
-                        
-                                        <a href='#' style='text-decoration: none;'>
-                                          <p style='color:#556ee6;
-                                                                  font-weight:bold;'>
-                                            Artlist
-                                          </p>
-                                        </a>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </td>
-                            </tr>
-                            <tr style='height: 300px;'>
-                              <td align='center' style='border: none;
-                                          border-bottom: 2px solid #d5dafa; 
-                                          padding-right: 20px;padding-left:20px'>
-                        
-                                <p style='font-size: 24px;
-                                              color:black;'>
-                                  Hello ${data.name}
-                                </p>
-                                <p style='font-size: 24px;
-                                color:black;'>You registration Status is : ${isCreated.data}</p>
-                      
-                              </td>
-                            </tr>
-                            <tr>
-                              <td style='
-                          font-size:11px; line-height:18px; 
-                          color:#999999;' valign='top' align='center'>
-                                <a href='#' style='color:#999999; 
-                          text-decoration:underline;'>PRIVACY STATEMENT</a>
-                                | <a href='#' style='color:#999999; text-decoration:underline;'>TERMS OF SERVICE</a>
-                                | <a href='#' style='color:#999999; text-decoration:underline;'>RETURNS</a><br>
-                                © 2023 Artlist. All Rights Reserved.<br>
-                                If you do not wish to receive any further
-                                emails from us, please
-                                <a href='#' style='text-decoration:none; 
-                                        color:#999999;'>unsubscribe</a>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        </td>
-                        </tr>
-                        </tbody>
-                        </table>`,
+                          "body" : "",
                           "attachment" : ""
                       }
+                      let payload = {
+                        "button" : false,
+                        "name" : data.name,
+                        "body" : `You registration Status is : ${isCreated.data}`,
+                      }
+                      let templatePath = 'templates/welcome.html';
+                      ejs.renderFile(templatePath,payload,(err,html)=>{
+                        if(err){
+                          console.log(err)
+                        }
+                        else{
+                          payload1.body = html;
+                          userService.sendMail(payload1)
+                        }
+                      })
                   }
-                  userService.sendMail(payload1)
                   }
                   return isCreated
                 }
@@ -231,83 +146,24 @@ userService.forgotPassword = (userData,origin) =>{
                     let payload1 = {
                     "subject" : 'Reset Your Password',
                     "email" : userData.email,
-                    "body" : ` <table align='center' border='0' cellpadding='0' cellspacing='0' width='550' bgcolor='white'
-                    style='border:2px solid black;border-radius:5px;'>
-                    <tbody>
-                        <tr>
-                        <td align='center'>
-                            <table align='center' border='0' cellpadding='0' cellspacing='0' class='col-550' width='550'>
-                            <tbody>
-                                <tr>
-                                <td align='center' style='background-color: #d5dafa;
-                                                    height: 50px;'>
-                    
-                                    <a href='#' style='text-decoration: none;'>
-                                    <p style='color:#556ee6;
-                                                            font-weight:bold;'>
-                                        Artlist
-                                    </p>
-                                    </a>
-                                </td>
-                                </tr>
-                            </tbody>
-                            </table>
-                        </td>
-                        </tr>
-                        <tr style='height: 300px;'>
-                        <td align='center' style='border: none;
-                                    border-bottom: 2px solid #d5dafa; 
-                                    padding-right: 20px;padding-left:20px'>
-                            <p style='font-size: 24px;
-                            color:black;'>
-                            Click below link to reset your password. The below link expires in 2 hours<br>
-                            <a href=${origin}/account/reset-password/${token} target='_blank'><button style="display: inline-block;
-                            font-weight: 400;
-                            text-align: center;
-                            white-space: nowrap;
-                            vertical-align: middle;
-                            -webkit-user-select: none;
-                            -moz-user-select: none;
-                            -ms-user-select: none;
-                            user-select: none;
-                            border: 1px solid transparent;
-                            padding: 0.375rem 0.75rem;
-                            font-size: 1rem;
-                            line-height: 1.5;
-                            background-color : #234c87;
-                            color : #fff;
-                            border-radius: 0.25rem;
-                            cursor:pointer;
-                            transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
-                            Click Here!
-                            </button></a>
-                </p>
-                
-                        </td>
-                        </tr>
-                        <tr>
-                        <td style='
-                    font-size:11px; line-height:18px; 
-                    color:#999999;' valign='top' align='center'>
-                            <a href='#' style='color:#999999; 
-                    text-decoration:underline;'>PRIVACY STATEMENT</a>
-                            | <a href='#' style='color:#999999; text-decoration:underline;'>TERMS OF SERVICE</a>
-                            | <a href='#' style='color:#999999; text-decoration:underline;'>RETURNS</a><br>
-                            © 2023 Artlist. All Rights Reserved.<br>
-                            If you do not wish to receive any further
-                            emails from us, please
-                            <a href='#' style='text-decoration:none; 
-                                    color:#999999;'>unsubscribe</a>
-                        </td>
-                        </tr>
-                    </tbody>
-                    </table>
-                    </td>
-                    </tr>
-                    </tbody>
-                    </table>`
+                    "body" : ""
+                      }
+                let data = {
+                  "button" : 'Reset Password',
+                  "name":false,
+                  "url":`${origin}/account/reset-password/${token}`,
+                  "body" : `Click below link to reset your password. The below link expires in 2 hours`,
                 }
-                userService.sendMail(payload1)
+                let templatePath = 'templates/welcome.html';
+                ejs.renderFile(templatePath,data,(err,html)=>{
+                  if(err){
+                    console.log(err)
+                  }
+                  else{
+                    payload1.body = html;
+                    userService.sendMail(payload1)
+                  }
+                })
                 let res = {
                     status: 200,
                     data: "Password reset link sent to your mail"
@@ -401,82 +257,24 @@ userService.sendVerifyEmail=(userData,host,protocol)=>{
     let payload1 = {
     "subject" : 'Verify Email',
     "email" : userData.email,
-    "body" : ` <table align='center' border='0' cellpadding='0' cellspacing='0' width='550' bgcolor='white'
-    style='border:2px solid black;border-radius:5px;'>
-    <tbody>
-        <tr>
-        <td align='center'>
-            <table align='center' border='0' cellpadding='0' cellspacing='0' class='col-550' width='550'>
-            <tbody>
-                <tr>
-                <td align='center' style='background-color: #d5dafa;
-                                    height: 50px;'>
-    
-                    <a href='#' style='text-decoration: none;'>
-                    <p style='color:#556ee6;
-                                            font-weight:bold;'>
-                        Artlist
-                    </p>
-                    </a>
-                </td>
-                </tr>
-            </tbody>
-            </table>
-        </td>
-        </tr>
-        <tr style='height: 300px;'>
-        <td align='center' style='border: none;
-                    border-bottom: 2px solid #d5dafa; 
-                    padding-right: 20px;padding-left:20px'>
-            <p style='font-size: 24px;
-            color:black;'>
-            Click below link verify email. The below link expires in 2 hours<br>
-            <a href=${protocol}://${host}/verifyEmail/${token} target='_blank'><button style="display: inline-block;
-            font-weight: 400;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            border: 1px solid transparent;
-            padding: 0.375rem 0.75rem;
-            font-size: 1rem;
-            line-height: 1.5;
-            background-color : #234c87;
-            color : #fff;
-            border-radius: 0.25rem;
-            cursor:pointer;
-            transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;">
-            Click Here!
-            </button></a>
-</p>
-        </td>
-        </tr>
-        <tr>
-        <td style='
-    font-size:11px; line-height:18px; 
-    color:#999999;' valign='top' align='center'>
-            <a href='#' style='color:#999999; 
-    text-decoration:underline;'>PRIVACY STATEMENT</a>
-            | <a href='#' style='color:#999999; text-decoration:underline;'>TERMS OF SERVICE</a>
-            | <a href='#' style='color:#999999; text-decoration:underline;'>RETURNS</a><br>
-            © 2023 Artlist. All Rights Reserved.<br>
-            If you do not wish to receive any further
-            emails from us, please
-            <a href='#' style='text-decoration:none; 
-                    color:#999999;'>unsubscribe</a>
-        </td>
-        </tr>
-    </tbody>
-    </table>
-    </td>
-    </tr>
-    </tbody>
-    </table>`
+    "body" : ""
     }
-    userService.sendMail(payload1)
+    let data = {
+      "button" : 'Verify Email',
+      "name" : false,
+      "url":`${protocol}://${host}/verifyEmail/${token}`,
+      "body" : `Click below link to verify email. The below link expires in 2 hours`,
+    }
+    let templatePath = 'templates/welcome.html';
+    ejs.renderFile(templatePath,data,(err,html)=>{
+      if(err){
+        console.log(err)
+      }
+      else{
+        payload1.body = html;
+        userService.sendMail(payload1)
+      }
+    })
     let res = {
         status: 200,
         data: "Email Verification link sent to your email"
@@ -557,68 +355,25 @@ userService.addApprover=(payload)=>{
               payload1 = {
                   "subject" : `Successfully Registered`,
                   "email" : payload.email,
-                  "body" : ` <table align='center' border='0' cellpadding='0' cellspacing='0' width='550' bgcolor='white'
-                  style='border:2px solid black;border-radius:5px;'>
-                  <tbody>
-                    <tr>
-                      <td align='center'>
-                        <table align='center' border='0' cellpadding='0' cellspacing='0' class='col-550' width='550'>
-                          <tbody>
-                            <tr>
-                              <td align='center' style='background-color: #d5dafa;
-                                                  height: 50px;'>
-                
-                                <a href='#' style='text-decoration: none;'>
-                                  <p style='color:#556ee6;
-                                                          font-weight:bold;'>
-                                    Artlist
-                                  </p>
-                                </a>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </td>
-                    </tr>
-                    <tr style='height: 300px;'>
-                      <td align='center' style='border: none;
-                                  border-bottom: 2px solid #d5dafa; 
-                                  padding-right: 20px;padding-left:20px'>
-                
-                        <p style='font-size: 24px;
-                                      color:black;'>
-                          Hello ${payload.name}
-                        </p>
-                        <p style='font-size: 24px;
-                        color:black;'>You have successfully registered as an Approver for Artlist</p>
-              
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style='
-                  font-size:11px; line-height:18px; 
-                  color:#999999;' valign='top' align='center'>
-                        <a href='#' style='color:#999999; 
-                  text-decoration:underline;'>PRIVACY STATEMENT</a>
-                        | <a href='#' style='color:#999999; text-decoration:underline;'>TERMS OF SERVICE</a>
-                        | <a href='#' style='color:#999999; text-decoration:underline;'>RETURNS</a><br>
-                        © 2023 Artlist. All Rights Reserved.<br>
-                        If you do not wish to receive any further
-                        emails from us, please
-                        <a href='#' style='text-decoration:none; 
-                                color:#999999;'>unsubscribe</a>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                </td>
-                </tr>
-                </tbody>
-                </table>`,
+                  "body" : "",
                   "attachment" : ""
               }
           }
-          userService.sendMail(payload1)
+          let data = {
+            "button" : false,
+            "name":payload.name,
+            "body" : `You have successfully registered as an Approver for Artlist`,
+          }
+          let templatePath = 'templates/welcome.html';
+          ejs.renderFile(templatePath,data,(err,html)=>{
+            if(err){
+              console.log(err)
+            }
+            else{
+              payload1.body = html;
+              userService.sendMail(payload1)
+            }
+          })
           }
           return data
         }
