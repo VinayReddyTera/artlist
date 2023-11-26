@@ -1903,10 +1903,8 @@ userDB.getReminder = async () => {
   let data = await collection.find({
     "$or": [
       { "date": {
-        "$elemMatch": {
-            "$gte": new Date(todayDate + "T00:00:00.000Z"),
-            "$lt": new Date(todayDate + "T23:59:59.999Z")
-        }
+        "$gte": new Date(todayDate + "T00:00:00.000Z"),
+        "$lt": new Date(todayDate + "T23:59:59.999Z")
     } },
       { "reminderDates": {
         "$elemMatch": {
@@ -1924,7 +1922,13 @@ userDB.getReminder = async () => {
     "to": 1,
     "slot": 1,
     "_id": 1,
-    "type":1
+    "type":1,
+    "address":1,
+    "mandal":1,
+    "district":1,
+    "state":1,
+    "pincode":1,
+    "bookingType":1
   }).lean();
   if (data) {
     function convertToPlainObject(data) {
@@ -1955,9 +1959,9 @@ userDB.getReminder = async () => {
         let userInfo = userMap.get(i.userId);
         let artistInfo = artistMap.get(i.artistId);
         if(userInfo){
-          i.userName = userInfo.name;
-          i.userPhone = userInfo.phoneNo;
-          i.userEmail = userInfo.email;
+          i.candName = userInfo.name;
+          i.candPhone = userInfo.phoneNo;
+          i.candEmail = userInfo.email;
         }
         if(artistInfo){
           i.artistName = artistInfo.name;

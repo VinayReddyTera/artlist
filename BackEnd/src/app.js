@@ -22,7 +22,7 @@ app.use(function(req, res, next) {
      next();
 });
    
-cron.schedule('40 10 * * *', () => {
+cron.schedule('00 07 * * *', () => {
   userservice.getReminder()
 });
 

@@ -2,6 +2,7 @@ const userDB = require('../model/users');
 const nodemailer = require('nodemailer');
 const userService = {}
 const jwt = require('jsonwebtoken');
+const ejs = require('ejs')
 
 userService.login=(data)=>{
   return userDB.checkLoginUser(data).then((userData)=>{
@@ -1107,312 +1108,70 @@ userService.updateBooking=async(payload)=>{
 userService.getReminder=()=>{
   return userDB.getReminder().then((data)=>{
       if(data){
-        let role = ['artist','user']
+        let role = ['user','artist']
         for(let i of data){
           for(let j of role){
-            if(j.role == 'user'){
-              let payload;
-              if(new Date(i.date).toDateString() == new Date().toDateString()){
-                if(i.type == 'fullDay'){
-                  payload = {
-                    "subject" : `Event Reminder`,
-                    "email" : data.userEmail,
-                    "body" : ` <table align='center' border='0' cellpadding='0' cellspacing='0' width='550' bgcolor='white'
-                    style='border:2px solid black;border-radius:5px;'>
-                    <tbody>
-                      <tr>
-                        <td align='center'>
-                          <table align='center' border='0' cellpadding='0' cellspacing='0' class='col-550' width='550'>
-                            <tbody>
-                              <tr>
-                                <td align='center' style='background-color: #d5dafa;
-                                                    height: 50px;'>
-                  
-                                  <a href='#' style='text-decoration: none;'>
-                                    <p style='color:#556ee6;
-                                                            font-weight:bold;'>
-                                      Artlist
-                                    </p>
-                                  </a>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </td>
-                      </tr>
-                      <tr style='height: 300px;'>
-                        <td align='center' style='border: none;
-                                    border-bottom: 2px solid #d5dafa; 
-                                    padding-right: 20px;padding-left:20px'>
-                  
-                          <p style='font-size: 24px;
-                                        color:black;'>
-                            Hello ${data.userName}
-                          </p>
-                          <p style='font-size: 24px;
-                          color:black;'>You hired ${data.artistName} as ${data.name}</p>
-                
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style='
-                    font-size:11px; line-height:18px; 
-                    color:#999999;' valign='top' align='center'>
-                          <a href='#' style='color:#999999; 
-                    text-decoration:underline;'>PRIVACY STATEMENT</a>
-                          | <a href='#' style='color:#999999; text-decoration:underline;'>TERMS OF SERVICE</a>
-                          | <a href='#' style='color:#999999; text-decoration:underline;'>RETURNS</a><br>
-                          © 2023 Artlist. All Rights Reserved.<br>
-                          If you do not wish to receive any further
-                          emails from us, please
-                          <a href='#' style='text-decoration:none; 
-                                  color:#999999;'>unsubscribe</a>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  </td>
-                  </tr>
-                  </tbody>
-                  </table>`,
-                    "attachment" : ""
-                }
-                }
-                else if(i.type == 'hourly'){
-                  
-                }
-                else if(i.type == 'event'){
-                  
-                }
-              }
-              else{
-                if(i.type == 'fullDay'){
-                  payload = {
-                    "subject" : `Event Reminder`,
-                    "email" : data.userEmail,
-                    "body" : ` <table align='center' border='0' cellpadding='0' cellspacing='0' width='550' bgcolor='white'
-                    style='border:2px solid black;border-radius:5px;'>
-                    <tbody>
-                      <tr>
-                        <td align='center'>
-                          <table align='center' border='0' cellpadding='0' cellspacing='0' class='col-550' width='550'>
-                            <tbody>
-                              <tr>
-                                <td align='center' style='background-color: #d5dafa;
-                                                    height: 50px;'>
-                  
-                                  <a href='#' style='text-decoration: none;'>
-                                    <p style='color:#556ee6;
-                                                            font-weight:bold;'>
-                                      Artlist
-                                    </p>
-                                  </a>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </td>
-                      </tr>
-                      <tr style='height: 300px;'>
-                        <td align='center' style='border: none;
-                                    border-bottom: 2px solid #d5dafa; 
-                                    padding-right: 20px;padding-left:20px'>
-                  
-                          <p style='font-size: 24px;
-                                        color:black;'>
-                            Hello ${data.userName}
-                          </p>
-                          <p style='font-size: 24px;
-                          color:black;'>You hired ${data.artistName} as ${data.name}</p>
-                
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style='
-                    font-size:11px; line-height:18px; 
-                    color:#999999;' valign='top' align='center'>
-                          <a href='#' style='color:#999999; 
-                    text-decoration:underline;'>PRIVACY STATEMENT</a>
-                          | <a href='#' style='color:#999999; text-decoration:underline;'>TERMS OF SERVICE</a>
-                          | <a href='#' style='color:#999999; text-decoration:underline;'>RETURNS</a><br>
-                          © 2023 Artlist. All Rights Reserved.<br>
-                          If you do not wish to receive any further
-                          emails from us, please
-                          <a href='#' style='text-decoration:none; 
-                                  color:#999999;'>unsubscribe</a>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  </td>
-                  </tr>
-                  </tbody>
-                  </table>`,
-                    "attachment" : ""
-                }
-                }
-                else if(i.type == 'hourly'){
-                  
-                }
-                else if(i.type == 'event'){
-                  
-                }
-              }
-              userService.sendMail(payload)
+            let payload = {
+              "subject":"",
+              "email":"",
+              "body":"",
+              "attachment":""
+            }
+            i.role = j;
+            let slotMap = {
+              1: '04:00 A.M - 09:00 A.M',
+              2: '09:00 A.M - 02:00 P.M',
+              3: '02:00 P.M - 07:00 P.M',
+              4: '07:00 P.M - 12:00 A.M',
+              5: '12:00 A.M - 04:00 A.M'
+            }
+            if(role == 'user'){
+              payload.email = i.userEmail;
             }
             else{
-              let payload;
-              if(new Date(i.date).toDateString() == new Date().toDateString()){
-                if(i.type == 'fullDay'){
-                  payload = {
-                    "subject" : `Event Reminder`,
-                    "email" : data.userEmail,
-                    "body" : ` <table align='center' border='0' cellpadding='0' cellspacing='0' width='550' bgcolor='white'
-                    style='border:2px solid black;border-radius:5px;'>
-                    <tbody>
-                      <tr>
-                        <td align='center'>
-                          <table align='center' border='0' cellpadding='0' cellspacing='0' class='col-550' width='550'>
-                            <tbody>
-                              <tr>
-                                <td align='center' style='background-color: #d5dafa;
-                                                    height: 50px;'>
-                  
-                                  <a href='#' style='text-decoration: none;'>
-                                    <p style='color:#556ee6;
-                                                            font-weight:bold;'>
-                                      Artlist
-                                    </p>
-                                  </a>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </td>
-                      </tr>
-                      <tr style='height: 300px;'>
-                        <td align='center' style='border: none;
-                                    border-bottom: 2px solid #d5dafa; 
-                                    padding-right: 20px;padding-left:20px'>
-                  
-                          <p style='font-size: 24px;
-                                        color:black;'>
-                            Hello ${data.userName}
-                          </p>
-                          <p style='font-size: 24px;
-                          color:black;'>You hired ${data.artistName} as ${data.name}</p>
-                
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style='
-                    font-size:11px; line-height:18px; 
-                    color:#999999;' valign='top' align='center'>
-                          <a href='#' style='color:#999999; 
-                    text-decoration:underline;'>PRIVACY STATEMENT</a>
-                          | <a href='#' style='color:#999999; text-decoration:underline;'>TERMS OF SERVICE</a>
-                          | <a href='#' style='color:#999999; text-decoration:underline;'>RETURNS</a><br>
-                          © 2023 Artlist. All Rights Reserved.<br>
-                          If you do not wish to receive any further
-                          emails from us, please
-                          <a href='#' style='text-decoration:none; 
-                                  color:#999999;'>unsubscribe</a>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  </td>
-                  </tr>
-                  </tbody>
-                  </table>`,
-                    "attachment" : ""
-                }
-                }
-                else if(i.type == 'hourly'){
-                  
-                }
-                else if(i.type == 'event'){
-                  
-                }
+              payload.email = i.artistEmail;
+            }
+            if(new Date().toDateString() == new Date(i.date).toDateString()){
+              if(i.type == 'hourly'){
+                i.from = i.from.toLocaleString().replace(/:\d{2}\s/, '');
+                i.to = i.to.toLocaleString().replace(/:\d{2}\s/, '');
+                payload.subject = 'Reminder: Hourly Event Today'
+              }
+              else if(i.type == 'fullDay'){
+                payload.subject = 'Reminder: Full Day Event Today'
+              }
+              else if(i.type == 'event'){
+                i.slot = slotMap[i.slot]
+                payload.subject = 'Reminder: Event Today'
+              }
+            }
+            else{
+              if(i.type == 'hourly'){
+                i.from = i.from.toLocaleString().replace(/:\d{2}\s/, '');
+                i.to = i.to.toLocaleString().replace(/:\d{2}\s/, '');
+                payload.subject = `Reminder: Hourly Event on ${new Date(i.date).toDateString()}`
+              }
+              else if(i.type == 'fullDay'){
+                payload.subject = `Reminder: Full Day Event on ${new Date(i.date).toDateString()}`
+              }
+              else if(i.type == 'event'){
+                i.slot = slotMap[i.slot]
+                payload.subject = `Reminder: Event on ${new Date(i.date).toDateString()}`
+              }
+            }
+            let templatePath = 'templates/reminder.html';
+            ejs.renderFile(templatePath,i,(err,html)=>{
+              if(err){
+                console.log(err)
               }
               else{
-                if(i.type == 'fullDay'){
-                  payload = {
-                    "subject" : `Event Reminder`,
-                    "email" : data.userEmail,
-                    "body" : ` <table align='center' border='0' cellpadding='0' cellspacing='0' width='550' bgcolor='white'
-                    style='border:2px solid black;border-radius:5px;'>
-                    <tbody>
-                      <tr>
-                        <td align='center'>
-                          <table align='center' border='0' cellpadding='0' cellspacing='0' class='col-550' width='550'>
-                            <tbody>
-                              <tr>
-                                <td align='center' style='background-color: #d5dafa;
-                                                    height: 50px;'>
-                  
-                                  <a href='#' style='text-decoration: none;'>
-                                    <p style='color:#556ee6;
-                                                            font-weight:bold;'>
-                                      Artlist
-                                    </p>
-                                  </a>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </td>
-                      </tr>
-                      <tr style='height: 300px;'>
-                        <td align='center' style='border: none;
-                                    border-bottom: 2px solid #d5dafa; 
-                                    padding-right: 20px;padding-left:20px'>
-                  
-                          <p style='font-size: 24px;
-                                        color:black;'>
-                            Hello ${data.userName}
-                          </p>
-                          <p style='font-size: 24px;
-                          color:black;'>You hired ${data.artistName} as ${data.name}</p>
-                
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style='
-                    font-size:11px; line-height:18px; 
-                    color:#999999;' valign='top' align='center'>
-                          <a href='#' style='color:#999999; 
-                    text-decoration:underline;'>PRIVACY STATEMENT</a>
-                          | <a href='#' style='color:#999999; text-decoration:underline;'>TERMS OF SERVICE</a>
-                          | <a href='#' style='color:#999999; text-decoration:underline;'>RETURNS</a><br>
-                          © 2023 Artlist. All Rights Reserved.<br>
-                          If you do not wish to receive any further
-                          emails from us, please
-                          <a href='#' style='text-decoration:none; 
-                                  color:#999999;'>unsubscribe</a>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  </td>
-                  </tr>
-                  </tbody>
-                  </table>`,
-                    "attachment" : ""
-                }
-                }
-                else if(i.type == 'hourly'){
-                  
-                }
-                else if(i.type == 'event'){
-                  
-                }
+                payload.body = html;
+                userService.sendMail(payload)
               }
-              userService.sendMail(payload)
-            }
+            })
           }
         }
-          return data
+        return 'ok'
       }
       else{
           let res = {
