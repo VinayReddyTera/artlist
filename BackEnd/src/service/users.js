@@ -638,6 +638,48 @@ userService.bookArtist=async (payload)=>{
     }
     return userDB.bookArtist(payload).then((data)=>{
       if(data){
+        // Mark Your Calendar: Event Rescheduled Successfully!
+        let roles = ['artist','user'];
+        for(let i of payload){
+          for(let j of roles){
+            i.role = j;
+            let payload1 = {
+              "subject" : 'Locked and Loaded: Your Event Booking Confirmation',
+              "email" : '',
+              "body" : ""
+              }
+              let slotMap = {
+                1: '04:00 A.M - 09:00 A.M',
+                2: '09:00 A.M - 02:00 P.M',
+                3: '02:00 P.M - 07:00 P.M',
+                4: '07:00 P.M - 12:00 A.M',
+                5: '12:00 A.M - 04:00 A.M'
+              }
+              if(j == 'user'){
+                payload1.email = i.userEmail;
+              }
+              else{
+                payload1.email = i.artistEmail;
+              }
+              if(i.type == 'hourly'){
+                i.from = i.from.toLocaleString().replace(/:\d{2}\s/, '');
+                i.to = i.to.toLocaleString().replace(/:\d{2}\s/, '');
+              }
+              else if(i.type == 'event'){
+                i.slot = slotMap[i.slot]
+              }
+              let templatePath = 'templates/booking.html';
+              ejs.renderFile(templatePath,i,(err,html)=>{
+                if(err){
+                  console.log(err)
+                }
+                else{
+                  payload1.body = html;
+                  userService.sendMail(payload1)
+                }
+              })
+          }
+        }
         return data
       }
       else{
@@ -880,7 +922,7 @@ userService.getReminder=()=>{
               4: '07:00 P.M - 12:00 A.M',
               5: '12:00 A.M - 04:00 A.M'
             }
-            if(role == 'user'){
+            if(j == 'user'){
               payload.email = i.userEmail;
             }
             else{

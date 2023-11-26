@@ -1579,6 +1579,7 @@ userDB.bookArtist = async (payload) => {
   if (data) {
     let res = {
       status: 200,
+      sendMail:true,
       data: 'Booking Successfull'
     }
     return res
@@ -1586,6 +1587,7 @@ userDB.bookArtist = async (payload) => {
   else {
     let res = {
       status: 204,
+      sendMail:false,
       data: 'Unable to book artist'
     }
     return res
