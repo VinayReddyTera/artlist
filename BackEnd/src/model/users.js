@@ -707,6 +707,7 @@ userDB.addSkill = async(userData,id)=>{
     if (data.modifiedCount == 1 && data.acknowledged == true) {
         let res = {
             status :200,
+            sendMail : true,
             data : "Added Skill"
         }
         return res
@@ -1855,7 +1856,6 @@ userDB.updateBooking = async (payload) => {
       }
     }
   }
-
   if (data.modifiedCount == 1 || data.acknowledged == true) {
     let res = {
       status: 200,
@@ -1969,6 +1969,17 @@ userDB.fetchUserAndArtist = async (payload) => {
   }
   if (newData.candName && newData.artistName) {
     return newData
+  }
+  else {
+    return false
+  }
+}
+
+userDB.fetchTag = async (payload) => {
+  const tagCollection = await connection.getTag();
+  let userData = await tagCollection.find({"skillName":payload},{name:1,email:1});
+  if (userData) {
+    return userData
   }
   else {
     return false
