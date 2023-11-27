@@ -280,8 +280,11 @@ export class NewRequestsComponent  implements OnInit{
     if(status == 'reschedule'){
       this.bookingForm = this.fb.group({
         type:[data.type,[Validators.required]],
+        name:[data.name,[Validators.required]],
+        bookingType:[data.bookingType,[Validators.required]],
         artistId:[data.artistId,[Validators.required]],
-        date:[new Date(data.date),[Validators.required]]
+        date:[new Date(data.date),[Validators.required]],
+        userId:[data.userId,[Validators.required]]
       })
       if(data.type == 'hourly'){
         this.timeDiff = this.calTimeDiff(formatDate(new Date(data.from), 'HH:mm', 'en-US'),formatDate(new Date(data.to), 'HH:mm', 'en-US'))
@@ -379,7 +382,7 @@ export class NewRequestsComponent  implements OnInit{
     let type = this.eventData.type;
     let dates = this.availableData[type];
     let isFound = false;
-    console.log(this.bookingForm.valid,this.bookingForm.value)
+    console.log(this.bookingForm.value)
     if(this.bookingForm.valid){
       if(type == 'fullDay'){
         for(let i of dates){

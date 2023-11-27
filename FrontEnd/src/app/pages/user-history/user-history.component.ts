@@ -424,7 +424,8 @@ export class UserHistoryComponent implements OnInit{
         type:[data.type,[Validators.required]],
         artistId:[data.artistId,[Validators.required]],
         price:[data.price,[Validators.required]],
-        date:[new Date(data.date),[Validators.required]]
+        date:[new Date(data.date),[Validators.required]],
+        name:[data.name,[Validators.required]]
       })
       if(data.type == 'hourly'){
         this.showFrom = true;

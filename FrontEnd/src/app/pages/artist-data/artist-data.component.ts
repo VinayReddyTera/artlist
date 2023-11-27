@@ -117,7 +117,7 @@ export class ArtistDataComponent implements OnInit{
     let dates = this.availableData[type];
     let isFound = false;
     console.log(this.bookingForm.valid,this.bookingForm.value)
-    if(!this.bookingForm.valid){
+    if(this.bookingForm.valid){
       if(type == 'fullDay'){
         for(let i of dates){
           if(new Date(i).toLocaleDateString() == new Date(date).toLocaleDateString()){
@@ -325,7 +325,7 @@ export class ArtistDataComponent implements OnInit{
 
   calPrice(){
     if(this.bookingForm.value.from && this.bookingForm.value.to){
-      let minutes = this.calTimeDiff(this.bookingForm.value.from,this.bookingForm.value.to);
+      let minutes = this.calTimeDiff(this.bookingForm.value?.from,this.bookingForm.value?.to);
       if(minutes<=0){
         let msgData = {
           severity : "warn",
@@ -350,7 +350,7 @@ export class ArtistDataComponent implements OnInit{
   calTimeDiff(start:any,end:any){
     // Split the time strings into hours and minutes
     const fromTimeParts = start.split(':');
-    const toTimeParts = end.split(':');
+    const toTimeParts = end?.split(':');
 
     // Convert the time parts to integers
     const fromHours = parseInt(fromTimeParts[0], 10);
