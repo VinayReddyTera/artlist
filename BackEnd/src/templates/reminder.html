@@ -233,7 +233,7 @@
                                                                 <!-- today start-->
                                                             <% if (type === 'hourly') { %>
                                                                 <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                <p style="text-align: center;">This is a gentle reminder for the today's hourly event. You have hired <%= artistName%> as <%= name%>.</p>
+                                                                <p style="text-align: center;"><%- body%></p>
                                                                     <ul>
                                                                         <li>Event Start Time: <%= from %></li>
                                                                         <li>Event End Time: <%= to %></li>
@@ -242,14 +242,14 @@
                                                                 </td>
                                                             <% } else if(type === 'fullDay') { %>
                                                                 <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                    <p style="text-align: center;">This is a gentle reminder for the today's Full Day event. You have hired <%= artistName%> as <%= name%>.</p>
+                                                                    <p style="text-align: center;"><%- body%></p>
                                                                     <ul>
                                                                         <li>Event Date: <%= new Date(date).toDateString() %></li>
                                                                     </ul>
                                                                 </td>
                                                             <% } else if(type === 'event') { %>
                                                                 <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                    <p style="text-align: center;">This is a gentle reminder for the today's Event. You have hired <%= artistName%> as <%= name%>.</p>
+                                                                    <p style="text-align: center;"><%- body%></p>
                                                                     <ul>
                                                                         <li>Slot: <%= slot %></li>
                                                                         <li>Event Date: <%= new Date(date).toDateString() %></li>
@@ -261,7 +261,7 @@
                                                                 <!-- future start-->
                                                                 <% if (type === 'hourly') { %>
                                                                     <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                        <p style="text-align: center;">This is a gentle reminder for the hourly Event on <%= new Date(date).toDateString()%>. You have hired <%= artistName%> as <%= name%>.</p>
+                                                                        <p style="text-align: center;"><%- body%></p>
                                                                         <ul>
                                                                             <li>Event Start Time: <%= from %></li>
                                                                             <li>Event End Time: <%= to %></li>
@@ -270,14 +270,14 @@
                                                                     </td>
                                                                 <% } else if(type === 'fullDay') { %>
                                                                     <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                        <p style="text-align: center;">This is a gentle reminder for the Full Day Event on <%= new Date(date).toDateString()%>. You have hired <%= artistName%> as <%= name%>.</p>
+                                                                        <p style="text-align: center;"><%- body%></p>
                                                                         <ul>
                                                                             <li>Event Date: <%= new Date(date).toDateString() %></li>
                                                                         </ul>
                                                                     </td>
                                                                 <% } else if(type === 'event') { %>
                                                                     <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                        <p style="text-align: center;">This is a gentle reminder for the Event on <%= new Date(date).toDateString()%>. You have hired <%= artistName%> as <%= name%>.</p>
+                                                                        <p style="text-align: center;"><%- body%></p>
                                                                         <ul>
                                                                             <li>Slot: <%= slot %></li>
                                                                             <li>Event Date: <%= new Date(date).toDateString() %></li>
@@ -292,7 +292,7 @@
                                                                 <!-- today start-->
                                                                 <% if (type === 'hourly') { %>
                                                                     <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                    <p style="text-align: center;">This is a gentle reminder for the today's hourly event. You have hired <%= artistName%> as <%= name%>.</p>
+                                                                    <p style="text-align: center;"><%- body%></p>
                                                                         <ul>
                                                                             <li>Event Start Time: <%= from %></li>
                                                                             <li>Event End Time: <%= to %></li>
@@ -306,7 +306,7 @@
                                                                     </td>
                                                                 <% } else if(type === 'fullDay') { %>
                                                                     <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                        <p style="text-align: center;">This is a gentle reminder for the today's Full Day event. You have hired <%= artistName%> as <%= name%>.</p>
+                                                                        <p style="text-align: center;"><%- body%></p>
                                                                         <ul>
                                                                             <li>Event Date: <%= new Date(date).toDateString() %></li>
                                                                             <li>Address: <%= address %></li>
@@ -318,7 +318,7 @@
                                                                     </td>
                                                                 <% } else if(type === 'event') { %>
                                                                     <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                        <p style="text-align: center;">This is a gentle reminder for the today's Event. You have hired <%= artistName%> as <%= name%>.</p>
+                                                                        <p style="text-align: center;"><%- body%></p>
                                                                         <ul>
                                                                             <li>Slot: <%= slot %></li>
                                                                             <li>Event Date: <%= new Date(date).toDateString() %></li>
@@ -335,7 +335,7 @@
                                                                 <!-- future start-->
                                                                 <% if (type === 'hourly') { %>
                                                                     <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                        <p style="text-align: center;">This is a gentle reminder for the hourly Event on <%= new Date(date).toDateString()%>. You have hired <%= artistName%> as <%= name%>.</p>
+                                                                        <p style="text-align: center;"><%- body%></p>
                                                                         <ul>
                                                                             <li>Event Start Time: <%= from %></li>
                                                                             <li>Event End Time: <%= to %></li>
@@ -349,7 +349,7 @@
                                                                     </td>
                                                                 <% } else if(type === 'fullDay') { %>
                                                                     <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                        <p style="text-align: center;">This is a gentle reminder for the Full Day Event on <%= new Date(date).toDateString()%>. You have hired <%= artistName%> as <%= name%>.</p>
+                                                                        <p style="text-align: center;"><%- body%></p>
                                                                         <ul>
                                                                             <li>Event Date: <%= new Date(date).toDateString() %></li>
                                                                             <li>Address: <%= address %></li>
@@ -361,7 +361,7 @@
                                                                     </td>
                                                                 <% } else if(type === 'event') { %>
                                                                     <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                        <p style="text-align: center;">This is a gentle reminder for the Event on <%= new Date(date).toDateString()%>. You have hired <%= artistName%> as <%= name%>.</p>
+                                                                        <p style="text-align: center;"><%- body%></p>
                                                                         <ul>
                                                                             <li>Slot: <%= slot %></li>
                                                                             <li>Event Date: <%= new Date(date).toDateString() %></li>
@@ -466,7 +466,7 @@
                                                                 <!-- today start-->
                                                             <% if (type === 'hourly') { %>
                                                                 <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                <p style="text-align: center;">This is a gentle reminder for the today's hourly event. You have been hired by <%= candName%> as <%= name%>.</p>
+                                                                <p style="text-align: center;"><%- body%></p>
                                                                     <ul>
                                                                         <li>Event Start Time: <%= from %></li>
                                                                         <li>Event End Time: <%= to %></li>
@@ -475,14 +475,14 @@
                                                                 </td>
                                                             <% } else if(type === 'fullDay') { %>
                                                                 <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                    <p style="text-align: center;">This is a gentle reminder for the today's Full Day event. You have been hired by <%= candName%> as <%= name%>.</p>
+                                                                    <p style="text-align: center;"><%- body%></p>
                                                                     <ul>
                                                                         <li>Event Date: <%= new Date(date).toDateString() %></li>
                                                                     </ul>
                                                                 </td>
                                                             <% } else if(type === 'event') { %>
                                                                 <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                    <p style="text-align: center;">This is a gentle reminder for the today's Event. You have been hired by <%= candName%> as <%= name%>.</p>
+                                                                    <p style="text-align: center;"><%- body%></p>
                                                                     <ul>
                                                                         <li>Slot: <%= slot %></li>
                                                                         <li>Event Date: <%= new Date(date).toDateString() %></li>
@@ -494,7 +494,7 @@
                                                                 <!-- future start-->
                                                                 <% if (type === 'hourly') { %>
                                                                     <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                        <p style="text-align: center;">This is a gentle reminder for the hourly Event on <%= new Date(date).toDateString()%>. You have been hired by <%= candName%> as <%= name%>.</p>
+                                                                        <p style="text-align: center;"><%- body%></p>
                                                                         <ul>
                                                                             <li>Event Start Time: <%= from %></li>
                                                                             <li>Event End Time: <%= to %></li>
@@ -503,14 +503,14 @@
                                                                     </td>
                                                                 <% } else if(type === 'fullDay') { %>
                                                                     <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                        <p style="text-align: center;">This is a gentle reminder for the Full Day Event on <%= new Date(date).toDateString()%>. You have been hired by <%= candName%> as <%= name%>.</p>
+                                                                        <p style="text-align: center;"><%- body%></p>
                                                                         <ul>
                                                                             <li>Event Date: <%= new Date(date).toDateString() %></li>
                                                                         </ul>
                                                                     </td>
                                                                 <% } else if(type === 'event') { %>
                                                                     <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                        <p style="text-align: center;">This is a gentle reminder for the Event on <%= new Date(date).toDateString()%>. You have been hired by <%= candName%> as <%= name%>.</p>
+                                                                        <p style="text-align: center;"><%- body%></p>
                                                                         <ul>
                                                                             <li>Slot: <%= slot %></li>
                                                                             <li>Event Date: <%= new Date(date).toDateString() %></li>
@@ -525,7 +525,7 @@
                                                                 <!-- today start-->
                                                                 <% if (type === 'hourly') { %>
                                                                     <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                    <p style="text-align: center;">This is a gentle reminder for the today's hourly event. You have been hired by <%= candName%> as <%= name%>.</p>
+                                                                    <p style="text-align: center;"><%- body%></p>
                                                                         <ul>
                                                                             <li>Event Start Time: <%= from %></li>
                                                                             <li>Event End Time: <%= to %></li>
@@ -539,7 +539,7 @@
                                                                     </td>
                                                                 <% } else if(type === 'fullDay') { %>
                                                                     <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                        <p style="text-align: center;">This is a gentle reminder for the today's Full Day event. You have been hired by <%= candName%> as <%= name%>.</p>
+                                                                        <p style="text-align: center;"><%- body%></p>
                                                                         <ul>
                                                                             <li>Event Date: <%= new Date(date).toDateString() %></li>
                                                                             <li>Address: <%= address %></li>
@@ -551,7 +551,7 @@
                                                                     </td>
                                                                 <% } else if(type === 'event') { %>
                                                                     <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                        <p style="text-align: center;">This is a gentle reminder for the today's Event. You have been hired by <%= candName%> as <%= name%>.</p>
+                                                                        <p style="text-align: center;"><%- body%></p>
                                                                         <ul>
                                                                             <li>Slot: <%= slot %></li>
                                                                             <li>Event Date: <%= new Date(date).toDateString() %></li>
@@ -568,7 +568,7 @@
                                                                 <!-- future start-->
                                                                 <% if (type === 'hourly') { %>
                                                                     <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                        <p style="text-align: center;">This is a gentle reminder for the hourly Event on <%= new Date(date).toDateString()%>. You have been hired by <%= candName%> as <%= name%>.</p>
+                                                                        <p style="text-align: center;"><%- body%></p>
                                                                         <ul>
                                                                             <li>Event Start Time: <%= from %></li>
                                                                             <li>Event End Time: <%= to %></li>
@@ -582,7 +582,7 @@
                                                                     </td>
                                                                 <% } else if(type === 'fullDay') { %>
                                                                     <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                        <p style="text-align: center;">This is a gentle reminder for the Full Day Event on <%= new Date(date).toDateString()%>. You have been hired by <%= candName%> as <%= name%>.</p>
+                                                                        <p style="text-align: center;"><%- body%></p>
                                                                         <ul>
                                                                             <li>Event Date: <%= new Date(date).toDateString() %></li>
                                                                             <li>Address: <%= address %></li>
@@ -594,7 +594,7 @@
                                                                     </td>
                                                                 <% } else if(type === 'event') { %>
                                                                     <td style="color:#444444; font-family:'Roboto', Arial, sans-serif; font-size:16px; line-height:28px; min-width:auto !important;">
-                                                                        <p style="text-align: center;">This is a gentle reminder for the Event on <%= new Date(date).toDateString()%>. You have been hired by <%= candName%> as <%= name%>.</p>
+                                                                        <p style="text-align: center;"><%- body%></p>
                                                                         <ul>
                                                                             <li>Slot: <%= slot %></li>
                                                                             <li>Event Date: <%= new Date(date).toDateString() %></li>

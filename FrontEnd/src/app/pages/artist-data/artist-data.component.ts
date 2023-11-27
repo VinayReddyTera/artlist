@@ -117,7 +117,7 @@ export class ArtistDataComponent implements OnInit{
     let dates = this.availableData[type];
     let isFound = false;
     console.log(this.bookingForm.valid,this.bookingForm.value)
-    if(this.bookingForm.valid){
+    if(!this.bookingForm.valid){
       if(type == 'fullDay'){
         for(let i of dates){
           if(new Date(i).toLocaleDateString() == new Date(date).toLocaleDateString()){

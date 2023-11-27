@@ -1954,4 +1954,25 @@ userDB.getReminder = async () => {
   else return false;
 }
 
+userDB.fetchUserAndArtist = async (payload) => {
+  const userCollection = await connection.getUsers();
+  const artistCollection = await connection.getArtist();
+  let userData = await userCollection.findOne({"_id":payload.userId},{name:1,email:1,phoneNo:1});
+  let artistData = await artistCollection.findOne({"_id":payload.artistId},{name:1,email:1,phoneNo:1});
+  let newData = {
+    candName : userData.name,
+    candPhone : userData.phoneNo,
+    candEmail : userData.email,
+    artistName : artistData.name,
+    artistPhone : artistData.phoneNo,
+    artistEmail : artistData.email
+  }
+  if (newData.candName && newData.artistName) {
+    return newData
+  }
+  else {
+    return false
+  }
+}
+
 module.exports = userDB

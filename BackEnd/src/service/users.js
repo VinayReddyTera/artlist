@@ -2,7 +2,8 @@ const userDB = require('../model/users');
 const nodemailer = require('nodemailer');
 const userService = {}
 const jwt = require('jsonwebtoken');
-const ejs = require('ejs')
+const ejs = require('ejs');
+const e = require('express');
 
 userService.login=(data)=>{
   return userDB.checkLoginUser(data).then((userData)=>{
@@ -636,51 +637,64 @@ userService.bookArtist=async (payload)=>{
         return res
       }
     }
-    return userDB.bookArtist(payload).then((data)=>{
+    return userDB.bookArtist(payload).then(async(data)=>{
       if(data){
+        let dataPayload = {
+          userId : payload.userId,
+          artistId : payload.artistId
+        }
+        let userData = await userDB.fetchUserAndArtist(dataPayload);
+        if(userData){
         // Mark Your Calendar: Event Rescheduled Successfully!
+        payload = {...payload,...userData};
         let roles = ['artist','user'];
-        for(let i of payload){
-          for(let j of roles){
-            i.role = j;
-            let payload1 = {
-              "subject" : 'Locked and Loaded: Your Event Booking Confirmation',
-              "email" : '',
-              "body" : ""
-              }
-              let slotMap = {
-                1: '04:00 A.M - 09:00 A.M',
-                2: '09:00 A.M - 02:00 P.M',
-                3: '02:00 P.M - 07:00 P.M',
-                4: '07:00 P.M - 12:00 A.M',
-                5: '12:00 A.M - 04:00 A.M'
-              }
-              if(j == 'user'){
-                payload1.email = i.userEmail;
+        for(let j of roles){
+          payload.role = j;
+          let payload1 = {
+            "subject" : 'Locked and Loaded: Your Event Booking Confirmation',
+            "email" : '',
+            "body" : ""
+            }
+            let slotMap = {
+              1: '04:00 A.M - 09:00 A.M',
+              2: '09:00 A.M - 02:00 P.M',
+              3: '02:00 P.M - 07:00 P.M',
+              4: '07:00 P.M - 12:00 A.M',
+              5: '12:00 A.M - 04:00 A.M'
+            }
+            if(j == 'user'){
+              payload1.email = payload.userEmail;
+            }
+            else{
+              payload1.email = payload.artistEmail;
+            }
+            if(payload.type == 'hourly'){
+              payload.from = payload.from.toLocaleString().replace(/:\d{2}\s/, '');
+              payload.to = payload.to.toLocaleString().replace(/:\d{2}\s/, '');
+            }
+            else if(payload.type == 'event'){
+              payload.slot = slotMap[payload.slot]
+            }
+            let templatePath = 'templates/booking.html';
+            ejs.renderFile(templatePath,payload,(err,html)=>{
+              if(err){
+                console.log(err)
               }
               else{
-                payload1.email = i.artistEmail;
+                payload1.body = html;
+                userService.sendMail(payload1)
               }
-              if(i.type == 'hourly'){
-                i.from = i.from.toLocaleString().replace(/:\d{2}\s/, '');
-                i.to = i.to.toLocaleString().replace(/:\d{2}\s/, '');
-              }
-              else if(i.type == 'event'){
-                i.slot = slotMap[i.slot]
-              }
-              let templatePath = 'templates/booking.html';
-              ejs.renderFile(templatePath,i,(err,html)=>{
-                if(err){
-                  console.log(err)
-                }
-                else{
-                  payload1.body = html;
-                  userService.sendMail(payload1)
-                }
-              })
-          }
+            })
         }
         return data
+        }
+        else{
+          let res= {
+            status : 200,
+            data: 'Booking Successful but unable to send confirmation email'
+          }
+          return res
+        }
       }
       else{
         let res= {
@@ -922,39 +936,47 @@ userService.getReminder=()=>{
               4: '07:00 P.M - 12:00 A.M',
               5: '12:00 A.M - 04:00 A.M'
             }
-            if(j == 'user'){
-              payload.email = i.userEmail;
-            }
-            else{
-              payload.email = i.artistEmail;
-            }
             if(new Date().toDateString() == new Date(i.date).toDateString()){
               if(i.type == 'hourly'){
                 i.from = i.from.toLocaleString().replace(/:\d{2}\s/, '');
                 i.to = i.to.toLocaleString().replace(/:\d{2}\s/, '');
                 payload.subject = 'Reminder: Hourly Event Today'
+                i.body = `This is a gentle reminder for the today's hourly event. `
               }
               else if(i.type == 'fullDay'){
-                payload.subject = 'Reminder: Full Day Event Today'
+                payload.subject = 'Reminder: Full Day Event Today';
+                i.body = `This is a gentle reminder for the today's Full Day event. `
               }
               else if(i.type == 'event'){
                 i.slot = slotMap[i.slot]
                 payload.subject = 'Reminder: Event Today'
+                i.body = `This is a gentle reminder for the today's Event. `
               }
             }
             else{
               if(i.type == 'hourly'){
                 i.from = i.from.toLocaleString().replace(/:\d{2}\s/, '');
                 i.to = i.to.toLocaleString().replace(/:\d{2}\s/, '');
-                payload.subject = `Reminder: Hourly Event on ${new Date(i.date).toDateString()}`
+                payload.subject = `Reminder: Hourly Event on ${new Date(i.date).toDateString()}`;
+                i.body = `This is a gentle reminder for the hourly Event on ${new Date(i.date).toDateString()}. `
               }
               else if(i.type == 'fullDay'){
                 payload.subject = `Reminder: Full Day Event on ${new Date(i.date).toDateString()}`
+                i.body = `This is a gentle reminder for the Full Day Event on ${new Date(i.date).toDateString()}. `
               }
               else if(i.type == 'event'){
                 i.slot = slotMap[i.slot]
                 payload.subject = `Reminder: Event on ${new Date(i.date).toDateString()}`
+                i.body = `This is a gentle reminder for the Event on ${new Date(i.date).toDateString()}. `
               }
+            }
+            if(j == 'user'){
+              payload.email = i.userEmail;
+              i.body = i.body+`You have hired ${i.artistName} as ${i.name}.`
+            }
+            else{
+              payload.email = i.artistEmail;
+              i.body = i.body+`You have been hired by ${i.candName} as ${i.name}.`
             }
             let templatePath = 'templates/reminder.html';
             ejs.renderFile(templatePath,i,(err,html)=>{
