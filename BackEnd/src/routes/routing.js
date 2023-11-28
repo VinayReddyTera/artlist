@@ -532,8 +532,8 @@ router.get('/getArtistSkill',verifyToken,(req,res,next)=>{
 
 //router to update artist skill
 router.post('/updateArtistSkill',verifyToken,(req,res,next)=>{
-  let id = jwt.decode(req.headers.authorization).data._id;
-  userservice.updateArtistSkill(req.body,id).then((data)=>{
+  let artistData = jwt.decode(req.headers.authorization).data;
+  userservice.updateArtistSkill(req.body,artistData,req.headers.origin).then((data)=>{
     return res.json(data)
   }).catch((err)=>{
     next(err)

@@ -376,9 +376,71 @@ userService.getArtistSkill=(id)=>{
   })
 }
 
-userService.updateArtistSkill=(payload,id)=>{
-  return userDB.updateArtistSkill(payload,id).then((data)=>{
+userService.updateArtistSkill=(payload,artistData,origin)=>{
+  return userDB.updateArtistSkill(payload,artistData._id).then(async(data)=>{
     if(data){
+      if(data.status == 200){
+        let text = ''
+        let tagText = '';
+        if(payload.validated == 'nv'){
+          text = `${payload.name} skill`;
+          tagText = `skill name ${payload.name}`;
+        }
+        if(payload.genre.length > 0){
+          for(let i of payload.genre){
+            if(i.validated == 'nv'){
+              text = text + `, ${i.name} genre`;
+              tagText = tagText + `, genre name : ${i.name}`
+            }
+          }
+        }
+        let payload1 = {
+          "subject" : 'Skill Updated',
+          "email" : artistData.email,
+          "body" : ""
+          }
+          let mailData = {
+            "button" : false,
+            "name" : artistData.name,
+            "body" : `Congratulations, You have successfully updated ${text}. Please be patient until our team reviews it.`,
+          }
+          let templatePath = 'templates/welcome.html';
+          ejs.renderFile(templatePath,mailData,(err,html)=>{
+            if(err){
+              console.log(err)
+            }
+            else{
+              payload1.body = html;
+              userService.sendMail(payload1)
+            }
+          })
+          let tagMailList = await userDB.fetchTag(payload.name)
+          if(tagMailList){
+            for(let i of tagMailList){
+              let tagpayload = {
+                "subject" : 'Updated Skill Approval Request',
+                "email" : i.email,
+                "body" : ""
+                }
+                let tagmailData = {
+                  "button" : 'Login',
+                  "url": `${origin}/account/login`,
+                  "name" : i.name,
+                  "body" : `You have an updated skill approval request with ${tagText}, Please login and review.`,
+                }
+                // let templatePath = 'templates/welcome.html';
+                ejs.renderFile(templatePath,tagmailData,(err,html)=>{
+                  if(err){
+                    console.log(err)
+                  }
+                  else{
+                    tagpayload.body = html;
+                    userService.sendMail(tagpayload)
+                  }
+                })
+            }
+          }
+      }
       return data
     }
     else{
