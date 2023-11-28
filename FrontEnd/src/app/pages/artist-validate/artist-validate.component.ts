@@ -29,12 +29,14 @@ export class ArtistValidateComponent implements OnInit{
     }
 
     this.skillForm = this.fb.group({
+      name: [this.updateData.name, [Validators.required]],
+      email: [this.updateData.email, [Validators.required]],
       genre : this.fb.array([])
     })
 
     if(this.updateData.skill.validated == 'nv'){
       this.skillForm.addControl('status', new FormControl('', Validators.required));
-      this.skillForm.addControl('name', new FormControl(this.updateData.skill.name, Validators.required));
+      this.skillForm.addControl('skillName', new FormControl(this.updateData.skill.name, Validators.required));
       this.skillForm.addControl('feedback', new FormControl({value:'',disabled:true}));
     }
     this.skillForm.addControl('id', new FormControl(this.updateData.skill._id, Validators.required));

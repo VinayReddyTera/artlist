@@ -730,7 +730,7 @@ router.get('/pendingArtists',verifyToken,(req,res,next)=>{
 
 //router to edit approver
 router.post('/approveSkill',verifyToken,(req,res,next)=>{
-  let id = jwt.decode(req.headers.authorization).data._id;
+  let userData = jwt.decode(req.headers.authorization).data;
   if(req.body.genre.length > 0){
     for(let i of req.body.genre){
       if(i.status != 'a' && i.status != 'r'){
@@ -765,7 +765,7 @@ router.post('/approveSkill',verifyToken,(req,res,next)=>{
       return res.json(response)
     }
   }
-  userservice.approveSkill(req.body,id).then((data)=>{
+  userservice.approveSkill(req.body,userData).then((data)=>{
     return res.json(data)
   }).catch((err)=>{
     next(err)

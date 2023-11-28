@@ -502,9 +502,61 @@ userService.pendingArtists=(id)=>{
   })
 }
 
-userService.approveSkill=(payload,id)=>{
-  return userDB.approveSkill(payload,id).then((skillData)=>{
+userService.approveSkill=(payload,userData)=>{
+  return userDB.approveSkill(payload,userData._id).then((skillData)=>{
     if(skillData){
+      if(skillData.status == 200){
+        let payload1 = {
+          "subject" : 'Skill Status',
+          "email" : payload.email,
+          "body" : ""
+          }
+          let mailData = {
+            "name" : payload.name,
+            "body" : `We have completed the review of the skills you recently submitted. Skills reviewed by ${userData.name}.`,
+            "isApproved" : false,
+            "isRejected" : false,
+            "approved" : {'skillName':null,'genreName':[]},
+            "rejected" : {'skillName':null,'genreName':[]},
+            "tagName" : userData.name,
+            "tagPhone" : userData.phoneNo,
+            "tagEmail" : userData.email,
+          }
+          if(payload?.skillName){
+            if(payload?.status == 'a'){
+              mailData.approved.skillName = payload?.skillName;
+              mailData.isApproved = true;
+            }
+            else if(payload?.status == 'r'){
+              mailData.rejected.skillName = payload?.skillName;
+              mailData.isRejected = true;
+            }
+          }
+          if(payload.genre.length>0){
+            for(let i of payload.genre){
+              if(i?.name){
+                if(i?.status == 'a'){
+                  mailData.approved.genreName.push(i?.name);
+                  mailData.isApproved = true;
+                }
+                else if(i?.status == 'r'){
+                  mailData.rejected.genreName.push(i?.name);
+                  mailData.isRejected = true;
+                }
+              }
+            }
+          }
+          let templatePath = 'templates/skill.html';
+          ejs.renderFile(templatePath,mailData,(err,html)=>{
+            if(err){
+              console.log(err)
+            }
+            else{
+              payload1.body = html;
+              userService.sendMail(payload1)
+            }
+          })
+      }
       return skillData
     }
     else{
