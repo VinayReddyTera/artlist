@@ -380,19 +380,17 @@ userService.updateArtistSkill=(payload,artistData,origin)=>{
   return userDB.updateArtistSkill(payload,artistData._id).then(async(data)=>{
     if(data){
       if(data.status == 200){
-        let text = ''
-        let tagText = '';
-        if(payload.validated == 'nv'){
-          text = `${payload.name} skill`;
-          tagText = `skill name ${payload.name}`;
-        }
+        let text = `skill name : ${payload.name}`;
+        let arr = []
         if(payload.genre.length > 0){
           for(let i of payload.genre){
             if(i.validated == 'nv'){
-              text = text + `, ${i.name} genre`;
-              tagText = tagText + `, genre name : ${i.name}`
+              arr.push(i.name)
             }
           }
+        }
+        if(arr.length>0){
+          text = text + `, genre name : ${arr.toString()}`;
         }
         let payload1 = {
           "subject" : 'Skill Updated',
@@ -426,7 +424,7 @@ userService.updateArtistSkill=(payload,artistData,origin)=>{
                   "button" : 'Login',
                   "url": `${origin}/account/login`,
                   "name" : i.name,
-                  "body" : `You have an updated skill approval request with ${tagText}, Please login and review.`,
+                  "body" : `You have an updated skill approval request with ${text}. Please login and review.`,
                 }
                 // let templatePath = 'templates/welcome.html';
                 ejs.renderFile(templatePath,tagmailData,(err,html)=>{
