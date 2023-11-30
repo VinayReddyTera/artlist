@@ -70,7 +70,7 @@ export class ApiService {
   }
 
   fetchUserDashboardData():Observable<any>{
-    return this.http.get(environment.domain+"fetchArtistDashboardData")
+    return this.http.get(environment.domain+"fetchUserDashboardData")
   }
 
   register(payload:any):Observable<any>{

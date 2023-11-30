@@ -925,6 +925,16 @@ router.post('/updateBooking',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to fetch dashboard data
+router.get('/fetchArtistDashboardData',verifyToken,(req,res,next)=>{
+  let payload = jwt.decode(req.headers.authorization).data;
+  userservice.fetchArtistDashboardData(payload).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 //router to get reminder
 router.get('/reminder',(req,res,next)=>{
   userservice.getReminder().then((data)=>{

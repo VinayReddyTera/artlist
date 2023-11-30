@@ -1986,4 +1986,15 @@ userDB.fetchTag = async (payload) => {
   }
 }
 
+userDB.fetchArtistDashboardData = async (payload) => {
+  const historyCollection = await connection.history();
+  let todayEvents = await historyCollection.find({"skillName":payload},{name:1,email:1});
+  if (userData) {
+    return userData
+  }
+  else {
+    return false
+  }
+}
+
 module.exports = userDB

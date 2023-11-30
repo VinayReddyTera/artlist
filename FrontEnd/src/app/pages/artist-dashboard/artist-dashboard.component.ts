@@ -18,7 +18,7 @@ export class ArtistDashboardComponent implements OnInit{
 
   userStatistics = {
     inProgress : 0,
-    cleared : 0,
+    completed : 0,
     rejected : 0
   }
 
@@ -39,32 +39,15 @@ export class ArtistDashboardComponent implements OnInit{
   date: Date = new Date();
   profileStatus:any;
 
-  statData: any = [{
-    "icon": "bx bx-copy-alt",
-    "title": "Job Descriptions",
-    "value": 0,
-    "link": "/jd-details"
-  }, {
-    "icon": "bx bx-archive-in",
-    "title": "Total Resumes",
-    "value": 0,
-    "link": "/pastResumes"
-  }, {
-    "icon": "bx bx-user",
-    "title": "Interviewers",
-    "value": 0,
-    "link": "/interviewers"
-  }];
-
   lineChartData: any;
   lineChartOptions: any = {
     responsive: true
   };
   lineChartLegend = true;
   
-  doughnutChartLabels: string[] = [ 'Inprogress', 'Cleared', 'Rejected' ];
+  doughnutChartLabels: string[] = [ 'Inprogress', 'Completed', 'Rejected' ];
   doughnutChartDatasets: any = [
-      { data: [ this.userStatistics.inProgress,this.userStatistics.cleared, this.userStatistics.rejected ] }
+      { data: [ this.userStatistics.inProgress,this.userStatistics.completed, this.userStatistics.rejected ] }
     ];
 
   doughnutChartOptions: any = {
@@ -81,86 +64,86 @@ export class ArtistDashboardComponent implements OnInit{
   gridApi1: any;
   gridApi2: any;
 
-    dashboardColumnDefs = [
-      {
-        field: "candName",
-        filter: "agTextColumnFilter",
-        filterParams: { suppressAndOrCondition: true },
-        headerName: "Candidate Name",
-        cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+  dashboardColumnDefs = [
+    {
+      field: "candName",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Candidate Name",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "action",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Candidate Contact",
+      cellRenderer: contactRenderer,
+      width:150
+    },
+    {
+      field: "intName",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Interviewer Name",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "level",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Level",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value,
+      width : 100
+    },
+    {
+      field: "role",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Role",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "status",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Status",
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          let link = `<span class="${params.data.class}">${params.value}</span>`;
+          return link
+        }
       },
-      {
-        field: "action",
-        filter: "agTextColumnFilter",
-        filterParams: { suppressAndOrCondition: true },
-        headerName: "Candidate Contact",
-        cellRenderer: contactRenderer,
-        width:150
-      },
-      {
-        field: "intName",
-        filter: "agTextColumnFilter",
-        filterParams: { suppressAndOrCondition: true },
-        headerName: "Interviewer Name",
-        cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-      },
-      {
-        field: "level",
-        filter: "agTextColumnFilter",
-        filterParams: { suppressAndOrCondition: true },
-        headerName: "Level",
-        cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value,
-        width : 100
-      },
-      {
-        field: "role",
-        filter: "agTextColumnFilter",
-        filterParams: { suppressAndOrCondition: true },
-        headerName: "Role",
-        cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-      },
-      {
-        field: "status",
-        filter: "agTextColumnFilter",
-        filterParams: { suppressAndOrCondition: true },
-        headerName: "Status",
-        cellRenderer: (params:any)=> {
-          if(params.value == null){
-            return 'N/A'
-          }
-          else{
-            let link = `<span class="${params.data.class}">${params.value}</span>`;
-            return link
-          }
-        },
-        width : 100
-      },
-      {
-        field: "feedback",
-        filter: "agTextColumnFilter",
-        filterParams: { suppressAndOrCondition: true },
-        headerName: "Feedback",
-        cellRenderer: (params:any)=> (params.value == null || params.value == "") ? "Not given yet" : params.value
-      },
-      {
-        field: "interviewDate",
-        filter: "agTextColumnFilter",
-        filterParams: { suppressAndOrCondition: true },
-        headerName: "Interview Date",
-        cellRenderer: timeRenderer,
-        width:250
-      }
-    ];
-    defaultColDef : ColDef = {
-      sortable:true,filter:true,resizable:true
+      width : 100
+    },
+    {
+      field: "feedback",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Feedback",
+      cellRenderer: (params:any)=> (params.value == null || params.value == "") ? "Not given yet" : params.value
+    },
+    {
+      field: "interviewDate",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Interview Date",
+      cellRenderer: timeRenderer,
+      width:250
     }
-    pagination:any = true;
-    calendarConnected :any;
-    googleConnected :any;
-    openings:any = 0;
-    onboarded:any = 0;
-    inaugForm:any;
-    wishForm:any;
+  ];
+  defaultColDef : ColDef = {
+    sortable:true,filter:true,resizable:true
+  }
+  pagination:any = true;
+  calendarConnected :any;
+  googleConnected :any;
+  completed:any = 0;
+  upcoming:any = 0;
+  inaugForm:any;
+  wishForm:any;
 
   constructor(private activeRoute : ActivatedRoute,private fb: FormBuilder,private apiService : ApiService,
     private router:Router,private decrypt:EncryptionService) {}
@@ -192,21 +175,18 @@ export class ArtistDashboardComponent implements OnInit{
     //     if(res.status == 200){
     //       console.log(res.data)
     //       this.userStatistics = res.data.userStatistics;
-    //       this.interviewerCount = res.data.interviewerCount;
-    //       this.jdCount = res.data.jdCount;
-    //       this.resumeCount = res.data.resumeCount;
     //       this.todayEvents = res.data.todayEvents;
     //       this.pastEvents = res.data.pastEvents;
     //       this.upComingEvents = res.data.upComingEvents;
-    //       this.openings = res.data.openings;
-    //       this.onboarded = res.data.onboarded;
+    //       this.completed = res.data.completed;
+    //       this.upcoming = res.data.upcoming;
     //       this.lineChartData = {
     //         labels: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
     //         "JUL","AUG","SEP","OCT","NOV","DEC"],
     //         datasets: [
     //           {
     //             data: res.data.graphData,
-    //             label: 'No. of resumes parsed',
+    //             label: 'No. of times hired',
     //             fill: true,
     //             tension: 0.5,
     //             borderColor: 'black',
@@ -214,12 +194,9 @@ export class ArtistDashboardComponent implements OnInit{
     //           }
     //         ]
     //       };
-    //       this.statData[0].value = res.data.jdCount;
-    //       this.statData[1].value = res.data.resumeCount;
-    //       this.statData[2].value = res.data.interviewerCount;
     //       this.doughnutChartDatasets = [
     //         { 
-    //           data: [ this.userStatistics?.inProgress,this.userStatistics?.cleared,
+    //           data: [ this.userStatistics?.inProgress,this.userStatistics?.completed,
     //              this.userStatistics?.rejected ],
     //              backgroundColor: [
     //               '#556ee6',

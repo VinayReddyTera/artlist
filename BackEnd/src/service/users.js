@@ -3,7 +3,6 @@ const nodemailer = require('nodemailer');
 const userService = {}
 const jwt = require('jsonwebtoken');
 const ejs = require('ejs');
-const e = require('express');
 
 userService.login=(data)=>{
   return userDB.checkLoginUser(data).then((userData)=>{
@@ -1259,6 +1258,21 @@ let amPm = input.getHours() >= 12 ? 'P.M' : 'A.M';
 
 // Format the output string
 return `${day} ${month} ${date} ${year} ${hours}:${minutes.toString().padStart(2, '0')} ${amPm}`;
+}
+
+userService.fetchArtistDashboardData=(payload)=>{
+  return userDB.fetchArtistDashboardData(payload).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to fetch dashboard data now'
+      }
+      return res
+    }
+  })
 }
 
 module.exports = userService
