@@ -1988,9 +1988,140 @@ userDB.fetchTag = async (payload) => {
 
 userDB.fetchArtistDashboardData = async (payload) => {
   const historyCollection = await connection.history();
-  let todayEvents = await historyCollection.find({"skillName":payload},{name:1,email:1});
-  if (userData) {
-    return userData
+  const artistCollection = await connection.getArtist();
+  const userCollection = await connection.getUsers();
+  let artistData = await artistCollection.findOne({"_id":new ObjectId(payload._id)}).lean();
+  let output = {};
+  output.inaug = artistData.inaug;
+  output.inaugPrice = artistData.inaugPrice;
+  output.wishes = artistData.wishes;
+  output.wishesPrice = artistData.wishesPrice;
+  let tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate()+1);
+  let userStatistics = {
+    inProgress : 0,
+    completed : 0,
+    rejected : 0
+  }
+  let todayEvents = [];
+  let pastEvents = [];
+  let upComingEvents = [];
+  let allDates = [];
+  let eventData = await historyCollection.find({"artistId":payload._id}).lean();
+  for(let i of eventData){
+    allDates.push(i.date)
+    if(i.status == "c"){
+      userStatistics.completed += 1
+    }
+    else if(i.status == "r"){
+      userStatistics.rejected += 1
+    }
+    else if(i.status == 'pending' || i.status == 'rescheduled' || i.status == 'a'){
+      userStatistics.inProgress += 1
+    }
+    let obj = {};
+    if(new Date(i.date).toDateString() == new Date().toDateString()){
+      let userData = await userCollection.findOne({"_id":new ObjectId(i.userId)},{_id:0,name:1,email:1,phoneNo:1}).lean();
+      obj.candName = userData.name;
+      obj.candPhoneNo = userData.phoneNo;
+      obj.candEmail = userData.email;
+      let time = new Date();
+      let minutes = time.getMinutes()
+      if (0<=minutes && minutes<30) {
+        time.setMinutes(0);
+        time.setMilliseconds(0);
+      } else if (30<=minutes && minutes<=59) {
+        time.setMinutes(30);
+        time.setMilliseconds(0);
+      }
+      if((new Date(i.date).getHours() == time.getHours()) && (new Date(i.date).getMinutes() == time.getMinutes())){
+        obj.onGoing = true;
+      }
+      else if(new Date(i.date) < time){
+        obj.past = true
+      }
+      else if(new Date(i.date) > time){
+        obj.future = true
+      }
+      if(i.status == 'c' || i.status == 'a'){
+        obj.class = 'badge badge-gradient-success'
+      }
+      else if(i.status == 'r' || i.status == 'pending' || i.status == 'rescheduled'){
+        obj.class = 'badge badge-gradient-danger'
+      }
+      todayEvents.push(obj)
+    }
+    else if((new Date(i.date) < new Date()) && !i.feedback && i.date){
+      let userData = await userCollection.findOne({"_id":new ObjectId(i.userId)},{_id:0,name:1,email:1,phoneNo:1}).lean();
+      obj.candName = userData.name;
+      obj.candPhoneNo = userData.phoneNo;
+      obj.candEmail = userData.email;
+      obj.class = 'badge badge-gradient-warning';
+      pastEvents.push(obj);
+    }
+    else if(new Date(i.date).toDateString() == tomorrow.toDateString()){
+      let userData = await userCollection.findOne({"_id":new ObjectId(i.userId)},{_id:0,name:1,email:1,phoneNo:1}).lean();
+      obj.candName = userData.name;
+      obj.candPhoneNo = userData.phoneNo;
+      obj.candEmail = userData.email;
+      upComingEvents.push(obj)
+    }
+    if(obj?.candName){
+      obj.name = i.name;
+      obj.date = i.date;
+      obj.status = i.status;
+      obj.type = i.type;
+      obj.bookingType = i.bookingType;
+      obj.price = i.price;
+      obj.paid = i.paid;
+      if(i.type == 'hourly'){
+        obj.from = i.from;
+        obj.to = i.to;
+      }
+      else if(i.type == 'event'){
+        obj.slot = i.slot;
+      }
+      if(i.bookingType == 'onsite'){
+        obj.address = i.address;
+        obj.mandal = i.mandal;
+        obj.district = i.district;
+        obj.state = i.state;
+        obj.pincode = i.pincode;
+      }
+    }
+  }
+  output.todayEvents = todayEvents;
+  output.pastEvents = pastEvents;
+  output.upComingEvents = upComingEvents;
+  output.userStatistics = userStatistics;
+  if (allDates.length > 0) {
+    const monthNames = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG",
+    "SEP","OCT","NOV","DEC"];
+
+    let out = {JAN: 0,FEB: 0,MAR: 0,APR: 0,MAY: 0,JUN: 0,JUL: 0,
+      AUG: 0,SEP: 0,OCT: 0,NOV: 0,DEC: 0};
+
+      function flattenArray(arr){
+        return arr.reduce((acc,val)=> acc.concat(Array.isArray(val) ? flattenArray(val):val),[]);
+      }
+
+      const datesArray = flattenArray(allDates)
+      .filter(item => new Date(item).toString() !== 'Invalid Date')
+      .map(dateString => new Date(dateString));
+
+      for(i of datesArray){
+        out[monthNames[new Date(i).getMonth()]] += 1;
+      }
+
+    let arr = [];
+
+    for (i in out) {
+      arr.push(out[i]);
+    }
+    output.graphData = arr
+  }
+  if (output) {
+    return output
   }
   else {
     return false
