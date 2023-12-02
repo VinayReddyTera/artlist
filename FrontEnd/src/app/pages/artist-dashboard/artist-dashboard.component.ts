@@ -3,9 +3,11 @@ import { ApiService } from '../services/api.service';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { contactRenderer } from './contactRenderer';
 import { ActivatedRoute, Router } from '@angular/router';
-import { timeRenderer } from './timeRenderer';
 import { EncryptionService } from '../services/encryption.service';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
+import { dateRenderer } from '../dateRenderer';
+import { userHistoryTimeRenderer } from '../user-history/userHistoryTimeRenderer';
+import { slotRenderer } from '../user-history/slotRenderer';
 
 declare const $ : any;
 
@@ -69,37 +71,22 @@ export class ArtistDashboardComponent implements OnInit{
       field: "candName",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
-      headerName: "Candidate Name",
+      headerName: "Name",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "action",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
-      headerName: "Candidate Contact",
+      headerName: "Contact",
       cellRenderer: contactRenderer,
       width:150
     },
     {
-      field: "intName",
+      field: "name",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
-      headerName: "Interviewer Name",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-    },
-    {
-      field: "level",
-      filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
-      headerName: "Level",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value,
-      width : 100
-    },
-    {
-      field: "role",
-      filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
-      headerName: "Role",
+      headerName: "Skill Name",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
@@ -112,26 +99,136 @@ export class ArtistDashboardComponent implements OnInit{
           return 'N/A'
         }
         else{
-          let link = `<span class="${params.data.class}">${params.value}</span>`;
-          return link
+          if(params.value == 'pending'){
+            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Pending</span>`;
+            return link
+          }
+          else if(params.value == 'a'){
+            let link = `<span class="badge badge-soft-info" style="font-size:13px">Accepted</span>`;
+            return link
+          }
+          else if(params.value == 'r'){
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">rejected</span>`;
+            return link
+          }
+          else if(params.value == 'c'){
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">Completed</span>`;
+            return link
+          }
+          else{
+            return params.value
+          }
         }
-      },
-      width : 100
+      }
     },
     {
-      field: "feedback",
+      field: "type",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
-      headerName: "Feedback",
-      cellRenderer: (params:any)=> (params.value == null || params.value == "") ? "Not given yet" : params.value
+      headerName: "Booking Type",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
-      field: "interviewDate",
+      field: "date",
+      filter: "agDateColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Date",
+      cellRenderer: dateRenderer
+    },
+    {
+      field: "from",
+      filter: "agDateColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "From",
+      cellRenderer: userHistoryTimeRenderer
+    },
+    {
+      field: "to",
+      filter: "agDateColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "To",
+      cellRenderer: userHistoryTimeRenderer
+    },
+    {
+      field: "slot",
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
-      headerName: "Interview Date",
-      cellRenderer: timeRenderer,
-      width:250
+      headerName: "Slot",
+      cellRenderer: slotRenderer
+    },
+    {
+      field: "price",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Price",
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          let data = `<span class="text-success">${params.value} ₹</span>`
+          return data
+        }
+      }
+    },
+    {
+      field: "address",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Address",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "mandal",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Mandal",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "district",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "District",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "state",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "State",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "pincode",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Pincode",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "paid",
+      filter: "agDateColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Paid",
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          if(params.value == false){
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">Not Paid</span>`;
+            return link
+          }
+          else if(params.value == true){
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">Paid</span>`;
+            return link
+          }
+          else{
+            return 'N/A'
+          }
+        }
+      }
     }
   ];
   defaultColDef : ColDef = {
@@ -169,70 +266,70 @@ export class ArtistDashboardComponent implements OnInit{
       localStorage.setItem('microsoftInt','true')
     }
     
-    // this.spinner.show();
-    // this.apiService.fetchArtistDashboardData().subscribe(
-    //   (res:any)=>{
-    //     if(res.status == 200){
-    //       console.log(res.data)
-    //       this.userStatistics = res.data.userStatistics;
-    //       this.todayEvents = res.data.todayEvents;
-    //       this.pastEvents = res.data.pastEvents;
-    //       this.upComingEvents = res.data.upComingEvents;
-    //       this.completed = res.data.completed;
-    //       this.upcoming = res.data.upcoming;
-    //       this.lineChartData = {
-    //         labels: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
-    //         "JUL","AUG","SEP","OCT","NOV","DEC"],
-    //         datasets: [
-    //           {
-    //             data: res.data.graphData,
-    //             label: 'No. of times hired',
-    //             fill: true,
-    //             tension: 0.5,
-    //             borderColor: 'black',
-    //             backgroundColor: 'rgba(255,255,0,0.28)'
-    //           }
-    //         ]
-    //       };
-    //       this.doughnutChartDatasets = [
-    //         { 
-    //           data: [ this.userStatistics?.inProgress,this.userStatistics?.completed,
-    //              this.userStatistics?.rejected ],
-    //              backgroundColor: [
-    //               '#556ee6',
-    //               '#36c391',
-    //               '#f46a6a'
-    //             ],
-    //             borderColor: [
-    //               'rgba(177, 148, 250, .2)',
-    //               'rgba(132, 217, 210, .2)',
-    //               'rgba(254, 112, 150, .2)'
-    //             ]
-    //             }
-    //       ];
-    //     }
-    //     else if(res.status == 204){
-    //       if(res.data == 'Session Expired'){
-    //         localStorage.clear();
-    //         this.router.navigateByUrl('/account/login')
-    //       }
-    //       else{
-    //         let msgData = {
-    //           severity : "error",
-    //           summary : 'Error',
-    //           detail : res.data,
-    //           life : 5000
-    //         }
-    //         this.apiService.sendMessage(msgData);
-    //       }
-    //     }
-    //   },
-    // (err:any)=>{
-    //   console.log(err)
-    // }
-    // ).add(()=>{
-    //   this.spinner.hide();
-    // })
+    this.apiService.initiateLoading(true)
+    this.apiService.fetchArtistDashboardData().subscribe(
+      (res:any)=>{
+        if(res.status == 200){
+          console.log(res.data)
+          this.userStatistics = res.data.userStatistics;
+          this.todayEvents = res.data.todayEvents;
+          this.pastEvents = res.data.pastEvents;
+          this.upComingEvents = res.data.upComingEvents;
+          this.completed = res.data.completed;
+          this.upcoming = res.data.upcoming;
+          this.lineChartData = {
+            labels: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+            "JUL","AUG","SEP","OCT","NOV","DEC"],
+            datasets: [
+              {
+                data: res.data.graphData,
+                label: 'No. of times hired',
+                fill: true,
+                tension: 0.5,
+                borderColor: 'black',
+                backgroundColor: 'rgba(255,255,0,0.28)'
+              }
+            ]
+          };
+          this.doughnutChartDatasets = [
+            { 
+              data: [ this.userStatistics?.inProgress,this.userStatistics?.completed,
+                 this.userStatistics?.rejected ],
+                 backgroundColor: [
+                  '#556ee6',
+                  '#36c391',
+                  '#f46a6a'
+                ],
+                borderColor: [
+                  'rgba(177, 148, 250, .2)',
+                  'rgba(132, 217, 210, .2)',
+                  'rgba(254, 112, 150, .2)'
+                ]
+                }
+          ];
+        }
+        else if(res.status == 204){
+          if(res.data == 'Session Expired'){
+            localStorage.clear();
+            this.router.navigateByUrl('/account/login')
+          }
+          else{
+            let msgData = {
+              severity : "error",
+              summary : 'Error',
+              detail : res.data,
+              life : 5000
+            }
+            this.apiService.sendMessage(msgData);
+          }
+        }
+      },
+    (err:any)=>{
+      console.log(err)
+    }
+    ).add(()=>{
+      this.apiService.initiateLoading(false)
+    })
   }
 
   getDisplayText(): string {

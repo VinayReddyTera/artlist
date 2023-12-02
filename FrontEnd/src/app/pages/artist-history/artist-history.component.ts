@@ -165,7 +165,7 @@ export class ArtistHistoryComponent  implements OnInit{
       field: "paid",
       filter: "agDateColumnFilter",
       filterParams: { suppressAndOrCondition: true },
-      headerName: "Portfolio",
+      headerName: "Paid",
       cellRenderer: (params:any)=> {
         if(params.value == null){
           return 'N/A'

@@ -925,10 +925,20 @@ router.post('/updateBooking',verifyToken,(req,res,next)=>{
   })
 })
 
-//router to fetch dashboard data
+//router to fetch artist dashboard data
 router.get('/fetchArtistDashboardData',verifyToken,(req,res,next)=>{
   let payload = jwt.decode(req.headers.authorization).data;
   userservice.fetchArtistDashboardData(payload).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
+//router to fetch user dashboard data
+router.get('/fetchUserDashboardData',verifyToken,(req,res,next)=>{
+  let payload = jwt.decode(req.headers.authorization).data;
+  userservice.fetchUserDashboardData(payload).then((data)=>{
     return res.json(data)
   }).catch((err)=>{
     next(err)
