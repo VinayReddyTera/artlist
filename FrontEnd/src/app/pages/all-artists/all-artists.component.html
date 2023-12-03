@@ -24,12 +24,23 @@
               </div>
             </div>
             <div class="col-xxl-2 col-lg-8">
-              <div class="position-relative h-100 hstack gap-3">
+              <div class="position-relative h-100 hstack gap-3 button-container">
                 <button type="button" class="btn btn-danger h-100 w-100" (click)="clear()">
                   <i class="mdi mdi-close align-middle" style="font-size:18px;"></i>Clear Filter
                 </button>
                 <button type="submit" class="btn btn-primary h-100 w-100">
                   <i class="bx bx-search-alt align-middle"></i> Filter
+                </button>
+                <a (click)="showAdvance = !showAdvance" class="btn btn-secondary h-100 w-100">
+                  <i class="bx bx-filter-alt align-middle"></i> Advance
+                </a>
+              </div>
+              <div class="position-relative h-100 hstack gap-3 icon-container">
+                <button type="button" class="btn btn-danger h-100 w-100" pTooltip="Clear Filter" tooltipPosition="top" (click)="clear()">
+                  <i class="mdi mdi-close align-middle" style="font-size:18px;"></i>
+                </button>
+                <button type="submit" pTooltip="Apply Filter" tooltipPosition="top" class="btn btn-primary h-100 w-100">
+                  <i class="bx bx-search-alt align-middle"></i>
                 </button>
                 <a (click)="showAdvance = !showAdvance" class="btn btn-secondary h-100 w-100">
                   <i class="bx bx-filter-alt align-middle"></i> Advance
@@ -62,7 +73,7 @@
 </div>
 
 <div class="row">
-    <div *ngFor='let artist of filteredData' class="col-xl-4 col-sm-6">
+    <div *ngFor='let artist of displayData' class="col-xl-4 col-sm-6">
       <div class="card">
         <div class="card-body">
           <div class="media">
@@ -103,6 +114,8 @@
     </div>
 </div>
 
-<div class="card flex justify-content-center">
+<div *ngIf="!errorMessage" class="card flex justify-content-center">
   <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
 </div>
+
+<div *ngIf="errorMessage" class="text-danger text-center font-weight-bold">{{errorMessage}}</div>
