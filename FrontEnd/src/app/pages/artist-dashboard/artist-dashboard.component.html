@@ -162,7 +162,7 @@
     <div class="row">
       <div class="col-lg-12">
         <div class="card">
-          <div *ngIf="todayEvents" class="card-body">
+          <div *ngIf="todayEvents.length > 0" class="card-body">
             <div class="row">
               <div class="col-6">
                 <h5 class="card-title">Events Today</h5>
@@ -186,7 +186,7 @@
           >
           </ag-grid-angular>
           </div>
-          <div *ngIf="!todayEvents" class="card-body">
+          <div *ngIf="todayEvents.length == 0" class="card-body">
             <h4 class="card-title">Events Today</h4>
             <div class="text-success text-center font-weight-bold">No Events going on today</div>
           </div>
@@ -197,7 +197,7 @@
   <div class="row">
       <div class="col-lg-12">
         <div class="card">
-          <div *ngIf="pastEvents" class="card-body">
+          <div *ngIf="pastEvents.length > 0" class="card-body">
             <div class="row">
               <div class="col-6">
                 <h5 class="card-title">Past Events with no feedback</h5>
@@ -221,7 +221,7 @@
           >
           </ag-grid-angular>
           </div>
-          <div *ngIf="!pastEvents" class="card-body">
+          <div *ngIf="pastEvents.length == 0" class="card-body">
             <h4 class="card-title">Past Events with no feedback</h4>
             <div class="text-success text-center font-weight-bold">No Pending Feedbacks</div>
           </div>
@@ -232,10 +232,10 @@
   <div class="row">
       <div class="col-lg-12">
         <div class="card">
-          <div *ngIf="upComingEvents" class="card-body">
+          <div *ngIf="upComingEvents.length > 0" class="card-body">
             <div class="row">
               <div class="col-6">
-                <h5 class="card-title">Upcoming Events</h5>
+                <h5 class="card-title">Tomorrow Events</h5>
               </div>
               <div class="offset-2 col-4 mb-2">
                 <input type="text" id="filter-text-box2" 
@@ -255,8 +255,8 @@
           >
           </ag-grid-angular>
           </div>
-          <div *ngIf="!upComingEvents" class="card-body">
-            <h4 class="card-title">Upcoming Events</h4>
+          <div *ngIf="upComingEvents.length == 0" class="card-body">
+            <h4 class="card-title">Tomorrow Events</h4>
             <div class="text-success text-center font-weight-bold">No Events scheduled tomorrow</div>
           </div>
         </div>

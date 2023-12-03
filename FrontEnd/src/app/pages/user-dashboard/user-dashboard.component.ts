@@ -4,6 +4,10 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EncryptionService } from '../services/encryption.service';
+import { dateRenderer } from '../dateRenderer';
+import { userHistoryTimeRenderer } from '../user-history/userHistoryTimeRenderer';
+import { slotRenderer } from '../user-history/slotRenderer';
+import { contactRenderer } from '../artist-dashboard/contactRenderer';
 
 declare const $ : any;
 
@@ -16,7 +20,7 @@ export class UserDashboardComponent {
 
   userStatistics = {
     inProgress : 0,
-    cleared : 0,
+    completed : 0,
     rejected : 0
   }
 
@@ -28,9 +32,9 @@ export class UserDashboardComponent {
   jdCount = 0;
   interviewerCount = 0;
   interviewerData : any;
-  todayInterviews:any = [];
-  upComingInterviews:any = [];
-  pastInterviews:any = [];
+  todayEvents:any = [];
+  upComingEvents:any = [];
+  pastEvents:any = [];
   tooltipOptions = {
     fitContent : true
   }
@@ -60,9 +64,9 @@ export class UserDashboardComponent {
   };
   lineChartLegend = true;
   
-  doughnutChartLabels: string[] = [ 'Inprogress', 'Cleared', 'Rejected' ];
+  doughnutChartLabels: string[] = [ 'Inprogress', 'Completed', 'Rejected' ];
   doughnutChartDatasets: any = [
-      { data: [ this.userStatistics.inProgress,this.userStatistics.cleared, this.userStatistics.rejected ] }
+      { data: [ this.userStatistics.inProgress,this.userStatistics.completed, this.userStatistics.rejected ] }
     ];
 
   doughnutChartOptions: any = {
@@ -79,68 +83,177 @@ export class UserDashboardComponent {
   gridApi1: any;
   gridApi2: any;
 
-    dashboardColumnDefs = [
-      {
-        field: "candName",
-        filter: "agTextColumnFilter",
-        filterParams: { suppressAndOrCondition: true },
-        headerName: "Candidate Name",
-        cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-      },
-      {
-        field: "intName",
-        filter: "agTextColumnFilter",
-        filterParams: { suppressAndOrCondition: true },
-        headerName: "Interviewer Name",
-        cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-      },
-      {
-        field: "level",
-        filter: "agTextColumnFilter",
-        filterParams: { suppressAndOrCondition: true },
-        headerName: "Level",
-        cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value,
-        width : 100
-      },
-      {
-        field: "role",
-        filter: "agTextColumnFilter",
-        filterParams: { suppressAndOrCondition: true },
-        headerName: "Role",
-        cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-      },
-      {
-        field: "status",
-        filter: "agTextColumnFilter",
-        filterParams: { suppressAndOrCondition: true },
-        headerName: "Status",
-        cellRenderer: (params:any)=> {
-          if(params.value == null){
-            return 'N/A'
-          }
-          else{
-            let link = `<span class="${params.data.class}">${params.value}</span>`;
+  dashboardColumnDefs = [
+    {
+      field: "candName",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Name",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "action",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Contact",
+      cellRenderer: contactRenderer,
+      width:150
+    },
+    {
+      field: "name",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Skill Name",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "status",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Status",
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          if(params.value == 'pending'){
+            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Pending</span>`;
             return link
           }
-        },
-        width : 100
-      },
-      {
-        field: "feedback",
-        filter: "agTextColumnFilter",
-        filterParams: { suppressAndOrCondition: true },
-        headerName: "Feedback",
-        cellRenderer: (params:any)=> (params.value == null || params.value == "") ? "Not given yet" : params.value
+          else if(params.value == 'a'){
+            let link = `<span class="badge badge-soft-info" style="font-size:13px">Accepted</span>`;
+            return link
+          }
+          else if(params.value == 'r'){
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">rejected</span>`;
+            return link
+          }
+          else if(params.value == 'c'){
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">Completed</span>`;
+            return link
+          }
+          else{
+            return params.value
+          }
+        }
       }
-    ];
+    },
+    {
+      field: "type",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Booking Type",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "date",
+      filter: "agDateColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Date",
+      cellRenderer: dateRenderer
+    },
+    {
+      field: "from",
+      filter: "agDateColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "From",
+      cellRenderer: userHistoryTimeRenderer
+    },
+    {
+      field: "to",
+      filter: "agDateColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "To",
+      cellRenderer: userHistoryTimeRenderer
+    },
+    {
+      field: "slot",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Slot",
+      cellRenderer: slotRenderer
+    },
+    {
+      field: "price",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Price",
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          let data = `<span class="text-success">${params.value} ₹</span>`
+          return data
+        }
+      }
+    },
+    {
+      field: "address",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Address",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "mandal",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Mandal",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "district",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "District",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "state",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "State",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "pincode",
+      filter: "agTextColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Pincode",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "paid",
+      filter: "agDateColumnFilter",
+      filterParams: { suppressAndOrCondition: true },
+      headerName: "Paid",
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          if(params.value == false){
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">Not Paid</span>`;
+            return link
+          }
+          else if(params.value == true){
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">Paid</span>`;
+            return link
+          }
+          else{
+            return 'N/A'
+          }
+        }
+      }
+    }
+  ];
     defaultColDef : ColDef = {
       sortable:true,filter:true,resizable:true
     }
     pagination:any = true;
-    calendarConnected :any;
-    googleConnected :any;
-    openings:any = 0;
-    onboarded:any = 0;
+    completed:any = 0;
+    upcoming:any = 0;
 
   constructor(private activeRoute : ActivatedRoute,private apiService : ApiService,
     private spinner : NgxSpinnerService,private router:Router,private decrypt:EncryptionService) {}
@@ -162,21 +275,18 @@ export class UserDashboardComponent {
         if(res.status == 200){
           console.log(res.data)
           this.userStatistics = res.data.userStatistics;
-          this.interviewerCount = res.data.interviewerCount;
-          this.jdCount = res.data.jdCount;
-          this.resumeCount = res.data.resumeCount;
-          this.todayInterviews = res.data.todayInterviews;
-          this.pastInterviews = res.data.pastInterviews;
-          this.upComingInterviews = res.data.upComingInterviews;
-          this.openings = res.data.openings;
-          this.onboarded = res.data.onboarded;
+          this.todayEvents = res.data.todayEvents;
+          this.pastEvents = res.data.pastEvents;
+          this.upComingEvents = res.data.upComingEvents;
+          this.completed = res.data.userStatistics.completed;
+          this.upcoming = res.data.userStatistics.inProgress;
           this.lineChartData = {
             labels: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
             "JUL","AUG","SEP","OCT","NOV","DEC"],
             datasets: [
               {
                 data: res.data.graphData,
-                label: 'No. of resumes parsed',
+                label: 'No. of times hired',
                 fill: true,
                 tension: 0.5,
                 borderColor: 'black',
@@ -184,12 +294,9 @@ export class UserDashboardComponent {
               }
             ]
           };
-          this.statData[0].value = res.data.jdCount;
-          this.statData[1].value = res.data.resumeCount;
-          this.statData[2].value = res.data.interviewerCount;
           this.doughnutChartDatasets = [
             { 
-              data: [ this.userStatistics?.inProgress,this.userStatistics?.cleared,
+              data: [ this.userStatistics?.inProgress,this.userStatistics?.completed,
                  this.userStatistics?.rejected ],
                  backgroundColor: [
                   '#556ee6',

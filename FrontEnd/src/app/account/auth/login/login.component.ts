@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 
 import { environment } from 'src/environments/environment';
 import { ApiService } from 'src/app/pages/services/api.service';
-import { HttpClient } from '@angular/common/http';
 import { EncryptionService } from 'src/app/pages/services/encryption.service';
 
 @Component({
@@ -21,7 +20,7 @@ export class LoginComponent implements OnInit {
   errorMessage : any;
   year: number = new Date().getFullYear();
   submitted : boolean = false;
-  constructor(public http: HttpClient, public router: Router,
+  constructor(public router: Router,
     private apiService : ApiService,private fb: FormBuilder,
     private encrypt:EncryptionService) { }
 

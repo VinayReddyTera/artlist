@@ -28,10 +28,6 @@ export class ArtistDashboardComponent implements OnInit{
   @ViewChild('content') content:any;
   userData:any;
   errorMessage : any;
-  resumeCount = 0;
-  jdCount = 0;
-  interviewerCount = 0;
-  interviewerData : any;
   todayEvents:any = [];
   upComingEvents:any = [];
   pastEvents:any = [];
@@ -235,8 +231,6 @@ export class ArtistDashboardComponent implements OnInit{
     sortable:true,filter:true,resizable:true
   }
   pagination:any = true;
-  calendarConnected :any;
-  googleConnected :any;
   completed:any = 0;
   upcoming:any = 0;
   inaugForm:any;
@@ -247,11 +241,11 @@ export class ArtistDashboardComponent implements OnInit{
 
   ngOnInit() {
     this.inaugForm = this.fb.group({
-      status: [true],
+      status: [''],
       price: ['', [Validators.required]]
     })
     this.wishForm = this.fb.group({
-      status: [true],
+      status: [''],
       price: ['', [Validators.required]]
     })
     this.userData = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('data')));
@@ -270,13 +264,17 @@ export class ArtistDashboardComponent implements OnInit{
     this.apiService.fetchArtistDashboardData().subscribe(
       (res:any)=>{
         if(res.status == 200){
+          this.inaugForm.controls['price'].setValue(res.data.inaugPrice)
+          this.inaugForm.controls['status'].setValue(res.data.inaug)
+          this.wishForm.controls['price'].setValue(res.data.wishesPrice)
+          this.wishForm.controls['status'].setValue(res.data.wishes)
           console.log(res.data)
           this.userStatistics = res.data.userStatistics;
           this.todayEvents = res.data.todayEvents;
           this.pastEvents = res.data.pastEvents;
           this.upComingEvents = res.data.upComingEvents;
-          this.completed = res.data.completed;
-          this.upcoming = res.data.upcoming;
+          this.completed = res.data.userStatistics.completed;
+          this.upcoming = res.data.userStatistics.inProgress;
           this.lineChartData = {
             labels: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
             "JUL","AUG","SEP","OCT","NOV","DEC"],
