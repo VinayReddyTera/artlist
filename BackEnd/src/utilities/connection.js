@@ -119,6 +119,7 @@ const history = Schema({
     userId : String,
     artistId : String,
     feedback : String,
+    rating:Number,
     remarks:String,
     rescheduledBy:String,
     pricing : Object,

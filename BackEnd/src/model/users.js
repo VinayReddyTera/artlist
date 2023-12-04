@@ -1637,8 +1637,50 @@ userDB.fetchHistory = async (payload) => {
 
 userDB.giveArtistFeedback = async (payload) => {
   const collection = await connection.history();
-  let data = await collection.updateOne({"_id":payload.id},{$set:{feedback:payload.feedback}})
-  if (data.modifiedCount == 1 || data.acknowledged == true) {
+  const artistCollection = await connection.getArtist();
+  let data = await collection.updateOne({"_id":payload.id},{$set:{feedback:payload.feedback,rating:payload.rating}});
+  let ratingData = await artistCollection.aggregate([
+    {
+      $match: {
+        $and: [
+          { "skills.name": payload.name },
+          { email: payload.email }
+        ]
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        rating: {
+          $filter: {
+            input: "$skills",
+            as: "skill",
+            cond: {
+              $eq: ["$$skill.name", payload.name]
+            }
+          }
+        }
+      }
+    },
+    {
+      $unwind: "$rating"
+    },
+    {
+      $project: {
+        rating: "$rating.rating"
+      }
+    }
+  ])
+  let rating = (ratingData[0].rating + payload.rating)/2
+  let artistData = await artistCollection.updateOne({
+    "skills.name": payload.name,
+    "email": payload.email
+  },{
+    $set: {
+      "skills.$.rating": rating
+    }
+  })
+  if ((data.modifiedCount == 1 || data.acknowledged == true) && (artistData.modifiedCount == 1 || artistData.acknowledged == true)) {
     let res = {
       status: 200,
       data: 'Successfully took feedback'

@@ -54,6 +54,7 @@ import { artistfeedbackRenderer } from './artist-history/feedbackRenderer';
 import { approverRenderer } from './new-requests/approverRenderer';
 import { UserApproverRenderer } from './user-history/userApproverRenderer';
 import { PaginatorModule } from 'primeng/paginator';
+import { RatingModule } from 'primeng/rating';
 
 @NgModule({
   declarations: [
@@ -115,7 +116,8 @@ import { PaginatorModule } from 'primeng/paginator';
     ChipsModule,
     MultiSelectModule,
     CalendarModule,
-    PaginatorModule
+    PaginatorModule,
+    RatingModule
   ]
 })
 export class PagesModule { }

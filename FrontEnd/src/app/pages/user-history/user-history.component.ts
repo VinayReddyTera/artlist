@@ -56,18 +56,45 @@ export class UserHistoryComponent implements OnInit{
       filter: "agTextColumnFilter",
       filterParams: { suppressAndOrCondition: true },
       headerName: "Status",
-      editable: true,
+      editable: (params:any) => {
+        if(new Date(params.data.date)<new Date()){
+          return true
+        }
+        else{
+          return false
+        }
+      },
       cellEditor: 'agSelectCellEditor',
       cellEditorParams: (params:any) => {
         const status = params.value;
-         if (status === 'a' || status === 'completed'){
+        let date = new Date(params.data.date)
+        if(date<new Date()){
+          if(status == 'r'){
             return {
-                values: ['accepted', 'completed']
-            };
+              values: ['rejected']
+            }
+          }
+          else{
+            return {
+              values: ['completed','artist not attended','cancelled','Discard Editing']
+            }
+          }
         }
         else{
-          return {
-            values: [status]
+          if(status == 'a'){
+            return {
+              values: ['accepted']
+            }
+          }
+          else if(status == 'r'){
+            return {
+              values: ['rejected']
+            }
+          }
+          else{
+            return {
+              values: [status]
+            }
           }
         }
     },
@@ -300,6 +327,9 @@ export class UserHistoryComponent implements OnInit{
   ngOnInit(): void {
     this.feedbackForm = this.fb.group({
       feedback:['',[Validators.required]],
+      rating:['',[Validators.required]],
+      email:['',[Validators.required]],
+      name:['',[Validators.required]],
       id:['',[Validators.required]]
     })
     this.rejectionForm = this.fb.group({
@@ -353,13 +383,21 @@ export class UserHistoryComponent implements OnInit{
   get f() { return this.bookingForm.controls; }
 
   viewFeedback(data:any){
-    if(data.date>new Date()){
+    if(new Date(data.date)<new Date() && (data.status == 'completed' || data.status == 'c')){
       this.feedbackForm.controls.id.setValue(data._id);
+      this.feedbackForm.controls.email.setValue(data.email);
+      this.feedbackForm.controls.name.setValue(data.name);
       if(data.feedback){
         this.feedbackForm.controls.feedback.setValue(data.feedback);
       }
       else{
         this.feedbackForm.controls.feedback.setValue('');
+      }
+      if(data?.rating){
+        this.feedbackForm.controls.rating.setValue(data.rating);
+      }
+      else{
+        this.feedbackForm.controls.rating.setValue('');
       }
       $('#giveFeedback').modal('show')
     }
@@ -369,6 +407,7 @@ export class UserHistoryComponent implements OnInit{
   }
 
   submitFeedback(){
+    console.log(this.feedbackForm.value)
     if(this.feedbackForm.valid){
       this.apiService.initiateLoading(true);
       this.apiService.giveArtistFeedback(this.feedbackForm.value).subscribe(
@@ -870,6 +909,10 @@ export class UserHistoryComponent implements OnInit{
   }
 
   onRowValueChanged(event:any) {
+    console.log(event)
+    if(event.value == 'Discard Editing'){
+      event.node.setDataValue(event.colDef.field, event.oldValue);
+    }
     // const existingRow = this.modifiedRows.find((row:any) => row.uniqueId === event.data.uniqueId);
     // if (!existingRow) {
     //   this.modifiedRows.push(event.data);
