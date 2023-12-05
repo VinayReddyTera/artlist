@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ColDef, GridReadyEvent, ISelectCellEditorParams } from 'ag-grid-community';
+import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { contactDetailsRenderer } from '../all-approvers/contactRenderer';
 import { dateRenderer } from '../dateRenderer';
 import { ApiService } from '../services/api.service';
 import { feedbackRenderer } from './feedback';
 import { slotRenderer } from './slotRenderer';
 import { userHistoryTimeRenderer } from './userHistoryTimeRenderer';
-import { FormBuilder, FormControl, Validators, FormArray, AbstractControl, FormGroup  } from '@angular/forms';
+import { FormBuilder, FormControl, Validators} from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { UserApproverRenderer } from './userApproverRenderer';
 import { left } from '@popperjs/core';
@@ -329,7 +329,6 @@ export class UserHistoryComponent implements OnInit{
     this.feedbackForm = this.fb.group({
       feedback:['',[Validators.required]],
       rating:['',[Validators.required]],
-      email:['',[Validators.required]],
       name:['',[Validators.required]],
       artistId:['',[Validators.required]],
       id:['',[Validators.required]]
@@ -387,7 +386,6 @@ export class UserHistoryComponent implements OnInit{
   viewFeedback(data:any){
     if(new Date(data.date)<new Date() && (data.status == 'completed' || data.status == 'c')){
       this.feedbackForm.controls.id.setValue(data._id);
-      this.feedbackForm.controls.email.setValue(data.email);
       this.feedbackForm.controls.name.setValue(data.name);
       this.feedbackForm.controls.artistId.setValue(data.artistId);
       if(data.feedback){
@@ -417,6 +415,7 @@ export class UserHistoryComponent implements OnInit{
       (res : any)=>{
         console.log(res)
         if(res.status == 200){
+          $('#giveFeedback').modal('hide')
           let msgData = {
             severity : "success",
             summary : 'Success',
@@ -424,6 +423,7 @@ export class UserHistoryComponent implements OnInit{
             life : 5000
           }
         this.apiService.sendMessage(msgData);
+        this.refresh()
         }
         else if(res.status == 204){
           let msgData = {

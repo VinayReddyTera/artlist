@@ -1643,20 +1643,20 @@ userDB.giveArtistFeedback = async (payload) => {
   let rating;
   if(ratingData.length>0){
     const sumOfRatings = ratingData.reduce((sum, item) => {
-      // Check if 'rating' property is present
       if (item.rating !== undefined) {
         return sum + item.rating;
       }
       return sum;
     }, 0);
     rating = sumOfRatings/ratingData.length
+    rating = parseFloat(rating.toFixed(1));
   }
   else{
     rating = payload.rating
   }
   let artistData = await artistCollection.updateOne({
     "skills.name": payload.name,
-    "email": payload.email
+    "_id": new ObjectId(payload.artistId)
   },{
     $set: {
       "skills.$.rating": rating

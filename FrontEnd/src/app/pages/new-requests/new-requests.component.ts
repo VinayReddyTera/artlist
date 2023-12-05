@@ -305,14 +305,14 @@ export class NewRequestsComponent  implements OnInit{
   get f() { return this.bookingForm.controls; }
 
   changeStatus(status:any){
-    let payload :any = {
+    let payload :any = [{
       id : this.eventData._id
-    }
+    }]
     if(status == 'approve'){
-      payload.status = 'a'
+      payload[0].status = 'a'
     }
     else if(status == 'reject'){
-      payload.status = 'r'
+      payload[0].status = 'r'
     }
     this.apiService.initiateLoading(true);
     this.apiService.updateEvent(payload).subscribe(
