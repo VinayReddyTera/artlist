@@ -1705,8 +1705,27 @@ userDB.fetchNewRequests = async (payload) => {
 
 userDB.updateEvent = async (payload) => {
   const collection = await connection.history();
-  let data = await collection.updateOne({"_id":payload.id},{$set:{status:payload.status}})
+  let data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{status:payload.status}})
   if (data.modifiedCount == 1 || data.acknowledged == true) {
+    let res = {
+      status: 200,
+      data: 'Successfully updated'
+    }
+    return res
+  }
+  else {
+    let res = {
+      status: 204,
+      data: 'Unable to update'
+    }
+    return res
+  }
+}
+
+userDB.updatePay = async (payload) => {
+  const collection = await connection.history();
+  let data = await collection.updateOne({"_id":new ObjectId(payload)},{$set:{paid:true,paymentType:'cash'}})
+  if (data.modifiedCount == 1) {
     let res = {
       status: 200,
       data: 'Successfully updated'
@@ -2029,6 +2048,7 @@ userDB.fetchArtistDashboardData = async (payload) => {
   }
   let todayEvents = [];
   let pastEvents = [];
+  let unpaidEvents = [];
   let upComingEvents = [];
   let allDates = [];
   let eventData = await historyCollection.find({"artistId":payload._id}).lean();
@@ -2090,6 +2110,14 @@ userDB.fetchArtistDashboardData = async (payload) => {
       obj.candEmail = userData.email;
       upComingEvents.push(obj)
     }
+    if(i.paid == false){
+      let userData = await userCollection.findOne({"_id":new ObjectId(i.userId)},{_id:0,name:1,email:1,phoneNo:1}).lean();
+      obj.candName = userData.name;
+      obj.candPhoneNo = userData.phoneNo;
+      obj.candEmail = userData.email;
+      obj.id = i._id
+      unpaidEvents.push(obj)
+    }
     if(obj?.candName){
       obj.name = i.name;
       obj.date = i.date;
@@ -2097,7 +2125,10 @@ userDB.fetchArtistDashboardData = async (payload) => {
       obj.type = i.type;
       obj.bookingType = i.bookingType;
       obj.price = i.price;
-      obj.paid = i.paid;
+      if(obj.paid == true){
+        obj.paid = 'Paid'
+      }
+      else obj.paid = 'Not Paid'
       if(i.type == 'hourly'){
         obj.from = i.from;
         obj.to = i.to;
@@ -2117,6 +2148,7 @@ userDB.fetchArtistDashboardData = async (payload) => {
   output.todayEvents = todayEvents;
   output.pastEvents = pastEvents;
   output.upComingEvents = upComingEvents;
+  output.unpaidEvents = unpaidEvents;
   output.userStatistics = userStatistics;
   if (allDates.length > 0) {
     const monthNames = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG",

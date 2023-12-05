@@ -185,4 +185,8 @@ export class ApiService {
     return this.http.post(environment.domain+"updateEvent",payload)
   }
 
+  updatePay(payload:any):Observable<any>{
+    return this.http.post(environment.domain+"updatePay",payload)
+  }
+
 }

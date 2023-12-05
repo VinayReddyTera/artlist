@@ -1001,6 +1001,21 @@ userService.updateEvent=(payload)=>{
   })
 }
 
+userService.updatePay=(payload)=>{
+  return userDB.updatePay(payload).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to update now'
+      }
+      return res
+    }
+  })
+}
+
 userService.updateBooking=async(payload)=>{
   let available= await userDB.fetchAvailable(payload.data.artistId);
   let role = payload.role

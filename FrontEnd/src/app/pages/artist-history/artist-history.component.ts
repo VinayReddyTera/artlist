@@ -163,7 +163,7 @@ export class ArtistHistoryComponent  implements OnInit{
     },
     {
       field: "paid",
-      filter: "agDateColumnFilter",
+      filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "Paid",
       cellRenderer: (params:any)=> {
@@ -187,8 +187,6 @@ export class ArtistHistoryComponent  implements OnInit{
     },
     {
       field: "action",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
       headerName: "View Feedback",
       cellRenderer: artistfeedbackRenderer,
       cellRendererParams: { onStatusChange: this.viewFeedback.bind(this) }

@@ -909,17 +909,28 @@ router.post('/updateEvent',verifyToken,(req,res,next)=>{
   userservice.updateEvent(payload[i]).then((data)=>{
     count += 1;
     if(count == payload.length){
-        res.json(data)
+      return res.json(data)
     }
     }).catch((err)=>{
       next(err)
   })
 }
-  userservice.updateEvent(req.body).then((data)=>{
-    return res.json(data)
-  }).catch((err)=>{
-    next(err)
+})
+
+//router to update payment status
+router.post('/updatePay',verifyToken,(req,res,next)=>{
+  let count = 0;
+  let payload = req.body;
+  for(i in payload){
+  userservice.updatePay(payload[i]).then((data)=>{
+    count += 1;
+    if(count == payload.length){
+      return res.json(data)
+    }
+    }).catch((err)=>{
+      next(err)
   })
+}
 })
 
 //router to Reschedule Event

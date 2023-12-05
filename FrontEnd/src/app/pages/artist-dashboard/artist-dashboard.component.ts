@@ -8,6 +8,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { dateRenderer } from '../dateRenderer';
 import { userHistoryTimeRenderer } from '../user-history/userHistoryTimeRenderer';
 import { slotRenderer } from '../user-history/slotRenderer';
+import { left } from '@popperjs/core';
 
 declare const $ : any;
 
@@ -27,10 +28,13 @@ export class ArtistDashboardComponent implements OnInit{
   name : any;
   @ViewChild('content') content:any;
   userData:any;
+  public rowSelection: 'single' | 'multiple' = 'multiple';
   errorMessage : any;
   todayEvents:any = [];
   upComingEvents:any = [];
   pastEvents:any = [];
+  unpaidEvents:any = [];
+  modifiedRows:any=[]
   tooltipOptions = {
     fitContent : true
   }
@@ -61,6 +65,7 @@ export class ArtistDashboardComponent implements OnInit{
   gridApi: any;
   gridApi1: any;
   gridApi2: any;
+  gridApi3: any;
 
   dashboardColumnDefs = [
     {
@@ -227,6 +232,179 @@ export class ArtistDashboardComponent implements OnInit{
       }
     }
   ];
+  unpaidDashboardColumnDefs = [
+    {
+      field: "candName",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      pinned : left,
+      headerName: "Name",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "action",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Contact",
+      pinned : left,
+      cellRenderer: contactRenderer,
+      width:150
+    },
+    {
+      field: "name",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Skill Name",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "status",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Status",
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          if(params.value == 'pending'){
+            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Pending</span>`;
+            return link
+          }
+          else if(params.value == 'a'){
+            let link = `<span class="badge badge-soft-info" style="font-size:13px">Accepted</span>`;
+            return link
+          }
+          else if(params.value == 'r'){
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">rejected</span>`;
+            return link
+          }
+          else if(params.value == 'c'){
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">Completed</span>`;
+            return link
+          }
+          else{
+            return params.value
+          }
+        }
+      }
+    },
+    {
+      field: "type",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Booking Type",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "date",
+      filter: "agDateColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Date",
+      cellRenderer: dateRenderer
+    },
+    {
+      field: "from",
+      filter: "agDateColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "From",
+      cellRenderer: userHistoryTimeRenderer
+    },
+    {
+      field: "to",
+      filter: "agDateColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "To",
+      cellRenderer: userHistoryTimeRenderer
+    },
+    {
+      field: "slot",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Slot",
+      cellRenderer: slotRenderer
+    },
+    {
+      field: "price",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Price",
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          let data = `<span class="text-success">${params.value} ₹</span>`
+          return data
+        }
+      }
+    },
+    {
+      field: "address",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Address",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "mandal",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Mandal",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "district",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "District",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "state",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "State",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "pincode",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Pincode",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "paid",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      pinned : left,
+      headerName: "Paid",
+      editable: true,
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ['Not Paid','Paid']
+    },
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          if(params.value == 'Not Paid'){
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">Not Paid</span>`;
+            return link
+          }
+          else if(params.value == "Paid"){
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">Paid</span>`;
+            return link
+          }
+          else{
+            return 'N/A'
+          }
+        }
+      }
+    }
+  ];
   defaultColDef : ColDef = {
     sortable:true,filter:true,resizable:true
   }
@@ -272,6 +450,7 @@ export class ArtistDashboardComponent implements OnInit{
           this.userStatistics = res.data.userStatistics;
           this.todayEvents = res.data.todayEvents;
           this.pastEvents = res.data.pastEvents;
+          this.unpaidEvents = res.data.unpaidEvents;
           this.upComingEvents = res.data.upComingEvents;
           this.completed = res.data.userStatistics.completed;
           this.upcoming = res.data.userStatistics.inProgress;
@@ -346,6 +525,10 @@ export class ArtistDashboardComponent implements OnInit{
     this.gridApi2 = params.api;
   }
 
+  onGridReady3(params: GridReadyEvent) {
+    this.gridApi3 = params.api;
+  }
+
   filter(index :any){
     if(index == '0'){
       this.gridApi.setQuickFilter(
@@ -360,6 +543,11 @@ export class ArtistDashboardComponent implements OnInit{
     else if(index == '2'){
       this.gridApi2.setQuickFilter(
         (document.getElementById('filter-text-box2') as HTMLInputElement).value
+      );
+    }
+    else if(index == '3'){
+      this.gridApi3.setQuickFilter(
+        (document.getElementById('filter-text-box3') as HTMLInputElement).value
       );
     }
   }
@@ -456,6 +644,78 @@ export class ArtistDashboardComponent implements OnInit{
               controls[name].markAsDirty()
           }
       }
+    }
+  }
+
+  onRowValueChanged(event:any) {
+    console.log(event)
+    const existingRow = this.modifiedRows.find((row:any) => row.id === event.data.id);
+    let obj = {
+      id : event.data.id,
+      paid : event.value
+    }
+    if (!existingRow) {
+      this.modifiedRows.push(obj)
+    }
+    else{
+      for(let i of this.modifiedRows){
+        if(i.id == event.data.id){
+          i.paid = event.value;
+          break;
+        }
+      }
+    }
+    console.log(this.modifiedRows)
+  }
+
+  updateMultiplePay(){
+    let payload = []
+    for(let i of this.modifiedRows){
+      if(i.paid == 'Paid'){
+        payload.push(i.id)
+      }
+    }
+    if(payload.length>0){
+      this.apiService.initiateLoading(true);
+      this.apiService.updatePay(payload).subscribe(
+      (res : any)=>{
+        console.log(res)
+        if(res.status == 200){
+          let msgData = {
+            severity : "success",
+            summary : 'Success',
+            detail : res.data,
+            life : 5000
+          }
+        this.apiService.sendMessage(msgData);
+        this.errorMessage = null;
+        this.ngOnInit();
+        }
+        else if(res.status == 204){
+          let msgData = {
+              severity : "error",
+              summary : 'Error',
+              detail : res.data,
+              life : 5000
+            }
+          this.apiService.sendMessage(msgData);
+        }
+      },
+      (err:any)=>{
+        console.log(err);
+      }
+    ).add(()=>{
+      this.apiService.initiateLoading(false)
+    })
+    }
+    else{
+      let msgData = {
+        severity : "error",
+        summary : 'Error',
+        detail : 'Change atleast one event to paid',
+        life : 5000
+      }
+      this.apiService.sendMessage(msgData);
     }
   }
 
