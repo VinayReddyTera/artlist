@@ -80,4 +80,62 @@
         </div>
       </div>
     </div>
+</div>
+
+<div class="modal fade" id="viewPricing" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header border-bottom-0">
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Type</th>
+              <th scope="col">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Online Hourly</th>
+              <td>
+                <span class="text-success">{{pricing?.oHourly}} ₹</span>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Online Full Day</th>
+              <td>
+                <span class="text-success">{{pricing?.oFullDay}} ₹</span>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Online Event</th>
+              <td>
+                <span class="text-success">{{pricing?.oEvent}} ₹</span>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Onsite Hourly</th>
+              <td>
+                <span class="text-success">{{pricing?.hourly}} ₹</span>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Onsite Full Day</th>
+              <td>
+                <span class="text-success">{{pricing?.fullDay}} ₹</span>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Onsite Event</th>
+              <td>
+                <span class="text-success">{{pricing?.event}} ₹</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
+</div>

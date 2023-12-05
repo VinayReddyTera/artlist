@@ -135,7 +135,8 @@ const history = Schema({
     name:String,
     price : Number,
     paid : {type:Boolean,default:false},
-    paymentType : String
+    paymentType : String,
+    commisionPaid : String,
 },{collection : "history"});
 
 const feedback = Schema({

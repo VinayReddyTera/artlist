@@ -5,6 +5,7 @@ import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { Router } from '@angular/router';
 import { genreRenderer } from './genreRenderer';
 import { editRenderer } from './editRenderer';
+import { pricingRenderer } from './pricingRenderer';
 
 declare const $:any;
 
@@ -92,37 +93,20 @@ export class SkillDataComponent implements OnInit{
       }
     },
     {
-      field: "pricing.hourly",
-      filter: "agDateColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Hourly Pricing",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
-    },
-    {
-      field: "pricing.fullDay",
-      filter: "agDateColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Full Day Pricing",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
-    },
-    {
-      field: "pricing.event",
-      filter: "agDateColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Event based Pricing",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
+      field: "action",
+      headerName: "Pricing",
+      cellRenderer: pricingRenderer,
+      cellRendererParams: { onStatusChange: this.viewPricing.bind(this) }
     },
     {
       field: "portfolio",
-      filter: "agDateColumnFilter",
+      filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "Portfolio",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value.toString()}`
     },
     {
       field: "action",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
       headerName: "View Genre",
       cellRenderer: genreRenderer,
       cellRendererParams: { onStatusChange: this.viewGenre.bind(this) }
@@ -132,8 +116,7 @@ export class SkillDataComponent implements OnInit{
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "Edit",
-      cellRenderer: editRenderer,
-      // cellRendererParams: { onStatusChange: this.viewJD.bind(this) }
+      cellRenderer: editRenderer
     }
   ];
   genreColumnDefs = [
@@ -222,6 +205,7 @@ export class SkillDataComponent implements OnInit{
   pagination:any = true;
   gridApi:any;
   gridApi1:any;
+  pricing:any;
 
   ngOnInit(): void {
     this.spinner.show()
@@ -276,6 +260,12 @@ export class SkillDataComponent implements OnInit{
     console.log(data)
     $('#viewGenreModal').modal('show');
     this.genreRowData = data
+  }
+
+  viewPricing(data:any){
+    console.log(data)
+    this.pricing = data
+    $('#viewPricing').modal('show');
   }
 
 }

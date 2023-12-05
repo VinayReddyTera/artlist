@@ -198,6 +198,7 @@ export class ArtistHistoryComponent  implements OnInit{
   pagination:any = true;
   gridApi:any;
   feedback:any;
+  rating:any;
 
   ngOnInit(): void {
     this.apiService.initiateLoading(true);
@@ -242,9 +243,11 @@ export class ArtistHistoryComponent  implements OnInit{
   viewFeedback(data:any){
     if(data.feedback){
       this.feedback = data.feedback
+      this.rating = data.rating
     }
     else{
-      this.feedback = ''
+      this.feedback = '';
+      this.rating = ''
     }
     $('#viewFeedback').modal('show')
   }

@@ -1,10 +1,10 @@
-.icon{
+.icon {
     width: 30px;
     height: 30px;
     position: relative;
 }
 
-.edit{
+.edit {
     position: absolute;
     left: 8px;
     bottom: 4px;
@@ -37,19 +37,20 @@
     bottom: 1px;
 }
 
-.eye{
+.eye {
     color: #007BFF;
     cursor: pointer;
 }
 
-.eye:hover{
+.eye:hover {
     opacity: 0.5;
 }
 
-.message{
+.message {
     font-weight: bolder;
     text-align: center;
     position: fixed;
+    font-size: 16px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -57,4 +58,26 @@
     -moz-transform: translate(-50%, -50%);
     -o-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
+}
+
+table.table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+}
+
+table.table thead th:first-child {
+    border-radius: 10px 0 0 0;
+}
+
+table.table thead th:last-child {
+    border-radius: 0 10px 0 0;
+}
+
+table.table tbody tr:last-child td:first-child {
+    border-radius: 0 0 0 10px;
+}
+
+table.table tbody tr:last-child td:last-child {
+    border-radius: 0 0 10px 0;
 }

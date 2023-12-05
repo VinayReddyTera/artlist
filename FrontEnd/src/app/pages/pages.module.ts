@@ -55,6 +55,7 @@ import { approverRenderer } from './new-requests/approverRenderer';
 import { UserApproverRenderer } from './user-history/userApproverRenderer';
 import { PaginatorModule } from 'primeng/paginator';
 import { RatingModule } from 'primeng/rating';
+import { pricingRenderer } from './skill-data/pricingRenderer';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { RatingModule } from 'primeng/rating';
     feedbackRenderer,
     artistfeedbackRenderer,
     approverRenderer,
-    UserApproverRenderer
+    UserApproverRenderer,
+    pricingRenderer
   ],
   imports: [
     CommonModule,

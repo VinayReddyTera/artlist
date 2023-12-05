@@ -42,7 +42,12 @@
           <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
       </div>
         <div class="modal-body">
-            <div *ngIf="feedback;else elseBlock" class="text-center">{{feedback}}</div>
+            <div *ngIf="feedback;else elseBlock" class="text-center">
+              <div class="text-muted font-size-14">{{feedback}}</div>
+              <div class="font-size-11 mt-2">
+                <p-rating [(ngModel)]="rating" [readonly]="true" [cancel]="false"></p-rating>
+              </div>
+            </div>
             <ng-template #elseBlock>
                 <div class="text-danger text-center font-weight-bold">No feedback given yet!</div>
             </ng-template>
