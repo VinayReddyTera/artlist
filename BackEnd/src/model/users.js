@@ -1638,40 +1638,22 @@ userDB.fetchHistory = async (payload) => {
 userDB.giveArtistFeedback = async (payload) => {
   const collection = await connection.history();
   const artistCollection = await connection.getArtist();
-  let data = await collection.updateOne({"_id":payload.id},{$set:{feedback:payload.feedback,rating:payload.rating,status:'c'}});
-  let ratingData = await artistCollection.aggregate([
-    {
-      $match: {
-        $and: [
-          { "skills.name": payload.name },
-          { email: payload.email }
-        ]
+  let data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{feedback:payload.feedback,rating:payload.rating,status:'c'}});
+  let ratingData = await collection.find({"name":payload.name,"artistId":payload.artistId,"rating": { $exists: true }},{_id:0,rating:1,name:1});
+  let rating;
+  if(ratingData.length>0){
+    const sumOfRatings = ratingData.reduce((sum, item) => {
+      // Check if 'rating' property is present
+      if (item.rating !== undefined) {
+        return sum + item.rating;
       }
-    },
-    {
-      $project: {
-        _id: 0,
-        rating: {
-          $filter: {
-            input: "$skills",
-            as: "skill",
-            cond: {
-              $eq: ["$$skill.name", payload.name]
-            }
-          }
-        }
-      }
-    },
-    {
-      $unwind: "$rating"
-    },
-    {
-      $project: {
-        rating: "$rating.rating"
-      }
-    }
-  ])
-  let rating = (ratingData[0].rating + payload.rating)/2
+      return sum;
+    }, 0);
+    rating = sumOfRatings/ratingData.length
+  }
+  else{
+    rating = payload.rating
+  }
   let artistData = await artistCollection.updateOne({
     "skills.name": payload.name,
     "email": payload.email

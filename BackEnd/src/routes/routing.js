@@ -903,6 +903,18 @@ router.get('/fetchNewRequests',verifyToken,(req,res,next)=>{
 
 //router to update event status
 router.post('/updateEvent',verifyToken,(req,res,next)=>{
+  let count = 0;
+  let payload = req.body;
+  for(i in payload){
+  userservice.updateEvent(payload[i]).then((data)=>{
+    count += 1;
+    if(count == payload.length){
+        res.json(data)
+    }
+    }).catch((err)=>{
+      next(err)
+  })
+}
   userservice.updateEvent(req.body).then((data)=>{
     return res.json(data)
   }).catch((err)=>{

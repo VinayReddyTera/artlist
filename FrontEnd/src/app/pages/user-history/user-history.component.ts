@@ -107,16 +107,17 @@ export class UserHistoryComponent implements OnInit{
             let link = `<span class="badge badge-soft-warning" style="font-size:13px">Pending</span>`;
             return link
           }
-          else if(params.value == 'a'){
+          else if(params.value == 'a' || params.value == 'accepted'){
             let link = `<span class="badge badge-soft-info" style="font-size:13px">Accepted</span>`;
             return link
           }
-          else if(params.value == 'accepted'){
-            let link = `<span class="badge badge-soft-info" style="font-size:13px">Accepted</span>`;
-            return link
-          }
-          else if(params.value == 'r'){
-            let link = `<span class="badge badge-soft-danger" style="font-size:13px">rejected</span>`;
+          else if(params.value == 'r' || params.value == 'artist not attended' || params.value == 'cancelled'){
+            let text = ''
+            if(params.value == 'r'){
+              text = 'Rejected'
+            }
+            else text = params.value
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">${text}</span>`;
             return link
           }
           else if(params.value == 'c'){
@@ -330,6 +331,7 @@ export class UserHistoryComponent implements OnInit{
       rating:['',[Validators.required]],
       email:['',[Validators.required]],
       name:['',[Validators.required]],
+      artistId:['',[Validators.required]],
       id:['',[Validators.required]]
     })
     this.rejectionForm = this.fb.group({
@@ -387,6 +389,7 @@ export class UserHistoryComponent implements OnInit{
       this.feedbackForm.controls.id.setValue(data._id);
       this.feedbackForm.controls.email.setValue(data.email);
       this.feedbackForm.controls.name.setValue(data.name);
+      this.feedbackForm.controls.artistId.setValue(data.artistId);
       if(data.feedback){
         this.feedbackForm.controls.feedback.setValue(data.feedback);
       }
@@ -523,14 +526,14 @@ export class UserHistoryComponent implements OnInit{
   }
 
   changeStatus(status:any){
-    let payload :any = {
+    let payload :any = [{
       id : this.eventData._id
-    }
+    }]
     if(status == 'approve'){
-      payload.status = 'a'
+      payload[0].status = 'a'
     }
     else if(status == 'reject'){
-      payload.status = 'r';
+      payload[0].status = 'r';
       if(this.rejectionForm.valid){
         payload.remarks = this.rejectionForm.value.remarks;
       }
@@ -544,6 +547,10 @@ export class UserHistoryComponent implements OnInit{
         return
       }
     }
+    this.submitStatus(payload)
+  }
+
+  submitStatus(payload:any){
     this.apiService.initiateLoading(true);
     this.apiService.updateEvent(payload).subscribe(
     (res : any)=>{
@@ -935,6 +942,21 @@ export class UserHistoryComponent implements OnInit{
       }
     }
     console.log(this.modifiedRows)
+  }
+
+  updateMultipleStatus(){
+    if(this.modifiedRows.length>0){
+      this.submitStatus(this.modifiedRows)
+    }
+    else{
+      let msgData = {
+        severity : "error",
+        summary : 'Error',
+        detail : 'Edit atleast one row',
+        life : 5000
+      }
+      this.apiService.sendMessage(msgData);
+    }
   }
 
 }
