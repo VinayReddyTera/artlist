@@ -31,7 +31,7 @@ export class UserHistoryComponent implements OnInit{
     {
       field: "candName",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Artist Name",
       pinned : left,
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
@@ -39,7 +39,7 @@ export class UserHistoryComponent implements OnInit{
     {
       field: "action",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Contact",
       cellRenderer: contactDetailsRenderer,
       width:150
@@ -47,17 +47,17 @@ export class UserHistoryComponent implements OnInit{
     {
       field: "name",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Skill Name",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "status",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Status",
       editable: (params:any) => {
-        if(new Date(params.data.date)<new Date()){
+        if(new Date(params.data.date)<new Date() && params.data.status != 'c'){
           return true
         }
         else{
@@ -140,14 +140,14 @@ export class UserHistoryComponent implements OnInit{
     {
       field: "type",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Booking Type",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "bookingType",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Event Type",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value,
       width:130
@@ -155,35 +155,35 @@ export class UserHistoryComponent implements OnInit{
     {
       field: "date",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Date",
       cellRenderer: dateRenderer
     },
     {
       field: "from",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "From",
       cellRenderer: userHistoryTimeRenderer
     },
     {
       field: "to",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "To",
       cellRenderer: userHistoryTimeRenderer
     },
     {
       field: "slot",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Slot",
       cellRenderer: slotRenderer
     },
     {
       field: "price",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Price",
       cellRenderer: (params:any)=> {
         if(params.value == null){
@@ -199,42 +199,42 @@ export class UserHistoryComponent implements OnInit{
     {
       field: "address",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Address",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "mandal",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Mandal",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "district",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "District",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "state",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "State",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "pincode",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Pincode",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "paid",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Payment Status",
       cellRenderer: (params:any)=> {
         if(params.value == null){
@@ -258,7 +258,7 @@ export class UserHistoryComponent implements OnInit{
     {
       field: "action",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Give/View Feedback",
       cellRenderer: feedbackRenderer,
       cellRendererParams: { onStatusChange: this.viewFeedback.bind(this) }
@@ -266,7 +266,7 @@ export class UserHistoryComponent implements OnInit{
     {
       field: "action",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Action",
       cellRenderer: UserApproverRenderer,
       width:200,
@@ -909,15 +909,32 @@ export class UserHistoryComponent implements OnInit{
   }
 
   onRowValueChanged(event:any) {
-    console.log(event)
+    // console.log(event)
     if(event.value == 'Discard Editing'){
       event.node.setDataValue(event.colDef.field, event.oldValue);
     }
-    // const existingRow = this.modifiedRows.find((row:any) => row.uniqueId === event.data.uniqueId);
-    // if (!existingRow) {
-    //   this.modifiedRows.push(event.data);
-    // }
-    // console.log(this.modifiedRows)
+    const existingRow = this.modifiedRows.find((row:any) => row.id === event.data._id);
+    let status = ''
+    if(event.data.status == 'completed'){
+      status = 'c'
+    }
+    else status = event.data.status;
+    let obj = {
+      id : event.data._id,
+      status : status
+    }
+    if (!existingRow) {
+      this.modifiedRows.push(obj)
+    }
+    else{
+      for(let i of this.modifiedRows){
+        if(i.id == event.data._id){
+          i.status = status;
+          break;
+        }
+      }
+    }
+    console.log(this.modifiedRows)
   }
 
 }

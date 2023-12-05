@@ -24,14 +24,14 @@ export class TagHistoryComponent {
     {
       field: "name",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Name",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "action",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Contact",
       cellRenderer: contactDetailsRenderer,
       width:150
@@ -39,21 +39,21 @@ export class TagHistoryComponent {
     {
       field: "skill.name",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Skill Name",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "skill.experience",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Experience",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} years`
     },
     {
       field: "skill.validated",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Validated",
       cellRenderer: (params:any)=> {
         if(params.value == null){
@@ -81,14 +81,14 @@ export class TagHistoryComponent {
     {
       field: "skill.feedback",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Feedback",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "skill.status",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Status",
       cellRenderer: (params:any)=> {
         if(params.value == null){
@@ -109,35 +109,35 @@ export class TagHistoryComponent {
     {
       field: "skill.pricing.hourly",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Hourly Pricing",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
     },
     {
       field: "skill.pricing.fullDay",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Full Day Pricing",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
     },
     {
       field: "skill.pricing.event",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Event based Pricing",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
     },
     {
       field: "skill.portfolio",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Portfolio",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value.toString()}`
     },
     {
       field: "action",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "View Genre",
       cellRenderer: genreRendererTagHistory,
       cellRendererParams: { onStatusChange: this.viewGenre.bind(this) }
@@ -147,21 +147,21 @@ export class TagHistoryComponent {
     {
       field: "name",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Skill Name",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "experience",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Experience",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} years`
     },
     {
       field: "validated",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Validated",
       cellRenderer: (params:any)=> {
         if(params.value == null){
@@ -189,14 +189,14 @@ export class TagHistoryComponent {
     {
       field: "feedback",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Feedback",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "status",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Status",
       cellRenderer: (params:any)=> {
         if(params.value == null){
@@ -217,7 +217,7 @@ export class TagHistoryComponent {
     {
       field: "portfolio",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Portfolio",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value.toString()}`
     }

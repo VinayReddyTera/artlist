@@ -24,21 +24,21 @@ export class SkillDataComponent implements OnInit{
     {
       field: "name",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Skill Name",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "experience",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Experience",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} years`
     },
     {
       field: "validated",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Validated",
       cellRenderer: (params:any)=> {
         if(params.value == null){
@@ -66,14 +66,14 @@ export class SkillDataComponent implements OnInit{
     {
       field: "feedback",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Feedback",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "status",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Status",
       cellRenderer: (params:any)=> {
         if(params.value == null){
@@ -94,35 +94,35 @@ export class SkillDataComponent implements OnInit{
     {
       field: "pricing.hourly",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Hourly Pricing",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
     },
     {
       field: "pricing.fullDay",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Full Day Pricing",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
     },
     {
       field: "pricing.event",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Event based Pricing",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
     },
     {
       field: "portfolio",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Portfolio",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value.toString()}`
     },
     {
       field: "action",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "View Genre",
       cellRenderer: genreRenderer,
       cellRendererParams: { onStatusChange: this.viewGenre.bind(this) }
@@ -130,7 +130,7 @@ export class SkillDataComponent implements OnInit{
     {
       field: "action",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Edit",
       cellRenderer: editRenderer,
       // cellRendererParams: { onStatusChange: this.viewJD.bind(this) }
@@ -140,21 +140,21 @@ export class SkillDataComponent implements OnInit{
     {
       field: "name",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Skill Name",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "experience",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Experience",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} years`
     },
     {
       field: "validated",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Validated",
       cellRenderer: (params:any)=> {
         if(params.value == null){
@@ -182,14 +182,14 @@ export class SkillDataComponent implements OnInit{
     {
       field: "feedback",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Feedback",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "status",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Status",
       cellRenderer: (params:any)=> {
         if(params.value == null){
@@ -210,7 +210,7 @@ export class SkillDataComponent implements OnInit{
     {
       field: "portfolio",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Portfolio",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value.toString()}`
     }

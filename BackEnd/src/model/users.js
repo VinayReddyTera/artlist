@@ -1638,7 +1638,7 @@ userDB.fetchHistory = async (payload) => {
 userDB.giveArtistFeedback = async (payload) => {
   const collection = await connection.history();
   const artistCollection = await connection.getArtist();
-  let data = await collection.updateOne({"_id":payload.id},{$set:{feedback:payload.feedback,rating:payload.rating}});
+  let data = await collection.updateOne({"_id":payload.id},{$set:{feedback:payload.feedback,rating:payload.rating,status:'c'}});
   let ratingData = await artistCollection.aggregate([
     {
       $match: {

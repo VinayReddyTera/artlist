@@ -87,14 +87,14 @@ export class UserDashboardComponent {
     {
       field: "candName",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Name",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "action",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Contact",
       cellRenderer: contactRenderer,
       width:150
@@ -102,14 +102,14 @@ export class UserDashboardComponent {
     {
       field: "name",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Skill Name",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "status",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Status",
       cellRenderer: (params:any)=> {
         if(params.value == null){
@@ -141,42 +141,42 @@ export class UserDashboardComponent {
     {
       field: "type",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Booking Type",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "date",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Date",
       cellRenderer: dateRenderer
     },
     {
       field: "from",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "From",
       cellRenderer: userHistoryTimeRenderer
     },
     {
       field: "to",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "To",
       cellRenderer: userHistoryTimeRenderer
     },
     {
       field: "slot",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Slot",
       cellRenderer: slotRenderer
     },
     {
       field: "price",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Price",
       cellRenderer: (params:any)=> {
         if(params.value == null){
@@ -191,42 +191,42 @@ export class UserDashboardComponent {
     {
       field: "address",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Address",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "mandal",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Mandal",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "district",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "District",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "state",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "State",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "pincode",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Pincode",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "paid",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Paid",
       cellRenderer: (params:any)=> {
         if(params.value == null){

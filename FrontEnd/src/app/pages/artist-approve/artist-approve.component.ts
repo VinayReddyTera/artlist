@@ -22,14 +22,14 @@ export class ArtistApproveComponent implements OnInit{
     {
       field: "name",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Name",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "action",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Contact",
       cellRenderer: contactDetailsRenderer,
       width:150
@@ -37,21 +37,21 @@ export class ArtistApproveComponent implements OnInit{
     {
       field: "skill.name",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Skill Name",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "skill.experience",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Experience",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} years`
     },
     {
       field: "skill.validated",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Validated",
       cellRenderer: (params:any)=> {
         if(params.value == null){
@@ -79,7 +79,7 @@ export class ArtistApproveComponent implements OnInit{
     {
       field: "skill.status",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Status",
       cellRenderer: (params:any)=> {
         if(params.value == null){
@@ -100,28 +100,28 @@ export class ArtistApproveComponent implements OnInit{
     {
       field: "skill.pricing.hourly",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Hourly Pricing",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
     },
     {
       field: "skill.pricing.fullDay",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Full Day Pricing",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
     },
     {
       field: "skill.pricing.event",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Event based Pricing",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} ₹`
     },
     {
       field: "action",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "View Genre",
       cellRenderer: genreRendererArtistApprove,
       cellRendererParams: { onStatusChange: this.viewGenre.bind(this) }
@@ -129,7 +129,7 @@ export class ArtistApproveComponent implements OnInit{
     {
       field: "action",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Edit",
       cellRenderer: editRendererArtistApprove,
       // cellRendererParams: { onStatusChange: this.viewJD.bind(this) }
@@ -139,21 +139,21 @@ export class ArtistApproveComponent implements OnInit{
     {
       field: "name",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Skill Name",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "experience",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Experience",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : `${params.value} years`
     },
     {
       field: "validated",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Validated",
       cellRenderer: (params:any)=> {
         if(params.value == null){
@@ -181,7 +181,7 @@ export class ArtistApproveComponent implements OnInit{
     {
       field: "status",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Status",
       cellRenderer: (params:any)=> {
         if(params.value == null){

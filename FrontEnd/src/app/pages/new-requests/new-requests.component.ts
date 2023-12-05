@@ -28,7 +28,7 @@ export class NewRequestsComponent  implements OnInit{
     {
       field: "candName",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Name",
       pinned : left,
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
@@ -36,7 +36,7 @@ export class NewRequestsComponent  implements OnInit{
     {
       field: "action",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Contact",
       cellRenderer: contactDetailsRenderer,
       width:150
@@ -44,14 +44,14 @@ export class NewRequestsComponent  implements OnInit{
     {
       field: "name",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Skill Name",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "status",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Status",
       cellRenderer: (params:any)=> {
         if(params.value == null){
@@ -87,42 +87,42 @@ export class NewRequestsComponent  implements OnInit{
     {
       field: "type",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Booking Type",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "date",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Date",
       cellRenderer: dateRenderer
     },
     {
       field: "from",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "From",
       cellRenderer: userHistoryTimeRenderer
     },
     {
       field: "to",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "To",
       cellRenderer: userHistoryTimeRenderer
     },
     {
       field: "slot",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Slot",
       cellRenderer: slotRenderer
     },
     {
       field: "price",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Price",
       cellRenderer: (params:any)=> {
         if(params.value == null){
@@ -137,42 +137,42 @@ export class NewRequestsComponent  implements OnInit{
     {
       field: "address",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Address",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "mandal",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Mandal",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "district",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "District",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "state",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "State",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "pincode",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Pincode",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
       field: "paid",
       filter: "agDateColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Portfolio",
       cellRenderer: (params:any)=> {
         if(params.value == null){
@@ -196,7 +196,7 @@ export class NewRequestsComponent  implements OnInit{
     {
       field: "action",
       filter: "agTextColumnFilter",
-      filterParams: { suppressAndOrCondition: true },
+      filterParams: { maxNumConditions: 1 },
       headerName: "Action",
       cellRenderer: approverRenderer,
       width:200,
