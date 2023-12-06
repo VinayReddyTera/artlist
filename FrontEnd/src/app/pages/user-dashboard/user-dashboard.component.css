@@ -75,11 +75,6 @@
     }
   }
   
-  .microsoftIcon {
-    border-radius: 5px;
-    background-color: black;
-  }
-  
-  .googleIcon {
-    scale: 1.6;
-  }
+  ::ng-deep .p-rating .p-rating-icon.p-rating-icon-active {
+    color: #ffc107;
+}

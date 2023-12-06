@@ -409,7 +409,7 @@ router.get('/verifyEmail/:token',(req,res,next)=>{
     jwt.verify(req.params.token,process.env.JWT_Secret,(err,user)=>{
       if(err){
           let userdata = jwt.decode(req.params.token)
-          let url = `${req.headers.origin}/${userdata.role}-profile?status=204&data=Email verification link expired`
+          let url = `${process.env.redirect_Url}/${userdata.role}-profile?status=204&data=Email verification link expired`
           return res.redirect(url)
       }
       else{
@@ -418,14 +418,15 @@ router.get('/verifyEmail/:token',(req,res,next)=>{
               role : user.data.role
           }
           userservice.verifyEmail(payload).then((data)=>{
-            let url = `${req.headers.origin}/${user.data.role}-profile?status=${data.status}&data=${data.data}`;
+            let url = `${process.env.redirect_Url}/${user.data.role}-profile?status=${data.status}&data=${data.data}`;
+            console.log(url)
             return res.redirect(url)
           }).catch(err => next(err));
       }
     });
   }
   else{
-    let url = `${req.headers.origin}/${user.data.role}-profile?status=204&data=Invalid Link`;
+    let url = `${process.env.redirect_Url}/${user.data.role}-profile?status=204&data=Invalid Link`;
     return res.redirect(url)
   }
 })

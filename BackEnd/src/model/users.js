@@ -2100,7 +2100,6 @@ userDB.fetchArtistDashboardData = async (payload) => {
       obj.candName = userData.name;
       obj.candPhoneNo = userData.phoneNo;
       obj.candEmail = userData.email;
-      obj.class = 'badge badge-gradient-warning';
       pastEvents.push(obj);
     }
     else if(new Date(i.date).toDateString() == tomorrow.toDateString()){
@@ -2252,7 +2251,8 @@ userDB.fetchUserDashboardData = async (payload) => {
       obj.candName = userData.name;
       obj.candPhoneNo = userData.phoneNo;
       obj.candEmail = userData.email;
-      obj.class = 'badge badge-gradient-warning';
+      obj.artistId = i.artistId;
+      obj.id = i._id;
       pastEvents.push(obj);
     }
     else if(new Date(i.date).toDateString() == tomorrow.toDateString()){

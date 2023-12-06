@@ -78,29 +78,6 @@
             </div>
         </div>
         <div class="col-xl-8">
-            <div class="row">
-                <div *ngFor="let stat of statData" class="col-md-4">
-                  <a [routerLink]="stat.link">
-                    <div class="card mini-stats-wid main">
-                      <div class="card-body">
-                        <div class="media">
-                          <div class="media-body">
-                            <p class="text-muted fw-medium">{{stat.title}}</p>
-                            <h4 class="mb-0">{{stat.value}}</h4>
-                          </div>
-                    
-                          <div class="mini-stat-icon avatar-sm rounded-circle bg-primary align-self-center">
-                            <span class="avatar-title">
-                              <i class="bx {{stat.icon}} font-size-24"></i>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </a>
-                </div>
-            </div>
-            <!-- end row -->
             <div class="card">
                 <div class="card-body">
                     <div class="d-sm-flex flex-wrap">
@@ -113,6 +90,17 @@
                     [legend]="lineChartLegend">
                     </canvas>
                 </div>
+            </div>
+            <div class="card overflow-hidden mb-0">
+              <div class="card-body">
+                <div>
+                  <h5>Profile Status : <span [ngClass]="{'text-danger': userData.profileStatus === 'Incomplete', 'text-success': userData.profileStatus !== 'Incomplete'}">{{userData.profileStatus}}</span></h5>
+                </div>
+                <button *ngIf="!userData.emailVerified" (click)="verifyEmail()" class="btn btn-block btn-soft-primary mt-2 mb-2">Verify Email</button> 
+                <div *ngIf="userData.emailVerified"><h5 class="text-success">Email Verified</h5></div><br>
+                <button *ngIf="!userData.phoneVerified" (click)="verifyPhone()" class="btn btn-block btn-soft-success">Verify Mobile Number</button>
+                <div *ngIf="userData.phoneVerified"><h5 class="text-success">Mobile Number Verified</h5></div>
+              </div>
             </div>
         </div>
     </div>
@@ -171,12 +159,16 @@
             <ag-grid-angular
             style="width: 100%; height: 400px"
             class="ag-theme-alpine"
+            [rowSelection]="rowSelection"
+            [suppressRowClickSelection]="true"
+            [singleClickEdit]="true"
             [rowData]="pastEvents"
-            [columnDefs]="dashboardColumnDefs"
+            [columnDefs]="pastdashboardColumnDefs"
             [pagination]="pagination"
             [paginationPageSize]="10"
             [defaultColDef]="defaultColDef"
             (gridReady)="onGridReady1($event)"
+            (cellValueChanged)="onRowValueChanged($event)"
           >
           </ag-grid-angular>
           </div>
@@ -186,6 +178,10 @@
           </div>
         </div>
       </div>
+  </div>
+
+  <div *ngIf="pastEvents.length > 0" class="mb-3">
+    <button class="btn btn-success" (click)="updateMultipleStatus()">Save Status</button>
   </div>
 
   <div class="row">
@@ -297,6 +293,37 @@
                   </div>
               </div>
           </div>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="giveFeedback" tabindex="-1" role="dialog" aria-labelledby="giveFeedback" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header border-bottom-0">
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
+      </div>
+        <div class="modal-body">
+            <form [formGroup]="feedbackForm" (ngSubmit)="submitFeedback()">
+                <div class="mb-3">
+                    <label for="feedback"><h5>Submit Feedback</h5></label>
+                    <textarea id="feedback" formControlName="feedback" class="form-control"></textarea>
+                      <div *ngIf="feedbackForm.controls.feedback.errors?.required && feedbackForm.controls.feedback.dirty" class="required-message text-danger">
+                        <small>Required Field!</small>
+                      </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="rating">Rating</label> <br>
+                    <p-rating formControlName="rating"></p-rating>
+                      <div *ngIf="feedbackForm.controls.rating.errors?.required && feedbackForm.controls.rating.dirty" class="required-message text-danger">
+                        <small>Required Field!</small>
+                      </div>
+                  </div>
+                  <div class="mt-3 d-grid">
+                    <button class="btn btn-success" type="submit">Submit</button>
+                  </div>
+            </form>
       </div>
       </div>
     </div>
