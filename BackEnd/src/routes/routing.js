@@ -419,7 +419,6 @@ router.get('/verifyEmail/:token',(req,res,next)=>{
           }
           userservice.verifyEmail(payload).then((data)=>{
             let url = `${process.env.redirect_Url}/${user.data.role}-profile?status=${data.status}&data=${data.data}`;
-            console.log(url)
             return res.redirect(url)
           }).catch(err => next(err));
       }
@@ -873,6 +872,20 @@ router.get('/fetchHistory',verifyToken,(req,res,next)=>{
     role : data.role
   }
   userservice.fetchHistory(payload).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
+//router to fetch Unpaid Commissions
+router.get('/fetchUnpaidCommissions',verifyToken,(req,res,next)=>{
+  let data = jwt.decode(req.headers.authorization).data;
+  let payload = {
+    id : data._id,
+    role : data.role
+  }
+  userservice.fetchUnpaidCommissions(payload).then((data)=>{
     return res.json(data)
   }).catch((err)=>{
     next(err)

@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate {
         // console.log(role)
         if(role == 'artist' || role == 'user' || role == 'admin' || role == 'tag'){
           if(role == 'artist'){
-            if(route.routeConfig?.path === 'artist-profile' || route.routeConfig?.path === 'artist-dashboard' || route.routeConfig?.path === 'artist-history' || route.routeConfig?.path === 'skill-data' || route.routeConfig?.path === 'new-requests' || route.routeConfig?.path === 'artist-approve' || route.routeConfig?.path === 'add-skill' || route.routeConfig?.path === 'add-skill/:type'){
+            if(route.routeConfig?.path === 'artist-profile' || route.routeConfig?.path === 'artist-dashboard' || route.routeConfig?.path === 'artist-history' || route.routeConfig?.path === 'skill-data' || route.routeConfig?.path === 'new-requests' || route.routeConfig?.path === 'artist-approve' || route.routeConfig?.path === 'add-skill' || route.routeConfig?.path === 'add-skill/:type' || route.routeConfig?.path === 'commissions'){
               return true
             }
             else{
@@ -65,7 +65,7 @@ export class AuthGuard implements CanActivate {
             return false
           }
           else if(role == 'admin'){
-            if(route.routeConfig?.path === 'all-artists' || route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'add-approver' || route.routeConfig?.path === 'add-approver/:type' || route.routeConfig?.path === 'all-approvers'){
+            if(route.routeConfig?.path === 'all-artists' || route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'add-approver' || route.routeConfig?.path === 'add-approver/:type' || route.routeConfig?.path === 'all-approvers' || route.routeConfig?.path === 'commissions'){
               return true
             }
             else{

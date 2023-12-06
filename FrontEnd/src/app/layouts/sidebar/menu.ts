@@ -16,6 +16,13 @@ export const MENU: MenuItem[] = [
         role: ['artist','access-new-requests']
     },
     {
+        id: 2,
+        label: 'Commissions',
+        icon: 'bx bx-money',
+        link: '/commissions',
+        role: ['artist','admin','access-commissions']
+    },
+    {
         id: 3,
         label: 'Add Skill',
         icon: 'bx-file',

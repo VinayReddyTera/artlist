@@ -173,6 +173,10 @@ export class ApiService {
     return this.http.get(environment.domain+"fetchHistory")
   }
 
+  fetchUnpaidCommissions():Observable<any>{
+    return this.http.get(environment.domain+"fetchUnpaidCommissions")
+  }
+
   giveArtistFeedback(payload:any):Observable<any>{
     return this.http.post(environment.domain+"giveArtistFeedback",payload);
   }

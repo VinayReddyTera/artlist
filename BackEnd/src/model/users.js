@@ -1635,6 +1635,31 @@ userDB.fetchHistory = async (payload) => {
   }
 }
 
+userDB.fetchUnpaidCommissions = async (payload) => {
+  const collection1 = await connection.history();
+  let data;
+  let userData;
+  data = await collection1.find({"artistId" : payload.id,commissionPaid:'Not Paid',status:'c'},{'bookingType':1,'commission':1,'commissionPaid':1,'date':1,'name':1,'paid':1,'price':1,'status':1,'type':1,'userId':1,'paymentType':1}).lean();
+  const idsArray = data.map(item => item.userId);
+  const collection = await connection.getUsers();
+  userData = await collection.find({ _id: { $in: idsArray } },{name:1,email:1,phoneNo:1,_id:1})
+  if (data.length > 0) {
+    let res = {
+      status: 200,
+      userData: userData,
+      history : data
+    }
+    return res
+  }
+  else {
+    let res = {
+      status: 205,
+      data: 'No Pending Commissions'
+    }
+    return res
+  }
+}
+
 userDB.giveArtistFeedback = async (payload) => {
   const collection = await connection.history();
   const artistCollection = await connection.getArtist();

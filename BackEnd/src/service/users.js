@@ -909,6 +909,33 @@ userService.fetchHistory=(payload)=>{
   })
 }
 
+userService.fetchUnpaidCommissions=(payload)=>{
+  return userDB.fetchUnpaidCommissions(payload).then((data)=>{
+    if(data){
+      if(data.status == 200){
+        let userData = data.userData;
+        let history = data.history;
+        let output = userService.generateOutput(payload.role,userData,history)
+        let res= {
+          status : 200,
+          data: output
+        }
+        return res
+      }
+      else{
+        return data
+      }
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to fetch history'
+      }
+      return res
+    }
+  })
+}
+
 userService.generateOutput = (role,userData,history)=>{
   // Create a mapping of userData based on _id
   const userDataMap = new Map(userData.map(user => [String(user._id), user]));
