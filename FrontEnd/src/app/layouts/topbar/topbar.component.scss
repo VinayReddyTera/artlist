@@ -1,3 +1,80 @@
 .dropdown-item{
     cursor: pointer;
 }
+
+.seeMore{
+    color:#556EE6 !important
+}
+
+.seeMore:hover{
+    opacity: 0.5;
+}
+
+.refreshButton{
+    color: #ffffff;
+    background: #4E6AF2;
+    border: 1px solid #4E6AF2;
+    position: absolute;
+    top:-6px;
+    left:105px;
+  }
+  
+.edit{
+    position: relative;
+    right: 4px;
+    bottom: 3px;
+}
+
+  .refresh-icon{
+    width: 30px !important;
+    height: 30px !important;
+    cursor: pointer;
+  }
+  
+  .dot-flashing {
+    position: absolute;
+    top: 5px;
+    left: 165px;
+    width: 8px;
+    height: 8px;
+    border-radius: 5px;
+    background-color: #556EE6;
+    color: #556EE6;
+    animation: dot-flashing 1s infinite linear alternate;
+    animation-delay: 0.5s;
+  }
+  .dot-flashing::before, .dot-flashing::after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    top: 0;
+  }
+  .dot-flashing::before {
+    left: -15px;
+    width: 8px;
+    height: 8px;
+    border-radius: 5px;
+    background-color: #556EE6;
+    color: #556EE6;
+    animation: dot-flashing 1s infinite alternate;
+    animation-delay: 0s;
+  }
+  .dot-flashing::after {
+    left: 15px;
+    width: 8px;
+    height: 8px;
+    border-radius: 5px;
+    background-color: #556EE6;
+    color: #556EE6;
+    animation: dot-flashing 1s infinite alternate;
+    animation-delay: 1s;
+  }
+  
+  @keyframes dot-flashing {
+    0% {
+      background-color: #556EE6;
+    }
+    50%, 100% {
+      background-color: rgba(152, 128, 255, 0.2);
+    }
+  }

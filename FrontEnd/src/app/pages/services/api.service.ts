@@ -193,4 +193,8 @@ export class ApiService {
     return this.http.post(environment.domain+"updatePay",payload)
   }
 
+  fetchNotificationData():Observable<any>{
+    return this.http.get(environment.domain+"fetchNotificationData")
+  }
+
 }

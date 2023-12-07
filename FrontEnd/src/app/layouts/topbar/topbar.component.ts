@@ -1,7 +1,8 @@
 import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, ViewportScroller } from '@angular/common';
 import { EncryptionService } from 'src/app/pages/services/encryption.service';
+import { ApiService } from 'src/app/pages/services/api.service';
 
 @Component({
   selector: 'app-topbar',
@@ -14,9 +15,11 @@ export class TopbarComponent implements OnInit {
   element:any;
   name : any;
   role:any;
-  constructor(@Inject(DOCUMENT) private document: any, private router: Router,private decrypt:EncryptionService) {
+  constructor(@Inject(DOCUMENT) private document: any, private router: Router,private decrypt:EncryptionService,private viewScroller: ViewportScroller,private apiService : ApiService) {
   }
   openMobileMenu: any;
+  notificationData:any;
+  loading:boolean = false;
   @Output() mobileMenuButtonClicked = new EventEmitter();
 
   ngOnInit() {
@@ -76,6 +79,44 @@ export class TopbarComponent implements OnInit {
         /* IE/Edge */
         this.document.msExitFullscreen();
       }
+    }
+  }
+
+  fetchNotificationData(){
+    this.loading = true;
+    this.apiService.fetchNotificationData().subscribe(
+      (res:any)=>{
+        if(res.status == 200){
+          console.log(res.data)
+          this.notificationData = res.data
+        }
+        else if(res.status == 204){
+          // let msgData = {
+          //   severity : "error",
+          //   summary : 'Error',
+          //   detail : res.data,
+          //   life : 5000
+          // }
+          // this.apiService.sendMessage(msgData);
+        }
+      },
+      (err:any)=>{
+        console.log(err)
+      }
+    ).add(()=>{
+      this.loading = false;
+    })
+  }
+
+  openDashboard(){
+    if(/dashboard/.test(this.router.url)){
+      const element = document.getElementById("todayEvents");
+      if (element) {
+        this.viewScroller.scrollToAnchor("todayEvents");
+      }
+    }
+    else{
+      this.router.navigateByUrl('dashboard/todayEvents')
     }
   }
 }
