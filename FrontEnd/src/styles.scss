@@ -148,3 +148,20 @@
     background-color: #343a40 !important;
     border-color: transparent
 }
+
+.ag-root ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px
+  }
+  
+  .ag-root ::-webkit-scrollbar-track-piece {
+    background: #eee
+  }
+  .ag-root ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius : 5px;
+  }
+  
+  .ag-root-wrapper { 
+    border-radius: 5px !important;
+  }

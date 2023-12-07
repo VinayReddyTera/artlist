@@ -17,6 +17,7 @@ export class CommissionComponent   implements OnInit{
   constructor(private apiService : ApiService,private router:Router){}
 
   errorMessage : any;
+  successMessage : any;
   usersRowData:any = [];
   usersColumnDefs = [
     {
@@ -192,6 +193,9 @@ export class CommissionComponent   implements OnInit{
         if(res.status == 200){
           this.usersRowData = res.data;
           console.log(this.usersRowData)
+        }
+        else if(res.status == 205){
+          this.successMessage = res.data
         }
         else if(res.status == 204){
           if(res.data == 'Invalid token'){

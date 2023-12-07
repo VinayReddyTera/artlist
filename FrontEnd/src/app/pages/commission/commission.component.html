@@ -1,6 +1,10 @@
 <div *ngIf="errorMessage" class="text-danger font-weight-bold message">
     {{errorMessage}}
-  </div>
+</div>
+
+<div *ngIf="successMessage" class="text-success font-weight-bold message">
+  {{successMessage}}
+</div>
   
   <div *ngIf="usersRowData.length" class="card">
     <div class="card-body">
@@ -35,7 +39,7 @@
     </div>
   </div>
 
-  <div>
+  <div *ngIf="usersRowData.length">
     <span class="font-weight-bold">{{text}}</span>
     <span class="text-success">{{commission}} ₹</span>
   </div>

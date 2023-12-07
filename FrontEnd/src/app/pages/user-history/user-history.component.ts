@@ -535,7 +535,7 @@ export class UserHistoryComponent implements OnInit{
     else if(status == 'reject'){
       payload[0].status = 'r';
       if(this.rejectionForm.valid){
-        payload.remarks = this.rejectionForm.value.remarks;
+        payload[0].remarks = this.rejectionForm.value.remarks;
       }
       else{
         const controls = this.rejectionForm.controls;
@@ -563,7 +563,8 @@ export class UserHistoryComponent implements OnInit{
           life : 5000
         }
       this.apiService.sendMessage(msgData);
-      $(`#${status}`).modal('hide');
+      $(`#approve`).modal('hide');
+      $(`#reject`).modal('hide');
       this.usersRowData = [];
       this.errorMessage = null;
       this.refresh();

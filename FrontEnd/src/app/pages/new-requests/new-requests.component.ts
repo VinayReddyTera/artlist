@@ -217,11 +217,15 @@ export class NewRequestsComponent  implements OnInit{
   minDate : Date = new Date(new Date().setDate(new Date().getDate()+1))
   showFrom:boolean=false;
   timeDiff:any;
+  rejectForm:any;
 
   ngOnInit(): void {
     this.bookingForm = this.fb.group({
       type:['',[Validators.required]],
       date:['',[Validators.required]]
+    })
+    this.rejectForm = this.fb.group({
+      remarks:['',[Validators.required]]
     })
     this.apiService.initiateLoading(true);
     this.apiService.fetchNewRequests().subscribe(
@@ -303,6 +307,7 @@ export class NewRequestsComponent  implements OnInit{
   }
 
   get f() { return this.bookingForm.controls; }
+  get rf() { return this.rejectForm.controls; }
 
   changeStatus(status:any){
     let payload :any = [{
@@ -313,7 +318,20 @@ export class NewRequestsComponent  implements OnInit{
     }
     else if(status == 'reject'){
       payload[0].status = 'r'
+      if(this.rejectForm.valid){
+        payload[0].remarks = this.rejectForm.value.remarks
+      }
+      else{
+        const controls = this.rejectForm.controls;
+        for (const name in controls) {
+          if (controls[name].invalid) {
+              controls[name].markAsDirty()
+          }
+        }
+        return
+      }
     }
+    console.log(payload)
     this.apiService.initiateLoading(true);
     this.apiService.updateEvent(payload).subscribe(
     (res : any)=>{

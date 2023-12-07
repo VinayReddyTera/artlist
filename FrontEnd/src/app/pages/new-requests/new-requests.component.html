@@ -72,9 +72,18 @@
           <h5>Reject Event</h5>
           <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
       </div>
+      <form [formGroup]="rejectForm" (ngSubmit)="changeStatus('reject')">
         <div class="modal-body">
-          <button class="btn btn-block btn-danger" (click)="changeStatus('reject')">Reject</button>
+          <div class="mb-3">
+            <label for="remarks">Remarks</label>
+            <textarea id="remarks" formControlName="remarks" class="form-control" id="remarks"></textarea>
+              <div *ngIf="rf.remarks?.errors?.required && rf.remarks?.dirty" class="required-message text-danger">
+                <small>Required Field!</small>
+              </div>
+          </div>
+          <button class="btn btn-block btn-danger" type="submit">Reject</button>
       </div>
+    </form>
       </div>
     </div>
   </div>

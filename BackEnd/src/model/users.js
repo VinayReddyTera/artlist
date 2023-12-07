@@ -1730,7 +1730,13 @@ userDB.fetchNewRequests = async (payload) => {
 
 userDB.updateEvent = async (payload) => {
   const collection = await connection.history();
-  let data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{status:payload.status}})
+  let data;
+  if(payload.status == 'r'){
+    data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{status:payload.status,remarks:payload.remarks}})
+  }
+  else{
+    data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{status:payload.status}})
+  }
   if (data.modifiedCount == 1 || data.acknowledged == true) {
     let res = {
       status: 200,

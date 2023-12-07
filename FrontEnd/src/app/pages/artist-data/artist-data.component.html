@@ -65,17 +65,27 @@
   
               <div class="table-responsive">
                 <table class="table table-nowrap mb-0">
+                  <thead class="thead-light">
+                    <tr>
+                      <th scope="col">Type</th>
+                      <th scope="col">Online</th>
+                      <th scope="col">Onsite</th>
+                    </tr>
+                  </thead>
                   <tbody>
                     <tr>
                       <th scope="row">Hourly :</th>
+                      <td><span class="text-success">{{artistData.skill.pricing.oHourly}} ₹</span></td>
                       <td><span class="text-success">{{artistData.skill.pricing.hourly}} ₹</span></td>
                     </tr>
                     <tr>
                       <th scope="row">Full Day :</th>
+                      <td><span class="text-success">{{artistData.skill.pricing.oFullDay}} ₹</span></td>
                       <td><span class="text-success">{{artistData.skill.pricing.fullDay}} ₹</span></td>
                     </tr>
                     <tr>
-                      <th scope="row">Event basis :</th>
+                      <th scope="row">Event :</th>
+                      <td><span class="text-success">{{artistData.skill.pricing.oEvent}} ₹</span></td>
                       <td><span class="text-success">{{artistData.skill.pricing.event}} ₹</span></td>
                     </tr>
                   </tbody>
