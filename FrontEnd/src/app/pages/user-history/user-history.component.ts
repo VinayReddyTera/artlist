@@ -202,35 +202,70 @@ export class UserHistoryComponent implements OnInit{
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "Address",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+      cellRenderer: (params:any)=> {
+        if(params.value === '' || params.value === null || params.value === undefined){
+          return 'N/A'
+        }
+        else{
+          return params.value
+        }
+      }
     },
     {
       field: "mandal",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "Mandal",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+      cellRenderer: (params:any)=> {
+        if(params.value === '' || params.value === null || params.value === undefined){
+          return 'N/A'
+        }
+        else{
+          return params.value
+        }
+      }
     },
     {
       field: "district",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "District",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+      cellRenderer: (params:any)=> {
+        if(params.value === '' || params.value === null || params.value === undefined){
+          return 'N/A'
+        }
+        else{
+          return params.value
+        }
+      }
     },
     {
       field: "state",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "State",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+            cellRenderer: (params:any)=> {
+        if(params.value === '' || params.value === null || params.value === undefined){
+          return 'N/A'
+        }
+        else{
+          return params.value
+        }
+      }
     },
     {
       field: "pincode",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "Pincode",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+            cellRenderer: (params:any)=> {
+        if(params.value === '' || params.value === null || params.value === undefined){
+          return 'N/A'
+        }
+        else{
+          return params.value
+        }
+      }
     },
     {
       field: "paid",
