@@ -917,11 +917,11 @@ router.get('/fetchNewRequests',verifyToken,(req,res,next)=>{
 
 //router to update event status
 router.post('/updateEvent',verifyToken,(req,res,next)=>{
-  let role = jwt.decode(req.headers.authorization).data.role;
+  let data = jwt.decode(req.headers.authorization).data;
   let count = 0;
   let payload = req.body;
   for(i in payload){
-  userservice.updateEvent(payload[i],role).then((data)=>{
+  userservice.updateEvent(payload[i],userData).then((data)=>{
     count += 1;
     if(count == payload.length){
       return res.json(data)

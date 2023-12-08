@@ -1013,9 +1013,65 @@ userService.fetchNewRequests=(payload)=>{
   })
 }
 
-userService.updateEvent=(payload,role)=>{
-  return userDB.updateEvent(payload,role).then((data)=>{
+userService.updateEvent=(updatePayload,userData)=>{
+  return userDB.updateEvent(updatePayload,userData.role).then((data)=>{
     if(data){
+      if(data.status == 200){
+        let payload;
+        if(userData.role = 'artist'){
+          payload
+        }
+        let roles = ['artist','user'];
+        let slotMap = {
+          1: '04:00 A.M - 09:00 A.M',
+          2: '09:00 A.M - 02:00 P.M',
+          3: '02:00 P.M - 07:00 P.M',
+          4: '07:00 P.M - 12:00 A.M',
+          5: '12:00 A.M - 04:00 A.M'
+        }
+        if(payload.type == 'hourly'){
+          payload.from = userService.formatDate(payload.from);
+          payload.to = userService.formatDate(payload.to);
+        }
+        else if(payload.type == 'event'){
+          payload.slot = slotMap[payload.slot]
+        }
+        for(let j of roles){
+          payload.role = j;
+          let payload1 = {
+            "subject" : '',
+            "email" : '',
+            "body" : ''
+            }
+            if(payload.type == 'hourly'){
+              payload.body = `Booking successful for hourly Event on ${new Date(payload.date).toDateString()}. `
+            }
+            else if(payload.type == 'fullDay'){
+              payload.body = `Booking successful for Full Day Event on ${new Date(payload.date).toDateString()}. `
+            }
+            else if(payload.type == 'event'){
+              payload.body = `Booking successful for Event on ${new Date(payload.date).toDateString()}. `
+            }
+            if(j == 'user'){
+              payload1.email = payload.candEmail;
+              payload.body = payload.body+`You have hired ${payload.artistName} as ${payload.name}.`
+            }
+            else{
+              payload1.email = payload.artistEmail;
+              payload.body = payload.body+`You have been hired by ${payload.candName} as ${payload.name}.`
+            }
+            let templatePath = 'templates/reminder.html';
+            ejs.renderFile(templatePath,payload,(err,html)=>{
+              if(err){
+                console.log(err)
+              }
+              else{
+                payload1.body = html;
+                userService.sendMail(payload1)
+              }
+            })
+        }
+      }
       return data
     }
     else{

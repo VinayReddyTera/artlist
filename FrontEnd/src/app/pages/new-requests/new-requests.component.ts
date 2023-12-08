@@ -139,35 +139,70 @@ export class NewRequestsComponent  implements OnInit{
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "Address",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+      cellRenderer: (params:any)=> {
+        if(params.value === '' || params.value === null || params.value === undefined){
+          return 'N/A'
+        }
+        else{
+          return params.value
+        }
+      }
     },
     {
       field: "mandal",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "Mandal",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+      cellRenderer: (params:any)=> {
+        if(params.value === '' || params.value === null || params.value === undefined){
+          return 'N/A'
+        }
+        else{
+          return params.value
+        }
+      }
     },
     {
       field: "district",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "District",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+      cellRenderer: (params:any)=> {
+        if(params.value === '' || params.value === null || params.value === undefined){
+          return 'N/A'
+        }
+        else{
+          return params.value
+        }
+      }
     },
     {
       field: "state",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "State",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+      cellRenderer: (params:any)=> {
+        if(params.value === '' || params.value === null || params.value === undefined){
+          return 'N/A'
+        }
+        else{
+          return params.value
+        }
+      }
     },
     {
       field: "pincode",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "Pincode",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+      cellRenderer: (params:any)=> {
+        if(params.value === '' || params.value === null || params.value === undefined){
+          return 'N/A'
+        }
+        else{
+          return params.value
+        }
+      }
     },
     {
       field: "paid",
@@ -311,7 +346,13 @@ export class NewRequestsComponent  implements OnInit{
 
   changeStatus(status:any){
     let payload :any = [{
-      id : this.eventData._id
+      id : this.eventData._id,
+      userName : this.eventData.candName,
+      userPhoneNo : this.eventData.phoneNo,
+      userEmail : this.eventData.email,
+      bookingType : this.eventData.bookingType,
+      type : this.eventData.type,
+      date : this.eventData.date
     }]
     if(status == 'approve'){
       payload[0].status = 'a'
@@ -330,6 +371,20 @@ export class NewRequestsComponent  implements OnInit{
         }
         return
       }
+    }
+    if(this.eventData.type == 'hourly'){
+      payload.from = this.eventData.from;
+      payload.to = this.eventData.to;
+    }
+    else if(this.eventData.type == 'event'){
+      payload.slot = this.eventData.slot
+    }
+    if(this.eventData.bookingType == 'onsite'){
+      payload.address = this.eventData.address;
+      payload.mandal = this.eventData.mandal;
+      payload.district = this.eventData.district;
+      payload.state = this.eventData.state;
+      payload.pincode = this.eventData.pincode;
     }
     console.log(payload)
     this.apiService.initiateLoading(true);
