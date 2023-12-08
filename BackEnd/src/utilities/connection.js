@@ -121,7 +121,7 @@ const history = Schema({
     feedback : String,
     rating:Number,
     remarks:String,
-    rescheduledBy:String,
+    modifiedBy:String,
     pricing : Object,
     type : String,
     bookingType : String,

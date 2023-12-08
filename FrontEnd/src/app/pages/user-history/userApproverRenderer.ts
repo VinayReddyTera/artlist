@@ -5,13 +5,13 @@ import { ICellRendererParams } from "ag-grid-community";
 @Component({
   selector: "status-component",
   template: `
-  <button [disabled]="(data.rescheduledBy != 'artist') || disableByDate" class="btn btn-success btn-rounded btn-icon icon" pTooltip="approve" tooltipPosition="top" (click)="changeStatus('approve')">
+  <button [disabled]="(data.modifiedBy != 'artist') || disableByDate" class="btn btn-success btn-rounded btn-icon icon" pTooltip="approve" tooltipPosition="top" (click)="changeStatus('approve')">
   <i class="mdi mdi-check edit"></i>
   </button>&nbsp;
-  <button [disabled]="(data.rescheduledBy != 'artist') || disableByDate" class="btn btn-danger btn-rounded btn-icon icon" pTooltip="reject" tooltipPosition="top" (click)="changeStatus('reject')">
+  <button [disabled]="(data.modifiedBy != 'artist') || disableByDate" class="btn btn-danger btn-rounded btn-icon icon" pTooltip="reject" tooltipPosition="top" (click)="changeStatus('reject')">
   <i class="mdi mdi-close edit"></i>
   </button>&nbsp;
-  <button [disabled]="(data.rescheduledBy != 'artist') || disableReschedule" class="btn btn-info btn-rounded btn-icon icon" pTooltip="reschedule" tooltipPosition="top" (click)="changeStatus('reschedule')">
+  <button [disabled]="(data.modifiedBy != 'artist') || disableReschedule" class="btn btn-info btn-rounded btn-icon icon" pTooltip="reschedule" tooltipPosition="top" (click)="changeStatus('reschedule')">
   <i class="mdi mdi-calendar-clock edit"></i>
   </button>
   `,

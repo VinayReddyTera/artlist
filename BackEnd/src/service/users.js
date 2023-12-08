@@ -1013,8 +1013,8 @@ userService.fetchNewRequests=(payload)=>{
   })
 }
 
-userService.updateEvent=(payload)=>{
-  return userDB.updateEvent(payload).then((data)=>{
+userService.updateEvent=(payload,role)=>{
+  return userDB.updateEvent(payload,role).then((data)=>{
     if(data){
       return data
     }

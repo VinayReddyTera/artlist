@@ -1728,14 +1728,14 @@ userDB.fetchNewRequests = async (payload) => {
   }
 }
 
-userDB.updateEvent = async (payload) => {
+userDB.updateEvent = async (payload,role) => {
   const collection = await connection.history();
   let data;
   if(payload.status == 'r'){
-    data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{status:payload.status,remarks:payload.remarks}})
+    data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{'status':payload.status,'remarks':payload.remarks,'modifiedBy':role}})
   }
   else{
-    data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{status:payload.status}})
+    data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{'status':payload.status,'modifiedBy':role}})
   }
   if (data.modifiedCount == 1 || data.acknowledged == true) {
     let res = {
@@ -1789,7 +1789,7 @@ userDB.updateBooking = async (payload) => {
         to : payload.data.to,
         status : 'rescheduled',
         reminderDates : arr,
-        rescheduledBy : payload.role
+        modifiedBy : payload.role
       }})
     }
     else if(payload.data.type == 'event'){
@@ -1798,7 +1798,7 @@ userDB.updateBooking = async (payload) => {
         status : 'rescheduled',
         slot : payload.data.slot,
         reminderDates : arr,
-        rescheduledBy : payload.role
+        modifiedBy : payload.role
       }})
     }
     else if(payload.data.type == 'fullDay'){
@@ -1806,7 +1806,7 @@ userDB.updateBooking = async (payload) => {
         status : 'rescheduled',
         date : payload.data.date,
         reminderDates : arr,
-        rescheduledBy : payload.role
+        modifiedBy : payload.role
       }})
     }
   }
@@ -1822,7 +1822,7 @@ userDB.updateBooking = async (payload) => {
           price : payload.data.price,
           reminderDates : arr,
           status : 'rescheduled',
-          rescheduledBy : payload.role,
+          modifiedBy : payload.role,
           bookingType : payload.data.bookingType,
           address : '',
           mandal : '',
@@ -1841,7 +1841,7 @@ userDB.updateBooking = async (payload) => {
           to : '',
           type : payload.data.type,
           reminderDates : arr,
-          rescheduledBy : payload.role,
+          modifiedBy : payload.role,
           bookingType : payload.data.bookingType,
           address : '',
           mandal : '',
@@ -1860,7 +1860,7 @@ userDB.updateBooking = async (payload) => {
           to : '',
           slot : '',
           reminderDates : arr,
-          rescheduledBy : payload.role,
+          modifiedBy : payload.role,
           bookingType : payload.data.bookingType,
           address : '',
           mandal : '',
@@ -1881,7 +1881,7 @@ userDB.updateBooking = async (payload) => {
           price : payload.data.price,
           reminderDates : arr,
           status : 'rescheduled',
-          rescheduledBy : payload.role,
+          modifiedBy : payload.role,
           bookingType : payload.data.bookingType,
           address : payload.data.address,
           mandal : payload.data.mandal,
@@ -1900,7 +1900,7 @@ userDB.updateBooking = async (payload) => {
           to : '',
           type : payload.data.type,
           reminderDates : arr,
-          rescheduledBy : payload.role,
+          modifiedBy : payload.role,
           bookingType : payload.data.bookingType,
           address : payload.data.address,
           mandal : payload.data.mandal,
@@ -1919,7 +1919,7 @@ userDB.updateBooking = async (payload) => {
           to : '',
           slot : '',
           reminderDates : arr,
-          rescheduledBy : payload.role,
+          modifiedBy : payload.role,
           bookingType : payload.data.bookingType,
           address : payload.data.address,
           mandal : payload.data.mandal,
