@@ -347,12 +347,13 @@ export class NewRequestsComponent  implements OnInit{
   changeStatus(status:any){
     let payload :any = [{
       id : this.eventData._id,
-      userName : this.eventData.candName,
-      userPhoneNo : this.eventData.phoneNo,
-      userEmail : this.eventData.email,
+      candName : this.eventData.candName,
+      candPhone : this.eventData.phoneNo,
+      candEmail : this.eventData.email,
       bookingType : this.eventData.bookingType,
       type : this.eventData.type,
-      date : this.eventData.date
+      date : this.eventData.date,
+      name : this.eventData.name
     }]
     if(status == 'approve'){
       payload[0].status = 'a'

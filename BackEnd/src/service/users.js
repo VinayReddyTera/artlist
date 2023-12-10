@@ -1017,10 +1017,7 @@ userService.updateEvent=(updatePayload,userData)=>{
   return userDB.updateEvent(updatePayload,userData.role).then((data)=>{
     if(data){
       if(data.status == 200){
-        let payload;
-        if(userData.role = 'artist'){
-          payload
-        }
+        let payload = {...updatePayload,...userData}
         let roles = ['artist','user'];
         let slotMap = {
           1: '04:00 A.M - 09:00 A.M',
@@ -1043,22 +1040,33 @@ userService.updateEvent=(updatePayload,userData)=>{
             "email" : '',
             "body" : ''
             }
+            if(updatePayload.status == 'a'){
+              payload1.subject = 'Event Accepted'
+            }
+            else if(updatePayload.status == 'r'){
+              payload1.subject = 'Event Rejected'
+            }
+            let text;
+            if(userData.role == 'artist'){
+              text = `${payload1.subject} by the ${userData.role} ${userData.artistName}`
+            }
+            else{
+              text = `${payload1.subject} by the ${userData.role} ${userData.candName}`
+            }
             if(payload.type == 'hourly'){
-              payload.body = `Booking successful for hourly Event on ${new Date(payload.date).toDateString()}. `
+              payload.body = `${text} for an hourly Event on ${new Date(payload.date).toDateString()}. `
             }
             else if(payload.type == 'fullDay'){
-              payload.body = `Booking successful for Full Day Event on ${new Date(payload.date).toDateString()}. `
+              payload.body = `${text} for an Full Day Event on ${new Date(payload.date).toDateString()}. `
             }
             else if(payload.type == 'event'){
-              payload.body = `Booking successful for Event on ${new Date(payload.date).toDateString()}. `
+              payload.body = `${text} for the Event on ${new Date(payload.date).toDateString()}. `
             }
             if(j == 'user'){
               payload1.email = payload.candEmail;
-              payload.body = payload.body+`You have hired ${payload.artistName} as ${payload.name}.`
             }
             else{
               payload1.email = payload.artistEmail;
-              payload.body = payload.body+`You have been hired by ${payload.candName} as ${payload.name}.`
             }
             let templatePath = 'templates/reminder.html';
             ejs.renderFile(templatePath,payload,(err,html)=>{

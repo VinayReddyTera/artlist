@@ -917,7 +917,31 @@ router.get('/fetchNewRequests',verifyToken,(req,res,next)=>{
 
 //router to update event status
 router.post('/updateEvent',verifyToken,(req,res,next)=>{
-  let data = jwt.decode(req.headers.authorization).data;
+  let payloadData = jwt.decode(req.headers.authorization).data;
+  let userData;
+  if(payloadData.role == 'artist'){
+    userData = {
+      artistName : payloadData.name,
+      artistPhone : payloadData.phoneNo,
+      artistEmail : payloadData.email,
+      role : payloadData.role
+    }
+  }
+  else if(payloadData.role == 'user'){
+    userData = {
+      candName : payloadData.name,
+      candPhone : payloadData.phoneNo,
+      candEmail : payloadData.email,
+      role : payloadData.role
+    }
+  }
+  else{
+    let response = {
+      status : 204,
+      data : 'Invalid Role'
+    }
+    return res.json(response)
+  }
   let count = 0;
   let payload = req.body;
   for(i in payload){

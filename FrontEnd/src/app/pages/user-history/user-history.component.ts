@@ -562,7 +562,14 @@ export class UserHistoryComponent implements OnInit{
 
   changeStatus(status:any){
     let payload :any = [{
-      id : this.eventData._id
+      id : this.eventData._id,
+      artistName : this.eventData.candName,
+      artistPhone : this.eventData.phoneNo,
+      artistEmail : this.eventData.email,
+      bookingType : this.eventData.bookingType,
+      type : this.eventData.type,
+      date : this.eventData.date,
+      name : this.eventData.name
     }]
     if(status == 'approve'){
       payload[0].status = 'a'
@@ -582,8 +589,23 @@ export class UserHistoryComponent implements OnInit{
         return
       }
     }
+    if(this.eventData.type == 'hourly'){
+      payload.from = this.eventData.from;
+      payload.to = this.eventData.to;
+    }
+    else if(this.eventData.type == 'event'){
+      payload.slot = this.eventData.slot
+    }
+    if(this.eventData.bookingType == 'onsite'){
+      payload.address = this.eventData.address;
+      payload.mandal = this.eventData.mandal;
+      payload.district = this.eventData.district;
+      payload.state = this.eventData.state;
+      payload.pincode = this.eventData.pincode;
+    }
     this.submitStatus(payload)
   }
+
 
   submitStatus(payload:any){
     this.apiService.initiateLoading(true);
