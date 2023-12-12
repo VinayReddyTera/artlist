@@ -984,7 +984,7 @@ export class UserHistoryComponent implements OnInit{
       status = 'c'
     }
     else status = event.data.status;
-    let obj = {
+    let obj:any = {
       id : event.data._id,
       status : status,
       artistName : event.data.candName,
@@ -994,6 +994,20 @@ export class UserHistoryComponent implements OnInit{
       type : event.data.type,
       date : event.data.date,
       name : event.data.name
+    }
+    if(event.data.type == 'hourly'){
+      obj.from = event.data.from;
+      obj.to = event.data.to;
+    }
+    else if(event.data.type == 'event'){
+      obj.slot = event.data.slot
+    }
+    if(event.data.bookingType == 'onsite'){
+      obj.address = event.data.address;
+      obj.mandal = event.data.mandal;
+      obj.district = event.data.district;
+      obj.state = event.data.state;
+      obj.pincode = event.data.pincode;
     }
     if (!existingRow) {
       this.modifiedRows.push(obj)
