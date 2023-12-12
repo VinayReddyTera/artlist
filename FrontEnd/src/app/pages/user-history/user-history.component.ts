@@ -986,7 +986,14 @@ export class UserHistoryComponent implements OnInit{
     else status = event.data.status;
     let obj = {
       id : event.data._id,
-      status : status
+      status : status,
+      artistName : event.data.candName,
+      artistPhone : event.data.phoneNo,
+      artistEmail : event.data.email,
+      bookingType : event.data.bookingType,
+      type : event.data.type,
+      date : event.data.date,
+      name : event.data.name
     }
     if (!existingRow) {
       this.modifiedRows.push(obj)

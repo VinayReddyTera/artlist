@@ -246,9 +246,37 @@ export class ArtistDashboardComponent implements OnInit{
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "Contact",
-      pinned : left,
       cellRenderer: contactRenderer,
       width:150
+    },
+    {
+      field: "paid",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Paid",
+      editable: true,
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: ['Not Paid','Paid']
+    },
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          if(params.value == 'Not Paid'){
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">Not Paid</span>`;
+            return link
+          }
+          else if(params.value == "Paid"){
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">Paid</span>`;
+            return link
+          }
+          else{
+            return 'N/A'
+          }
+        }
+      }
     },
     {
       field: "name",
@@ -373,36 +401,6 @@ export class ArtistDashboardComponent implements OnInit{
       filterParams: { maxNumConditions: 1 },
       headerName: "Pincode",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-    },
-    {
-      field: "paid",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      pinned : left,
-      headerName: "Paid",
-      editable: true,
-      cellEditor: 'agSelectCellEditor',
-      cellEditorParams: {
-        values: ['Not Paid','Paid']
-    },
-      cellRenderer: (params:any)=> {
-        if(params.value == null){
-          return 'N/A'
-        }
-        else{
-          if(params.value == 'Not Paid'){
-            let link = `<span class="badge badge-soft-danger" style="font-size:13px">Not Paid</span>`;
-            return link
-          }
-          else if(params.value == "Paid"){
-            let link = `<span class="badge badge-soft-success" style="font-size:13px">Paid</span>`;
-            return link
-          }
-          else{
-            return 'N/A'
-          }
-        }
-      }
     }
   ];
   defaultColDef : ColDef = {

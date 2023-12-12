@@ -1046,12 +1046,47 @@ userService.updateEvent=(updatePayload,userData)=>{
             else if(updatePayload.status == 'r'){
               payload1.subject = 'Event Rejected'
             }
-            let text;
-            if(userData.role == 'artist'){
-              text = `${payload1.subject} by the ${userData.role} ${userData.artistName}`
+            else if(updatePayload.status == 'c'){
+              payload1.subject = 'Event Completed'
             }
-            else{
-              text = `${payload1.subject} by the ${userData.role} ${userData.candName}`
+            else if(updatePayload.status == 'artist not attended'){
+              payload1.subject = 'Artist Not Attended Event'
+            }
+            else if(updatePayload.status == 'cancelled'){
+              payload1.subject = 'Event Cancelled'
+            }
+            let text;
+            if(updatePayload.status == 'a' || updatePayload.status == 'r'){
+              if(userData.role == 'artist'){
+                text = `${payload1.subject} by the ${userData.role} ${userData.artistName}`
+              }
+              else{
+                text = `${payload1.subject} by the ${userData.role} ${userData.candName}`
+              }
+            }
+            else if(updatePayload.status == 'c'){
+              if(userData.role == 'artist'){
+                text = `Event status marked as Completed by the ${userData.role} ${userData.artistName}`
+              }
+              else{
+                text = `Event status marked as Completed by the ${userData.role} ${userData.candName}`
+              }
+            }
+            else if(updatePayload.status == 'artist not attended'){
+              if(userData.role == 'artist'){
+                text = `Event status marked as Artist Not Attended by the ${userData.role} ${userData.artistName}`
+              }
+              else{
+                text = `Event status marked as Artist Not Attended by the ${userData.role} ${userData.candName}`
+              }
+            }
+            else if(updatePayload.status == 'cancelled'){
+              if(userData.role == 'artist'){
+                text = `Event status marked as Cancelled by the ${userData.role} ${userData.artistName}`
+              }
+              else{
+                text = `Event status marked as Cancelled by the ${userData.role} ${userData.candName}`
+              }
             }
             if(payload.type == 'hourly'){
               payload.body = `${text} for an hourly Event on ${new Date(payload.date).toDateString()}. `
