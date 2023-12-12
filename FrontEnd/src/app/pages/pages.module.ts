@@ -57,6 +57,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { RatingModule } from 'primeng/rating';
 import { pricingRenderer } from './skill-data/pricingRenderer';
 import { CommissionComponent } from './commission/commission.component';
+import { AllCommissionsComponent } from './all-commissions/all-commissions.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +95,8 @@ import { CommissionComponent } from './commission/commission.component';
     approverRenderer,
     UserApproverRenderer,
     pricingRenderer,
-    CommissionComponent
+    CommissionComponent,
+    AllCommissionsComponent
   ],
   imports: [
     CommonModule,

@@ -197,4 +197,12 @@ export class ApiService {
     return this.http.get(environment.domain+"fetchNotificationData")
   }
 
+  payArtCommission(payload:any):Observable<any>{
+    return this.http.post(environment.domain+"payArtCommission",payload)
+  }
+
+  fetchAllUnpaidCommissions():Observable<any>{
+    return this.http.get(environment.domain+"fetchAllUnpaidCommissions")
+  }
+
 }

@@ -8,11 +8,11 @@ import { ApiService } from '../services/api.service';
 declare const $:any;
 
 @Component({
-  selector: 'app-commission',
-  templateUrl: './commission.component.html',
-  styleUrls: ['./commission.component.css']
+  selector: 'app-all-commissions',
+  templateUrl: './all-commissions.component.html',
+  styleUrls: ['./all-commissions.component.css']
 })
-export class CommissionComponent implements OnInit{
+export class AllCommissionsComponent implements OnInit{
 
   constructor(private apiService : ApiService,private router:Router){}
 
@@ -189,11 +189,16 @@ export class CommissionComponent implements OnInit{
 
   ngOnInit(): void {
     this.apiService.initiateLoading(true);
-    this.apiService.fetchUnpaidCommissions().subscribe(
+    this.apiService.fetchAllUnpaidCommissions().subscribe(
       (res:any)=>{
         if(res.status == 200){
           this.usersRowData = res.data;
-          console.log(this.usersRowData)
+          console.log(res.data)
+          let data = res.data;
+          let output = [];
+          for(let i of data){
+            
+          }
         }
         else if(res.status == 205){
           this.successMessage = res.data

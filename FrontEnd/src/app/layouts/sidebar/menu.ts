@@ -20,7 +20,7 @@ export const MENU: MenuItem[] = [
         label: 'Commissions',
         icon: 'bx bx-money',
         link: '/commissions',
-        role: ['artist','admin','access-commissions']
+        role: ['artist','access-commissions']
     },
     {
         id: 3,
@@ -63,6 +63,13 @@ export const MENU: MenuItem[] = [
         icon: 'bxs-group',
         link : '/all-artists',
         role: ['admin','user','access-all-artists']
+    },
+    {
+        id: 2,
+        label: 'All Commissions',
+        icon: 'bx bx-money',
+        link: '/all-commissions',
+        role: ['admin','access-all-commissions']
     },
     {
         id: 9,

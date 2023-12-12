@@ -936,6 +936,33 @@ userService.fetchUnpaidCommissions=(payload)=>{
   })
 }
 
+userService.fetchAllUnpaidCommissions=(payload)=>{
+  return userDB.fetchAllUnpaidCommissions(payload).then((data)=>{
+    if(data){
+      if(data.status == 200){
+        let userData = data.userData;
+        let history = data.history;
+        let output = userService.generateOutput(payload.role,userData,history)
+        let res= {
+          status : 200,
+          data: output
+        }
+        return res
+      }
+      else{
+        return data
+      }
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to fetch history'
+      }
+      return res
+    }
+  })
+}
+
 userService.generateOutput = (role,userData,history)=>{
   // Create a mapping of userData based on _id
   const userDataMap = new Map(userData.map(user => [String(user._id), user]));
@@ -945,8 +972,11 @@ userService.generateOutput = (role,userData,history)=>{
     if(role == 'user'){
       newData = userDataMap.get(entry.artistId);
     }
-    else{
+    else if(role == 'artist'){
       newData = userDataMap.get(entry.userId);
+    }
+    else{
+      newData = userDataMap.get(entry.artistId);
     }
     if (newData) {
       entry.candName = newData.name;
@@ -1430,4 +1460,20 @@ userService.fetchUserDashboardData=(payload)=>{
     }
   })
 }
+
+userService.payArtCommission=(payload)=>{
+  return userDB.payArtCommission(payload).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to update now'
+      }
+      return res
+    }
+  })
+}
+
 module.exports = userService

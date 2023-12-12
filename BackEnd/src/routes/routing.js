@@ -892,6 +892,23 @@ router.get('/fetchUnpaidCommissions',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to fetch All Unpaid Commissions
+router.get('/fetchAllUnpaidCommissions',verifyToken,(req,res,next)=>{
+  let data = jwt.decode(req.headers.authorization).data;
+  let payload = {
+    id : data._id,
+    role : data.role
+  }
+  if(data.role != 'admin'){
+    return res.json({status : 204, data: 'Unauthorized'})
+  }
+  userservice.fetchAllUnpaidCommissions(payload).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 //router to give artist feedback
 router.post('/giveArtistFeedback',verifyToken,(req,res,next)=>{
   userservice.giveArtistFeedback(req.body).then((data)=>{
@@ -1005,6 +1022,22 @@ router.get('/fetchUserDashboardData',verifyToken,(req,res,next)=>{
   }).catch((err)=>{
     next(err)
   })
+})
+
+//router to pay artlist commission
+router.post('/payArtCommission',verifyToken,(req,res,next)=>{
+  let count = 0;
+  let payload = req.body;
+  for(i in payload){
+  userservice.payArtCommission(payload[i]).then((data)=>{
+    count += 1;
+    if(count == payload.length){
+      return res.json(data)
+    }
+    }).catch((err)=>{
+      next(err)
+  })
+}
 })
 
 //router to get reminder

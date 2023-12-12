@@ -18,6 +18,7 @@ import { AllApproversComponent } from './all-approvers/all-approvers.component';
 import { TagHistoryComponent } from './tag-history/tag-history.component';
 import { ArtistValidateComponent } from './artist-validate/artist-validate.component';
 import { CommissionComponent } from './commission/commission.component';
+import { AllCommissionsComponent } from './all-commissions/all-commissions.component';
 
 const routes: Routes = [
   {
@@ -169,7 +170,15 @@ const routes: Routes = [
     component: CommissionComponent,
     canActivate: [AuthGuard],
     data: {
-      role: ['admin','artist','access-commissions']
+      role: ['artist','access-commissions']
+    }
+  },
+  {
+    path: 'all-commissions',
+    component: AllCommissionsComponent,
+    canActivate: [AuthGuard],
+    data: {
+      role: ['admin','access-all-commissions']
     }
   },
   {
