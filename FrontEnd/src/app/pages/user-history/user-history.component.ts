@@ -57,7 +57,7 @@ export class UserHistoryComponent implements OnInit{
       filterParams: { maxNumConditions: 1 },
       headerName: "Status",
       editable: (params:any) => {
-        if(new Date(params.data.date)<new Date() && params.data.status != 'c'){
+        if(new Date(params.data.date)<new Date() && params.data.status != 'c' && params.data.status != 'r'){
           return true
         }
         else{
@@ -450,7 +450,7 @@ export class UserHistoryComponent implements OnInit{
       (res : any)=>{
         console.log(res)
         if(res.status == 200){
-          $('#giveFeedback').modal('hide')
+          $('#giveFeedback').modal('hide');
           let msgData = {
             severity : "success",
             summary : 'Success',

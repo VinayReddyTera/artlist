@@ -76,6 +76,7 @@ export class ArtistDataComponent implements OnInit{
       name:[this.artistData.skill.name],
       artistId:[this.artistData.id],
       price:[''],
+      modifiedBy:['user'],
       pricing:[this.artistData.skill.pricing]
     })
   }

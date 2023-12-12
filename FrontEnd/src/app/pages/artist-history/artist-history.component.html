@@ -23,6 +23,9 @@
       <ag-grid-angular
       style="width: 100%; height: 400px"
       class="ag-theme-alpine"
+      [rowSelection]="rowSelection"
+      [suppressRowClickSelection]="true"
+      [singleClickEdit]="true"
       [rowData]="usersRowData"
       [columnDefs]="usersColumnDefs"
       [animateRows]="true"
@@ -30,9 +33,14 @@
       [paginationPageSize]="10"
       [defaultColDef]="defaultColDef"
       (gridReady)="onGridReady($event)"
+      (cellValueChanged)="onRowValueChanged($event)"
       >
       </ag-grid-angular>
     </div>
+  </div>
+
+  <div>
+    <button class="btn btn-success" (click)="updateMultipleStatus()">Save Status</button>
   </div>
 
   <div class="modal fade" id="viewFeedback" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">

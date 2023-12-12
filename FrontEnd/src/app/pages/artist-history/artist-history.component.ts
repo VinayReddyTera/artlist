@@ -49,6 +49,48 @@ export class ArtistHistoryComponent  implements OnInit{
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "Status",
+      editable: (params:any) => {
+        if(new Date(params.data.date)<new Date() && params.data.status != 'c' && params.data.status != 'r'){
+          return true
+        }
+        else{
+          return false
+        }
+      },
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: (params:any) => {
+        const status = params.value;
+        let date = new Date(params.data.date)
+        if(date<new Date()){
+          if(status == 'r'){
+            return {
+              values: ['rejected']
+            }
+          }
+          else{
+            return {
+              values: ['completed','artist not attended','cancelled','Discard Editing']
+            }
+          }
+        }
+        else{
+          if(status == 'a'){
+            return {
+              values: ['accepted']
+            }
+          }
+          else if(status == 'r'){
+            return {
+              values: ['rejected']
+            }
+          }
+          else{
+            return {
+              values: [status]
+            }
+          }
+        }
+    },
       cellRenderer: (params:any)=> {
         if(params.value == null){
           return 'N/A'
@@ -58,16 +100,29 @@ export class ArtistHistoryComponent  implements OnInit{
             let link = `<span class="badge badge-soft-warning" style="font-size:13px">Pending</span>`;
             return link
           }
-          else if(params.value == 'a'){
+          else if(params.value == 'a' || params.value == 'accepted'){
             let link = `<span class="badge badge-soft-info" style="font-size:13px">Accepted</span>`;
             return link
           }
-          else if(params.value == 'r'){
-            let link = `<span class="badge badge-soft-danger" style="font-size:13px">rejected</span>`;
+          else if(params.value == 'r' || params.value == 'artist not attended' || params.value == 'cancelled'){
+            let text = ''
+            if(params.value == 'r'){
+              text = 'Rejected'
+            }
+            else text = params.value
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">${text}</span>`;
             return link
           }
           else if(params.value == 'c'){
             let link = `<span class="badge badge-soft-success" style="font-size:13px">Completed</span>`;
+            return link
+          }
+          else if(params.value == 'completed'){
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">Completed</span>`;
+            return link
+          }
+          else if(params.value == 'rescheduled'){
+            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Rescheduled</span>`;
             return link
           }
           else{
@@ -227,6 +282,8 @@ export class ArtistHistoryComponent  implements OnInit{
       cellRendererParams: { onStatusChange: this.viewFeedback.bind(this) }
     }
   ];
+  modifiedRows:any=[];
+  public rowSelection: 'single' | 'multiple' = 'multiple';
   defaultColDef : ColDef = {
     sortable:true,filter:true,resizable:true
   }
@@ -285,6 +342,83 @@ export class ArtistHistoryComponent  implements OnInit{
       this.rating = ''
     }
     $('#viewFeedback').modal('show')
+  }
+
+  onRowValueChanged(event:any) {
+    // console.log(event)
+    if(event.value == 'Discard Editing'){
+      event.node.setDataValue(event.colDef.field, event.oldValue);
+    }
+    const existingRow = this.modifiedRows.find((row:any) => row.id === event.data._id);
+    let status = ''
+    if(event.data.status == 'completed'){
+      status = 'c'
+    }
+    else status = event.data.status;
+    let obj = {
+      id : event.data._id,
+      status : status
+    }
+    if (!existingRow) {
+      this.modifiedRows.push(obj)
+    }
+    else{
+      for(let i of this.modifiedRows){
+        if(i.id == event.data._id){
+          i.status = status;
+          break;
+        }
+      }
+    }
+    console.log(this.modifiedRows)
+  }
+
+  updateMultipleStatus(){
+    if(this.modifiedRows.length>0){
+      this.apiService.initiateLoading(true);
+      this.apiService.updateEvent(this.modifiedRows).subscribe(
+      (res : any)=>{
+        console.log(res)
+        if(res.status == 200){
+          let msgData = {
+            severity : "success",
+            summary : 'Success',
+            detail : res.data,
+            life : 5000
+          }
+        this.apiService.sendMessage(msgData);
+        $(`#approve`).modal('hide');
+        $(`#reject`).modal('hide');
+        this.usersRowData = [];
+        this.errorMessage = null;
+        this.refresh();
+        }
+        else if(res.status == 204){
+          let msgData = {
+              severity : "error",
+              summary : 'Error',
+              detail : res.data,
+              life : 5000
+            }
+          this.apiService.sendMessage(msgData);
+        }
+      },
+      (err:any)=>{
+        console.log(err);
+      }
+    ).add(()=>{
+      this.apiService.initiateLoading(false)
+    })
+    }
+    else{
+      let msgData = {
+        severity : "error",
+        summary : 'Error',
+        detail : 'Edit atleast one row',
+        life : 5000
+      }
+      this.apiService.sendMessage(msgData);
+    }
   }
 
 }

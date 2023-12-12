@@ -2126,7 +2126,7 @@ userDB.fetchArtistDashboardData = async (payload) => {
       }
       todayEvents.push(obj)
     }
-    else if((new Date(i.date) < new Date()) && !i.feedback && i.date){
+    else if((new Date(i.date) < new Date()) && !i.feedback && i.date && i.status == 'c'){
       let userData = await userCollection.findOne({"_id":new ObjectId(i.userId)},{_id:0,name:1,email:1,phoneNo:1}).lean();
       obj.candName = userData.name;
       obj.candPhoneNo = userData.phoneNo;
@@ -2277,7 +2277,7 @@ userDB.fetchUserDashboardData = async (payload) => {
       }
       todayEvents.push(obj)
     }
-    else if((new Date(i.date) < new Date()) && !i.feedback && i.date){
+    else if((new Date(i.date) < new Date()) && !i.feedback && i.date && i.status == 'c'){
       let userData = await artistCollection.findOne({"_id":new ObjectId(i.artistId)},{_id:0,name:1,email:1,phoneNo:1}).lean();
       obj.candName = userData.name;
       obj.candPhoneNo = userData.phoneNo;

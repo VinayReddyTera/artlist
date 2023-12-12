@@ -471,7 +471,7 @@ export class UserDashboardComponent implements OnInit{
       field: "action",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
-      headerName: "Give/View Feedback",
+      headerName: "Give Feedback",
       cellRenderer: feedbackRenderer,
       cellRendererParams: { onStatusChange: this.viewFeedback.bind(this) }
     }
