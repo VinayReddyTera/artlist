@@ -77,7 +77,9 @@ export class ArtistDataComponent implements OnInit{
       artistId:[this.artistData.id],
       price:[''],
       modifiedBy:['user'],
-      pricing:[this.artistData.skill.pricing]
+      pricing:[this.artistData.skill.pricing],
+      commission:[''],
+      paid:[true]
     })
   }
 
@@ -119,6 +121,12 @@ export class ArtistDataComponent implements OnInit{
     let isFound = false;
     console.log(this.bookingForm.valid,this.bookingForm.value)
     if(this.bookingForm.valid){
+      if(this.bookingForm.value.paid){
+        this.bookingForm.controls.commission.setValue(this.bookingForm.value.price*0.95);
+      }
+      else{
+        this.bookingForm.controls.commission.setValue(-(this.bookingForm.value.price*0.05));
+      }
       if(type == 'fullDay'){
         for(let i of dates){
           if(new Date(i).toLocaleDateString() == new Date(date).toLocaleDateString()){
@@ -210,7 +218,7 @@ export class ArtistDataComponent implements OnInit{
           console.log(err);
         }
       ).add(()=>{
-        this.apiservice.initiateLoading(false)
+        this.apiservice.initiateLoading(false);
       })
       }
       else{
@@ -403,6 +411,15 @@ export class ArtistDataComponent implements OnInit{
         this.price = this.artistData.skill.pricing.oEvent
         this.bookingForm.controls.price.setValue(this.price);
       }
+    }
+  }
+
+  updatePay(data:any){
+    if(data == 'paynow'){
+      this.bookingForm.controls.paid.setValue(true);
+    }
+    else{
+      this.bookingForm.controls.paid.setValue(false);
     }
   }
 

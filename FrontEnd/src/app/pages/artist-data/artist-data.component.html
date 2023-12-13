@@ -301,7 +301,7 @@
                                       </div>
                                 </div>
                             </div>
-                      
+                            
                             <div class="form-group col-md-6" style="position: relative;">
                                 <div class="mb-3">
                                     <label for="to">To</label>
@@ -326,8 +326,19 @@
                             </div>
                           </div>
                           <div *ngIf="bookingForm.value.type" class="font-weight-bold price-text">Price : <span class="text-success">{{price}} ₹</span></div>
+                          <div *ngIf="bookingForm.value.type" class="form-row">
+                            <div class="form-check form-group col-md-6" style="padding-left: 25px;">
+                              <input name="formRadio" class="form-check-input" id="payNow" checked type="radio" (click)="updatePay('paynow')">
+                              <label for="payNow" class="form-check-label">Pay Now</label>
+                            </div>
+                            <div class="form-check form-group col-md-6" style="padding-left: 25px;">
+                              <input name="formRadio" class="form-check-input" id="payLater" type="radio" (click)="updatePay('paylater')">
+                              <label for="payLater" class="form-check-label">Pay Later</label>
+                            </div>
+                          </div>
                       <div class="mt-3 d-grid">
-                        <button class="btn btn-primary" type="submit">Book Now</button>
+                        <button *ngIf="bookingForm.value.paid" class="btn btn-success" type="submit">Pay and Book Now</button>
+                        <button *ngIf="!bookingForm.value.paid" class="btn btn-primary" type="submit">Book Now</button>
                       </div>
                     </form>
                   </div>

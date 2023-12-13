@@ -375,7 +375,9 @@ export class UserHistoryComponent implements OnInit{
       bookingType:['',[Validators.required]],
       type:['',[Validators.required]],
       date:['',[Validators.required]],
-      price:['']
+      price:[''],
+      commission:[''],
+      paid:[true]
     })
     this.apiService.initiateLoading(true);
     this.apiService.fetchHistory().subscribe(
@@ -1035,6 +1037,15 @@ export class UserHistoryComponent implements OnInit{
         life : 5000
       }
       this.apiService.sendMessage(msgData);
+    }
+  }
+
+  updatePay(data:any){
+    if(data == 'paynow'){
+      this.bookingForm.controls.paid.setValue(true);
+    }
+    else{
+      this.bookingForm.controls.paid.setValue(false);
     }
   }
 
