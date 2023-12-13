@@ -59,6 +59,7 @@ import { pricingRenderer } from './skill-data/pricingRenderer';
 import { CommissionComponent } from './commission/commission.component';
 import { AllCommissionsComponent } from './all-commissions/all-commissions.component';
 import { commissionRenderer } from './all-commissions/commissionRenderer';
+import { payCommissionRenderer } from './all-commissions/payCommission';
 
 @NgModule({
   declarations: [
@@ -98,7 +99,8 @@ import { commissionRenderer } from './all-commissions/commissionRenderer';
     pricingRenderer,
     CommissionComponent,
     AllCommissionsComponent,
-    commissionRenderer
+    commissionRenderer,
+    payCommissionRenderer
   ],
   imports: [
     CommonModule,

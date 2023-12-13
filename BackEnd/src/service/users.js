@@ -114,6 +114,7 @@ userService.sendMail=(payload)=>{
         from : process.env.mailId,
         to : payload.email,
         subject : payload.subject,
+        cc : payload?.cc,
         html : payload.body
     }
 
@@ -964,38 +965,38 @@ userService.fetchAllUnpaidCommissions=(payload)=>{
   })
 }
 
-userService.modifyAllUnpaid=(inputArray)=>{
- // Create an object to store grouped data
-const groupedData = {};
+userService.modifyAllUnpaid = (inputArray) => {
+  // Create an object to store grouped data
+  const groupedData = {};
 
-// Iterate through the input array and group data based on artistId
-inputArray.forEach(item => {
-  const { artistId, candName, email, phoneNo, commission, ...rest } = item;
+  // Iterate through the input array and group data based on artistId
+  inputArray.forEach(item => {
+    const { artistId, candName, email, phoneNo, commission, ...rest } = item;
 
-  // Create a key based on artistId
-  const key = artistId;
+    // Create a key based on artistId
+    const key = artistId;
 
-  // If the key doesn't exist in the groupedData object, create an entry
-  if (!groupedData[key]) {
-    groupedData[key] = {
-      artistId,
-      candName,
-      email,
-      phoneNo,
-      commission: 0, // Initialize commission to 0
-      data: [],
-    };
-  }
+    // If the key doesn't exist in the groupedData object, create an entry
+    if (!groupedData[key]) {
+      groupedData[key] = {
+        artistId,
+        candName,
+        email,
+        phoneNo,
+        commission: 0, // Initialize commission to 0
+        data: [],
+      };
+    }
 
-  // Add the commission to the total commission for the artist
-  groupedData[key].commission += commission;
-  const entryWithCommission = { ...rest, commission };
-  // Add the data to the corresponding group
-  groupedData[key].data.push(entryWithCommission);
-});
+    // Add the commission to the total commission for the artist
+    groupedData[key].commission += commission;
+    const entryWithCommission = { ...rest, commission };
+    // Add the data to the corresponding group
+    groupedData[key].data.push(entryWithCommission);
+  });
 
-// Convert the groupedData object values to an array
-return Object.values(groupedData);
+  // Convert the groupedData object values to an array
+  return Object.values(groupedData);
 }
 
 userService.generateOutput = (role,userData,history)=>{
@@ -1449,21 +1450,21 @@ userService.getReminder=()=>{
   })
 }
 
-userService.formatDate = (input)=>{
+userService.formatDate = (input) => {
   input = new Date(input)
-    // Get day, month, year
-let day = input.toLocaleString('en-US', { weekday: 'short' });
-let month = input.toLocaleString('en-US', { month: 'short' });
-let date = input.getDate();
-let year = input.getFullYear();
+  // Get day, month, year
+  let day = input.toLocaleString('en-US', { weekday: 'short' });
+  let month = input.toLocaleString('en-US', { month: 'short' });
+  let date = input.getDate();
+  let year = input.getFullYear();
 
-// Get hours, minutes, and AM/PM
-let hours = input.getHours() % 12 || 12; // Convert to 12-hour format
-let minutes = input.getMinutes();
-let amPm = input.getHours() >= 12 ? 'P.M' : 'A.M';
+  // Get hours, minutes, and AM/PM
+  let hours = input.getHours() % 12 || 12; // Convert to 12-hour format
+  let minutes = input.getMinutes();
+  let amPm = input.getHours() >= 12 ? 'P.M' : 'A.M';
 
-// Format the output string
-return `${day} ${month} ${date} ${year} ${hours}:${minutes.toString().padStart(2, '0')} ${amPm}`;
+  // Format the output string
+  return `${day} ${month} ${date} ${year} ${hours}:${minutes.toString().padStart(2, '0')} ${amPm}`;
 }
 
 userService.fetchArtistDashboardData=(payload)=>{
@@ -1496,8 +1497,66 @@ userService.fetchUserDashboardData=(payload)=>{
   })
 }
 
-userService.payArtCommission=(payload)=>{
-  return userDB.payArtCommission(payload).then((data)=>{
+userService.payArtCommission=(payload,userData)=>{
+  return userDB.payArtCommission(payload.id).then(async(data)=>{
+    if(data){
+      if(data.status == 200){;
+        let ccEmails = await userDB.fetchAdminEmails();
+        if(ccEmails){
+          let payload1;
+          let mailPayload;
+          if(userData.role == 'admin'){
+            payload1 = {
+              "subject" : 'Commission Payment Success',
+              "email" : ccEmails,
+              "body" : '',
+              "cc":payload.email
+            }         
+            mailPayload = {
+              "button" : false,
+              "name" : false,
+              "body" : `This is to inform you that the commission of rupees ${payload.commission} was paid by the team Artlist to artist ${payload.name}.`,
+            }
+          }
+          else if(userData.role == 'artist'){
+            payload1 = {
+              "subject" : 'Commission Payment Success',
+              "email" : userData.email,
+              "body" : '',
+              "cc":ccEmails
+            }
+            mailPayload = {
+              "button" : false,
+              "name" : false,
+              "body" : `This is to inform you that the commission of rupees ${payload.commission} was paid by the artist ${userData.name} to team Artlist.`,
+            }
+          }
+          let templatePath = 'templates/welcome.html';
+          ejs.renderFile(templatePath,mailPayload,(err,html)=>{
+            if(err){
+              console.log(err)
+            }
+            else{
+              payload1.body = html;
+              userService.sendMail(payload1)
+            }
+          })
+        }
+      }
+      return data;
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to update now'
+      }
+      return res
+    }
+  })
+}
+
+userService.test=()=>{
+  return userDB.test().then((data)=>{
     if(data){
       return data
     }

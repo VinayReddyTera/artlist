@@ -1660,7 +1660,7 @@ userDB.fetchUnpaidCommissions = async (payload) => {
   }
 }
 
-userDB.fetchAllUnpaidCommissions = async (payload) => {
+userDB.fetchAllUnpaidCommissions = async () => {
   const collection1 = await connection.history();
   let data;
   let userData;
@@ -2386,8 +2386,39 @@ userDB.fetchUserDashboardData = async (payload) => {
 
 userDB.payArtCommission = async (payload) => {
   const collection = await connection.history();
-  let data = await collection.updateOne({"_id":new ObjectId(payload)},{$set:{commissionPaid:true}})
-  if (data.modifiedCount == 1) {
+  let data = await collection.updateMany({"_id":{ $in: payload }},{$set:{commissionPaid:'Paid'}})
+  if (data.modifiedCount == payload.length) {
+    let res = {
+      status: 200,
+      data: 'Successfully updated'
+    }
+    return res
+  }
+  else {
+    let res = {
+      status: 204,
+      data: 'Unable to update'
+    }
+    return res
+  }
+}
+
+userDB.fetchAdminEmails = async () => {
+  const collection = await connection.getTag();
+  let data = await collection.find({'role':'admin'},{_id:0,email:1})
+  const emails = data.map(item => item.email);
+  if (emails.length>0) {
+    return emails
+  }
+  else {
+    return false
+  }
+}
+
+userDB.test = async () => {
+  const collection = await connection.history();
+  let data = await collection.updateMany({},{$set:{commissionPaid:'Not Paid'}})
+  if (data) {
     let res = {
       status: 200,
       data: 'Successfully updated'

@@ -241,15 +241,19 @@ export class CommissionComponent implements OnInit{
   }
 
   refresh(){
-    this.ngOnInit();
     this.commission = 0;
     this.showBtn = false;
+    this.usersRowData = [];
+    this.ngOnInit();
   }
 
   pay(){
-    let payload:any = [];
+    let payload:any = {
+      id:[],
+      commission:Math.round(this.commission)
+    };
     for(let i of this.usersRowData){
-      payload.push(i._id)
+      payload.id.push(i._id)
     }
     this.apiService.initiateLoading(true);
     this.apiService.payArtCommission(payload).subscribe(

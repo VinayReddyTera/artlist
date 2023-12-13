@@ -1026,23 +1026,26 @@ router.get('/fetchUserDashboardData',verifyToken,(req,res,next)=>{
 
 //router to pay artlist commission
 router.post('/payArtCommission',verifyToken,(req,res,next)=>{
-  let count = 0;
-  let payload = req.body;
-  for(i in payload){
-  userservice.payArtCommission(payload[i]).then((data)=>{
-    count += 1;
-    if(count == payload.length){
+  let payload = jwt.decode(req.headers.authorization).data;
+  userservice.payArtCommission(req.body,payload).then((data)=>{
       return res.json(data)
-    }
     }).catch((err)=>{
       next(err)
   })
-}
 })
 
 //router to get reminder
 router.get('/reminder',(req,res,next)=>{
   userservice.getReminder().then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
+//router to test
+router.get('/test',(req,res,next)=>{
+  userservice.test().then((data)=>{
     return res.json(data)
   }).catch((err)=>{
     next(err)

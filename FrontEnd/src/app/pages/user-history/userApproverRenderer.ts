@@ -21,7 +21,6 @@ export class UserApproverRenderer implements AgRendererComponent {
   data: any;
   params:any;
   disable:any = false;
-  // disableReschedule = false;
   
   agInit(params: ICellRendererParams): void {
     this.data = params.data;
@@ -33,9 +32,6 @@ export class UserApproverRenderer implements AgRendererComponent {
     if((status == 'r' || status == 'a') && new Date(params.data.date)>=new Date()){
       this.disable = false
     }
-    // if(this.data.modifiedBy == 'user' && new Date(params.data.date)<new Date() && (status == 'completed' || status == 'c' || status == 'artist not attended' || status =='cancelled')){
-    //   this.disableReschedule = true;
-    // }
   }
 
   refresh(params: ICellRendererParams) {
