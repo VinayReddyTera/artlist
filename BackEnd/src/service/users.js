@@ -943,9 +943,10 @@ userService.fetchAllUnpaidCommissions=(payload)=>{
         let userData = data.userData;
         let history = data.history;
         let output = userService.generateOutput(payload.role,userData,history)
+        let modified = userService.modifyAllUnpaid(output)
         let res= {
           status : 200,
-          data: output
+          data: modified
         }
         return res
       }
@@ -961,6 +962,40 @@ userService.fetchAllUnpaidCommissions=(payload)=>{
       return res
     }
   })
+}
+
+userService.modifyAllUnpaid=(inputArray)=>{
+ // Create an object to store grouped data
+const groupedData = {};
+
+// Iterate through the input array and group data based on artistId
+inputArray.forEach(item => {
+  const { artistId, candName, email, phoneNo, commission, ...rest } = item;
+
+  // Create a key based on artistId
+  const key = artistId;
+
+  // If the key doesn't exist in the groupedData object, create an entry
+  if (!groupedData[key]) {
+    groupedData[key] = {
+      artistId,
+      candName,
+      email,
+      phoneNo,
+      commission: 0, // Initialize commission to 0
+      data: [],
+    };
+  }
+
+  // Add the commission to the total commission for the artist
+  groupedData[key].commission += commission;
+  const entryWithCommission = { ...rest, commission };
+  // Add the data to the corresponding group
+  groupedData[key].data.push(entryWithCommission);
+});
+
+// Convert the groupedData object values to an array
+return Object.values(groupedData);
 }
 
 userService.generateOutput = (role,userData,history)=>{

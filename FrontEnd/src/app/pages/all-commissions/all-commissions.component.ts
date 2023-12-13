@@ -4,6 +4,7 @@ import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { contactDetailsRenderer } from '../all-approvers/contactRenderer';
 import { dateRenderer } from '../dateRenderer';
 import { ApiService } from '../services/api.service';
+import { commissionRenderer } from './commissionRenderer';
 
 declare const $:any;
 
@@ -36,50 +37,6 @@ export class AllCommissionsComponent implements OnInit{
       width:150
     },
     {
-      field: "paid",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "User Paid",
-      cellRenderer: (params:any)=> {
-        if(params.value == null){
-          return 'N/A'
-        }
-        else{
-          if(params.value == false){
-            let link = `<span class="badge badge-soft-danger" style="font-size:13px">Not Paid</span>`;
-            return link
-          }
-          else if(params.value == true){
-            let link = `<span class="badge badge-soft-success" style="font-size:13px">Paid</span>`;
-            return link
-          }
-          else{
-            return 'N/A'
-          }
-        }
-      }
-    },
-    {
-      field: "commissionPaid",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Commission Status",
-      cellRenderer: (params:any)=> {
-        if(params.value == null){
-          return 'N/A'
-        }
-        else{
-          if(params.value == 'Not Paid'){
-            let link = `<span class="badge badge-soft-danger" style="font-size:13px">Not Paid</span>`;
-            return link
-          }
-          else{
-            return 'N/A'
-          }
-        }
-      }
-    },
-    {
       field: "commission",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
@@ -101,79 +58,12 @@ export class AllCommissionsComponent implements OnInit{
       }
     },
     {
-      field: "price",
+      field: "action",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
-      headerName: "Price",
-      cellRenderer: (params:any)=> {
-        if(params.value == null){
-          return 'N/A'
-        }
-        else{
-          let data = `<span class="text-success">${params.value} ₹</span>`
-          return data
-        }
-      }
-    },
-    {
-      field: "paymentType",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Payment Type",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-    },
-    {
-      field: "name",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Skill Name",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-    },
-    {
-      field: "status",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Status",
-      cellRenderer: (params:any)=> {
-        if(params.value == null){
-          return 'N/A'
-        }
-        else{
-          if(params.value == 'pending'){
-            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Pending</span>`;
-            return link
-          }
-          else if(params.value == 'a'){
-            let link = `<span class="badge badge-soft-info" style="font-size:13px">Accepted</span>`;
-            return link
-          }
-          else if(params.value == 'r'){
-            let link = `<span class="badge badge-soft-danger" style="font-size:13px">rejected</span>`;
-            return link
-          }
-          else if(params.value == 'c'){
-            let link = `<span class="badge badge-soft-success" style="font-size:13px">Completed</span>`;
-            return link
-          }
-          else{
-            return params.value
-          }
-        }
-      }
-    },
-    {
-      field: "type",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Booking Type",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-    },
-    {
-      field: "date",
-      filter: "agDateColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Date",
-      cellRenderer: dateRenderer
+      headerName: "View Genre",
+      cellRenderer: commissionRenderer,
+      cellRendererParams: { onStatusChange: this.viewAll.bind(this) }
     }
   ];
   defaultColDef : ColDef = {
@@ -192,13 +82,8 @@ export class AllCommissionsComponent implements OnInit{
     this.apiService.fetchAllUnpaidCommissions().subscribe(
       (res:any)=>{
         if(res.status == 200){
-          this.usersRowData = res.data;
           console.log(res.data)
-          let data = res.data;
-          let output = [];
-          for(let i of data){
-            
-          }
+          this.usersRowData = res.data;
         }
         else if(res.status == 205){
           this.successMessage = res.data
@@ -292,6 +177,10 @@ export class AllCommissionsComponent implements OnInit{
       this.apiService.initiateLoading(false)
       this.refresh()
     })
+  }
+
+  viewAll(data:any){
+    console.log(data)
   }
 
 }
