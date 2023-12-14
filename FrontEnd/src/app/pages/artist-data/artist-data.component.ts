@@ -417,9 +417,11 @@ export class ArtistDataComponent implements OnInit{
   updatePay(data:any){
     if(data == 'paynow'){
       this.bookingForm.controls.paid.setValue(true);
+      this.bookingForm.addControl('paymentType', new FormControl('online', Validators.required));
     }
     else{
       this.bookingForm.controls.paid.setValue(false);
+      this.bookingForm.removeControl('paymentType');
     }
   }
 

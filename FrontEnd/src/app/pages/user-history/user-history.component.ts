@@ -322,6 +322,7 @@ export class UserHistoryComponent implements OnInit{
   minDate : Date = new Date(new Date().setDate(new Date().getDate()+1))
   showFrom:boolean=false;
   price:any;
+  arrear:any = 0;
   rejectionForm:any;
   states = [
     "Andhra Pradesh",
@@ -504,7 +505,9 @@ export class UserHistoryComponent implements OnInit{
         artistId:[data.artistId,[Validators.required]],
         price:[data.price,[Validators.required]],
         date:[new Date(data.date),[Validators.required]],
-        name:[data.name,[Validators.required]]
+        name:[data.name,[Validators.required]],
+        commission:[data.commission],
+        paid:[data.paid]
       })
       if(data.type == 'hourly'){
         this.showFrom = true;
@@ -715,6 +718,7 @@ export class UserHistoryComponent implements OnInit{
           id : this.eventData._id,
           data : this.bookingForm.value
         }
+        console.log(payload)
         this.apiService.updateBooking(payload).subscribe(
         (res : any)=>{
           console.log(res)
@@ -868,7 +872,7 @@ export class UserHistoryComponent implements OnInit{
   addField(){
     this.bookingForm.controls.date.setValue('');
     if(this.bookingForm.value.type == 'hourly'){
-      this.price = '0';
+      this.price = 0;
       this.bookingForm.controls.price.setValue(this.price);
       this.bookingForm.addControl('from', new FormControl('', Validators.required));
       this.bookingForm.addControl('to', new FormControl('', Validators.required));
@@ -881,7 +885,7 @@ export class UserHistoryComponent implements OnInit{
     }
     if(this.bookingForm.value.bookingType == 'onsite'){
       if(this.bookingForm.value.type == 'event'){
-        this.price = this.eventData.pricing.event
+        this.price = this.eventData.pricing.event;
         this.bookingForm.controls.price.setValue(this.price);
         this.bookingForm.addControl('slot', new FormControl('', Validators.required));
       }
@@ -889,7 +893,7 @@ export class UserHistoryComponent implements OnInit{
         this.bookingForm.removeControl('slot');
       }
       if(this.bookingForm.value.type == 'fullDay'){
-        this.price = this.eventData.pricing.fullDay
+        this.price = this.eventData.pricing.fullDay;
         this.bookingForm.controls.price.setValue(this.price);
       }
     }
@@ -920,6 +924,7 @@ export class UserHistoryComponent implements OnInit{
       this.bookingForm.controls.state.setValue(this.eventData.state);
       this.bookingForm.controls.pincode.setValue(this.eventData.pincode);
     }
+    this.arrear = this.eventData.price - this.price;
   }
 
   addAddress(){
