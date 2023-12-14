@@ -611,7 +611,6 @@ export class UserHistoryComponent implements OnInit{
     this.submitStatus(payload)
   }
 
-
   submitStatus(payload:any){
     this.apiService.initiateLoading(true);
     this.apiService.updateEvent(payload).subscribe(
@@ -849,6 +848,7 @@ export class UserHistoryComponent implements OnInit{
       this.bookingForm.controls.from.markAsDirty();
       this.bookingForm.controls.to.markAsDirty();
     }
+    this.arrear = this.eventData.price - this.price;
   }
 
   calTimeDiff(start:any,end:any){
@@ -978,6 +978,7 @@ export class UserHistoryComponent implements OnInit{
       this.bookingForm.controls.state.setValue(this.eventData.state);
       this.bookingForm.controls.pincode.setValue(this.eventData.pincode);
     }
+    this.arrear = this.eventData.price - this.price;
   }
 
   onRowValueChanged(event:any) {
