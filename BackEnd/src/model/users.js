@@ -1817,6 +1817,13 @@ userDB.updatePay = async (payload) => {
 
 userDB.updateBooking = async (payload) => {
   const collection = await connection.history();
+  if(payload.data.paid && payload.refundStatus == 'positive'){
+    const userCollection = await connection.getUsers();
+    let arrearUpdate = await userCollection.updateOne({"_id":new ObjectId(payload.data.userId)},{$inc:{'wallet':-payload.oldPrice}});
+    if(arrearUpdate.modifiedCount != 1){
+      return {status:204,data:'unable to update wallet amount and accept event'}
+    }
+  }
   if(payload?.wallet){
     const userCollection = await connection.getUsers();
     let arrearUpdate = await userCollection.updateOne({"_id":new ObjectId(payload.data.userId)},{$inc:{'wallet':payload.wallet}});
@@ -1839,7 +1846,8 @@ userDB.updateBooking = async (payload) => {
         to : payload.data.to,
         status : 'rescheduled',
         reminderDates : arr,
-        modifiedBy : payload.role
+        modifiedBy : payload.role,
+        refundStatus : 'negative'
       }})
     }
     else if(payload.data.type == 'event'){
@@ -1848,7 +1856,8 @@ userDB.updateBooking = async (payload) => {
         status : 'rescheduled',
         slot : payload.data.slot,
         reminderDates : arr,
-        modifiedBy : payload.role
+        modifiedBy : payload.role,
+        refundStatus : 'negative'
       }})
     }
     else if(payload.data.type == 'fullDay'){
@@ -1856,7 +1865,8 @@ userDB.updateBooking = async (payload) => {
         status : 'rescheduled',
         date : payload.data.date,
         reminderDates : arr,
-        modifiedBy : payload.role
+        modifiedBy : payload.role,
+        refundStatus : 'negative'
       }})
     }
   }
@@ -1880,7 +1890,8 @@ userDB.updateBooking = async (payload) => {
           mandal : '',
           district : '',
           state : '',
-          pincode:''
+          pincode:'',
+          refundStatus : 'negative'
         }})
       }
       else if(payload.data.type == 'event'){
@@ -1901,7 +1912,8 @@ userDB.updateBooking = async (payload) => {
           mandal : '',
           district : '',
           state : '',
-          pincode:''
+          pincode:'',
+          refundStatus : 'negative'
         }})
       }
       else if(payload.data.type == 'fullDay'){
@@ -1922,7 +1934,8 @@ userDB.updateBooking = async (payload) => {
           mandal : '',
           district : '',
           state : '',
-          pincode:''
+          pincode:'',
+          refundStatus : 'negative'
         }})
       }
     }
@@ -1945,7 +1958,8 @@ userDB.updateBooking = async (payload) => {
           mandal : payload.data.mandal,
           district : payload.data.district,
           state : payload.data.state,
-          pincode:payload.data.pincode
+          pincode:payload.data.pincode,
+          refundStatus : 'negative'
         }})
       }
       else if(payload.data.type == 'event'){
@@ -1966,7 +1980,8 @@ userDB.updateBooking = async (payload) => {
           mandal : payload.data.mandal,
           district : payload.data.district,
           state : payload.data.state,
-          pincode:payload.data.pincode
+          pincode:payload.data.pincode,
+          refundStatus : 'negative'
         }})
       }
       else if(payload.data.type == 'fullDay'){
@@ -1987,7 +2002,8 @@ userDB.updateBooking = async (payload) => {
           mandal : payload.data.mandal,
           district : payload.data.district,
           state : payload.data.state,
-          pincode:payload.data.pincode
+          pincode:payload.data.pincode,
+          refundStatus : 'negative'
         }})
       }
     }

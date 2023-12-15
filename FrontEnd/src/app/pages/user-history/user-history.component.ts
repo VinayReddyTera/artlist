@@ -735,6 +735,10 @@ export class UserHistoryComponent implements OnInit{
         if(this.arrear>0){
           payload.wallet = this.arrear;
         }
+        if(this.eventData.paid && this.eventData.refundStatus == 'positive'){
+          payload.oldPrice = this.eventData.price;
+          payload.refundStatus = this.eventData.refundStatus
+        }
         console.log(payload)
         this.apiService.updateBooking(payload).subscribe(
         (res : any)=>{
