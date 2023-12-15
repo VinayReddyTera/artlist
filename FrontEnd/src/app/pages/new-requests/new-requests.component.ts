@@ -323,7 +323,8 @@ export class NewRequestsComponent  implements OnInit{
         bookingType:[data.bookingType,[Validators.required]],
         artistId:[data.artistId,[Validators.required]],
         date:[new Date(data.date),[Validators.required]],
-        userId:[data.userId,[Validators.required]]
+        userId:[data.userId,[Validators.required]],
+        paid : [data.paid]
       })
       if(data.type == 'hourly'){
         this.timeDiff = this.calTimeDiff(formatDate(new Date(data.from), 'HH:mm', 'en-US'),formatDate(new Date(data.to), 'HH:mm', 'en-US'))
@@ -531,9 +532,13 @@ export class NewRequestsComponent  implements OnInit{
           this.bookingForm.controls.to.setValue(to);
         }
         this.apiService.initiateLoading(true);
-        let payload = {
+        let payload:any = {
           id : this.eventData._id,
           data : this.bookingForm.value
+        }
+        if(this.eventData.paid && this.eventData.refundStatus == 'positive'){
+          payload.oldPrice = this.eventData.price;
+          payload.refundStatus = this.eventData.refundStatus
         }
         this.apiService.updateBooking(payload).subscribe(
         (res : any)=>{
