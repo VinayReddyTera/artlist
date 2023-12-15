@@ -123,7 +123,7 @@ const history = Schema({
     rating:Number,
     remarks:String,
     modifiedBy:String,
-    isRejected:{type:Boolean,default:false},
+    refundStatus:{type:Boolean,default:'negative'},
     pricing : Object,
     type : String,
     bookingType : String,

@@ -1757,22 +1757,24 @@ userDB.updateEvent = async (payload,role) => {
   const collection = await connection.history();
   let data;
   if(payload.status == 'r'){
-    const userCollection = await connection.getUsers();
-    let arrearUpdate = await userCollection.updateOne({"_id":new ObjectId(payload.userId)},{$inc:{'wallet':payload.price}});
-    if(arrearUpdate.modifiedCount != 1){
-      return {status:204,data:'unable to update wallet amount and reject event'}
+    if(payload.paid && payload.refundStatus == 'negative'){
+      const userCollection = await connection.getUsers();
+      let arrearUpdate = await userCollection.updateOne({"_id":new ObjectId(payload.userId)},{$inc:{'wallet':payload.price}});
+      if(arrearUpdate.modifiedCount != 1){
+        return {status:204,data:'unable to update wallet amount and reject event'}
+      }
     }
-    data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{'status':payload.status,'remarks':payload.remarks,'modifiedBy':role,"isRejected":true}})
+    data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{'status':payload.status,'remarks':payload.remarks,'modifiedBy':role,"refundStatus":'positive'}})
   }
   else if(payload.status == 'a'){
-    if(payload.isRejected){
+    if(payload.paid && payload.refundStatus == 'positive'){
       const userCollection = await connection.getUsers();
       let arrearUpdate = await userCollection.updateOne({"_id":new ObjectId(payload.userId)},{$inc:{'wallet':-payload.price}});
       if(arrearUpdate.modifiedCount != 1){
         return {status:204,data:'unable to update wallet amount and accept event'}
       }
     }
-    data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{'status':payload.status,'remarks':payload.remarks,'modifiedBy':role}})
+    data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{'status':payload.status,'remarks':payload.remarks,'modifiedBy':role,"refundStatus":'negative'}})
     
   }
   else{

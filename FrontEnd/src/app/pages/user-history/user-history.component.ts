@@ -581,8 +581,9 @@ export class UserHistoryComponent implements OnInit{
       date : this.eventData.date,
       name : this.eventData.name,
       price : this.eventData.price,
-      isRejected : this.eventData.isRejected,
-      userId : this.eventData.userId
+      refundStatus : this.eventData.refundStatus,
+      userId : this.eventData.userId,
+      paid : this.eventData.paid
     }]
     if(status == 'approve'){
       payload[0].status = 'a'
