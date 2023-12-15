@@ -324,6 +324,7 @@ export class UserHistoryComponent implements OnInit{
   price:any;
   arrear:any = 0;
   rejectionForm:any;
+  payNow:boolean = true;
   states = [
     "Andhra Pradesh",
     "Arunachal Pradesh",
@@ -497,7 +498,11 @@ export class UserHistoryComponent implements OnInit{
   viewStatus(data:any,status:any){
     console.log(data)
     this.eventData = data;
-    this.price = data.price
+    this.price = data.price;
+    if(this.eventData.paid){
+      this.payNow = false;
+    }
+    else this.payNow = true;
     if(status == 'reschedule'){
       this.bookingForm = this.fb.group({
         bookingType:[data.bookingType,[Validators.required]],
@@ -507,7 +512,7 @@ export class UserHistoryComponent implements OnInit{
         date:[new Date(data.date),[Validators.required]],
         name:[data.name,[Validators.required]],
         commission:[data.commission],
-        paid:[data.paid]
+        paid:[true]
       })
       if(data.type == 'hourly'){
         this.showFrom = true;
@@ -574,7 +579,10 @@ export class UserHistoryComponent implements OnInit{
       bookingType : this.eventData.bookingType,
       type : this.eventData.type,
       date : this.eventData.date,
-      name : this.eventData.name
+      name : this.eventData.name,
+      price : this.eventData.price,
+      isRejected : this.eventData.isRejected,
+      userId : this.eventData.userId
     }]
     if(status == 'approve'){
       payload[0].status = 'a'
@@ -595,18 +603,18 @@ export class UserHistoryComponent implements OnInit{
       }
     }
     if(this.eventData.type == 'hourly'){
-      payload.from = this.eventData.from;
-      payload.to = this.eventData.to;
+      payload[0].from = this.eventData.from;
+      payload[0].to = this.eventData.to;
     }
     else if(this.eventData.type == 'event'){
-      payload.slot = this.eventData.slot
+      payload[0].slot = this.eventData.slot
     }
     if(this.eventData.bookingType == 'onsite'){
-      payload.address = this.eventData.address;
-      payload.mandal = this.eventData.mandal;
-      payload.district = this.eventData.district;
-      payload.state = this.eventData.state;
-      payload.pincode = this.eventData.pincode;
+      payload[0].address = this.eventData.address;
+      payload[0].mandal = this.eventData.mandal;
+      payload[0].district = this.eventData.district;
+      payload[0].state = this.eventData.state;
+      payload[0].pincode = this.eventData.pincode;
     }
     this.submitStatus(payload)
   }
@@ -655,6 +663,12 @@ export class UserHistoryComponent implements OnInit{
     let isFound = false;
     console.log(this.bookingForm.valid,this.bookingForm.value)
     if(this.bookingForm.valid){
+      if(this.bookingForm.value.paid){
+        this.bookingForm.controls.commission.setValue(this.bookingForm.value.price*0.95);
+      }
+      else{
+        this.bookingForm.controls.commission.setValue(-(this.bookingForm.value.price*0.05));
+      }
       if(type == 'fullDay'){
         for(let i of dates){
           if(new Date(i).toLocaleDateString() == new Date(date).toLocaleDateString()){
@@ -713,9 +727,12 @@ export class UserHistoryComponent implements OnInit{
           this.bookingForm.controls.to.setValue(to);
         }
         this.apiService.initiateLoading(true);
-        let payload = {
+        let payload:any = {
           id : this.eventData._id,
           data : this.bookingForm.value
+        }
+        if(this.arrear>0){
+          payload.wallet = this.arrear;
         }
         console.log(payload)
         this.apiService.updateBooking(payload).subscribe(
@@ -848,7 +865,9 @@ export class UserHistoryComponent implements OnInit{
       this.bookingForm.controls.from.markAsDirty();
       this.bookingForm.controls.to.markAsDirty();
     }
-    this.arrear = this.eventData.price - this.price;
+    if(this.eventData.paid){
+      this.arrear = this.eventData.price - this.price;
+    }
   }
 
   calTimeDiff(start:any,end:any){
@@ -924,7 +943,9 @@ export class UserHistoryComponent implements OnInit{
       this.bookingForm.controls.state.setValue(this.eventData.state);
       this.bookingForm.controls.pincode.setValue(this.eventData.pincode);
     }
-    this.arrear = this.eventData.price - this.price;
+    if(this.eventData.paid){
+      this.arrear = this.eventData.price - this.price;
+    }
   }
 
   addAddress(){
@@ -978,7 +999,9 @@ export class UserHistoryComponent implements OnInit{
       this.bookingForm.controls.state.setValue(this.eventData.state);
       this.bookingForm.controls.pincode.setValue(this.eventData.pincode);
     }
-    this.arrear = this.eventData.price - this.price;
+    if(this.eventData.paid){
+      this.arrear = this.eventData.price - this.price;
+    }
   }
 
   onRowValueChanged(event:any) {
@@ -1049,9 +1072,13 @@ export class UserHistoryComponent implements OnInit{
   updatePay(data:any){
     if(data == 'paynow'){
       this.bookingForm.controls.paid.setValue(true);
+      this.payNow = true;
+      this.bookingForm.addControl('paymentType', new FormControl('online'));
     }
     else{
       this.bookingForm.controls.paid.setValue(false);
+      this.payNow = false;
+      this.bookingForm.addControl('paymentType', new FormControl(null));
     }
   }
 

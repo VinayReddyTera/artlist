@@ -353,7 +353,10 @@ export class NewRequestsComponent  implements OnInit{
       bookingType : this.eventData.bookingType,
       type : this.eventData.type,
       date : this.eventData.date,
-      name : this.eventData.name
+      name : this.eventData.name,
+      price : this.eventData.price,
+      isRejected : this.eventData.isRejected,
+      userId : this.eventData.userId
     }]
     if(status == 'approve'){
       payload[0].status = 'a'
@@ -374,18 +377,18 @@ export class NewRequestsComponent  implements OnInit{
       }
     }
     if(this.eventData.type == 'hourly'){
-      payload.from = this.eventData.from;
-      payload.to = this.eventData.to;
+      payload[0].from = this.eventData.from;
+      payload[0].to = this.eventData.to;
     }
     else if(this.eventData.type == 'event'){
-      payload.slot = this.eventData.slot
+      payload[0].slot = this.eventData.slot
     }
     if(this.eventData.bookingType == 'onsite'){
-      payload.address = this.eventData.address;
-      payload.mandal = this.eventData.mandal;
-      payload.district = this.eventData.district;
-      payload.state = this.eventData.state;
-      payload.pincode = this.eventData.pincode;
+      payload[0].address = this.eventData.address;
+      payload[0].mandal = this.eventData.mandal;
+      payload[0].district = this.eventData.district;
+      payload[0].state = this.eventData.state;
+      payload[0].pincode = this.eventData.pincode;
     }
     console.log(payload)
     this.apiService.initiateLoading(true);

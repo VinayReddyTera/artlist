@@ -1600,7 +1600,7 @@ userDB.fetchHistory = async (payload) => {
   let data;
   let userData;
   if(payload.role == 'user'){
-    data = await collection1.find({"userId" : payload.id},{'userId':0,'reminderDates':0,'__v':0}).lean();
+    data = await collection1.find({"userId" : payload.id},{'reminderDates':0,'__v':0}).lean();
     const idsArray = data.map(item => item.artistId);
     const collection = await connection.getArtist();
     userData = await collection.find({ _id: { $in: idsArray } },{name:1,email:1,phoneNo:1,_id:1})
@@ -1757,7 +1757,23 @@ userDB.updateEvent = async (payload,role) => {
   const collection = await connection.history();
   let data;
   if(payload.status == 'r'){
+    const userCollection = await connection.getUsers();
+    let arrearUpdate = await userCollection.updateOne({"_id":new ObjectId(payload.userId)},{$inc:{'wallet':payload.price}});
+    if(arrearUpdate.modifiedCount != 1){
+      return {status:204,data:'unable to update wallet amount and reject event'}
+    }
+    data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{'status':payload.status,'remarks':payload.remarks,'modifiedBy':role,"isRejected":true}})
+  }
+  else if(payload.status == 'a'){
+    if(payload.isRejected){
+      const userCollection = await connection.getUsers();
+      let arrearUpdate = await userCollection.updateOne({"_id":new ObjectId(payload.userId)},{$inc:{'wallet':-payload.price}});
+      if(arrearUpdate.modifiedCount != 1){
+        return {status:204,data:'unable to update wallet amount and accept event'}
+      }
+    }
     data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{'status':payload.status,'remarks':payload.remarks,'modifiedBy':role}})
+    
   }
   else{
     data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{'status':payload.status,'modifiedBy':role}})
@@ -1799,6 +1815,13 @@ userDB.updatePay = async (payload) => {
 
 userDB.updateBooking = async (payload) => {
   const collection = await connection.history();
+  if(payload?.wallet){
+    const userCollection = await connection.getUsers();
+    let arrearUpdate = await userCollection.updateOne({"_id":new ObjectId(payload.data.userId)},{$inc:{'wallet':payload.wallet}});
+    if(arrearUpdate.modifiedCount != 1){
+      return {status:204,data:'unable to update wallet amount and reschedule'}
+    }
+  }
   let data;
   let date = new Date(payload.data.date);
   let arr = [];
@@ -1845,6 +1868,8 @@ userDB.updateBooking = async (payload) => {
           to : payload.data.to,
           slot : '',
           price : payload.data.price,
+          commission : payload.data.commission,
+          paymentType : payload.data.paymentType,
           reminderDates : arr,
           status : 'rescheduled',
           modifiedBy : payload.role,
@@ -1862,6 +1887,8 @@ userDB.updateBooking = async (payload) => {
           status : 'rescheduled',
           slot : payload.data.slot,
           price : payload.data.price,
+          commission : payload.data.commission,
+          paymentType : payload.data.paymentType,
           from : '',
           to : '',
           type : payload.data.type,
@@ -1880,6 +1907,8 @@ userDB.updateBooking = async (payload) => {
           status : 'rescheduled',
           date : payload.data.date,
           price : payload.data.price,
+          commission : payload.data.commission,
+          paymentType : payload.data.paymentType,
           type : payload.data.type,
           from : '',
           to : '',
@@ -1904,6 +1933,8 @@ userDB.updateBooking = async (payload) => {
           to : payload.data.to,
           slot : '',
           price : payload.data.price,
+          commission : payload.data.commission,
+          paymentType : payload.data.paymentType,
           reminderDates : arr,
           status : 'rescheduled',
           modifiedBy : payload.role,
@@ -1921,6 +1952,8 @@ userDB.updateBooking = async (payload) => {
           status : 'rescheduled',
           slot : payload.data.slot,
           price : payload.data.price,
+          commission : payload.data.commission,
+          paymentType : payload.data.paymentType,
           from : '',
           to : '',
           type : payload.data.type,
@@ -1939,6 +1972,8 @@ userDB.updateBooking = async (payload) => {
           status : 'rescheduled',
           date : payload.data.date,
           price : payload.data.price,
+          commission : payload.data.commission,
+          paymentType : payload.data.paymentType,
           type : payload.data.type,
           from : '',
           to : '',
