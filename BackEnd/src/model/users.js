@@ -2487,6 +2487,25 @@ userDB.fetchBalance = async(payload) => {
   }
 }
 
+userDB.withdrawBalance = async(amount,payload) => {
+  const collection = await connection.getUsers();
+  let data = await collection.updateOne({"_id":new ObjectId(payload),wallet: { $gte: amount }},{ $inc: { wallet: -amount }, $push: { withdrawHistory: { amount: amount, date: new Date() } } })
+  if (data.modifiedCount == 1) {
+    let res = {
+      status: 200,
+      data: 'successfully withdrawn'
+    }
+    return res
+  }
+  else {
+    let res = {
+      status: 204,
+      data: 'Unable to update balance'
+    }
+    return res
+  }
+}
+
 userDB.test = async () => {
   const collection = await connection.history();
   let data = await collection.updateMany({},{$set:{commissionPaid:'Not Paid'}})

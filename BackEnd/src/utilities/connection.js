@@ -12,6 +12,12 @@ const users = Schema({
     password:String,
     role:String,
     otp:Number,
+    withdrawHistory:[
+        {
+            amount : Number,
+            date : Date
+        }
+    ],
     wallet : {type:Number,default:0},
     profileStatus :{type:String,default:'Incomplete'},
     emailVerified : {type:Boolean,default:false},

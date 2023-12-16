@@ -1570,6 +1570,21 @@ userService.fetchBalance=(payload)=>{
   })
 }
 
+userService.withdrawBalance=(amount,payload)=>{
+  return userDB.withdrawBalance(amount,payload).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to update balance'
+      }
+      return res
+    }
+  })
+}
+
 userService.test=()=>{
   return userDB.test().then((data)=>{
     if(data){

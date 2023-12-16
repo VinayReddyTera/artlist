@@ -78,16 +78,20 @@ export class UserProfileComponent implements OnInit{
       this.userData = JSON.parse(this.encrypt.deCrypt(localStorage.getItem('data')));
       this.profileStatus = this.userData.profileStatus
     }
-    if(this.encrypt.deCrypt(this.activatedRoute.snapshot.paramMap.get('data')) == 'wallet'){
-      // this.setKeyTrue('showWallet')
-      this.show.showProfile = false;
-      this.show.showWallet = true;
-    }
 
     this.activatedRoute.queryParamMap.subscribe(params => {
-      // Optional parameter
       const status:any = params.get('status');
       const data:any = params.get('data');
+      if(this.encrypt.deCrypt(data) == 'wallet'){
+        this.show.showProfile = false;
+        this.show.showWallet = true;
+        return
+      }
+      if(this.encrypt.deCrypt(data) == 'verify'){
+        this.show.showProfile = false;
+        this.show.showProfileStatus = true;
+        return
+      }
       if(status == 200){
         let msgData = {
           severity : "success",
@@ -530,6 +534,11 @@ export class UserProfileComponent implements OnInit{
             life : 5000
           }
           this.apiService.sendMessage(msgData);
+          this.amount -= this.walletForm.value.amount;
+          this.walletForm.reset();
+          if(this.amount == 0){
+            this.walletForm.get('amount').disable()
+          }
         }
         else if(res.status == 204){
           this.errorMessage = res.data;

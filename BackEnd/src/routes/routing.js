@@ -1044,6 +1044,16 @@ router.get('/fetchBalance',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to fetch Withdraw Balance
+router.post('/withdrawBalance',verifyToken,(req,res,next)=>{
+  let payload = jwt.decode(req.headers.authorization).data;
+  userservice.withdrawBalance(req.body.amount,payload._id).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 //router to get reminder
 router.get('/reminder',(req,res,next)=>{
   userservice.getReminder().then((data)=>{

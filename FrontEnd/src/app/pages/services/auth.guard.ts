@@ -45,7 +45,6 @@ export class AuthGuard implements CanActivate {
             return false
           }
           else if(role == 'user'){
-            console.log(route.routeConfig?.path)
             if(route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'user-profile/:data' || route.routeConfig?.path === 'user-dashboard' || route.routeConfig?.path === 'user-history' || route.routeConfig?.path === 'all-artists' || route.routeConfig?.path === 'artist-data'){
               return true
             }

@@ -47,7 +47,7 @@ export class TopbarComponent implements OnInit {
     else if(this.role == 'user' || this.role == 'tag'|| this.role == 'admin'){
       if(data == 'wallet'){
         let encrypt = this.decrypt.enCrypt('wallet');
-        this.router.navigateByUrl(`/user-profile/${encrypt}`)
+        this.router.navigateByUrl(`/user-profile?data=${encrypt}`)
       }
       else this.router.navigateByUrl('/user-profile')
     }

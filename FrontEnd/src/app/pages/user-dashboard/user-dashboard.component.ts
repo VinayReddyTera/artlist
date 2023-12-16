@@ -792,5 +792,14 @@ export class UserDashboardComponent implements OnInit{
     },5000)
   })
   }
+
+  navigate(){
+  if(this.profileStatus == 'Incomplete'){
+    let encrypt = this.decrypt.enCrypt('verify')
+    this.router.navigateByUrl(`/user-profile?data=${encrypt}`)
+  }
+  else this.router.navigateByUrl('/user-profile')
+  }
+
 }
 
