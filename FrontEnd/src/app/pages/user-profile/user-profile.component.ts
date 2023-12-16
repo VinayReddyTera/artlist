@@ -28,18 +28,60 @@ export class UserProfileComponent implements OnInit{
     'showProfile':true,
     'showPassword':false,
     'showSkills':false,
-    'showProfileStatus':false
+    'showProfileStatus':false,
+    'showWallet':false
   }
   items: any;
+  walletForm:any;
+  amount:any = 0;
 
   constructor(public http: HttpClient, public router: Router,
     private apiService : ApiService,private fb: FormBuilder,
     private encrypt:EncryptionService,private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
+    this.walletForm = this.fb.group({
+      amount: ['',[Validators.required,this.validateAmount.bind(this)]]
+    });
+    this.apiService.initiateLoading(true);
+    this.apiService.fetchBalance().subscribe(
+    (res : any)=>{
+      console.log(res)
+      if(res.status == 200){
+        this.amount = res.data.wallet
+      }
+      else if(res.status == 204){
+        this.errorMessage = res.data;
+        let msgData = {
+          severity : "error",
+          summary : 'Error',
+          detail : res.data,
+          life : 5000
+        }
+        this.apiService.sendMessage(msgData);
+      }
+    },
+    (err:any)=>{
+      this.errorMessage = err.error
+      console.log(err);
+    }
+  ).add(()=>{
+    this.apiService.initiateLoading(false);
+    if(this.amount == 0){
+      this.walletForm.get('amount').disable();
+    }
+    setTimeout(()=>{
+      this.errorMessage = null;
+    },5000)
+  })
     if(localStorage.getItem('data')){
       this.userData = JSON.parse(this.encrypt.deCrypt(localStorage.getItem('data')));
       this.profileStatus = this.userData.profileStatus
+    }
+    if(this.encrypt.deCrypt(this.activatedRoute.snapshot.paramMap.get('data')) == 'wallet'){
+      // this.setKeyTrue('showWallet')
+      this.show.showProfile = false;
+      this.show.showWallet = true;
     }
 
     this.activatedRoute.queryParamMap.subscribe(params => {
@@ -126,6 +168,34 @@ export class UserProfileComponent implements OnInit{
       }
     ];
     }
+    else if(this.userData.role == 'user'){
+      this.items = [
+        {
+            icon: 'mdi mdi-account-edit',
+            command: () => {
+                this.setKeyTrue('showProfile')
+            }
+        },
+        {
+            icon: 'mdi mdi-key-variant',
+            command: () => {
+              this.setKeyTrue('showPassword')
+            }
+        },
+        {
+            icon: 'mdi mdi-list-status',
+            command: () => {
+              this.setKeyTrue('showProfileStatus')
+            }
+        },
+        {
+            icon: 'mdi mdi-contactless-payment',
+            command: () => {
+              this.setKeyTrue('showWallet')
+            }
+        }
+    ];
+    }
     else{
       this.items = [
         {
@@ -163,6 +233,7 @@ export class UserProfileComponent implements OnInit{
       role: [this.userData.role, [Validators.required]],
       email : [this.userData.email,[Validators.required]]
     },{validator : this.validatePassword});
+
   }
 
   validateEmail(c:FormControl){
@@ -171,6 +242,26 @@ export class UserProfileComponent implements OnInit{
       emailError : {
         message : 'Invalid email format!'
       }
+    }
+  }
+
+  validateAmount(c:FormControl){
+    if(c.value<=0){
+      return {
+        amountError : {
+          message : 'Amount cannot be less than or equal to 0'
+        }
+      }
+    }
+    else if(c.value > this.amount){
+      return {
+        amountError : {
+          message : `Amount cannot be more than ${this.amount}`
+        }
+      }
+    }
+    else{
+      return null
     }
   }
 
@@ -423,6 +514,53 @@ export class UserProfileComponent implements OnInit{
 
   verifyPhone(){
 
+  }
+
+  withdraw(){
+    if(this.walletForm.valid){
+      this.apiService.initiateLoading(true);
+      this.apiService.withdrawBalance(this.walletForm.value).subscribe(
+      (res : any)=>{
+        console.log(res)
+        if(res.status == 200){
+          let msgData = {
+            severity : "success",
+            summary : 'Success',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
+        }
+        else if(res.status == 204){
+          this.errorMessage = res.data;
+          let msgData = {
+            severity : "error",
+            summary : 'Error',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
+        }
+      },
+      (err:any)=>{
+        this.errorMessage = err.error
+        console.log(err);
+      }
+    ).add(()=>{
+      this.apiService.initiateLoading(false)
+      setTimeout(()=>{
+        this.errorMessage = null;
+      },5000)
+    })
+    }
+    else{
+      const controls = this.walletForm.controls;
+      for (const name in controls) {
+          if (controls[name].invalid) {
+              controls[name].markAsDirty()
+          }
+      }
+    }
   }
 
 }

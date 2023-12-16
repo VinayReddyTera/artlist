@@ -8,9 +8,16 @@
     margin-right: 10px; /* Add some space between buttons */
   }
 
+  .price-text{
+    font-size: 22px;
+  }
+
   @media (max-width: 425px) {
     .button-container {
       display: none;
+    }
+    .price-text{
+      font-size: 18px;
     }
   }
 

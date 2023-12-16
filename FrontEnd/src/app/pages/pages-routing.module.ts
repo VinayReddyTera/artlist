@@ -110,6 +110,14 @@ const routes: Routes = [
     }
   },
   {
+    path: 'user-profile/:data',
+    component: UserProfileComponent,
+    canActivate: [AuthGuard],
+    data: {
+      role: ['admin', 'user','tag','access-user-profile']
+    }
+  },
+  {
     path: 'user-history',
     component: UserHistoryComponent,
     canActivate: [AuthGuard],

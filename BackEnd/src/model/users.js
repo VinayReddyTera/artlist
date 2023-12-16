@@ -2468,6 +2468,25 @@ userDB.fetchAdminEmails = async () => {
   }
 }
 
+userDB.fetchBalance = async(payload) => {
+  const collection = await connection.getUsers();
+  let data = await collection.findOne({"_id":new ObjectId(payload)},{_id:0,wallet:1})
+  if (data) {
+    let res = {
+      status: 200,
+      data: data
+    }
+    return res
+  }
+  else {
+    let res = {
+      status: 204,
+      data: 'Unable to fetch balance'
+    }
+    return res
+  }
+}
+
 userDB.test = async () => {
   const collection = await connection.history();
   let data = await collection.updateMany({},{$set:{commissionPaid:'Not Paid'}})

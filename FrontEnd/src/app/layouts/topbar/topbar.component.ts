@@ -23,7 +23,7 @@ export class TopbarComponent implements OnInit {
   @Output() mobileMenuButtonClicked = new EventEmitter();
 
   ngOnInit() {
-    let data = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('data')))
+    let data = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('data')));
     this.name = data.name;
     this.role = data.role;
     this.openMobileMenu = false;
@@ -40,12 +40,16 @@ export class TopbarComponent implements OnInit {
     this.router.navigate(['/account/login']);
   }
 
-  openProfile(){
+  openProfile(data:any){
     if(this.role == 'artist'){
       this.router.navigateByUrl('/artist-profile')
     }
     else if(this.role == 'user' || this.role == 'tag'|| this.role == 'admin'){
-      this.router.navigateByUrl('/user-profile')
+      if(data == 'wallet'){
+        let encrypt = this.decrypt.enCrypt('wallet');
+        this.router.navigateByUrl(`/user-profile/${encrypt}`)
+      }
+      else this.router.navigateByUrl('/user-profile')
     }
   }
 

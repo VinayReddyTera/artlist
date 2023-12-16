@@ -45,7 +45,8 @@ export class AuthGuard implements CanActivate {
             return false
           }
           else if(role == 'user'){
-            if(route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'user-dashboard' || route.routeConfig?.path === 'user-history' || route.routeConfig?.path === 'all-artists' || route.routeConfig?.path === 'artist-data'){
+            console.log(route.routeConfig?.path)
+            if(route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'user-profile/:data' || route.routeConfig?.path === 'user-dashboard' || route.routeConfig?.path === 'user-history' || route.routeConfig?.path === 'all-artists' || route.routeConfig?.path === 'artist-data'){
               return true
             }
             else{
@@ -55,7 +56,7 @@ export class AuthGuard implements CanActivate {
             return false
           }
           else if(role == 'tag'){
-            if(route.routeConfig?.path === 'artist-approve' || route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'tag-history' || route.routeConfig?.path === 'artist-validation'){
+            if(route.routeConfig?.path === 'artist-approve' || route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'user-profile/:data' || route.routeConfig?.path === 'tag-history' || route.routeConfig?.path === 'artist-validation'){
               return true
             }
             else{
@@ -65,7 +66,7 @@ export class AuthGuard implements CanActivate {
             return false
           }
           else if(role == 'admin'){
-            if(route.routeConfig?.path === 'all-artists' || route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'add-approver' || route.routeConfig?.path === 'add-approver/:type' || route.routeConfig?.path === 'all-approvers' || route.routeConfig?.path === 'all-commissions'){
+            if(route.routeConfig?.path === 'all-artists' || route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'user-profile/:data' || route.routeConfig?.path === 'add-approver' || route.routeConfig?.path === 'add-approver/:type' || route.routeConfig?.path === 'all-approvers' || route.routeConfig?.path === 'all-commissions'){
               return true
             }
             else{

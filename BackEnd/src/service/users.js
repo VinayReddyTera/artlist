@@ -1555,6 +1555,21 @@ userService.payArtCommission=(payload,userData)=>{
   })
 }
 
+userService.fetchBalance=(payload)=>{
+  return userDB.fetchBalance(payload).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to fetch balance'
+      }
+      return res
+    }
+  })
+}
+
 userService.test=()=>{
   return userDB.test().then((data)=>{
     if(data){

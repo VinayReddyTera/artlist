@@ -205,4 +205,12 @@ export class ApiService {
     return this.http.get(environment.domain+"fetchAllUnpaidCommissions")
   }
 
+  fetchBalance():Observable<any>{
+    return this.http.get(environment.domain+"fetchBalance")
+  }
+
+  withdrawBalance(payload:any):Observable<any>{
+    return this.http.post(environment.domain+"withdrawBalance",payload)
+  }
+
 }
