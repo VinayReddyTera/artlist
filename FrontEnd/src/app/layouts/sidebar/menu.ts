@@ -72,6 +72,13 @@ export const MENU: MenuItem[] = [
         role: ['admin','access-all-commissions']
     },
     {
+        id: 2,
+        label: 'Refunds',
+        icon: 'bx bxs-dollar-circle',
+        link: '/refunds',
+        role: ['admin','access-refunds']
+    },
+    {
         id: 9,
         label: 'Add Approver',
         icon: 'bxs-user-plus',

@@ -213,4 +213,8 @@ export class ApiService {
     return this.http.post(environment.domain+"withdrawBalance",payload)
   }
 
+  fetchAllRefunds():Observable<any>{
+    return this.http.get(environment.domain+"fetchAllRefunds")
+  }
+
 }

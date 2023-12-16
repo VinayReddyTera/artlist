@@ -19,6 +19,7 @@ import { TagHistoryComponent } from './tag-history/tag-history.component';
 import { ArtistValidateComponent } from './artist-validate/artist-validate.component';
 import { CommissionComponent } from './commission/commission.component';
 import { AllCommissionsComponent } from './all-commissions/all-commissions.component';
+import { RefundsComponent } from './refunds/refunds.component';
 
 const routes: Routes = [
   {
@@ -187,6 +188,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       role: ['admin','access-all-commissions']
+    }
+  },
+  {
+    path: 'refunds',
+    component: RefundsComponent,
+    canActivate: [AuthGuard],
+    data: {
+      role: ['admin','access-refunds']
     }
   },
   {

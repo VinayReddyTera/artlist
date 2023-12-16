@@ -61,6 +61,7 @@ import { AllCommissionsComponent } from './all-commissions/all-commissions.compo
 import { commissionRenderer } from './all-commissions/commissionRenderer';
 import { payCommissionRenderer } from './all-commissions/payCommission';
 import { refundRenderer } from './user-history/refundRenderer';
+import { RefundsComponent } from './refunds/refunds.component';
 
 @NgModule({
   declarations: [
@@ -102,7 +103,8 @@ import { refundRenderer } from './user-history/refundRenderer';
     AllCommissionsComponent,
     commissionRenderer,
     payCommissionRenderer,
-    refundRenderer
+    refundRenderer,
+    RefundsComponent
   ],
   imports: [
     CommonModule,

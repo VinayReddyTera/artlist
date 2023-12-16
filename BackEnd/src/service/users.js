@@ -1585,6 +1585,21 @@ userService.withdrawBalance=(amount,payload)=>{
   })
 }
 
+userService.fetchAllRefunds=()=>{
+  return userDB.fetchAllRefunds().then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to fetch refund requests'
+      }
+      return res
+    }
+  })
+}
+
 userService.test=()=>{
   return userDB.test().then((data)=>{
     if(data){
