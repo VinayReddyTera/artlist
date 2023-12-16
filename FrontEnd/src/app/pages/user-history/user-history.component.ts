@@ -11,6 +11,7 @@ import { FormBuilder, FormControl, Validators} from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { UserApproverRenderer } from './userApproverRenderer';
 import { left } from '@popperjs/core';
+import { refundRenderer } from './refundRenderer';
 
 declare const $:any;
 
@@ -307,6 +308,15 @@ export class UserHistoryComponent implements OnInit{
       cellRenderer: UserApproverRenderer,
       width:200,
       cellRendererParams: { onStatusChange: this.viewStatus.bind(this) }
+    },
+    {
+      field: "action",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Request Refund",
+      cellRenderer: refundRenderer,
+      width:200,
+      cellRendererParams: { onStatusChange: this.refund.bind(this) }
     }
   ];
   defaultColDef : ColDef = {
@@ -1085,6 +1095,10 @@ export class UserHistoryComponent implements OnInit{
       this.payNow = false;
       this.bookingForm.addControl('paymentType', new FormControl(null));
     }
+  }
+
+  refund(data:any){
+    console.log(data)
   }
 
 }
