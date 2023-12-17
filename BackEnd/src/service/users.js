@@ -1615,6 +1615,36 @@ userService.requestRefund=(payload)=>{
   })
 }
 
+userService.payRefund=async(payload)=>{
+  let commissionData = await userDB.getcommissionStatus(payload._id);
+  if(commissionData.paid && commissionData.commissionPaid == 'Not Paid'){
+    return userDB.payRefundWithoutCommission(payload,commissionData).then((data)=>{
+      if(data){
+        return data
+      }
+      else{
+        let res= {
+          status : 204,
+          data: 'Unable to pay refund'
+        }
+        return res
+      }
+    })
+  }
+  return userDB.payRefund(payload).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to pay refund'
+      }
+      return res
+    }
+  })
+}
+
 userService.test=()=>{
   return userDB.test().then((data)=>{
     if(data){

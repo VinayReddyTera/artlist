@@ -221,4 +221,8 @@ export class ApiService {
     return this.http.get(environment.domain+"fetchAllRefunds")
   }
 
+  payRefund(payload:any):Observable<any>{
+    return this.http.post(environment.domain+"payRefund",payload)
+  }
+
 }

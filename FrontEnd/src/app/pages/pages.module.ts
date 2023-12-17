@@ -62,6 +62,9 @@ import { commissionRenderer } from './all-commissions/commissionRenderer';
 import { payCommissionRenderer } from './all-commissions/payCommission';
 import { refundRenderer } from './user-history/refundRenderer';
 import { RefundsComponent } from './refunds/refunds.component';
+import { userRenderer } from './refunds/userContact';
+import { artistRenderer } from './refunds/artistContact';
+import { refundAcceptRenderer } from './refunds/refundAccept';
 
 @NgModule({
   declarations: [
@@ -104,7 +107,10 @@ import { RefundsComponent } from './refunds/refunds.component';
     commissionRenderer,
     payCommissionRenderer,
     refundRenderer,
-    RefundsComponent
+    RefundsComponent,
+    userRenderer,
+    artistRenderer,
+    refundAcceptRenderer
   ],
   imports: [
     CommonModule,

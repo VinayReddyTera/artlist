@@ -2508,14 +2508,59 @@ userDB.withdrawBalance = async(amount,payload) => {
 
 userDB.fetchAllRefunds = async() => {
   const collection = await connection.history();
-  let data = await collection.find({"refundRequested":true},{pricing:0,reminderDates:0}).lean();
-
-  if (data.length>0) {
-    let res = {
-      status: 200,
-      data: data
+  let data = await collection.find({"refundRequested":true},{pricing:0,reminderDates:0,__v:0,status:0,refundRequested:0,refundStatus:0,remarks:0,modifiedBy:0}).lean();
+  if(data.length>0){
+    function convertToPlainObject(data) {
+      return data.map(item => {
+        const { _id, ...rest } = item;
+        return { ...rest, _id: _id.toString() };
+      });
     }
-    return res
+    // Extract unique userIds
+    const userIds = [...new Set(data.map(item => item.userId))];
+  
+    // Extract unique artistIds
+    const artistIds = [...new Set(data.map(item => item.artistId))];
+    const userColl = await connection.getUsers();
+    const artistColl = await connection.getArtist();
+    let userData = await userColl.find({
+      "_id": { "$in": userIds }
+      },{name:1,email:1,phoneNo:1}).lean();
+    let artistData = await artistColl.find({
+      "_id": { "$in": artistIds }
+      },{name:1,email:1,phoneNo:1}).lean();
+      userData = convertToPlainObject(userData)
+      artistData = convertToPlainObject(artistData)
+      const userMap = new Map(userData.map(user => [user._id, user]));
+      const artistMap = new Map(artistData.map(artist => [artist._id, artist]));
+      for(let i of data){
+        let userInfo = userMap.get(i.userId);
+        let artistInfo = artistMap.get(i.artistId);
+        if(userInfo){
+          i.candName = userInfo.name;
+          i.candPhone = userInfo.phoneNo;
+          i.candEmail = userInfo.email;
+        }
+        if(artistInfo){
+          i.artistName = artistInfo.name;
+          i.artistPhone = artistInfo.phoneNo;
+          i.artistEmail = artistInfo.email;
+        }
+      }
+      if (data.length>0) {
+        let res = {
+          status: 200,
+          data: data
+        }
+        return res
+      }
+      else{
+        let res = {
+          status: 205,
+          data: 'No Pending Refund Requests'
+        }
+        return res
+      }
   }
   else {
     let res = {
@@ -2540,6 +2585,32 @@ userDB.requestRefund = async(payload) => {
     let res = {
       status: 204,
       data: 'Unable to request refund'
+    }
+    return res
+  }
+}
+
+userDB.getcommissionStatus = async(payload) => {
+  const collection = await connection.history();
+  let data = await collection.findOne({"_id":new ObjectId(payload)},{_id:0,commission:1,commissionPaid:1,price:1,paid:1})
+  if (data) {
+    return data
+  }
+  else {
+    return null
+  }
+}
+
+userDB.payRefundWithoutCommission = async(payload) => {
+  const collection = await connection.history();
+  let data = await collection.updateOne({"_id":new ObjectId(payload._id)},{$set:{'refundAccepted':payload.refundStatus}})
+  if (data.modifiedCount == 1) {
+    
+  }
+  else {
+    let res = {
+      status: 204,
+      data: 'Unable to pay refund'
     }
     return res
   }

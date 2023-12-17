@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
-import { contactDetailsRenderer } from '../all-approvers/contactRenderer';
 import { dateRenderer } from '../dateRenderer';
 import { ApiService } from '../services/api.service';
+import { slotRenderer } from '../user-history/slotRenderer';
+import { userHistoryTimeRenderer } from '../user-history/userHistoryTimeRenderer';
+import { artistRenderer } from './artistContact';
+import { refundAcceptRenderer } from './refundAccept';
+import { userRenderer } from './userContact';
 
 declare const $:any;
 
@@ -21,6 +25,21 @@ export class RefundsComponent implements OnInit{
   usersRowData:any = [];
   usersColumnDefs = [
     {
+      field: "artistName",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Artist Name",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "action",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Artist Contact",
+      cellRenderer: artistRenderer,
+      width:150
+    },
+    {
       field: "candName",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
@@ -31,38 +50,151 @@ export class RefundsComponent implements OnInit{
       field: "action",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
-      headerName: "Contact",
-      cellRenderer: contactDetailsRenderer,
+      headerName: "User Contact",
+      cellRenderer: userRenderer,
       width:150
     },
     {
-      field: "commission",
+      field: "name",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
-      headerName: "Commission",
+      headerName: "Skill Name",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "type",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Booking Type",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "bookingType",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Event Type",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value,
+      width:130
+    },
+    {
+      field: "date",
+      filter: "agDateColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Date",
+      cellRenderer: dateRenderer
+    },
+    {
+      field: "from",
+      filter: "agDateColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "From",
+      cellRenderer: userHistoryTimeRenderer
+    },
+    {
+      field: "to",
+      filter: "agDateColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "To",
+      cellRenderer: userHistoryTimeRenderer
+    },
+    {
+      field: "slot",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Slot",
+      cellRenderer: slotRenderer
+    },
+    {
+      field: "address",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Address",
+      cellRenderer: (params:any)=> {
+        if(params.value === '' || params.value === null || params.value === undefined){
+          return 'N/A'
+        }
+        else{
+          return params.value
+        }
+      }
+    },
+    {
+      field: "mandal",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Mandal",
+      cellRenderer: (params:any)=> {
+        if(params.value === '' || params.value === null || params.value === undefined){
+          return 'N/A'
+        }
+        else{
+          return params.value
+        }
+      }
+    },
+    {
+      field: "district",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "District",
+      cellRenderer: (params:any)=> {
+        if(params.value === '' || params.value === null || params.value === undefined){
+          return 'N/A'
+        }
+        else{
+          return params.value
+        }
+      }
+    },
+    {
+      field: "state",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "State",
+      cellRenderer: (params:any)=> {
+        if(params.value === '' || params.value === null || params.value === undefined){
+          return 'N/A'
+        }
+        else{
+          return params.value
+        }
+      }
+    },
+    {
+      field: "pincode",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Pincode",
+      cellRenderer: (params:any)=> {
+        if(params.value === '' || params.value === null || params.value === undefined){
+          return 'N/A'
+        }
+        else{
+          return params.value
+        }
+      }
+    },
+    {
+      field: "price",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Price",
       cellRenderer: (params:any)=> {
         if(params.value == null){
           return 'N/A'
         }
         else{
-          if(params.value < 0){
-            let link = `<span class="text-danger" style="font-size:13px">${params.value} ₹</span>`;
-            return link
-          }
-          else{
-            let link = `<span class="text-success" style="font-size:13px">${params.value} ₹</span>`;
-            return link
-          }
+          let data = `<span class="text-success">${params.value} ₹</span>`
+          return data
         }
-      }
-    }
-  ];
-  payColumnDefs = [
+      },
+      width:130
+    },
     {
       field: "paid",
-      filter: "agTextColumnFilter",
+      filter: "agDateColumnFilter",
       filterParams: { maxNumConditions: 1 },
-      headerName: "User Paid",
+      headerName: "Payment Status",
       cellRenderer: (params:any)=> {
         if(params.value == null){
           return 'N/A'
@@ -83,6 +215,20 @@ export class RefundsComponent implements OnInit{
       }
     },
     {
+      field: "paymentType",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Payment Type",
+      cellRenderer: (params:any)=> {
+        if(params.value === '' || params.value === null || params.value === undefined){
+          return 'N/A'
+        }
+        else{
+          return params.value
+        }
+      }
+    },
+    {
       field: "commissionPaid",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
@@ -94,6 +240,10 @@ export class RefundsComponent implements OnInit{
         else{
           if(params.value == 'Not Paid'){
             let link = `<span class="badge badge-soft-danger" style="font-size:13px">Not Paid</span>`;
+            return link
+          }
+          else if(params.value == 'Paid'){
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">Paid</span>`;
             return link
           }
           else{
@@ -108,95 +258,36 @@ export class RefundsComponent implements OnInit{
       filterParams: { maxNumConditions: 1 },
       headerName: "Commission",
       cellRenderer: (params:any)=> {
-        if(params.value == null){
+        if(params.value === '' || params.value === null || params.value === undefined){
           return 'N/A'
         }
         else{
-          if(params.value < 0){
-            let link = `<span class="text-danger" style="font-size:13px">${params.value} ₹</span>`;
-            return link
-          }
-          else{
-            let link = `<span class="text-success" style="font-size:13px">${params.value} ₹</span>`;
-            return link
-          }
+          return params.value
         }
       }
     },
     {
-      field: "price",
+      field: "refundReason",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
-      headerName: "Price",
+      headerName: "Refund Reason",
       cellRenderer: (params:any)=> {
-        if(params.value == null){
+        if(params.value === '' || params.value === null || params.value === undefined){
           return 'N/A'
         }
         else{
-          let data = `<span class="text-success">${params.value} ₹</span>`
-          return data
+          return params.value
         }
       }
     },
     {
-      field: "paymentType",
+      field: "action",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
-      headerName: "Payment Type",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-    },
-    {
-      field: "name",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Skill Name",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-    },
-    {
-      field: "status",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Status",
-      cellRenderer: (params:any)=> {
-        if(params.value == null){
-          return 'N/A'
-        }
-        else{
-          if(params.value == 'pending'){
-            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Pending</span>`;
-            return link
-          }
-          else if(params.value == 'a'){
-            let link = `<span class="badge badge-soft-info" style="font-size:13px">Accepted</span>`;
-            return link
-          }
-          else if(params.value == 'r'){
-            let link = `<span class="badge badge-soft-danger" style="font-size:13px">rejected</span>`;
-            return link
-          }
-          else if(params.value == 'c'){
-            let link = `<span class="badge badge-soft-success" style="font-size:13px">Completed</span>`;
-            return link
-          }
-          else{
-            return params.value
-          }
-        }
-      }
-    },
-    {
-      field: "type",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Booking Type",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-    },
-    {
-      field: "date",
-      filter: "agDateColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Date",
-      cellRenderer: dateRenderer
+      headerName: "Action",
+      cellRenderer: refundAcceptRenderer,
+      width:200,
+      cellRendererParams: { onStatusChange: this.accept.bind(this) }
     }
   ];
   defaultColDef : ColDef = {
@@ -204,13 +295,8 @@ export class RefundsComponent implements OnInit{
   }
   pagination:any = true;
   gridApi:any;
-  gridApi1:any;
-  feedback:any;
   rating:any;
   text:any;
-  commission:any = 0;
-  showBtn: Boolean = false;
-  paymentData:any;
 
   ngOnInit(): void {
     this.apiService.initiateLoading(true);
@@ -237,30 +323,12 @@ export class RefundsComponent implements OnInit{
         console.log(err)
       }
     ).add(()=>{
-      this.apiService.initiateLoading(false)
-      for(let i of this.usersRowData){
-        this.commission += i.commission
-      }
-      if(this.commission > 0){
-        this.text = 'Total amount you will receive from Artlist : '
-      }
-      else{
-        this.showBtn = true;
-        this.text = 'Total amount to be paid to Artlist : '
-      }
-      if(this.commission == 0){
-        this.showBtn = false;
-      }
-      this.commission = Math.round(Math.abs(this.commission));
+      this.apiService.initiateLoading(false);
     })
   }
 
   onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
-  }
-
-  onGridReady1(params: GridReadyEvent) {
-    this.gridApi1 = params.api;
   }
 
   filter(){
@@ -269,82 +337,45 @@ export class RefundsComponent implements OnInit{
     );
   }
 
-  filter1(){
-    this.gridApi1.setQuickFilter(
-      (document.getElementById('filter-text-box1') as HTMLInputElement).value
-    );
-  }
-
   refresh(){
-    this.commission = 0;
-    this.showBtn = false;
     this.usersRowData = [];
     this.ngOnInit();
   }
 
-  paynow(data:any){
-    this.paymentData = data;
-    console.log(data)
-    $(`#payNow`).modal('show');
-  }
-
-  pay(){
-    let payload:any = {
-      id : [],
-      email: this.paymentData.email,
-      name : this.paymentData.candName,
-      commission:Math.round(this.paymentData.commission * -1)
-    }
-    for(let i of this.paymentData.data){
-      payload.id.push(i._id)
-    }
-    console.log(payload)
-    if(payload.id.length>0){
-      this.apiService.initiateLoading(true);
-      this.apiService.payArtCommission(payload).subscribe(
-        (res:any)=>{
-          if(res.status == 200){
-            let msgData = {
-              severity : "success",
-              summary : 'Success',
-              detail : res.data,
-              life : 5000
-            }
-          this.apiService.sendMessage(msgData);
-          }
-          else if(res.status == 204){
-            if(res.data == 'Invalid token'){
-              localStorage.clear();
-              this.router.navigate(['/account/login']);
-            }
-            else{
-              this.errorMessage = res.data;
-              let msgData = {
-                severity : "error",
-                summary : 'Error',
-                detail : res.data,
-                life : 5000
-              }
-            this.apiService.sendMessage(msgData);
-            }
-          }
-        },
-        (err:any)=>{
-          console.log(err)
-        }
-      ).add(()=>{
-        this.apiService.initiateLoading(false);
-        $(`#payNow`).modal('hide');
-        $(`#viewPay`).modal('hide');
-        this.refresh();
-      })
-    }
-  }
-
-  viewAll(data:any){
+  accept(data:any,status:any){
     console.log(data);
-    this.paymentData = data;
-    $(`#viewPay`).modal('show');
+    if(status == 'accept'){
+      data.refundStatus = true
+    }
+    else{
+      data.refundStatus = false
+    }
+    this.apiService.initiateLoading(true);
+    this.apiService.payRefund(data).subscribe(
+      (res:any)=>{
+        if(res.status == 200){
+          console.log(res.data)
+          this.usersRowData = res.data;
+        }
+        else if(res.status == 205){
+          this.successMessage = res.data
+        }
+        else if(res.status == 204){
+          if(res.data == 'Invalid token'){
+            localStorage.clear();
+            this.router.navigate(['/account/login']);
+          }
+          else{
+            this.errorMessage = res.data;
+          }
+        }
+      },
+      (err:any)=>{
+        console.log(err)
+      }
+    ).add(()=>{
+      this.apiService.initiateLoading(false);
+    })
   }
 
 }

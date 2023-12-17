@@ -40,43 +40,46 @@ export class UserProfileComponent implements OnInit{
     private encrypt:EncryptionService,private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
-    this.walletForm = this.fb.group({
-      amount: ['',[Validators.required,this.validateAmount.bind(this)]]
-    });
-    this.apiService.initiateLoading(true);
-    this.apiService.fetchBalance().subscribe(
-    (res : any)=>{
-      console.log(res)
-      if(res.status == 200){
-        this.amount = res.data.wallet
-      }
-      else if(res.status == 204){
-        this.errorMessage = res.data;
-        let msgData = {
-          severity : "error",
-          summary : 'Error',
-          detail : res.data,
-          life : 5000
-        }
-        this.apiService.sendMessage(msgData);
-      }
-    },
-    (err:any)=>{
-      this.errorMessage = err.error
-      console.log(err);
-    }
-  ).add(()=>{
-    this.apiService.initiateLoading(false);
-    if(this.amount == 0){
-      this.walletForm.get('amount').disable();
-    }
-    setTimeout(()=>{
-      this.errorMessage = null;
-    },5000)
-  })
     if(localStorage.getItem('data')){
       this.userData = JSON.parse(this.encrypt.deCrypt(localStorage.getItem('data')));
       this.profileStatus = this.userData.profileStatus
+    }
+    if(this.userData.role == 'user'){
+      this.walletForm = this.fb.group({
+        amount: ['',[Validators.required,this.validateAmount.bind(this)]]
+      });
+  
+      this.apiService.initiateLoading(true);
+      this.apiService.fetchBalance().subscribe(
+      (res : any)=>{
+        console.log(res)
+        if(res.status == 200){
+          this.amount = res.data.wallet
+        }
+        else if(res.status == 204){
+          this.errorMessage = res.data;
+          let msgData = {
+            severity : "error",
+            summary : 'Error',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
+        }
+      },
+      (err:any)=>{
+        this.errorMessage = err.error
+        console.log(err);
+      }
+    ).add(()=>{
+      this.apiService.initiateLoading(false);
+      if(this.amount == 0){
+        this.walletForm.get('amount').disable();
+      }
+      setTimeout(()=>{
+        this.errorMessage = null;
+      },5000)
+    })
     }
 
     this.activatedRoute.queryParamMap.subscribe(params => {
