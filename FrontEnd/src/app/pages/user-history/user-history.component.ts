@@ -316,7 +316,7 @@ export class UserHistoryComponent implements OnInit{
       headerName: "Request Refund",
       cellRenderer: refundRenderer,
       width:200,
-      cellRendererParams: { onStatusChange: this.refund.bind(this) }
+      cellRendererParams: { onStatusChange: this.openRefund.bind(this) }
     }
   ];
   defaultColDef : ColDef = {
@@ -371,6 +371,7 @@ export class UserHistoryComponent implements OnInit{
     "Delhi",
     "Puducherry"
   ];
+  refundForm:any;
 
   ngOnInit(): void {
     this.feedbackForm = this.fb.group({
@@ -382,6 +383,10 @@ export class UserHistoryComponent implements OnInit{
     })
     this.rejectionForm = this.fb.group({
       remarks:['',[Validators.required]]
+    })
+    this.refundForm = this.fb.group({
+      id:[''],
+      refundReason:['',[Validators.required]]
     })
     this.bookingForm = this.fb.group({
       bookingType:['',[Validators.required]],
@@ -1097,8 +1102,56 @@ export class UserHistoryComponent implements OnInit{
     }
   }
 
-  refund(data:any){
-    console.log(data)
+  openRefund(data:any){
+    this.refundForm.controls.id.setValue(data._id);
+    $(`#refund`).modal('show');
+  }
+
+  refund(){
+    if(this.refundForm.valid){
+      this.apiService.initiateLoading(true);
+      this.apiService.requestRefund(this.refundForm.value).subscribe(
+      (res : any)=>{
+        console.log(res)
+        if(res.status == 200){
+          let msgData = {
+            severity : "success",
+            summary : 'Success',
+            detail : res.data,
+            life : 5000
+          }
+        this.apiService.sendMessage(msgData);
+        $(`#approve`).modal('hide');
+        $(`#reject`).modal('hide');
+        this.usersRowData = [];
+        this.errorMessage = null;
+        this.refresh();
+        }
+        else if(res.status == 204){
+          let msgData = {
+              severity : "error",
+              summary : 'Error',
+              detail : res.data,
+              life : 5000
+            }
+          this.apiService.sendMessage(msgData);
+        }
+      },
+      (err:any)=>{
+        console.log(err);
+      }
+    ).add(()=>{
+      this.apiService.initiateLoading(false)
+    })
+    }
+    else{
+      const controls = this.refundForm.controls;
+      for(const name in controls) {
+        if(controls[name].invalid) {
+            controls[name].markAsDirty()
+        }
+      }
+    }
   }
 
 }

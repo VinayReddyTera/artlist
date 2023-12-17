@@ -1067,6 +1067,15 @@ router.get('/fetchAllRefunds',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to request refund
+router.post('/requestRefund',verifyToken,(req,res,next)=>{
+  userservice.requestRefund(req.body).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 //router to get reminder
 router.get('/reminder',(req,res,next)=>{
   userservice.getReminder().then((data)=>{

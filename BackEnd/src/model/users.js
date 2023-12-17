@@ -2508,7 +2508,8 @@ userDB.withdrawBalance = async(amount,payload) => {
 
 userDB.fetchAllRefunds = async() => {
   const collection = await connection.history();
-  let data = await collection.find({"refundRequested":true},{pricing:0}).lean()
+  let data = await collection.find({"refundRequested":true},{pricing:0,reminderDates:0}).lean();
+
   if (data.length>0) {
     let res = {
       status: 200,
@@ -2520,6 +2521,25 @@ userDB.fetchAllRefunds = async() => {
     let res = {
       status: 205,
       data: 'No Pending Refund Requests'
+    }
+    return res
+  }
+}
+
+userDB.requestRefund = async(payload) => {
+  const collection = await connection.history();
+  let data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{'refundRequested':true,'refundReason':payload.refundReason,'status':'artist not attended'}})
+  if (data.modifiedCount == 1) {
+    let res = {
+      status: 200,
+      data: 'Refund Requested'
+    }
+    return res
+  }
+  else {
+    let res = {
+      status: 204,
+      data: 'Unable to request refund'
     }
     return res
   }
