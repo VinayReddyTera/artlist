@@ -354,13 +354,23 @@ export class RefundsComponent implements OnInit{
     this.apiService.payRefund(data).subscribe(
       (res:any)=>{
         if(res.status == 200){
-          console.log(res.data)
-          this.usersRowData = res.data;
-        }
-        else if(res.status == 205){
-          this.successMessage = res.data
+          let msgData = {
+            severity : "success",
+            summary : 'Success',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
+          this.refresh()
         }
         else if(res.status == 204){
+          let msgData = {
+            severity : "error",
+            summary : 'Error',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiService.sendMessage(msgData);
           if(res.data == 'Invalid token'){
             localStorage.clear();
             this.router.navigate(['/account/login']);

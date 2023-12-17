@@ -1555,8 +1555,8 @@ userService.payArtCommission=(payload,userData)=>{
   })
 }
 
-userService.fetchBalance=(payload)=>{
-  return userDB.fetchBalance(payload).then((data)=>{
+userService.fetchBalance=(payload,role)=>{
+  return userDB.fetchBalance(payload,role).then((data)=>{
     if(data){
       return data
     }
@@ -1570,8 +1570,8 @@ userService.fetchBalance=(payload)=>{
   })
 }
 
-userService.withdrawBalance=(amount,payload)=>{
-  return userDB.withdrawBalance(amount,payload).then((data)=>{
+userService.withdrawBalance=(amount,payload,role)=>{
+  return userDB.withdrawBalance(amount,payload,role).then((data)=>{
     if(data){
       return data
     }
@@ -1616,33 +1616,53 @@ userService.requestRefund=(payload)=>{
 }
 
 userService.payRefund=async(payload)=>{
-  let commissionData = await userDB.getcommissionStatus(payload._id);
-  if(commissionData.paid && commissionData.commissionPaid == 'Not Paid'){
-    return userDB.payRefundWithoutCommission(payload,commissionData).then((data)=>{
-      if(data){
-        return data
-      }
-      else{
-        let res= {
-          status : 204,
-          data: 'Unable to pay refund'
+  if(payload.refundStatus == true){
+    let commissionData = await userDB.getcommissionStatus(payload._id);
+    if(commissionData.paid && commissionData.commissionPaid == 'Not Paid'){
+      return userDB.payRefundWithoutCommission(payload,commissionData).then((data)=>{
+        if(data){
+          return data
         }
-        return res
-      }
-    })
+        else{
+          let res= {
+            status : 204,
+            data: 'Unable to pay refund'
+          }
+          return res
+        }
+      })
+    }
+    else if(commissionData.paid && commissionData.commissionPaid == 'Paid'){
+      return userDB.payRefundWithCommission(payload,commissionData).then((data)=>{
+        if(data){
+          return data
+        }
+        else{
+          let res= {
+            status : 204,
+            data: 'Unable to pay refund'
+          }
+          return res
+        }
+      })
+    }
+    else{
+      return {status:204,data:'Not eligible for refund'}
+    }
   }
-  return userDB.payRefund(payload).then((data)=>{
+  else{
+    let data = await userDB.rejectRefund(payload._id);
     if(data){
       return data
     }
     else{
       let res= {
         status : 204,
-        data: 'Unable to pay refund'
+        data: 'Unable to reject refund request'
       }
       return res
     }
-  })
+  }
 }
 
 userService.test=()=>{

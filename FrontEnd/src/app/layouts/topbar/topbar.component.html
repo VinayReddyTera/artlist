@@ -92,7 +92,7 @@
             {{name}}</a>
           <a class="dropdown-item" (click)="openProfile('')"><i class="bx bx-user font-size-16 align-middle me-1"></i>
             Profile</a>
-          <a class="dropdown-item" (click)="openProfile('wallet')"><i class="bx bx-wallet font-size-16 align-middle me-1"></i>
+          <a class="dropdown-item" *ngIf="role == 'artist' || role == 'user'" (click)="openProfile('wallet')"><i class="bx bx-wallet font-size-16 align-middle me-1"></i>
             Wallet</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item text-danger" (click)="logout()"><i

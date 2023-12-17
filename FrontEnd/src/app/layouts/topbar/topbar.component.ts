@@ -42,7 +42,11 @@ export class TopbarComponent implements OnInit {
 
   openProfile(data:any){
     if(this.role == 'artist'){
-      this.router.navigateByUrl('/artist-profile')
+      if(data == 'wallet'){
+        let encrypt = this.decrypt.enCrypt('wallet');
+        this.router.navigateByUrl(`/artist-profile?data=${encrypt}`)
+      }
+      else this.router.navigateByUrl('/artist-profile')
     }
     else if(this.role == 'user' || this.role == 'tag'|| this.role == 'admin'){
       if(data == 'wallet'){

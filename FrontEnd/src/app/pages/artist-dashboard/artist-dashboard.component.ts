@@ -717,4 +717,12 @@ export class ArtistDashboardComponent implements OnInit{
     }
   }
 
+  navigate(){
+    if(this.profileStatus == 'Incomplete'){
+      let encrypt = this.decrypt.enCrypt('verify')
+      this.router.navigateByUrl(`/artist-profile?data=${encrypt}`)
+    }
+    else this.router.navigateByUrl('/artist-profile')
+  }
+
 }

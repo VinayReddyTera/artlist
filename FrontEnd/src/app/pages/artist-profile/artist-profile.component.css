@@ -8,13 +8,33 @@
     margin-right: 10px; /* Add some space between buttons */
   }
 
-  @media (max-width: 425px) {
+  .price-text{
+    font-size: 22px;
+  }
+
+  @media (max-width: 375px) {
     .button-container {
       display: none;
     }
+    .price-text{
+      font-size: 18px;
+    }
+    ::ng-deep .p-speeddial-action{
+      width: 2.5rem;
+      height: 2.5rem;
+    }
   }
 
-  @media (min-width: 426px) {
+  @media (max-width: 768px) {
+    .button-container {
+      display: none;
+    }
+    .price-text{
+      font-size: 18px;
+    }
+  }
+
+  @media (min-width: 769px) {
     ::ng-deep p-speedDial{
       display: none;
     }

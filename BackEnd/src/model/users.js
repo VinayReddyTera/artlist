@@ -2468,8 +2468,11 @@ userDB.fetchAdminEmails = async () => {
   }
 }
 
-userDB.fetchBalance = async(payload) => {
-  const collection = await connection.getUsers();
+userDB.fetchBalance = async(payload,role) => {
+  let collection = await connection.getArtist();
+  if(role == 'user'){
+    collection = await connection.getUsers()
+  }
   let data = await collection.findOne({"_id":new ObjectId(payload)},{_id:0,wallet:1})
   if (data) {
     let res = {
@@ -2487,8 +2490,11 @@ userDB.fetchBalance = async(payload) => {
   }
 }
 
-userDB.withdrawBalance = async(amount,payload) => {
-  const collection = await connection.getUsers();
+userDB.withdrawBalance = async(amount,payload,role) => {
+  let collection = await connection.getArtist();
+  if(role == 'user'){
+    collection = await connection.getUsers()
+  }
   let data = await collection.updateOne({"_id":new ObjectId(payload),wallet: { $gte: amount }},{ $inc: { wallet: -amount }, $push: { withdrawHistory: { amount: amount, date: new Date() } } })
   if (data.modifiedCount == 1) {
     let res = {
@@ -2573,7 +2579,7 @@ userDB.fetchAllRefunds = async() => {
 
 userDB.requestRefund = async(payload) => {
   const collection = await connection.history();
-  let data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{'refundRequested':true,'refundReason':payload.refundReason,'status':'artist not attended'}})
+  let data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{'refundRequested':true,'refundReason':payload.refundReason,'status':'artist not attended','refundAccepted':'Pending'}})
   if (data.modifiedCount == 1) {
     let res = {
       status: 200,
@@ -2592,7 +2598,7 @@ userDB.requestRefund = async(payload) => {
 
 userDB.getcommissionStatus = async(payload) => {
   const collection = await connection.history();
-  let data = await collection.findOne({"_id":new ObjectId(payload)},{_id:0,commission:1,commissionPaid:1,price:1,paid:1})
+  let data = await collection.findOne({"_id":new ObjectId(payload)},{_id:0,commission:1,commissionPaid:1,price:1,paid:1,paymentType:1})
   if (data) {
     return data
   }
@@ -2601,11 +2607,128 @@ userDB.getcommissionStatus = async(payload) => {
   }
 }
 
-userDB.payRefundWithoutCommission = async(payload) => {
+userDB.rejectRefund = async(payload) => {
   const collection = await connection.history();
-  let data = await collection.updateOne({"_id":new ObjectId(payload._id)},{$set:{'refundAccepted':payload.refundStatus}})
+  let data = await collection.updateOne({"_id":new ObjectId(payload)},{refundAccepted :'Rejected',refundRequested:false})
   if (data.modifiedCount == 1) {
-    
+    let res = {
+      status: 200,
+      data: 'Successfully Rejected'
+    }
+    return res
+  }
+  else {
+    let res = {
+      status: 204,
+      data: 'Unable to reject refund requestd'
+    }
+    return res
+  }
+}
+
+userDB.payRefundWithoutCommission = async(payload,commissionData) => {
+  const collection = await connection.history();
+  let data = await collection.updateOne({"_id":new ObjectId(payload._id)},{$set:{'refundAccepted':'Accepted',refundRequested:false}})
+  if (data.modifiedCount == 1) {
+    let userPayStatus = await (await connection.getUsers()).updateOne({'_id':new ObjectId(payload.userId)},{$inc:{wallet:commissionData.price}});
+    if(commissionData.paymentType == 'cash'){
+      let artistPay = await (await connection.getArtist()).updateOne({'_id':new ObjectId(payload.artistId)},{$inc:{wallet:-(commissionData.price)}})
+      if(artistPay.modifiedCount == 1){
+        let res = {
+          status: 200,
+          data: 'successfully Done'
+        }
+        return res
+      }
+      else{
+        let res = {
+          status: 204,
+          data: 'Successfully paid user, unable to update artist wallet'
+        }
+        return res
+      }
+    }
+    else{
+      if(userPayStatus.modifiedCount == 1){
+        let res = {
+          status: 200,
+          data: 'successfully Done'
+        }
+        return res
+      }
+      else{
+        let res = {
+          status: 204,
+          data: 'Unable to pay refund'
+        }
+        return res
+      }
+    }
+  }
+  else {
+    let res = {
+      status: 204,
+      data: 'Unable to pay refund'
+    }
+    return res
+  }
+}
+
+userDB.payRefundWithCommission = async(payload,commissionData) => {
+  const collection = await connection.history();
+  let data = await collection.updateOne({"_id":new ObjectId(payload._id)},{$set:{'refundAccepted':'Accepted',refundRequested:false}})
+  if (data.modifiedCount == 1) {
+    let userPayStatus = await (await connection.getUsers()).updateOne({'_id':new ObjectId(payload.userId)},{$inc:{wallet:commissionData.price}});
+    if(commissionData.paymentType == 'cash'){
+      let artistPay = await (await connection.getArtist()).updateOne({'_id':new ObjectId(payload.artistId)},{$inc:{wallet:-(commissionData.price+commissionData.commission)}})
+      if(artistPay.modifiedCount == 1){
+        let res = {
+          status: 200,
+          data: 'successfully Done'
+        }
+        return res
+      }
+      else{
+        let res = {
+          status: 204,
+          data: 'Successfully paid user, unable to update artist wallet'
+        }
+        return res
+      }
+    }
+    else if(commissionData.paymentType == 'online'){
+      let artistPay = await (await connection.getArtist()).updateOne({'_id':new ObjectId(payload.artistId)},{$inc:{wallet:-(commissionData.commission)}})
+      if(artistPay.modifiedCount == 1){
+        let res = {
+          status: 200,
+          data: 'successfully Done'
+        }
+        return res
+      }
+      else{
+        let res = {
+          status: 204,
+          data: 'Successfully paid user, unable to update artist wallet'
+        }
+        return res
+      }
+    }
+    else{
+      if(userPayStatus.modifiedCount == 1){
+        let res = {
+          status: 200,
+          data: 'successfully Done'
+        }
+        return res
+      }
+      else{
+        let res = {
+          status: 204,
+          data: 'Unable to pay refund'
+        }
+        return res
+      }
+    }
   }
   else {
     let res = {

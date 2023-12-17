@@ -1034,10 +1034,10 @@ router.post('/payArtCommission',verifyToken,(req,res,next)=>{
   })
 })
 
-//router to fetch user balance
+//router to fetch user or artist balance
 router.get('/fetchBalance',verifyToken,(req,res,next)=>{
   let payload = jwt.decode(req.headers.authorization).data;
-  userservice.fetchBalance(payload._id).then((data)=>{
+  userservice.fetchBalance(payload._id,payload.role).then((data)=>{
     return res.json(data)
   }).catch((err)=>{
     next(err)
@@ -1047,7 +1047,7 @@ router.get('/fetchBalance',verifyToken,(req,res,next)=>{
 //router to fetch Withdraw Balance
 router.post('/withdrawBalance',verifyToken,(req,res,next)=>{
   let payload = jwt.decode(req.headers.authorization).data;
-  userservice.withdrawBalance(req.body.amount,payload._id).then((data)=>{
+  userservice.withdrawBalance(req.body.amount,payload._id,payload.role).then((data)=>{
     return res.json(data)
   }).catch((err)=>{
     next(err)

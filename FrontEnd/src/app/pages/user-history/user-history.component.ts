@@ -1121,8 +1121,7 @@ export class UserHistoryComponent implements OnInit{
             life : 5000
           }
         this.apiService.sendMessage(msgData);
-        $(`#approve`).modal('hide');
-        $(`#reject`).modal('hide');
+        $(`#refund`).modal('hide');
         this.usersRowData = [];
         this.errorMessage = null;
         this.refresh();

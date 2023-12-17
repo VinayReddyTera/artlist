@@ -15,6 +15,8 @@ const users = Schema({
     withdrawHistory:[
         {
             amount : Number,
+            type:String,
+            status : {type:String,default:'pending'},
             date : Date
         }
     ],
@@ -61,6 +63,14 @@ const artistDetails = Schema({
     inaug : {type:Boolean,default:false},
     wishes: {type:Boolean,default:false},
     wallet : {type:Number,default:0},
+    withdrawHistory:[
+        {
+            amount : Number,
+            type:String,
+            status : {type:String,default:'pending'},
+            date : Date
+        }
+    ],
     inaugPrice : Number,
     wishesPrice: Number,
     address : String,
@@ -132,7 +142,7 @@ const history = Schema({
     modifiedBy:String,
     refundStatus:{type:String,default:'negative'},
     refundRequested : {type:Boolean,default:false},
-    refundAccepted : Boolean,
+    refundAccepted : String,
     refundReason : String,
     pricing : Object,
     type : String,
@@ -151,19 +161,6 @@ const history = Schema({
     commission : Number,
     commissionPaid : {type:String,default:'Not Paid'},
 },{collection : "history"});
-
-const feedback = Schema({
-    name: String,
-    email: String,
-    feedbacks: [
-        {
-            feedbackType: String,
-            feedback: String,
-            emotion: String,
-            date: { type: Date, default: Date.now }
-        }
-    ]
-},{collection : "feedback"})
 
 let collection = {}
 
@@ -190,16 +187,6 @@ collection.getArtist = () => {
 collection.getTag = () => {
     return Mongoose.connect(url,{useNewUrlParser:true,useUnifiedTopology:true}).then((database)=>{
         return database.model('tag',tag)
-    }).catch((error)=>{
-        let err = new Error("Could not connect to database " + error);
-        err.status = 500;
-        throw err;
-    })
-}
-
-collection.feedback = () => {
-    return Mongoose.connect(url,{useNewUrlParser:true,useUnifiedTopology:true}).then((database)=>{
-        return database.model('feedback',feedback)
     }).catch((error)=>{
         let err = new Error("Could not connect to database " + error);
         err.status = 500;
