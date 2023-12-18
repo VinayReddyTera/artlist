@@ -63,14 +63,7 @@ const artistDetails = Schema({
     inaug : {type:Boolean,default:false},
     wishes: {type:Boolean,default:false},
     wallet : {type:Number,default:0},
-    withdrawHistory:[
-        {
-            amount : Number,
-            type:String,
-            status : {type:String,default:'pending'},
-            date : Date
-        }
-    ],
+    withdrawHistory:[withdrawHistorySchema],
     inaugPrice : Number,
     wishesPrice: Number,
     address : String,

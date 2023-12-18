@@ -121,3 +121,20 @@ input[type="time"] {
       left: -23px !important;
     }
 }
+
+.button-text{
+  position: relative;
+  bottom: 3px;
+}
+
+@media (max-width: 425px) {
+  .button-container {
+    display: none;
+  }
+}
+
+@media (min-width: 426px) {
+  .icon-container{
+    display: none;
+  }
+}
