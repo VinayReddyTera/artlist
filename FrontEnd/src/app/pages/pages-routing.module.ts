@@ -20,6 +20,8 @@ import { ArtistValidateComponent } from './artist-validate/artist-validate.compo
 import { CommissionComponent } from './commission/commission.component';
 import { AllCommissionsComponent } from './all-commissions/all-commissions.component';
 import { RefundsComponent } from './refunds/refunds.component';
+import { TransactionsComponent } from './transactions/transactions.component';
+import { PendingWithdrawsComponent } from './pending-withdraws/pending-withdraws.component';
 
 const routes: Routes = [
   {
@@ -196,6 +198,22 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       role: ['admin','access-refunds']
+    }
+  },
+  {
+    path: 'transactions',
+    component: TransactionsComponent,
+    canActivate: [AuthGuard],
+    data: {
+      role: ['user','artist','access-transactions']
+    }
+  },
+  {
+    path: 'pending-withdraws',
+    component: PendingWithdrawsComponent,
+    canActivate: [AuthGuard],
+    data: {
+      role: ['admin','access-pending-withdraws']
     }
   },
   {

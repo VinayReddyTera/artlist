@@ -65,6 +65,9 @@ import { RefundsComponent } from './refunds/refunds.component';
 import { userRenderer } from './refunds/userContact';
 import { artistRenderer } from './refunds/artistContact';
 import { refundAcceptRenderer } from './refunds/refundAccept';
+import { TransactionsComponent } from './transactions/transactions.component';
+import { PendingWithdrawsComponent } from './pending-withdraws/pending-withdraws.component';
+import { pendingRenderer } from './pending-withdraws/pending-contact';
 
 @NgModule({
   declarations: [
@@ -110,7 +113,10 @@ import { refundAcceptRenderer } from './refunds/refundAccept';
     RefundsComponent,
     userRenderer,
     artistRenderer,
-    refundAcceptRenderer
+    refundAcceptRenderer,
+    TransactionsComponent,
+    PendingWithdrawsComponent,
+    pendingRenderer
   ],
   imports: [
     CommonModule,

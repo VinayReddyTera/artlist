@@ -1085,6 +1085,29 @@ router.post('/payRefund',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to get withraw requests
+router.get('/fetchWithdraws',verifyToken,(req,res,next)=>{
+  let payload = jwt.decode(req.headers.authorization).data;
+  userservice.fetchWithdraws(payload._id,payload.role).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
+//router to get withraw requests
+router.get('/fetchPendingWithdraws',verifyToken,(req,res,next)=>{
+  let payload = jwt.decode(req.headers.authorization).data;
+  if(payload.role != 'admin'){
+    return res.json({status:204,data:'Unauthorized Request'})
+  }
+  userservice.fetchPendingWithdraws().then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 //router to get reminder
 router.get('/reminder',(req,res,next)=>{
   userservice.getReminder().then((data)=>{

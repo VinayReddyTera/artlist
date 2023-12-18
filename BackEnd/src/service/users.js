@@ -1665,6 +1665,36 @@ userService.payRefund=async(payload)=>{
   }
 }
 
+userService.fetchWithdraws=(payload,role)=>{
+  return userDB.fetchWithdraws(payload,role).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to Withdraw requests'
+      }
+      return res
+    }
+  })
+}
+
+userService.fetchPendingWithdraws=()=>{
+  return userDB.fetchPendingWithdraws().then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to fetch pending withdraw requests'
+      }
+      return res
+    }
+  })
+}
+
 userService.test=()=>{
   return userDB.test().then((data)=>{
     if(data){

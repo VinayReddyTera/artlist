@@ -5,6 +5,13 @@ Mongoose.set('strictQuery', true);
 const url = process.env.MONGO_URL;
 const moment = require('moment');
 
+const withdrawHistorySchema = Schema({
+    amount: Number,
+    type: String,
+    status: { type: String, default: 'Pending' },
+    date: Date
+});
+
 const users = Schema({
     name:String,
     email:String,
@@ -12,14 +19,7 @@ const users = Schema({
     password:String,
     role:String,
     otp:Number,
-    withdrawHistory:[
-        {
-            amount : Number,
-            type:String,
-            status : {type:String,default:'pending'},
-            date : Date
-        }
-    ],
+    withdrawHistory:[withdrawHistorySchema],
     wallet : {type:Number,default:0},
     profileStatus :{type:String,default:'Incomplete'},
     emailVerified : {type:Boolean,default:false},

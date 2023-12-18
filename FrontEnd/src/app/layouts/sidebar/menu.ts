@@ -119,5 +119,19 @@ export const MENU: MenuItem[] = [
         icon: 'bx-history',
         link : '/tag-history',
         role: ['tag','access-tag-history']
+    },
+    {
+        id: 10,
+        label: 'Transactions',
+        icon: 'bx-transfer-alt',
+        link : '/transactions',
+        role: ['user','artist','access-transactions']
+    },
+    {
+        id: 10,
+        label: 'Withdraw Requests',
+        icon: 'bx-transfer-alt',
+        link : '/pending-withdraws',
+        role: ['admin','access-pending-withdraws']
     }
 ]

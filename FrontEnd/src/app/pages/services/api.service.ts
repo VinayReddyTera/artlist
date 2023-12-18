@@ -225,4 +225,12 @@ export class ApiService {
     return this.http.post(environment.domain+"payRefund",payload)
   }
 
+  fetchWithdraws():Observable<any>{
+    return this.http.get(environment.domain+"fetchWithdraws")
+  }
+
+  fetchPendingWithdraws():Observable<any>{
+    return this.http.get(environment.domain+"fetchPendingWithdraws")
+  }
+
 }

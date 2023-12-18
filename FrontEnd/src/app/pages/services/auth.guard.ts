@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate {
         // console.log(role)
         if(role == 'artist' || role == 'user' || role == 'admin' || role == 'tag'){
           if(role == 'artist'){
-            if(route.routeConfig?.path === 'artist-profile' || route.routeConfig?.path === 'artist-dashboard' || route.routeConfig?.path === 'artist-history' || route.routeConfig?.path === 'skill-data' || route.routeConfig?.path === 'new-requests' || route.routeConfig?.path === 'artist-approve' || route.routeConfig?.path === 'add-skill' || route.routeConfig?.path === 'add-skill/:type' || route.routeConfig?.path === 'commissions'){
+            if(route.routeConfig?.path === 'artist-profile' || route.routeConfig?.path === 'artist-dashboard' || route.routeConfig?.path === 'artist-history' || route.routeConfig?.path === 'skill-data' || route.routeConfig?.path === 'new-requests' || route.routeConfig?.path === 'artist-approve' || route.routeConfig?.path === 'add-skill' || route.routeConfig?.path === 'add-skill/:type' || route.routeConfig?.path === 'commissions' || route.routeConfig?.path === 'transactions'){
               return true
             }
             else{
@@ -45,7 +45,7 @@ export class AuthGuard implements CanActivate {
             return false
           }
           else if(role == 'user'){
-            if(route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'user-profile/:data' || route.routeConfig?.path === 'user-dashboard' || route.routeConfig?.path === 'user-history' || route.routeConfig?.path === 'all-artists' || route.routeConfig?.path === 'artist-data'){
+            if(route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'user-profile/:data' || route.routeConfig?.path === 'user-dashboard' || route.routeConfig?.path === 'user-history' || route.routeConfig?.path === 'all-artists' || route.routeConfig?.path === 'artist-data' || route.routeConfig?.path === 'transactions'){
               return true
             }
             else{
@@ -65,7 +65,7 @@ export class AuthGuard implements CanActivate {
             return false
           }
           else if(role == 'admin'){
-            if(route.routeConfig?.path === 'all-artists' || route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'user-profile/:data' || route.routeConfig?.path === 'add-approver' || route.routeConfig?.path === 'add-approver/:type' || route.routeConfig?.path === 'all-approvers' || route.routeConfig?.path === 'all-commissions' || route.routeConfig?.path === 'refunds'){
+            if(route.routeConfig?.path === 'all-artists' || route.routeConfig?.path === 'user-profile' || route.routeConfig?.path === 'user-profile/:data' || route.routeConfig?.path === 'add-approver' || route.routeConfig?.path === 'add-approver/:type' || route.routeConfig?.path === 'all-approvers' || route.routeConfig?.path === 'all-commissions' || route.routeConfig?.path === 'refunds' || route.routeConfig?.path === 'pending-withdraws'){
               return true
             }
             else{

@@ -2491,9 +2491,12 @@ userDB.fetchBalance = async(payload,role) => {
 }
 
 userDB.withdrawBalance = async(amount,payload,role) => {
-  let collection = await connection.getArtist();
+  let collection;
   if(role == 'user'){
     collection = await connection.getUsers()
+  }
+  else{
+    collection = await connection.getArtist();
   }
   let data = await collection.updateOne({"_id":new ObjectId(payload),wallet: { $gte: amount }},{ $inc: { wallet: -amount }, $push: { withdrawHistory: { amount: amount, date: new Date() } } })
   if (data.modifiedCount == 1) {
@@ -2734,6 +2737,97 @@ userDB.payRefundWithCommission = async(payload,commissionData) => {
     let res = {
       status: 204,
       data: 'Unable to pay refund'
+    }
+    return res
+  }
+}
+
+userDB.fetchWithdraws = async(payload,role) => {
+  let collection;
+  if(role == 'user'){
+    collection = await connection.getUsers();
+  }
+  else{
+    collection = await connection.getArtist();
+  }
+  let data = await collection.findOne({"_id":new ObjectId(payload)},{_id:0,wallet:1,withdrawHistory:1});
+  if (data) {
+    let res = {
+      status: 200,
+      data: data
+    }
+    return res
+  }
+  else {
+    let res = {
+      status: 204,
+      data: 'Unable to fetch withdraw history'
+    }
+    return res
+  }
+}
+
+userDB.fetchPendingWithdraws = async() => {
+  let collection = await connection.getUsers();
+  let artistCollection = await connection.getArtist();
+  let data = await collection.aggregate([
+  {
+    $match: {
+      "withdrawHistory.status": "Pending"
+    }
+  },
+  {
+    $project: {
+      _id: 1, // Exclude the default _id field from the output
+      name: "$name",
+      email: "$email",
+      phoneNo: "$phoneNo",
+      role:"$role",
+      withdrawHistory: {
+        $filter: {
+          input: "$withdrawHistory",
+          as: "history",
+          cond: { $eq: ["$$history.status", "Pending"] }
+        }
+      }
+    }
+  }
+])
+  let artistdata = await artistCollection.aggregate([
+  {
+    $match: {
+      "withdrawHistory.status": "Pending"
+    }
+  },
+  {
+    $project: {
+      _id: 1, // Exclude the default _id field from the output
+      name: "$name",
+      email: "$email",
+      phoneNo: "$phoneNo",
+      role:"$role",
+      withdrawHistory: {
+        $filter: {
+          input: "$withdrawHistory",
+          as: "history",
+          cond: { $eq: ["$$history.status", "Pending"] }
+        }
+      }
+    }
+  }
+]);
+  const joinedArray = data.concat(artistdata);
+  if (joinedArray.length>0) {
+    let res = {
+      status: 200,
+      data: data
+    }
+    return res
+  }
+  else {
+    let res = {
+      status: 204,
+      data: 'Unable to fetch pending withdraw requests'
     }
     return res
   }
