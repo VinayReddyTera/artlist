@@ -2826,8 +2826,35 @@ userDB.fetchPendingWithdraws = async() => {
   }
   else {
     let res = {
+      status: 205,
+      data: 'No pending withdraw requests'
+    }
+    return res
+  }
+}
+
+userDB.payBalance = async(payload) => {
+  let collection;
+  if(payload.role == 'user'){
+    collection = await connection.getUsers();
+  }
+  else{
+    collection = await connection.getArtist();
+  }
+  let data = await collection.updateMany({ 'withdrawHistory._id': { $in: payload.ids } },
+  { $set: { 'withdrawHistory.$[elem].status': 'Completed' } },
+  { arrayFilters: [{ 'elem._id': { $in: payload.ids } }] })
+  if (data.modifiedCount == 1) {
+    let res = {
+      status: 200,
+      data: 'Successfully updated'
+    }
+    return res
+  }
+  else {
+    let res = {
       status: 204,
-      data: 'Unable to fetch pending withdraw requests'
+      data: 'Unable to update'
     }
     return res
   }

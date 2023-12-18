@@ -1695,6 +1695,21 @@ userService.fetchPendingWithdraws=()=>{
   })
 }
 
+userService.payBalance=(payload)=>{
+  return userDB.payBalance(payload).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to update'
+      }
+      return res
+    }
+  })
+}
+
 userService.test=()=>{
   return userDB.test().then((data)=>{
     if(data){

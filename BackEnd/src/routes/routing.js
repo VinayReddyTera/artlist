@@ -1108,6 +1108,19 @@ router.get('/fetchPendingWithdraws',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to pay balance
+router.post('/payBalance',verifyToken,(req,res,next)=>{
+  let payload = jwt.decode(req.headers.authorization).data;
+  if(payload.role != 'admin'){
+    return res.json({status:204,data:'Unauthorized Request'})
+  }
+  userservice.payBalance(req.body).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 //router to get reminder
 router.get('/reminder',(req,res,next)=>{
   userservice.getReminder().then((data)=>{

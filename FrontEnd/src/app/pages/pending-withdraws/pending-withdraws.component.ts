@@ -77,10 +77,6 @@ export class PendingWithdrawsComponent implements OnInit{
             let link = `<span class="badge badge-soft-success" style="font-size:13px">Completed</span>`;
             return link
           }
-          else if(params.value == 'Rejected'){
-            let link = `<span class="badge badge-soft-danger" style="font-size:13px">Rejected</span>`;
-            return link
-          }
           else{
             return params.value
           }
@@ -109,7 +105,7 @@ export class PendingWithdrawsComponent implements OnInit{
       filterParams: { maxNumConditions: 1 },
       headerName: "Pay Now",
       cellRenderer: withdrawPayRenderer,
-      cellRendererParams: { onStatusChange: this.paynow.bind(this) }
+      cellRendererParams: { onStatusChange: this.pay.bind(this) }
     }
   ];
   payColumnDefs = [
@@ -169,10 +165,10 @@ export class PendingWithdrawsComponent implements OnInit{
   pagination:any = true;
   gridApi:any;
   gridApi1:any;
-  amount:any;
   groupData:any;
   normalData:any;
   paymentData:any;
+  payloadData:any;
 
   ngOnInit(): void {
     this.apiService.initiateLoading(true);
@@ -255,6 +251,8 @@ export class PendingWithdrawsComponent implements OnInit{
 
   refresh(){
     this.usersRowData = [];
+    this.normalData = [];
+    this.groupData = [];
     this.ngOnInit();
   }
 
@@ -264,46 +262,69 @@ export class PendingWithdrawsComponent implements OnInit{
     $(`#viewPay`).modal('show');
   }
 
-  paynow(data:any){
-    console.log(data);
+  pay(data:any){
+    this.payloadData = data;
+    console.log(data)
+    $(`#viewConfirm`).modal('show');
+  }
+
+  paynow(){
     let value = (<HTMLInputElement>document.getElementById('check'));
-    let payload:any = [];
+    let payload:any = {
+      role : this.payloadData.role,
+      ids : []
+    };
     if(value.checked){
-      for(let i of data.withdrawHistory){
-        payload.push(i._id)
+      for(let i of this.payloadData.withdrawHistory){
+        payload.ids.push(i._id)
       }
     }
     else{
-      payload.push(data.historyId)
+      payload.ids.push(this.payloadData.historyId)
     }
     console.log(payload)
-    // if(payload.length>0){
-    //   this.apiService.initiateLoading(true);
-    //   this.apiService.payBalance(payload).subscribe(
-    //     (res:any)=>{
-    //       if(res.status == 200){
-            
-    //       }
-    //       else if(res.status == 205){
-    //         this.successMessage = res.data
-    //       }
-    //       else if(res.status == 204){
-    //         if(res.data == 'Invalid token'){
-    //           localStorage.clear();
-    //           this.router.navigate(['/account/login']);
-    //         }
-    //         else{
-    //           this.errorMessage = res.data;
-    //         }
-    //       }
-    //     },
-    //     (err:any)=>{
-    //       console.log(err)
-    //     }
-    //   ).add(()=>{
-    //     this.apiService.initiateLoading(false)
-    //   })
-    // }
+    if(payload.ids.length>0){
+      this.apiService.initiateLoading(true);
+      this.apiService.payBalance(payload).subscribe(
+        (res:any)=>{
+          if(res.status == 200){
+            let msgData = {
+              severity : "success",
+              summary : 'Success',
+              detail : res.data,
+              life : 5000
+            }
+            this.apiService.sendMessage(msgData);
+            $(`#viewConfirm`).modal('hide');
+            this.refresh()
+          }
+          else if(res.status == 205){
+            this.successMessage = res.data
+          }
+          else if(res.status == 204){
+            if(res.data == 'Invalid token'){
+              localStorage.clear();
+              this.router.navigate(['/account/login']);
+            }
+            else{
+              let msgData = {
+                severity : "error",
+                summary : 'Error',
+                detail : res.data,
+                life : 5000
+              }
+              this.apiService.sendMessage(msgData);
+              this.errorMessage = res.data;
+            }
+          }
+        },
+        (err:any)=>{
+          console.log(err)
+        }
+      ).add(()=>{
+        this.apiService.initiateLoading(false)
+      })
+    }
   }
 
   change(){

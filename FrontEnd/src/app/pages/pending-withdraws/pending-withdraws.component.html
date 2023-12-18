@@ -6,7 +6,7 @@
   {{successMessage}}
 </div>
 
-<div class="form-check form-switch form-switch-lg mb-3 d-flex justify-content-end">
+<div *ngIf="usersRowData.length" class="form-check form-switch form-switch-lg mb-3 d-flex justify-content-end">
     <input type="checkbox" id="check" checked="" class="form-check-input" (change)="change()">
     <label  for="check" class="form-check-label">Grouped Data</label>
 </div>
@@ -76,6 +76,20 @@
             >
             </ag-grid-angular>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="viewConfirm" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header border-bottom-0">
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
+      </div>
+        <div class="modal-body">
+          <div class="mb-2"><span class="font-weight-bold">Total amount to be paid : </span><span class="text-success">{{payloadData?.amount | number: '1.0-0'}} ₹</span></div>
+          <button class="btn btn-block btn-success" (click)="paynow()">Pay Now</button>
         </div>
       </div>
     </div>
