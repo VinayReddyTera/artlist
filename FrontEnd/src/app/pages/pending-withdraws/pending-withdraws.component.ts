@@ -3,7 +3,9 @@ import { Router } from '@angular/router';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { dateRenderer } from '../dateRenderer';
 import { ApiService } from '../services/api.service';
+import { withdrawPayRenderer } from './pay';
 import { pendingRenderer } from './pending-contact';
+import { historyRenderer } from './viewHistory';
 
 declare const $:any;
 
@@ -41,6 +43,73 @@ export class PendingWithdrawsComponent implements OnInit{
       filterParams: { maxNumConditions: 1 },
       headerName: "Role",
       width:150
+    },
+    {
+      field: "amount",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Amount",
+      width:150
+    },
+    {
+      field: "type",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Type",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+    },
+    {
+      field: "status",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Status",
+      hide:true,
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          if(params.value == 'Pending'){
+            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Pending</span>`;
+            return link
+          }
+          else if(params.value == 'Completed'){
+            let link = `<span class="badge badge-soft-success" style="font-size:13px">Completed</span>`;
+            return link
+          }
+          else if(params.value == 'Rejected'){
+            let link = `<span class="badge badge-soft-danger" style="font-size:13px">Rejected</span>`;
+            return link
+          }
+          else{
+            return params.value
+          }
+        }
+      }
+    },
+    {
+      field: "date",
+      filter: "agDateColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Date",
+      cellRenderer: dateRenderer
+    },
+    {
+      field: "action",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "View Withdraw Data",
+      cellRenderer: historyRenderer,
+      cellRendererParams: { onStatusChange: this.viewHistory.bind(this) },
+      width:150
+    },
+    {
+      field: "action",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Pay Now",
+      cellRenderer: withdrawPayRenderer,
+      cellRendererParams: { onStatusChange: this.paynow.bind(this) }
     }
   ];
   payColumnDefs = [
@@ -103,6 +172,7 @@ export class PendingWithdrawsComponent implements OnInit{
   amount:any;
   groupData:any;
   normalData:any;
+  paymentData:any;
 
   ngOnInit(): void {
     this.apiService.initiateLoading(true);
@@ -118,15 +188,29 @@ export class PendingWithdrawsComponent implements OnInit{
               role: user.role,
               amount: history.amount,
               date: history.date,
+              group : false,
               historyId: history._id,
               status: history.status,
               type: history.type
             }))
           );
-          this.groupData = res.data;
+          this.groupData = res.data.map((user:any) => {
+            const totalAmount = user.withdrawHistory.reduce((sum:any, history:any) => sum + history.amount, 0);
+          
+            return {
+              _id: user._id,
+              name: user.name,
+              email: user.email,
+              phoneNo: user.phoneNo,
+              role: user.role,
+              amount: totalAmount,
+              group:true,
+              withdrawHistory : user.withdrawHistory
+            };
+          });
           this.normalData = transformedArray
-          this.usersRowData = res.data;
-          console.log(res.data)
+          this.usersRowData = this.groupData
+          console.log(this.groupData)
           console.log(transformedArray)
         }
         else if(res.status == 205){
@@ -153,6 +237,15 @@ export class PendingWithdrawsComponent implements OnInit{
   onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
   }
+  onGridReady1(params: GridReadyEvent) {
+    this.gridApi1 = params.api;
+  }
+
+  filter1(){
+    this.gridApi1.setQuickFilter(
+      (document.getElementById('filter-text-box1') as HTMLInputElement).value
+    );
+  }
 
   filter(){
     this.gridApi.setQuickFilter(
@@ -163,6 +256,64 @@ export class PendingWithdrawsComponent implements OnInit{
   refresh(){
     this.usersRowData = [];
     this.ngOnInit();
+  }
+
+  viewHistory(data:any){
+    console.log(data)
+    this.paymentData = data.withdrawHistory;
+    $(`#viewPay`).modal('show');
+  }
+
+  paynow(data:any){
+    console.log(data);
+    let value = (<HTMLInputElement>document.getElementById('check'));
+    let payload:any = [];
+    if(value.checked){
+      for(let i of data.withdrawHistory){
+        payload.push(i._id)
+      }
+    }
+    else{
+      payload.push(data.historyId)
+    }
+    console.log(payload)
+    // if(payload.length>0){
+    //   this.apiService.initiateLoading(true);
+    //   this.apiService.payBalance(payload).subscribe(
+    //     (res:any)=>{
+    //       if(res.status == 200){
+            
+    //       }
+    //       else if(res.status == 205){
+    //         this.successMessage = res.data
+    //       }
+    //       else if(res.status == 204){
+    //         if(res.data == 'Invalid token'){
+    //           localStorage.clear();
+    //           this.router.navigate(['/account/login']);
+    //         }
+    //         else{
+    //           this.errorMessage = res.data;
+    //         }
+    //       }
+    //     },
+    //     (err:any)=>{
+    //       console.log(err)
+    //     }
+    //   ).add(()=>{
+    //     this.apiService.initiateLoading(false)
+    //   })
+    // }
+  }
+
+  change(){
+    let data = (<HTMLInputElement>document.getElementById('check'));
+    if(data.checked){
+      this.usersRowData = this.groupData;
+    }
+    else{
+      this.usersRowData = this.normalData
+    }
   }
 
 }

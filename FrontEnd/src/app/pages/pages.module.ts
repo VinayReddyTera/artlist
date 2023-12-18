@@ -68,6 +68,8 @@ import { refundAcceptRenderer } from './refunds/refundAccept';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { PendingWithdrawsComponent } from './pending-withdraws/pending-withdraws.component';
 import { pendingRenderer } from './pending-withdraws/pending-contact';
+import { historyRenderer } from './pending-withdraws/viewHistory';
+import { withdrawPayRenderer } from './pending-withdraws/pay';
 
 @NgModule({
   declarations: [
@@ -116,7 +118,9 @@ import { pendingRenderer } from './pending-withdraws/pending-contact';
     refundAcceptRenderer,
     TransactionsComponent,
     PendingWithdrawsComponent,
-    pendingRenderer
+    pendingRenderer,
+    historyRenderer,
+    withdrawPayRenderer
   ],
   imports: [
     CommonModule,

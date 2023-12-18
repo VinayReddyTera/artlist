@@ -5,7 +5,10 @@ import { ICellRendererParams } from "ag-grid-community";
 @Component({
   selector: "status-component",
   template: `
-  <span>{{data | date : 'mediumDate'}}</span>
+  <span *ngIf="data;else elseBlock">{{data | date : 'mediumDate'}}</span>
+  <ng-template #elseBlock>
+  <div>N/A</div>
+  </ng-template>
   `,
   styleUrls: [],
 })
