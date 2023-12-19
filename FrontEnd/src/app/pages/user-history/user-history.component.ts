@@ -385,6 +385,8 @@ export class UserHistoryComponent implements OnInit{
   filterApplied:boolean = false;
   historyData:any;
   dataView:any;
+  disable:any = false;
+  disableRefund:boolean=true;
 
   ngOnInit(): void {
     this.feedbackForm = this.fb.group({
@@ -1270,7 +1272,17 @@ export class UserHistoryComponent implements OnInit{
   openDataView(data:any){
     console.log(data)
     this.dataView = data;
+    let status = data.status
     $(`#dataView`).modal('show');
+    if(data.modifiedBy == 'user' || new Date(data.date)<new Date() || (status == 'completed' || status == 'c' || status == 'artist not attended' || status =='cancelled')){
+      this.disable = true
+    }
+    if((status == 'r' || status == 'a') && new Date(data.date)>=new Date()){
+      this.disable = false
+    }
+    if((data.paid == true && data.status == 'artist not attended') || data.refundRequested){
+      this.disableRefund = false
+    }
   }
 
 }

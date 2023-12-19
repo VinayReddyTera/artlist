@@ -172,7 +172,7 @@
   </div>
 </div>
 
-  <div class="modal fade" id="giveFeedback" tabindex="-1" role="dialog" aria-labelledby="giveFeedback" aria-hidden="true">
+  <div class="modal fade custom-class" id="giveFeedback" tabindex="-1" role="dialog" aria-labelledby="giveFeedback" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header border-bottom-0">
@@ -203,7 +203,7 @@
     </div>
   </div>
 
-  <div class="modal fade" id="noFeedback" tabindex="-1" role="dialog" aria-labelledby="noFeedback" aria-hidden="true">
+  <div class="modal fade custom-class" id="noFeedback" tabindex="-1" role="dialog" aria-labelledby="noFeedback" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header border-bottom-0">
@@ -216,7 +216,7 @@
     </div>
   </div>
 
-  <div class="modal fade" id="approve" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
+  <div class="modal fade custom-class" id="approve" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
       <div class="modal-content">
         <div class="modal-header border-bottom-0">
@@ -230,7 +230,7 @@
     </div>
   </div>
 
-  <div class="modal fade" id="reject" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
+  <div class="modal fade custom-class" id="reject" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
       <div class="modal-content">
         <div class="modal-header border-bottom-0">
@@ -255,7 +255,7 @@
     </div>
   </div>
 
-  <div class="modal fade" id="reschedule" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
+  <div class="modal fade custom-class" id="reschedule" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header border-bottom-0">
@@ -460,7 +460,7 @@
     </div>
   </div>
 
-  <div class="modal fade" id="refund" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
+  <div class="modal fade custom-class" id="refund" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
       <div class="modal-content">
         <div class="modal-header border-bottom-0">
@@ -508,7 +508,7 @@
                   <a class="text-dark">{{dataView?.candName}}</a>
                 </h5>
                 <div class="text-muted">{{dataView?.name}}</div>
-                <div class="text-muted">{{dataView?.date | date : 'mediumDate'}}</div>
+                <!-- <div class="text-muted">{{dataView?.date | date : 'mediumDate'}}</div> -->
                 <div class="text-muted">
                   <span class="badge" [ngClass]="{
                     'badge-soft-warning': ['pending', 'rescheduled'].includes(dataView?.status),
@@ -517,13 +517,6 @@
                     'badge-soft-info': dataView?.status === 'a'}"
                     style="font-size:12px;">{{dataView?.status | status}}</span>
                 </div>
-                <div *ngIf="dataView?.rating;else noRating" class="font-size-11 mt-2">
-                  <p-rating [(ngModel)]="dataView.rating" [readonly]="true" [cancel]="false"></p-rating>
-                </div>
-                <!-- <div *ngIf="dataView?.rating;else noRating" class="badge bg-success font-size-11 mt-2"><i class="bx bxs-star me-1"></i>{{dataView?.rating}}</div> -->
-                <ng-template #noRating>
-                  <div class="text-danger">No rating given yet</div>
-                </ng-template>
                 <div class="mt-2">
                   <a href="tel:{{dataView?.phoneNo}}" [pTooltip]="dataView?.phoneNo" tooltipPosition="top">
                     <button class="btn btn-success btn-rounded btn-icon icon">
@@ -535,8 +528,33 @@
                     <i class="mdi mdi-email edit"></i>
                     </button>
                     </a> &nbsp;
-                    <!-- <button class="btn btn-primary" style="height: 30px;" (click)="openDataView(dataView?)"><span class="button-text">view</span></button> -->
+                    <a pTooltip="Edit Feedback" tooltipPosition="top" (click)="viewFeedback(dataView)">
+                      <button class="btn btn-info btn-rounded btn-icon icon">
+                      <i class="mdi mdi-circle-edit-outline edit"></i>
+                      </button>
+                    </a>
                 </div>
+                <div class="mt-2">
+                  <button [disabled]="disable" class="btn btn-success btn-rounded btn-icon icon" pTooltip="approve" tooltipPosition="top" (click)="viewStatus(dataView,'approve')">
+                    <i class="mdi mdi-check edit"></i>
+                    </button>&nbsp;
+                    <button [disabled]="disable" class="btn btn-danger btn-rounded btn-icon icon" pTooltip="reject" tooltipPosition="top" (click)="viewStatus(dataView,'reject')">
+                    <i class="mdi mdi-close edit"></i>
+                    </button>&nbsp;
+                    <button [disabled]="disable" class="btn btn-info btn-rounded btn-icon icon" pTooltip="reschedule" tooltipPosition="top" (click)="viewStatus(dataView,'reschedule')">
+                    <i class="mdi mdi-calendar-clock edit"></i>
+                    </button>&nbsp;
+                    <button [disabled]='disableRefund' class="btn btn-success btn-rounded btn-icon icon" (click)="openRefund(dataView)">
+                      <i class="mdi mdi-contactless-payment edit"></i>
+                    </button>
+                </div>
+                <div *ngIf="dataView?.rating;else noRating" class="font-size-11 mt-2">
+                  <p-rating [(ngModel)]="dataView.rating" [readonly]="true" [cancel]="false"></p-rating>
+                </div>
+                <!-- <div *ngIf="dataView?.rating;else noRating" class="badge bg-success font-size-11 mt-2"><i class="bx bxs-star me-1"></i>{{dataView?.rating}}</div> -->
+                <ng-template #noRating>
+                  <div class="text-danger">No rating given yet</div>
+                </ng-template>
               </div>
             </div>
           </div>
