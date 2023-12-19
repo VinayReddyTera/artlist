@@ -142,3 +142,7 @@ input[type="time"] {
     display: none;
   }
 }
+
+::ng-deep .p-rating .p-rating-icon.p-rating-icon-active {
+  color: #ffc107;
+}

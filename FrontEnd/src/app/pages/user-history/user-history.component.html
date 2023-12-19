@@ -492,7 +492,124 @@
           <h5>Event Data</h5>
           <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
       </div>
-        <div class="modal-body">
+      <div class="modal-body">
+
+        <div class="card">
+          <div class="card-body">
+            <div class="media">
+              <div class="avatar-md me-2">
+                <span class="avatar-title rounded-circle bg-light text-danger font-size-16">
+                  <img class="rounded-circle" src="assets/images/user.png" alt height="65" />
+                </span>
+              </div>
+  
+              <div class="media-body pl-2 pb-2 overflow-hidden">
+                <h5 class="text-truncate font-size-15">
+                  <a class="text-dark">{{dataView?.candName}}</a>
+                </h5>
+                <div class="text-muted">{{dataView?.name}}</div>
+                <div class="text-muted">{{dataView?.date | date : 'mediumDate'}}</div>
+                <div class="text-muted">
+                  <span class="badge" [ngClass]="{
+                    'badge-soft-warning': ['pending', 'rescheduled'].includes(dataView?.status),
+                    'badge-soft-danger': ['r', 'artist not attended', 'cancelled'].includes(dataView?.status),
+                    'badge-soft-success': dataView?.status === 'c',
+                    'badge-soft-info': dataView?.status === 'a'}"
+                    style="font-size:12px;">{{dataView?.status | status}}</span>
+                </div>
+                <div *ngIf="dataView?.rating;else noRating" class="font-size-11 mt-2">
+                  <p-rating [(ngModel)]="dataView.rating" [readonly]="true" [cancel]="false"></p-rating>
+                </div>
+                <!-- <div *ngIf="dataView?.rating;else noRating" class="badge bg-success font-size-11 mt-2"><i class="bx bxs-star me-1"></i>{{dataView?.rating}}</div> -->
+                <ng-template #noRating>
+                  <div class="text-danger">No rating given yet</div>
+                </ng-template>
+                <div class="mt-2">
+                  <a href="tel:{{dataView?.phoneNo}}" [pTooltip]="dataView?.phoneNo" tooltipPosition="top">
+                    <button class="btn btn-success btn-rounded btn-icon icon">
+                    <i class="mdi mdi-phone edit"></i>
+                    </button>
+                    </a> &nbsp;
+                    <a href="mailto:{{dataView?.email}}" [pTooltip]="dataView?.email" tooltipPosition="top">
+                    <button class="btn btn-info btn-rounded btn-icon icon">
+                    <i class="mdi mdi-email edit"></i>
+                    </button>
+                    </a> &nbsp;
+                    <!-- <button class="btn btn-primary" style="height: 30px;" (click)="openDataView(dataView?)"><span class="button-text">view</span></button> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-4">Pricing</h4>
+
+            <div class="table-responsive">
+              <table class="table table-nowrap mb-0">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">Type</th>
+                    <th scope="col">Online</th>
+                    <th scope="col">Onsite</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Hourly :</th>
+                    <td><span class="text-success">{{dataView?.pricing.oHourly}} ₹</span></td>
+                    <td><span class="text-success">{{dataView?.pricing.hourly}} ₹</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Full Day :</th>
+                    <td><span class="text-success">{{dataView?.pricing.oFullDay}} ₹</span></td>
+                    <td><span class="text-success">{{dataView?.pricing.fullDay}} ₹</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Event :</th>
+                    <td><span class="text-success">{{dataView?.pricing.oEvent}} ₹</span></td>
+                    <td><span class="text-success">{{dataView?.pricing.event}} ₹</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="dataView?.address" class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-4">Address</h4>
+
+            <div class="table-responsive">
+              <table class="table table-nowrap mb-0">
+                <tbody>
+                  <tr>
+                    <th scope="row">Address :</th>
+                    <td>{{dataView?.address}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Mandal :</th>
+                    <td>{{dataView?.mandal}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">District :</th>
+                    <td>{{dataView?.district}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">State :</th>
+                    <td>{{dataView?.state}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Pincode :</th>
+                    <td>{{dataView?.pincode}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
       </div>
       </div>
     </div>
