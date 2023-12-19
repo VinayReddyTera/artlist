@@ -159,7 +159,7 @@
                   <i class="mdi mdi-email edit"></i>
                   </button>
                   </a> &nbsp;
-                  <button class="btn btn-primary" style="height: 30px;"><span class="button-text">view</span></button>
+                  <button class="btn btn-primary" style="height: 30px;" (click)="openDataView(history)"><span class="button-text">view</span></button>
               </div>
             </div>
           </div>
@@ -480,6 +480,19 @@
                 <button type="submit" class="btn btn-block btn-danger">Refund</button>
               </div>
         </form>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="dataView" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header border-bottom-0">
+          <h5>Event Data</h5>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
+      </div>
+        <div class="modal-body">
       </div>
       </div>
     </div>

@@ -384,6 +384,7 @@ export class UserHistoryComponent implements OnInit{
   filterForm : any;
   filterApplied:boolean = false;
   historyData:any;
+  dataView:any;
 
   ngOnInit(): void {
     this.feedbackForm = this.fb.group({
@@ -1210,6 +1211,15 @@ export class UserHistoryComponent implements OnInit{
   
   filterCard(){
   console.log(this.filterForm.value);
+  if((this.filterForm.value.status).toLowerCase() == 'completed'){
+    this.filterForm.controls.status.setValue('c');
+  }
+  else if((this.filterForm.value.status).toLowerCase() == 'accepted'){
+    this.filterForm.controls.status.setValue('a');
+  }
+  else if((this.filterForm.value.status).toLowerCase() == 'rejected'){
+    this.filterForm.controls.status.setValue('r');
+  }
   this.filterApplied = true
   this.filteredData = this.historyData.filter((item:any) => {
     // Function to check if a string contains a substring
@@ -1235,17 +1245,12 @@ export class UserHistoryComponent implements OnInit{
     }
   
     // Filter by skillName
-    if (
-      this.filterForm.value.skillName &&
-      !(
-        containsSubstring(item.name, this.filterForm.value.skillName)
-      )
-    ) {
+    if (this.filterForm.value.skillName && !(containsSubstring(item.name, this.filterForm.value.skillName))) {
       return false;
     }
-  
+
     // Filter by rating (assuming it is a property of the item, adjust as needed)
-    if (this.filterForm.value.rating && item.rating !== parseInt(this.filterForm.value.rating)) {
+    if (this.filterForm.value.rating && item.rating < parseInt(this.filterForm.value.rating)) {
       return false;
     }
   
@@ -1260,6 +1265,12 @@ export class UserHistoryComponent implements OnInit{
   else{
     this.errorMessage = null
   }
+  }
+
+  openDataView(data:any){
+    console.log(data)
+    this.dataView = data;
+    $(`#dataView`).modal('show');
   }
 
 }
