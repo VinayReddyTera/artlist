@@ -122,6 +122,10 @@ input[type="time"] {
     }
 }
 
+::ng-deep .p-datepicker{
+  z-index: 1010 !important;
+}
+
 .button-text{
   position: relative;
   bottom: 3px;

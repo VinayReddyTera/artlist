@@ -70,6 +70,7 @@ import { PendingWithdrawsComponent } from './pending-withdraws/pending-withdraws
 import { pendingRenderer } from './pending-withdraws/pending-contact';
 import { historyRenderer } from './pending-withdraws/viewHistory';
 import { withdrawPayRenderer } from './pending-withdraws/pay';
+import { StatusPipe } from './user-history/status.pipe';
 
 @NgModule({
   declarations: [
@@ -120,7 +121,8 @@ import { withdrawPayRenderer } from './pending-withdraws/pay';
     PendingWithdrawsComponent,
     pendingRenderer,
     historyRenderer,
-    withdrawPayRenderer
+    withdrawPayRenderer,
+    StatusPipe
   ],
   imports: [
     CommonModule,

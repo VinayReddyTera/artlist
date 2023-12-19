@@ -438,10 +438,9 @@ export class UserHistoryComponent implements OnInit{
     });
     this.filterForm = this.fb.group({
       name:[''],
-      address:[''],
-      language : [''],
+      date:[''],
+      status : [''],
       skillName:[''],
-      experience:[''],
       rating : ['']
     })
 
@@ -1205,7 +1204,8 @@ export class UserHistoryComponent implements OnInit{
     this.filterForm.reset();
     this.displayData = this.historyData.slice(0,10);
     this.filteredData = [];
-    this.filterApplied = false
+    this.filterApplied = false;
+    this.errorMessage = null;
   }
   
   filterCard(){
@@ -1214,31 +1214,23 @@ export class UserHistoryComponent implements OnInit{
   this.filteredData = this.historyData.filter((item:any) => {
     // Function to check if a string contains a substring
     const containsSubstring = (str:any, substr:any) => str.toLowerCase().includes(substr.toLowerCase());
+
+    // Function to check if a date string contains a substring
+    const containsDateSubstring = (dateStr: any, dateSubstr: any) =>
+    new Date(dateStr).toDateString().includes(new Date(dateSubstr).toDateString());
   
     // Filter by name
-    if (this.filterForm.value.name && !containsSubstring(item.name, this.filterForm.value.name)) {
+    if (this.filterForm.value.name && !containsSubstring(item.candName, this.filterForm.value.name)) {
+      return false;
+    }
+
+    // Filter by date
+    if (this.filterForm.value.date && !containsDateSubstring(item.date, this.filterForm.value.date)) {
       return false;
     }
   
-    // Filter by address
-    if (
-      this.filterForm.value.address &&
-      !(
-        containsSubstring(item.address, this.filterForm.value.address) ||
-        containsSubstring(item.mandal, this.filterForm.value.address) ||
-        containsSubstring(item.district, this.filterForm.value.address) ||
-        containsSubstring(item.state, this.filterForm.value.address) ||
-        containsSubstring(item.pincode.toString(), this.filterForm.value.address)
-      )
-    ) {
-      return false;
-    }
-  
-    // Filter by language
-    if (
-      this.filterForm.value.language &&
-      !item.language.some((lang:any) => containsSubstring(lang, this.filterForm.value.language))
-    ) {
+    // Filter by status
+    if (this.filterForm.value.status && !containsSubstring(item.status, this.filterForm.value.status)) {
       return false;
     }
   
@@ -1246,20 +1238,14 @@ export class UserHistoryComponent implements OnInit{
     if (
       this.filterForm.value.skillName &&
       !(
-        containsSubstring(item.skill.name, this.filterForm.value.skillName) ||
-        item.skill.genre.some((genre:any) => containsSubstring(genre.name, this.filterForm.value.skillName))
+        containsSubstring(item.name, this.filterForm.value.skillName)
       )
     ) {
       return false;
     }
   
-    // Filter by experience
-    if (this.filterForm.value.experience && item.skill.experience !== parseInt(this.filterForm.value.experience)) {
-      return false;
-    }
-  
     // Filter by rating (assuming it is a property of the item, adjust as needed)
-    if (this.filterForm.value.rating && item.skill.rating !== parseInt(this.filterForm.value.rating)) {
+    if (this.filterForm.value.rating && item.rating !== parseInt(this.filterForm.value.rating)) {
       return false;
     }
   
