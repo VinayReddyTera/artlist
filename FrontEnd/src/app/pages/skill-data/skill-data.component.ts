@@ -328,24 +328,19 @@ export class SkillDataComponent implements OnInit{
   
   filterCard(){
   console.log(this.filterForm.value);
-  if((this.filterForm.value.validated).toLowerCase() == 'approved'){
+  if((this.filterForm.value?.validated).toLowerCase() == 'approved'){
     this.filterForm.controls.validated.setValue('a');
   }
-  else if((this.filterForm.value.validated).toLowerCase() == 'rejected'){
+  else if((this.filterForm.value?.validated).toLowerCase() == 'rejected'){
     this.filterForm.controls.validated.setValue('r');
   }
-  else if(((this.filterForm.value.validated).toLowerCase() == 'not validated') || (this.filterForm.value.validated).toLowerCase() == 'notvalidated'){
+  else if(((this.filterForm.value?.validated).toLowerCase() == 'not validated') || (this.filterForm.value.validated).toLowerCase() == 'notvalidated'){
     this.filterForm.controls.validated.setValue('nv');
   }
   this.filterApplied = true
   this.filteredData = this.skillData.filter((item:any) => {
     // Function to check if a string contains a substring
     const containsSubstring = (str:any, substr:any) => str.toLowerCase().includes(substr.toLowerCase());
-
-    // Filter by name
-    if (this.filterForm.value.name && !containsSubstring(item.name, this.filterForm.value.name)) {
-      return false;
-    }
 
     // Filter by status
     if (this.filterForm.value.status && !containsSubstring(item.status, this.filterForm.value.status)) {
@@ -359,10 +354,10 @@ export class SkillDataComponent implements OnInit{
 
     // Filter by skillName
     if (
-      this.filterForm.value.skillName &&
+      this.filterForm.value.name &&
       !(
-        containsSubstring(item.name, this.filterForm.value.skillName) ||
-        item.genre.some((genre:any) => containsSubstring(genre.name, this.filterForm.value.skillName))
+        containsSubstring(item.name, this.filterForm.value.name) ||
+        item.genre.some((genre:any) => containsSubstring(genre.name, this.filterForm.value.name))
       )
     ) {
       return false;
@@ -382,7 +377,8 @@ export class SkillDataComponent implements OnInit{
     return true;
   });
   this.totalRecords = this.filteredData.length
-  this.displayData = this.filteredData.slice(0,10)
+  this.displayData = this.filteredData.slice(0,10);
+  console.log(this.filteredData)
   if(this.filteredData.length == 0){
     this.errorMessage = 'No Data Available with above filter!'
   }
