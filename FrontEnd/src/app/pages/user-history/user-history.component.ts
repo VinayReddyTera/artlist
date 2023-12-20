@@ -1341,7 +1341,7 @@ export class UserHistoryComponent implements OnInit{
         payload[0].pincode = this.dataView.pincode;
       }
       console.log(payload)
-      // this.submitStatus(payload)
+      this.submitStatus(payload)
     }
     else{
       const controls = this.statusForm.controls;

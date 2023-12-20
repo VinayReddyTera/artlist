@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { genreRenderer } from './genreRenderer';
 import { editRenderer } from './editRenderer';
 import { pricingRenderer } from './pricingRenderer';
+import { FormBuilder, FormControl, Validators} from '@angular/forms';
+import { EncryptionService } from '../services/encryption.service';
 
 declare const $:any;
 
@@ -16,8 +18,8 @@ declare const $:any;
 })
 export class SkillDataComponent implements OnInit{
 
-  constructor(private apiService : ApiService,
-    private spinner : NgxSpinnerService,private router:Router) { }
+  constructor(private apiService : ApiService,private fb: FormBuilder,
+    private spinner : NgxSpinnerService,private router:Router,private encrypt: EncryptionService) { }
   
   errorMessage : any;
   usersRowData:any = [];
@@ -206,6 +208,19 @@ export class SkillDataComponent implements OnInit{
   gridApi:any;
   gridApi1:any;
   pricing:any;
+  showTable:any = false;
+  showAdvance:any = false;
+  first: number = 0;
+  rows: number = 10;
+  totalRecords : any;
+  startIndex = 1;
+  endIndex = 5;
+  displayData:any = [];
+  filteredData:any = [];
+  filterForm : any;
+  filterApplied:boolean = false;
+  skillData:any;
+  dataView:any;
 
   ngOnInit(): void {
     this.spinner.show()
@@ -213,6 +228,8 @@ export class SkillDataComponent implements OnInit{
       (res : any)=>{
         if(res.status == 200){
           this.usersRowData = res.data;
+          this.skillData = res.data;
+          console.log(res.data)
         }
         else if(res.status == 204){
           if(res.data == 'Invalid token'){
@@ -228,7 +245,19 @@ export class SkillDataComponent implements OnInit{
         this.errorMessage = err.error.message
       }
     ).add(()=>{
-      this.spinner.hide()
+      this.spinner.hide();
+      if(this.skillData.length > 0){
+        this.totalRecords = this.skillData.length;
+        this.displayData = this.skillData.slice(0,10);
+      }
+    })
+
+    this.filterForm = this.fb.group({
+      name:[''],
+      status:[''],
+      validated : [''],
+      experience:[''],
+      rating : ['']
     })
   }
 
@@ -266,6 +295,112 @@ export class SkillDataComponent implements OnInit{
     console.log(data)
     this.pricing = data
     $('#viewPricing').modal('show');
+  }
+
+  change(){
+    let data = (<HTMLInputElement>document.getElementById('check'));
+    if(data.checked){
+      this.showTable = false;
+    }
+    else{
+      this.showTable = true;
+    }
+  }
+
+  onPageChange(event: any) {
+    this.first = event.first;
+    this.rows = event.rows;
+    if(this.filterApplied){
+      this.displayData = this.filteredData.slice(this.first,this.first+this.rows)
+    }
+    else{
+      this.displayData = this.skillData.slice(this.first,this.first+this.rows)
+    }
+  }
+
+  clear(){
+    this.filterForm.reset();
+    this.displayData = this.skillData.slice(0,10);
+    this.filteredData = [];
+    this.filterApplied = false;
+    this.errorMessage = null;
+  }
+  
+  filterCard(){
+  console.log(this.filterForm.value);
+  if((this.filterForm.value.validated).toLowerCase() == 'approved'){
+    this.filterForm.controls.validated.setValue('a');
+  }
+  else if((this.filterForm.value.validated).toLowerCase() == 'rejected'){
+    this.filterForm.controls.validated.setValue('r');
+  }
+  else if(((this.filterForm.value.validated).toLowerCase() == 'not validated') || (this.filterForm.value.validated).toLowerCase() == 'notvalidated'){
+    this.filterForm.controls.validated.setValue('nv');
+  }
+  this.filterApplied = true
+  this.filteredData = this.skillData.filter((item:any) => {
+    // Function to check if a string contains a substring
+    const containsSubstring = (str:any, substr:any) => str.toLowerCase().includes(substr.toLowerCase());
+
+    // Filter by name
+    if (this.filterForm.value.name && !containsSubstring(item.name, this.filterForm.value.name)) {
+      return false;
+    }
+
+    // Filter by status
+    if (this.filterForm.value.status && !containsSubstring(item.status, this.filterForm.value.status)) {
+      return false;
+    }
+
+    // Filter by validation
+    if (this.filterForm.value.validated && !containsSubstring(item.validated, this.filterForm.value.validated)) {
+      return false;
+    }
+
+    // Filter by skillName
+    if (
+      this.filterForm.value.skillName &&
+      !(
+        containsSubstring(item.name, this.filterForm.value.skillName) ||
+        item.genre.some((genre:any) => containsSubstring(genre.name, this.filterForm.value.skillName))
+      )
+    ) {
+      return false;
+    }
+
+    // Filter by experience
+    if (this.filterForm.value.experience && item.experience < parseInt(this.filterForm.value.experience)) {
+      return false;
+    }
+
+    // Filter by rating (assuming it is a property of the item, adjust as needed)
+    if (this.filterForm.value.rating && item.rating < parseInt(this.filterForm.value.rating)) {
+      return false;
+    }
+
+    // If all conditions pass, include the item in the filtered result
+    return true;
+  });
+  this.totalRecords = this.filteredData.length
+  this.displayData = this.filteredData.slice(0,10)
+  if(this.filteredData.length == 0){
+    this.errorMessage = 'No Data Available with above filter!'
+  }
+  else{
+    this.errorMessage = null
+  }
+  }
+
+  edit(data:any){
+    let encryptData = this.encrypt.enCrypt(JSON.stringify(data));
+    localStorage.setItem('editSkill',encryptData);
+    let link = '/add-skill/'+this.encrypt.enCrypt('edit');
+    this.router.navigateByUrl(link)
+  }
+
+  openDataView(data:any){
+    this.dataView = data;
+    $(`#dataView`).modal('show');
   }
 
 }

@@ -81,3 +81,30 @@ table.table tbody tr:last-child td:first-child {
 table.table tbody tr:last-child td:last-child {
     border-radius: 0 0 10px 0;
 }
+
+@media (max-width: 425px) {
+    .button-container {
+      display: none;
+    }
+  }
+  
+  @media (min-width: 426px) {
+    .icon-container{
+      display: none;
+    }
+  }
+  
+  .custom-class{
+    z-index: 1051 !important;
+    backdrop-filter: brightness(0.5);
+    padding-right: 15px;
+  }
+
+  .button-text{
+    position: relative;
+    bottom: 3px;
+  }
+
+  ::ng-deep .p-rating .p-rating-icon.p-rating-icon-active {
+    color: #ffc107;
+  }
