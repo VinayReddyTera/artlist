@@ -121,3 +121,30 @@ input[type="time"] {
       left: -23px !important;
     }
 }
+
+.button-text{
+  position: relative;
+  bottom: 3px;
+}
+
+@media (max-width: 425px) {
+  .button-container {
+    display: none;
+  }
+}
+
+@media (min-width: 426px) {
+  .icon-container{
+    display: none;
+  }
+}
+
+::ng-deep .p-rating .p-rating-icon.p-rating-icon-active {
+  color: #ffc107;
+}
+
+.custom-class{
+  z-index: 1051 !important;
+  backdrop-filter: brightness(0.5);
+  /* padding-right: 15px; */
+}

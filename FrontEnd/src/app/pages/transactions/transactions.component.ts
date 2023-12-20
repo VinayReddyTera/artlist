@@ -82,7 +82,10 @@ export class TransactionsComponent implements OnInit{
       (res:any)=>{
         if(res.status == 200){
           this.usersRowData = res.data?.withdrawHistory;
-          this.amount = res.data?.wallet
+          this.amount = res.data?.wallet;
+          if(this.usersRowData.length == 0){
+            this.successMessage = 'No Transactions Yet!'
+          }
         }
         else if(res.status == 205){
           this.successMessage = res.data

@@ -1,49 +1,178 @@
 <div *ngIf="errorMessage" class="text-danger font-weight-bold message">
     {{errorMessage}}
   </div>
+
+<div *ngIf="usersRowData.length" class="form-check form-switch form-switch-lg mb-3 d-flex justify-content-end">
+    <input type="checkbox" id="check" checked="" class="form-check-input" (change)="change()">
+    <label  for="check" class="form-check-label">Card View</label>
+</div>
   
-  <div *ngIf="usersRowData.length" class="card">
-    <div class="card-body">
-      <div class="row">
-        <div class="col-3">
-          <h5 class="card-title">History</h5>
+  <div *ngIf="showTable">
+    <div *ngIf="usersRowData.length" class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-3">
+            <h5 class="card-title">History</h5>
+          </div>
+          <div class="offset-3 col-2" style="position: relative;">
+            <button type="button" class="btn btn-rounded btn-icon icon1 refreshButton" (click)="refresh()">
+              <i class="mdi mdi-refresh refresh i"></i>
+            </button>
+          </div>
+          <div class="col-4 mb-2">
+            <input type="text" id="filter-text-box" 
+            placeholder="Filter..." (input)="filter()"
+            class="form-control"
+          />
+          </div>
         </div>
-        <div class="offset-3 col-2" style="position: relative;">
-          <button type="button" class="btn btn-rounded btn-icon icon1 refreshButton" (click)="refresh()">
-            <i class="mdi mdi-refresh refresh i"></i>
-          </button>
-        </div>
-        <div class="col-4 mb-2">
-          <input type="text" id="filter-text-box" 
-          placeholder="Filter..." (input)="filter()"
-          class="form-control"
-        />
-        </div>
+        <ag-grid-angular
+        style="width: 100%; height: 400px"
+        class="ag-theme-alpine"
+        [rowSelection]="rowSelection"
+        [suppressRowClickSelection]="true"
+        [singleClickEdit]="true"
+        [rowData]="usersRowData"
+        [columnDefs]="usersColumnDefs"
+        [animateRows]="true"
+        [pagination]="pagination"
+        [paginationPageSize]="10"
+        [defaultColDef]="defaultColDef"
+        (gridReady)="onGridReady($event)"
+        (cellValueChanged)="onRowValueChanged($event)"
+        >
+        </ag-grid-angular>
       </div>
-      <ag-grid-angular
-      style="width: 100%; height: 400px"
-      class="ag-theme-alpine"
-      [rowSelection]="rowSelection"
-      [suppressRowClickSelection]="true"
-      [singleClickEdit]="true"
-      [rowData]="usersRowData"
-      [columnDefs]="usersColumnDefs"
-      [animateRows]="true"
-      [pagination]="pagination"
-      [paginationPageSize]="10"
-      [defaultColDef]="defaultColDef"
-      (gridReady)="onGridReady($event)"
-      (cellValueChanged)="onRowValueChanged($event)"
-      >
-      </ag-grid-angular>
+    </div>
+  
+    <div>
+      <button class="btn btn-success" (click)="updateMultipleStatus()">Save Status</button>
     </div>
   </div>
 
-  <div>
-    <button class="btn btn-success" (click)="updateMultipleStatus()">Save Status</button>
+  <div *ngIf="!showTable">
+    <div class="row">
+      <form [formGroup]="filterForm" (ngSubmit)="filterCard()">
+        <div class="col-lg-12">
+          <div class="card job-filter">
+            <div class="card-body p-3">
+              <div class="row g-3">
+                <div class="col-xxl-4 col-lg-4">
+                  <div class="position-relative">
+                    <input type="text" id="searchJob" placeholder="Search By Name" class="form-control" formControlName="name"></div>
+                </div>
+                <div class="col-xxl-2 col-lg-4">
+                  <div class="position-relative"><input type="text" id="jobCategories"
+                      placeholder="Search status" class="form-control" formControlName="status"></div>
+                </div>
+                <div class="col-xxl-2 col-lg-4">
+                  <div class="position-relative">
+                    <div id="datepicker1"><input type="text" placeholder="Skill Name" class="form-control" formControlName="skillName">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xxl-2 col-lg-4">
+                  <div class="position-relative">
+                    <!-- <input type="date" id="date" placeholder="Search by Date" class="form-control" formControlName="date"> -->
+                    <p-calendar placeholder="Search by Date" formControlName="date" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [readonlyInput]="true"></p-calendar>
+                  </div>
+                </div>
+                <div class="col-xxl-2 col-lg-8">
+                  <div class="position-relative h-100 hstack gap-3 button-container">
+                    <button type="button" class="btn btn-danger h-100 w-100" (click)="clear()">
+                      <i class="mdi mdi-close align-middle" style="font-size:18px;"></i>Clear Filter
+                    </button>
+                    <button type="submit" class="btn btn-primary h-100 w-100">
+                      <i class="bx bx-search-alt align-middle"></i> Filter
+                    </button>
+                    <a (click)="showAdvance = !showAdvance" class="btn btn-secondary h-100 w-100">
+                      <i class="bx bx-filter-alt align-middle"></i> Advance
+                    </a>
+                  </div>
+                  <div class="position-relative h-100 hstack gap-3 icon-container">
+                    <button type="button" class="btn btn-danger h-100 w-100" pTooltip="Clear Filter" tooltipPosition="top" (click)="clear()">
+                      <i class="mdi mdi-close align-middle" style="font-size:18px;"></i>
+                    </button>
+                    <button type="submit" pTooltip="Apply Filter" tooltipPosition="top" class="btn btn-primary h-100 w-100">
+                      <i class="bx bx-search-alt align-middle"></i>
+                    </button>
+                    <a (click)="showAdvance = !showAdvance" class="btn btn-secondary h-100 w-100">
+                      <i class="bx bx-filter-alt align-middle"></i> Advance
+                    </a>
+                  </div>
+                </div>
+                <div *ngIf="showAdvance" id="collapseExample" class="collapse in show" aria-hidden="false" style="display: block;">
+                  <div class="pt-4">
+                    <div class="row g-3">
+                      <div class="col-xxl-4 col-lg-12">
+                        <div class="position-relative"><label for="RatingInput"
+                            class="form-label">Rating</label><input type="number" id="RatingInput"
+                            placeholder="Rating" class="form-control" formControlName="rating"><i
+                            class="ri-government-line filter-icon"></i></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="row">
+      <div *ngFor='let history of displayData' class="col-xl-4 col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="media">
+              <div class="avatar-md me-2">
+                <span class="avatar-title rounded-circle bg-light text-danger font-size-16">
+                  <img class="rounded-circle" src="assets/images/user.png" alt height="65" />
+                </span>
+              </div>
+  
+              <div class="media-body pl-2 pb-2 overflow-hidden">
+                <h5 class="text-truncate font-size-15">
+                  <a class="text-dark">{{history.candName}}</a>
+                </h5>
+                <div class="text-muted">{{history.name}}</div>
+                <div class="text-muted">{{history.date | date : 'mediumDate'}}</div>
+                <div class="text-muted">
+                  <span class="badge" [ngClass]="{
+                    'badge-soft-warning': ['pending', 'rescheduled'].includes(history.status),
+                    'badge-soft-danger': ['r', 'artist not attended', 'cancelled'].includes(history.status),
+                    'badge-soft-success': history.status === 'c',
+                    'badge-soft-info': history.status === 'a'}"
+                    style="font-size:12px;">{{history.status | status}}</span>
+                </div>
+                <div *ngIf="history.rating;else noRating" class="badge bg-success font-size-11 mt-2"><i class="bx bxs-star me-1"></i>{{history.rating}}</div>
+                <ng-template #noRating>
+                  <div class="text-danger">No rating given yet</div>
+                </ng-template>
+                <div class="mt-2">
+                  <a href="tel:{{history.phoneNo}}" [pTooltip]="history.phoneNo" tooltipPosition="top">
+                    <button class="btn btn-success btn-rounded btn-icon icon">
+                    <i class="mdi mdi-phone edit"></i>
+                    </button>
+                    </a> &nbsp;
+                    <a href="mailto:{{history.email}}" [pTooltip]="history.email" tooltipPosition="top">
+                    <button class="btn btn-info btn-rounded btn-icon icon">
+                    <i class="mdi mdi-email edit"></i>
+                    </button>
+                    </a> &nbsp;
+                    <button class="btn btn-primary" style="height: 30px;" (click)="openDataView(history)"><span class="button-text">view</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+    <div *ngIf="!errorMessage" class="card flex justify-content-center">
+      <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
+    </div>
   </div>
 
-  <div class="modal fade" id="viewFeedback" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
+  <div class="modal fade custom-class" id="viewFeedback" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header border-bottom-0">
@@ -59,6 +188,210 @@
             <ng-template #elseBlock>
                 <div class="text-danger text-center font-weight-bold">No feedback given yet!</div>
             </ng-template>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="dataView" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header border-bottom-0">
+          <h5>Event Data</h5>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="card">
+          <div class="card-body">
+            <div class="media">
+              <div class="avatar-md me-2">
+                <span class="avatar-title rounded-circle bg-light text-danger font-size-16">
+                  <img class="rounded-circle" src="assets/images/user.png" alt height="65" />
+                </span>
+              </div>
+  
+              <div class="media-body pl-2 pb-2 overflow-hidden">
+                <h5 class="text-truncate font-size-15">
+                  <a class="text-dark">{{dataView?.candName}}</a>
+                </h5>
+                <div class="text-muted">{{dataView?.name}}</div>
+                <div class="text-muted">
+                  <span class="badge" [ngClass]="{
+                    'badge-soft-warning': ['pending', 'rescheduled'].includes(dataView?.status),
+                    'badge-soft-danger': ['r', 'artist not attended', 'cancelled'].includes(dataView?.status),
+                    'badge-soft-success': dataView?.status === 'c',
+                    'badge-soft-info': dataView?.status === 'a'}"
+                    style="font-size:12px;">{{dataView?.status | status}}</span>
+                </div>
+                <div class="mt-2">
+                  <a href="tel:{{dataView?.phoneNo}}" [pTooltip]="dataView?.phoneNo" tooltipPosition="top">
+                    <button class="btn btn-success btn-rounded btn-icon icon">
+                    <i class="mdi mdi-phone edit"></i>
+                    </button>
+                    </a> &nbsp;
+                    <a href="mailto:{{dataView?.email}}" [pTooltip]="dataView?.email" tooltipPosition="top">
+                    <button class="btn btn-info btn-rounded btn-icon icon">
+                    <i class="mdi mdi-email edit"></i>
+                    </button>
+                    </a> &nbsp;
+                    <a pTooltip="View Feedback" tooltipPosition="top" (click)="viewFeedback(dataView)">
+                      <button class="btn btn-info btn-rounded btn-icon icon">
+                      <i class="mdi mdi-eye-outline edit"></i>
+                      </button>
+                    </a>
+                </div>
+                <div *ngIf="dataView?.rating;else noRating" class="font-size-11 mt-2">
+                  <p-rating [(ngModel)]="dataView.rating" [readonly]="true" [cancel]="false"></p-rating>
+                </div>
+                <!-- <div *ngIf="dataView?.rating;else noRating" class="badge bg-success font-size-11 mt-2"><i class="bx bxs-star me-1"></i>{{dataView?.rating}}</div> -->
+                <ng-template #noRating>
+                  <div class="text-danger">No rating given yet</div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isStatusEditable" class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-4">Edit Status</h4>
+            <form [formGroup]="statusForm" (ngSubmit)="statusSubmit()">
+              <div class="mb-3">
+                <label for="eventStatus"><h5>Status</h5></label>
+                <select id="eventStatus" class="form-control" formControlName="status">
+                  <option value="" disabled selected>--select role--</option>
+                  <option *ngFor="let data of dynamicOptions | keyvalue" [value]="data.key">{{data.value}}</option>
+                </select>
+                <!-- <textarea id="status" formControlName="status" class="form-control"></textarea> -->
+                <div *ngIf="statusForm.controls.status.errors?.required && statusForm.controls.status.dirty" class="required-message text-danger">
+                  <small>Required Field!</small>
+                </div>
+              </div>
+              <div class="mt-3 d-grid">
+                <button type="submit" class="btn btn-block btn-success">Save</button>
+              </div>
+          </form>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-4">Event Details</h4>
+
+            <div class="table-responsive">
+              <table class="table table-nowrap mb-0">
+                <tbody>
+                  <tr>
+                    <th scope="row">Price :</th>
+                    <td><span class="text-success">{{dataView?.price}} ₹</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Booking Type :</th>
+                    <td>{{dataView?.bookingType}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Event Type :</th>
+                    <td>{{dataView?.type}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Date :</th>
+                    <td>{{dataView?.date | date : 'mediumDate'}}</td>
+                  </tr>
+                  <tr *ngIf="dataView?.from">
+                    <th scope="row">From :</th>
+                    <td>{{dataView?.from | date : 'shortTime'}}</td>
+                  </tr>
+                  <tr *ngIf="dataView?.to">
+                    <th scope="row">To :</th>
+                    <td>{{dataView?.to | date : 'shortTime'}}</td>
+                  </tr>
+                  <tr *ngIf="dataView?.slot">
+                    <th scope="row">Slot :</th>
+                    <td>{{dataView?.slot | event}}</td>
+                  </tr>
+                  <tr *ngIf="dataView?.paid == true;else notPaid">
+                    <th scope="row">Paid :</th>
+                    <td><span class="badge badge-soft-success" style="font-size: 13px;">Paid</span></td>
+                  </tr>
+                  <ng-template #notPaid>
+                    <th scope="row">Paid :</th>
+                    <td><span class="badge badge-soft-danger" style="font-size: 13px;">Not Paid</span></td>
+                  </ng-template>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-4">Pricing</h4>
+
+            <div class="table-responsive">
+              <table class="table table-nowrap mb-0">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">Type</th>
+                    <th scope="col">Online</th>
+                    <th scope="col">Onsite</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Hourly :</th>
+                    <td><span class="text-success">{{dataView?.pricing.oHourly}} ₹</span></td>
+                    <td><span class="text-success">{{dataView?.pricing.hourly}} ₹</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Full Day :</th>
+                    <td><span class="text-success">{{dataView?.pricing.oFullDay}} ₹</span></td>
+                    <td><span class="text-success">{{dataView?.pricing.fullDay}} ₹</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Event :</th>
+                    <td><span class="text-success">{{dataView?.pricing.oEvent}} ₹</span></td>
+                    <td><span class="text-success">{{dataView?.pricing.event}} ₹</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="dataView?.address" class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-4">Address</h4>
+
+            <div class="table-responsive">
+              <table class="table table-nowrap mb-0">
+                <tbody>
+                  <tr>
+                    <th scope="row">Address :</th>
+                    <td>{{dataView?.address}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Mandal :</th>
+                    <td>{{dataView?.mandal}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">District :</th>
+                    <td>{{dataView?.district}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">State :</th>
+                    <td>{{dataView?.state}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Pincode :</th>
+                    <td>{{dataView?.pincode}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
       </div>
       </div>
     </div>

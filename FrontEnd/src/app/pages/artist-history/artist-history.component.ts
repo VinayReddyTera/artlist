@@ -7,6 +7,7 @@ import { ApiService } from '../services/api.service';
 import { slotRenderer } from '../user-history/slotRenderer';
 import { userHistoryTimeRenderer } from '../user-history/userHistoryTimeRenderer';
 import { artistfeedbackRenderer } from './feedbackRenderer';
+import { FormBuilder, FormControl, Validators} from '@angular/forms';
 
 declare const $:any;
 
@@ -17,7 +18,7 @@ declare const $:any;
 })
 export class ArtistHistoryComponent  implements OnInit{
 
-  constructor(private apiService : ApiService,private router:Router){}
+  constructor(private apiService : ApiService,private router:Router,private fb: FormBuilder){}
 
   errorMessage : any;
   usersRowData:any = [];
@@ -291,13 +292,35 @@ export class ArtistHistoryComponent  implements OnInit{
   gridApi:any;
   feedback:any;
   rating:any;
+  showTable:any = false;
+  showAdvance:any = false;
+  first: number = 0;
+  rows: number = 10;
+  totalRecords : any;
+  startIndex = 1;
+  endIndex = 5;
+  displayData:any = [];
+  filteredData:any = [];
+  filterForm : any;
+  filterApplied:boolean = false;
+  historyData:any;
+  dataView:any;
+  disable:any = false;
+  disableRefund:boolean=true;
+  isStatusEditable:boolean = false;
+  statusForm:any;
+  dynamicOptions:any;
 
   ngOnInit(): void {
+    this.statusForm = this.fb.group({
+      status:['',[Validators.required]]
+    })
     this.apiService.initiateLoading(true);
     this.apiService.fetchHistory().subscribe(
       (res:any)=>{
         if(res.status == 200){
           this.usersRowData = res.data;
+          this.historyData = res.data;
           console.log(this.usersRowData)
         }
         else if(res.status == 204){
@@ -314,7 +337,18 @@ export class ArtistHistoryComponent  implements OnInit{
         console.log(err)
       }
     ).add(()=>{
-      this.apiService.initiateLoading(false)
+      this.apiService.initiateLoading(false);
+      if(this.historyData.length > 0){
+        this.totalRecords = this.historyData.length;
+        this.displayData = this.historyData.slice(0,10);
+      }
+    })
+    this.filterForm = this.fb.group({
+      name:[''],
+      date:[''],
+      status : [''],
+      skillName:[''],
+      rating : ['']
     })
   }
 
@@ -439,6 +473,171 @@ export class ArtistHistoryComponent  implements OnInit{
         life : 5000
       }
       this.apiService.sendMessage(msgData);
+    }
+  }
+
+  change(){
+    let data = (<HTMLInputElement>document.getElementById('check'));
+    if(data.checked){
+      this.showTable = false;
+    }
+    else{
+      this.showTable = true;
+    }
+  }
+
+  onPageChange(event: any) {
+    this.first = event.first;
+    this.rows = event.rows;
+    if(this.filterApplied){
+      this.displayData = this.filteredData.slice(this.first,this.first+this.rows)
+    }
+    else{
+      this.displayData = this.historyData.slice(this.first,this.first+this.rows)
+    }
+  }
+
+  clear(){
+    this.filterForm.reset();
+    this.displayData = this.historyData.slice(0,10);
+    this.filteredData = [];
+    this.filterApplied = false;
+    this.errorMessage = null;
+  }
+  
+  filterCard(){
+  console.log(this.filterForm.value);
+  if((this.filterForm.value.status).toLowerCase() == 'completed'){
+    this.filterForm.controls.status.setValue('c');
+  }
+  else if((this.filterForm.value.status).toLowerCase() == 'accepted'){
+    this.filterForm.controls.status.setValue('a');
+  }
+  else if((this.filterForm.value.status).toLowerCase() == 'rejected'){
+    this.filterForm.controls.status.setValue('r');
+  }
+  this.filterApplied = true
+  this.filteredData = this.historyData.filter((item:any) => {
+    // Function to check if a string contains a substring
+    const containsSubstring = (str:any, substr:any) => str.toLowerCase().includes(substr.toLowerCase());
+
+    // Function to check if a date string contains a substring
+    const containsDateSubstring = (dateStr: any, dateSubstr: any) =>
+    new Date(dateStr).toDateString().includes(new Date(dateSubstr).toDateString());
+  
+    // Filter by name
+    if (this.filterForm.value.name && !containsSubstring(item.candName, this.filterForm.value.name)) {
+      return false;
+    }
+
+    // Filter by date
+    if (this.filterForm.value.date && !containsDateSubstring(item.date, this.filterForm.value.date)) {
+      return false;
+    }
+  
+    // Filter by status
+    if (this.filterForm.value.status && !containsSubstring(item.status, this.filterForm.value.status)) {
+      return false;
+    }
+  
+    // Filter by skillName
+    if (this.filterForm.value.skillName && !(containsSubstring(item.name, this.filterForm.value.skillName))) {
+      return false;
+    }
+
+    // Filter by rating (assuming it is a property of the item, adjust as needed)
+    if (this.filterForm.value.rating && item.rating < parseInt(this.filterForm.value.rating)) {
+      return false;
+    }
+  
+    // If all conditions pass, include the item in the filtered result
+    return true;
+  });
+  this.totalRecords = this.filteredData.length
+  this.displayData = this.filteredData.slice(0,10)
+  if(this.filteredData.length == 0){
+    this.errorMessage = 'No Data Available with above filter!'
+  }
+  else{
+    this.errorMessage = null
+  }
+  }
+
+  openDataView(data:any){
+    console.log(data)
+    this.dataView = data;
+    let status = data.status
+    $(`#dataView`).modal('show');
+    if(data.modifiedBy == 'user' || new Date(data.date)<new Date() || (status == 'completed' || status == 'c' || status == 'artist not attended' || status =='cancelled')){
+      this.disable = true
+    }
+    if((status == 'r' || status == 'a') && new Date(data.date)>=new Date()){
+      this.disable = false
+    }
+    if((data.paid == true && data.status == 'artist not attended') || data.refundRequested){
+      this.disableRefund = false
+    }
+    if(new Date(data.date)<new Date() && data.status != 'c' && data.status != 'r'){
+      this.isStatusEditable = true;
+      if(status == 'r'){
+        this.dynamicOptions = {
+          'r':'rejected',
+        }
+      }
+      else{
+        this.dynamicOptions = {
+          'c':'completed',
+          'artist not attended':'artist not attended',
+          'cancelled':'cancelled'
+        }
+      }
+    }
+    else{
+      this.isStatusEditable = false
+    }
+  }
+
+  statusSubmit(){
+    if(this.statusForm.valid){
+      let payload :any = [{
+        id : this.dataView._id,
+        artistName : this.dataView.candName,
+        artistPhone : this.dataView.phoneNo,
+        artistEmail : this.dataView.email,
+        bookingType : this.dataView.bookingType,
+        type : this.dataView.type,
+        date : this.dataView.date,
+        name : this.dataView.name,
+        price : this.dataView.price,
+        refundStatus : this.dataView.refundStatus,
+        userId : this.dataView.userId,
+        paid : this.dataView.paid,
+        status : this.statusForm.value.status
+      }]
+      if(this.dataView.type == 'hourly'){
+        payload[0].from = this.dataView.from;
+        payload[0].to = this.dataView.to;
+      }
+      else if(this.dataView.type == 'event'){
+        payload[0].slot = this.dataView.slot
+      }
+      if(this.dataView.bookingType == 'onsite'){
+        payload[0].address = this.dataView.address;
+        payload[0].mandal = this.dataView.mandal;
+        payload[0].district = this.dataView.district;
+        payload[0].state = this.dataView.state;
+        payload[0].pincode = this.dataView.pincode;
+      }
+      console.log(payload)
+      // this.submitStatus(payload)
+    }
+    else{
+      const controls = this.statusForm.controls;
+      for(const name in controls) {
+        if(controls[name].invalid) {
+            controls[name].markAsDirty()
+        }
+      }
     }
   }
 

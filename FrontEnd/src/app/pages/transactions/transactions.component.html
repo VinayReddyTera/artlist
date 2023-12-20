@@ -39,4 +39,4 @@
     </div>
   </div>
 
-  <div class="font-weight-bold price-text">Wallet : <span class="text-success">{{amount}} ₹</span></div>
+  <div *ngIf="usersRowData.length" class="font-weight-bold price-text">Wallet : <span class="text-success">{{amount}} ₹</span></div>
