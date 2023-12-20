@@ -267,7 +267,6 @@ export class NewRequestsComponent  implements OnInit{
   historyData:any;
   dataView:any;
   disable:any = false;
-  disableRefund:boolean=true;
 
   ngOnInit(): void {
     this.bookingForm = this.fb.group({
@@ -795,14 +794,11 @@ export class NewRequestsComponent  implements OnInit{
     this.dataView = data;
     let status = data.status
     $(`#dataView`).modal('show');
-    if(data.modifiedBy == 'user' || new Date(data.date)<new Date() || (status == 'completed' || status == 'c' || status == 'artist not attended' || status =='cancelled')){
+    if(data.modifiedBy == 'artist' || new Date(data.date)<new Date() || (status == 'completed' || status == 'c' || status == 'artist not attended' || status =='cancelled')){
       this.disable = true
     }
     if((status == 'r' || status == 'a') && new Date(data.date)>=new Date()){
       this.disable = false
-    }
-    if((data.paid == true && data.status == 'artist not attended') || data.refundRequested){
-      this.disableRefund = false
     }
   }
 
