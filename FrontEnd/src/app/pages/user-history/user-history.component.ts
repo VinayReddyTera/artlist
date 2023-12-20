@@ -28,6 +28,7 @@ export class UserHistoryComponent implements OnInit{
   modifiedRows:any=[]
   public rowSelection: 'single' | 'multiple' = 'multiple';
   usersRowData:any = [];
+  dynamicOptions:any;
   usersColumnDefs = [
     {
       field: "candName",
@@ -387,6 +388,8 @@ export class UserHistoryComponent implements OnInit{
   dataView:any;
   disable:any = false;
   disableRefund:boolean=true;
+  isStatusEditable:boolean = false;
+  statusForm:any;
 
   ngOnInit(): void {
     this.feedbackForm = this.fb.group({
@@ -398,6 +401,9 @@ export class UserHistoryComponent implements OnInit{
     })
     this.rejectionForm = this.fb.group({
       remarks:['',[Validators.required]]
+    })
+    this.statusForm = this.fb.group({
+      status:['',[Validators.required]]
     })
     this.refundForm = this.fb.group({
       id:[''],
@@ -1282,6 +1288,68 @@ export class UserHistoryComponent implements OnInit{
     }
     if((data.paid == true && data.status == 'artist not attended') || data.refundRequested){
       this.disableRefund = false
+    }
+    if(new Date(data.date)<new Date() && data.status != 'c' && data.status != 'r'){
+      this.isStatusEditable = true;
+      if(status == 'r'){
+        this.dynamicOptions = {
+          'r':'rejected',
+        }
+      }
+      else{
+        this.dynamicOptions = {
+          'c':'completed',
+          'artist not attended':'artist not attended',
+          'cancelled':'cancelled'
+        }
+      }
+    }
+    else{
+      this.isStatusEditable = false
+    }
+  }
+
+  statusSubmit(){
+    if(this.statusForm.valid){
+      let payload :any = [{
+        id : this.dataView._id,
+        artistName : this.dataView.candName,
+        artistPhone : this.dataView.phoneNo,
+        artistEmail : this.dataView.email,
+        bookingType : this.dataView.bookingType,
+        type : this.dataView.type,
+        date : this.dataView.date,
+        name : this.dataView.name,
+        price : this.dataView.price,
+        refundStatus : this.dataView.refundStatus,
+        userId : this.dataView.userId,
+        paid : this.dataView.paid,
+        status : this.statusForm.value.status
+      }]
+      if(this.dataView.type == 'hourly'){
+        payload[0].from = this.dataView.from;
+        payload[0].to = this.dataView.to;
+      }
+      else if(this.dataView.type == 'event'){
+        payload[0].slot = this.dataView.slot
+      }
+      if(this.dataView.bookingType == 'onsite'){
+        payload[0].address = this.dataView.address;
+        payload[0].mandal = this.dataView.mandal;
+        payload[0].district = this.dataView.district;
+        payload[0].state = this.dataView.state;
+        payload[0].pincode = this.dataView.pincode;
+      }
+      console.log(payload)
+      // this.submitStatus(payload)
+    }
+    else{
+      const controls = this.statusForm.controls;
+      for(const name in controls) {
+        if(controls[name].invalid) {
+            controls[name].markAsDirty()
+        }
+      }
     }
   }
 

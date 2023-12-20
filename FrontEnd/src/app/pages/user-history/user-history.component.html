@@ -508,7 +508,6 @@
                   <a class="text-dark">{{dataView?.candName}}</a>
                 </h5>
                 <div class="text-muted">{{dataView?.name}}</div>
-                <!-- <div class="text-muted">{{dataView?.date | date : 'mediumDate'}}</div> -->
                 <div class="text-muted">
                   <span class="badge" [ngClass]="{
                     'badge-soft-warning': ['pending', 'rescheduled'].includes(dataView?.status),
@@ -556,6 +555,77 @@
                   <div class="text-danger">No rating given yet</div>
                 </ng-template>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isStatusEditable" class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-4">Edit Status</h4>
+            <form [formGroup]="statusForm" (ngSubmit)="statusSubmit()">
+              <div class="mb-3">
+                <label for="eventStatus"><h5>Status</h5></label>
+                <select id="eventStatus" class="form-control" formControlName="status">
+                  <option value="" disabled selected>--select role--</option>
+                  <option *ngFor="let data of dynamicOptions | keyvalue" [value]="data.key">{{data.value}}</option>
+                </select>
+                <!-- <textarea id="status" formControlName="status" class="form-control"></textarea> -->
+                <div *ngIf="statusForm.controls.status.errors?.required && statusForm.controls.status.dirty" class="required-message text-danger">
+                  <small>Required Field!</small>
+                </div>
+              </div>
+              <div class="mt-3 d-grid">
+                <button type="submit" class="btn btn-block btn-success">Save</button>
+              </div>
+          </form>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title mb-4">Event Details</h4>
+
+            <div class="table-responsive">
+              <table class="table table-nowrap mb-0">
+                <tbody>
+                  <tr>
+                    <th scope="row">Price :</th>
+                    <td><span class="text-success">{{dataView?.price}} ₹</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Booking Type :</th>
+                    <td>{{dataView?.bookingType}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Event Type :</th>
+                    <td>{{dataView?.type}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Date :</th>
+                    <td>{{dataView?.date | date : 'mediumDate'}}</td>
+                  </tr>
+                  <tr *ngIf="dataView?.from">
+                    <th scope="row">From :</th>
+                    <td>{{dataView?.from | date : 'shortTime'}}</td>
+                  </tr>
+                  <tr *ngIf="dataView?.to">
+                    <th scope="row">To :</th>
+                    <td>{{dataView?.to | date : 'shortTime'}}</td>
+                  </tr>
+                  <tr *ngIf="dataView?.slot">
+                    <th scope="row">Slot :</th>
+                    <td>{{dataView?.slot | event}}</td>
+                  </tr>
+                  <tr *ngIf="dataView?.paid == true;else notPaid">
+                    <th scope="row">Paid :</th>
+                    <td><span class="badge badge-soft-success" style="font-size: 13px;">Paid</span></td>
+                  </tr>
+                  <ng-template #notPaid>
+                    <th scope="row">Paid :</th>
+                    <td><span class="badge badge-soft-danger" style="font-size: 13px;">Not Paid</span></td>
+                  </ng-template>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
