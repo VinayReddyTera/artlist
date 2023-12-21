@@ -20,13 +20,6 @@ export class TransactionsComponent implements OnInit{
   usersRowData:any = [];
   usersColumnDefs = [
     {
-      field: "type",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Type",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
-    },
-    {
       field: "status",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
@@ -66,7 +59,15 @@ export class TransactionsComponent implements OnInit{
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "Amount",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else{
+          let data = `<span class="font-size-13">${params.value} ₹</span>`
+          return data
+        }
+      }
     }
   ];
   defaultColDef : ColDef = {

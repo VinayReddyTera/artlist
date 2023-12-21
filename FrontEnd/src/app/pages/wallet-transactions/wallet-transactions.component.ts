@@ -27,34 +27,6 @@ export class WalletTransactionsComponent implements OnInit{
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
-      field: "status",
-      filter: "agTextColumnFilter",
-      filterParams: { maxNumConditions: 1 },
-      headerName: "Status",
-      cellRenderer: (params:any)=> {
-        if(params.value == null){
-          return 'N/A'
-        }
-        else{
-          if(params.value == 'Pending'){
-            let link = `<span class="badge badge-soft-warning" style="font-size:13px">Pending</span>`;
-            return link
-          }
-          else if(params.value == 'Completed'){
-            let link = `<span class="badge badge-soft-success" style="font-size:13px">Completed</span>`;
-            return link
-          }
-          else if(params.value == 'Rejected'){
-            let link = `<span class="badge badge-soft-danger" style="font-size:13px">Rejected</span>`;
-            return link
-          }
-          else{
-            return params.value
-          }
-        }
-      }
-    },
-    {
       field: "date",
       filter: "agDateColumnFilter",
       filterParams: { maxNumConditions: 1 },
@@ -66,7 +38,22 @@ export class WalletTransactionsComponent implements OnInit{
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "Amount",
-      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
+      cellRenderer: (params:any)=> {
+        if(params.value == null){
+          return 'N/A'
+        }
+        else if(params.value < 0){
+          let data = `<span class="badge badge-soft-danger font-size-13">${params.value} ₹</span>`
+          return data
+        }
+        else if(params.value >= 0){
+          let data = `<span class="badge badge-soft-success font-size-13">${params.value} ₹</span>`
+          return data
+        }
+        else{
+          return params.value
+        }
+      }
     }
   ];
   defaultColDef : ColDef = {

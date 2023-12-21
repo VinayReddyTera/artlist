@@ -2513,7 +2513,12 @@ userDB.withdrawBalance = async(amount,payload,role) => {
   else{
     collection = await connection.getArtist();
   }
-  let data = await collection.updateOne({"_id":new ObjectId(payload),wallet: { $gte: amount }},{ $inc: { wallet: -amount }, $push: { withdrawHistory: { amount: amount, date: new Date() } } })
+  let walletData = {
+    amount : -amount,
+    date : new Date(),
+    type : 'Balance Withdraw'
+  }
+  let data = await collection.updateOne({"_id":new ObjectId(payload),wallet: { $gte: amount }},{ $inc: { wallet: -amount }, $push: { withdrawHistory: { amount: amount, date: new Date() }, walletHistory : walletData } })
   if (data.modifiedCount == 1) {
     let res = {
       status: 200,
@@ -2648,9 +2653,19 @@ userDB.payRefundWithoutCommission = async(payload,commissionData) => {
   const collection = await connection.history();
   let data = await collection.updateOne({"_id":new ObjectId(payload._id)},{$set:{'refundAccepted':'Accepted',refundRequested:false}})
   if (data.modifiedCount == 1) {
-    let userPayStatus = await (await connection.getUsers()).updateOne({'_id':new ObjectId(payload.userId)},{$inc:{wallet:commissionData.price}});
+    let walletData = {
+      amount : commissionData.price,
+      date : new Date(),
+      type : 'Refund'
+    }
+    let userPayStatus = await (await connection.getUsers()).updateOne({'_id':new ObjectId(payload.userId)},{$inc:{wallet:commissionData.price},$push:{walletHistory:walletData}});
     if(commissionData.paymentType == 'cash'){
-      let artistPay = await (await connection.getArtist()).updateOne({'_id':new ObjectId(payload.artistId)},{$inc:{wallet:-(commissionData.price)}})
+      let walletData = {
+        amount : -(commissionData.price),
+        date : new Date(),
+        type : 'User Refund'
+      }
+      let artistPay = await (await connection.getArtist()).updateOne({'_id':new ObjectId(payload.artistId)},{$inc:{wallet:-(commissionData.price)},$push:{walletHistory:walletData}})
       if(artistPay.modifiedCount == 1){
         let res = {
           status: 200,
@@ -2696,9 +2711,19 @@ userDB.payRefundWithCommission = async(payload,commissionData) => {
   const collection = await connection.history();
   let data = await collection.updateOne({"_id":new ObjectId(payload._id)},{$set:{'refundAccepted':'Accepted',refundRequested:false}})
   if (data.modifiedCount == 1) {
-    let userPayStatus = await (await connection.getUsers()).updateOne({'_id':new ObjectId(payload.userId)},{$inc:{wallet:commissionData.price}});
+    let walletData = {
+      amount : commissionData.price,
+      date : new Date(),
+      type : 'Refund'
+    }
+    let userPayStatus = await (await connection.getUsers()).updateOne({'_id':new ObjectId(payload.userId)},{$inc:{wallet:commissionData.price},$push:{walletHistory:walletData}});
     if(commissionData.paymentType == 'cash'){
-      let artistPay = await (await connection.getArtist()).updateOne({'_id':new ObjectId(payload.artistId)},{$inc:{wallet:-(commissionData.price+commissionData.commission)}})
+      let walletData = {
+        amount : -(commissionData.price+commissionData.commission),
+        date : new Date(),
+        type : 'User Refund'
+      }
+      let artistPay = await (await connection.getArtist()).updateOne({'_id':new ObjectId(payload.artistId)},{$inc:{wallet:-(commissionData.price+commissionData.commission)},$push:{walletHistory:walletData}})
       if(artistPay.modifiedCount == 1){
         let res = {
           status: 200,
@@ -2715,7 +2740,12 @@ userDB.payRefundWithCommission = async(payload,commissionData) => {
       }
     }
     else if(commissionData.paymentType == 'online'){
-      let artistPay = await (await connection.getArtist()).updateOne({'_id':new ObjectId(payload.artistId)},{$inc:{wallet:-(commissionData.commission)}})
+      let walletData = {
+        amount : -(commissionData.commission),
+        date : new Date(),
+        type : 'User Refund'
+      }
+      let artistPay = await (await connection.getArtist()).updateOne({'_id':new ObjectId(payload.artistId)},{$inc:{wallet:-(commissionData.commission)},$push:{walletHistory:walletData}})
       if(artistPay.modifiedCount == 1){
         let res = {
           status: 200,

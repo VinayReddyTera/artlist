@@ -7,8 +7,13 @@ const moment = require('moment');
 
 const withdrawHistorySchema = Schema({
     amount: Number,
-    type: String,
     status: { type: String, default: 'Pending' },
+    date: Date
+});
+
+const walletHistorySchema = Schema({
+    amount: Number,
+    type: String,
     date: Date
 });
 
@@ -19,13 +24,7 @@ const users = Schema({
     password:String,
     role:String,
     otp:Number,
-    walletHistory : [
-        {
-            amount: Number,
-            type: String,
-            date: Date
-        }
-    ],
+    walletHistory : [walletHistorySchema],
     withdrawHistory:[withdrawHistorySchema],
     wallet : {type:Number,default:0},
     profileStatus :{type:String,default:'Incomplete'},
@@ -70,13 +69,7 @@ const artistDetails = Schema({
     inaug : {type:Boolean,default:false},
     wishes: {type:Boolean,default:false},
     wallet : {type:Number,default:0},
-    walletHistory : [
-        {
-            amount: Number,
-            type: String,
-            date: Date
-        }
-    ],
+    walletHistory : [walletHistorySchema],
     withdrawHistory:[withdrawHistorySchema],
     inaugPrice : Number,
     wishesPrice: Number,
