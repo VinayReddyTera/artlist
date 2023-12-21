@@ -802,6 +802,7 @@ export class UserHistoryComponent implements OnInit{
             }
           this.apiService.sendMessage(msgData);
           $(`#reschedule`).modal('hide');
+          $(`#dataView`).modal('hide');
           this.usersRowData = [];
           this.errorMessage = null;
           this.ngOnInit();
@@ -1215,18 +1216,25 @@ export class UserHistoryComponent implements OnInit{
     this.filteredData = [];
     this.filterApplied = false;
     this.errorMessage = null;
+    this.first = 0;
+    this.rows = 10;
+    this.totalRecords = this.historyData.length;
+    this.startIndex = 1;
+    this.endIndex = 5;
   }
   
   filterCard(){
   console.log(this.filterForm.value);
-  if((this.filterForm.value.status).toLowerCase() == 'completed'){
-    this.filterForm.controls.status.setValue('c');
-  }
-  else if((this.filterForm.value.status).toLowerCase() == 'accepted'){
-    this.filterForm.controls.status.setValue('a');
-  }
-  else if((this.filterForm.value.status).toLowerCase() == 'rejected'){
-    this.filterForm.controls.status.setValue('r');
+  if(this.filterForm.value?.status != null){
+    if((this.filterForm.value?.status).toLowerCase() == 'completed'){
+      this.filterForm.controls.status.setValue('c');
+    }
+    else if((this.filterForm.value?.status).toLowerCase() == 'accepted'){
+      this.filterForm.controls.status.setValue('a');
+    }
+    else if((this.filterForm.value?.status).toLowerCase() == 'rejected'){
+      this.filterForm.controls.status.setValue('r');
+    }
   }
   this.filterApplied = true
   this.filteredData = this.historyData.filter((item:any) => {
