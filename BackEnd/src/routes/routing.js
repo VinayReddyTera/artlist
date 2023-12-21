@@ -1095,6 +1095,16 @@ router.get('/fetchWithdraws',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to get wallet withraws
+router.get('/fetchWalletWithdraws',verifyToken,(req,res,next)=>{
+  let payload = jwt.decode(req.headers.authorization).data;
+  userservice.fetchWalletWithdraws(payload._id,payload.role).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 //router to get withraw requests
 router.get('/fetchPendingWithdraws',verifyToken,(req,res,next)=>{
   let payload = jwt.decode(req.headers.authorization).data;

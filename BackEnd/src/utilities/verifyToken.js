@@ -8,7 +8,7 @@ let verifyToken = (req,res,next) =>{
             status : 204,
             data : 'You are not Authenticated'
            }
-           res.json(response)
+           res.status(400).json(response)
         }
         else{
             jwt.verify(token,process.env.JWT_Secret,(err,user)=>{
@@ -17,7 +17,7 @@ let verifyToken = (req,res,next) =>{
                         status : 204,
                         data : 'Session Expired'
                     }
-                    res.json(response)
+                    res.status(400).json(response)
                 }
                 else{
                     req.user = user;

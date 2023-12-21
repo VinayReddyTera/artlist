@@ -1680,6 +1680,21 @@ userService.fetchWithdraws=(payload,role)=>{
   })
 }
 
+userService.fetchWalletWithdraws=(payload,role)=>{
+  return userDB.fetchWalletWithdraws(payload,role).then((data)=>{
+    if(data){
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to fetch wallet history'
+      }
+      return res
+    }
+  })
+}
+
 userService.fetchPendingWithdraws=()=>{
   return userDB.fetchPendingWithdraws().then((data)=>{
     if(data){

@@ -1759,7 +1759,12 @@ userDB.updateEvent = async (payload,role) => {
   if(payload.status == 'r'){
     if(payload.paid && payload.refundStatus == 'negative'){
       const userCollection = await connection.getUsers();
-      let arrearUpdate = await userCollection.updateOne({"_id":new ObjectId(payload.userId)},{$inc:{'wallet':payload.price}});
+      let walletData = {
+        amount : payload.price,
+        date : new Date(),
+        type : 'Event Rejected'
+      }
+      let arrearUpdate = await userCollection.updateOne({"_id":new ObjectId(payload.userId)},{$inc:{'wallet':payload.price},$push:{'walletHistory':walletData}});
       if(arrearUpdate.modifiedCount != 1){
         return {status:204,data:'unable to update wallet amount and reject event'}
       }
@@ -1768,8 +1773,13 @@ userDB.updateEvent = async (payload,role) => {
   }
   else if(payload.status == 'a'){
     if(payload.paid && payload.refundStatus == 'positive'){
+      let walletData = {
+        amount : -payload.price,
+        date : new Date(),
+        type : 'Event Accepted'
+      }
       const userCollection = await connection.getUsers();
-      let arrearUpdate = await userCollection.updateOne({"_id":new ObjectId(payload.userId)},{$inc:{'wallet':-payload.price}});
+      let arrearUpdate = await userCollection.updateOne({"_id":new ObjectId(payload.userId)},{$inc:{'wallet':-payload.price},$push:{'walletHistory':walletData}});
       if(arrearUpdate.modifiedCount != 1){
         return {status:204,data:'unable to update wallet amount and accept event'}
       }
@@ -1819,7 +1829,12 @@ userDB.updateBooking = async (payload) => {
   const collection = await connection.history();
   if(payload.data.paid && payload.refundStatus == 'positive'){
     const userCollection = await connection.getUsers();
-    let arrearUpdate = await userCollection.updateOne({"_id":new ObjectId(payload.data.userId)},{$inc:{'wallet':-payload.oldPrice}});
+    let walletData = {
+      amount : -payload.oldPrice,
+      date : new Date(),
+      type : 'Event Rescheduled'
+    }
+    let arrearUpdate = await userCollection.updateOne({"_id":new ObjectId(payload.data.userId)},{$inc:{'wallet':-payload.oldPrice},$push:{'walletHistory':walletData}});
     if(arrearUpdate.modifiedCount != 1){
       return {status:204,data:'unable to update wallet amount and accept event'}
     }
@@ -2762,6 +2777,31 @@ userDB.fetchWithdraws = async(payload,role) => {
     let res = {
       status: 204,
       data: 'Unable to fetch withdraw history'
+    }
+    return res
+  }
+}
+
+userDB.fetchWalletWithdraws = async(payload,role) => {
+  let collection;
+  if(role == 'user'){
+    collection = await connection.getUsers();
+  }
+  else{
+    collection = await connection.getArtist();
+  }
+  let data = await collection.findOne({"_id":new ObjectId(payload)},{_id:0,wallet:1,walletHistory:1});
+  if (data) {
+    let res = {
+      status: 200,
+      data: data
+    }
+    return res
+  }
+  else {
+    let res = {
+      status: 204,
+      data: 'Unable to fetch wallet history'
     }
     return res
   }

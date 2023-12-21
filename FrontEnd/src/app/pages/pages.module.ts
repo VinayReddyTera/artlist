@@ -71,6 +71,7 @@ import { pendingRenderer } from './pending-withdraws/pending-contact';
 import { historyRenderer } from './pending-withdraws/viewHistory';
 import { withdrawPayRenderer } from './pending-withdraws/pay';
 import { StatusPipe } from './user-history/status.pipe';
+import { WalletTransactionsComponent } from './wallet-transactions/wallet-transactions.component';
 
 @NgModule({
   declarations: [
@@ -122,7 +123,8 @@ import { StatusPipe } from './user-history/status.pipe';
     pendingRenderer,
     historyRenderer,
     withdrawPayRenderer,
-    StatusPipe
+    StatusPipe,
+    WalletTransactionsComponent
   ],
   imports: [
     CommonModule,

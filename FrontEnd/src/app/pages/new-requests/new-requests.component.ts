@@ -361,6 +361,13 @@ export class NewRequestsComponent  implements OnInit{
       else if(data.type == 'event'){
         this.bookingForm.addControl('slot', new FormControl(data.slot, Validators.required));
       }
+      if(data.bookingType == 'onsite'){
+        this.bookingForm.addControl('address', new FormControl(data.address, Validators.required));
+        this.bookingForm.addControl('mandal', new FormControl(data.mandal, Validators.required));
+        this.bookingForm.addControl('district', new FormControl(data.district, Validators.required));
+        this.bookingForm.addControl('state', new FormControl(data.state, Validators.required));
+        this.bookingForm.addControl('pincode', new FormControl(data.pincode, Validators.required));
+      }
     }
     if(status == 'reschedule' && !this.apiCalled){
       this.fetchAvailable()
@@ -566,6 +573,7 @@ export class NewRequestsComponent  implements OnInit{
           payload.oldPrice = this.eventData.price;
           payload.refundStatus = this.eventData.refundStatus
         }
+        console.log(payload)
         this.apiService.updateBooking(payload).subscribe(
         (res : any)=>{
           console.log(res)

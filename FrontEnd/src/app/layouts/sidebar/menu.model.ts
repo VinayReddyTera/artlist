@@ -1,5 +1,4 @@
 export interface MenuItem {
-    id?: number;
     label?:any
     icon?:any
     link?:any

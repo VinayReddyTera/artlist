@@ -22,6 +22,7 @@ import { AllCommissionsComponent } from './all-commissions/all-commissions.compo
 import { RefundsComponent } from './refunds/refunds.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { PendingWithdrawsComponent } from './pending-withdraws/pending-withdraws.component';
+import { WalletTransactionsComponent } from './wallet-transactions/wallet-transactions.component';
 
 const routes: Routes = [
   {
@@ -206,6 +207,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       role: ['user','artist','access-transactions']
+    }
+  },
+  {
+    path: 'wallet-transactions',
+    component: WalletTransactionsComponent,
+    canActivate: [AuthGuard],
+    data: {
+      role: ['user','artist','access-wallet-transactions']
     }
   },
   {

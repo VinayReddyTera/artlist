@@ -19,6 +19,13 @@ const users = Schema({
     password:String,
     role:String,
     otp:Number,
+    walletHistory : [
+        {
+            amount: Number,
+            type: String,
+            date: Date
+        }
+    ],
     withdrawHistory:[withdrawHistorySchema],
     wallet : {type:Number,default:0},
     profileStatus :{type:String,default:'Incomplete'},
@@ -63,6 +70,13 @@ const artistDetails = Schema({
     inaug : {type:Boolean,default:false},
     wishes: {type:Boolean,default:false},
     wallet : {type:Number,default:0},
+    walletHistory : [
+        {
+            amount: Number,
+            type: String,
+            date: Date
+        }
+    ],
     withdrawHistory:[withdrawHistorySchema],
     inaugPrice : Number,
     wishesPrice: Number,

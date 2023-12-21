@@ -261,7 +261,7 @@ export class TagHistoryComponent {
         }
       },
       (err)=>{
-        this.errorMessage = err.error.message
+        this.errorMessage = err.error.data
       }
     ).add(()=>{
       this.spinner.hide()
