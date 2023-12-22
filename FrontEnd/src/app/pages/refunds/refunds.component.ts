@@ -43,7 +43,7 @@ export class RefundsComponent implements OnInit{
       field: "candName",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
-      headerName: "Artist Name",
+      headerName: "User Name",
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
@@ -345,11 +345,12 @@ export class RefundsComponent implements OnInit{
   accept(data:any,status:any){
     console.log(data);
     if(status == 'accept'){
-      data.refundStatus = true
+      data.refundStatus = true;
     }
     else{
       data.refundStatus = false
     }
+    console.log(data)
     this.apiService.initiateLoading(true);
     this.apiService.payRefund(data).subscribe(
       (res:any)=>{
