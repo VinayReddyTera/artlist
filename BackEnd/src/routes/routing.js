@@ -1047,7 +1047,7 @@ router.get('/fetchBalance',verifyToken,(req,res,next)=>{
 //router to fetch Withdraw Balance
 router.post('/withdrawBalance',verifyToken,(req,res,next)=>{
   let payload = jwt.decode(req.headers.authorization).data;
-  userservice.withdrawBalance(req.body.amount,payload._id,payload.role).then((data)=>{
+  userservice.withdrawBalance(req.body.amount,payload).then((data)=>{
     return res.json(data)
   }).catch((err)=>{
     next(err)
@@ -1069,7 +1069,16 @@ router.get('/fetchAllRefunds',verifyToken,(req,res,next)=>{
 
 //router to request refund
 router.post('/requestRefund',verifyToken,(req,res,next)=>{
-  userservice.requestRefund(req.body).then((data)=>{
+  let payload = jwt.decode(req.headers.authorization).data;
+  if(payload.role != 'user'){
+    return res.json({status:204,data:"Unauthorized Request"})
+  }
+  let data1 = req.body;
+  data1.candName = payload.name;
+  data1.candPhone = payload.phoneNo;
+  data1.candEmail = payload.email;
+  data1.role = 'artist'
+  userservice.requestRefund(data1).then((data)=>{
     return res.json(data)
   }).catch((err)=>{
     next(err)

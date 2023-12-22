@@ -2510,10 +2510,10 @@ userDB.fetchBalance = async(payload,role) => {
   }
 }
 
-userDB.withdrawBalance = async(amount,payload,role) => {
+userDB.withdrawBalance = async(amount,payload) => {
   let collection;
-  if(role == 'user'){
-    collection = await connection.getUsers()
+  if(payload.role == 'user'){
+    collection = await connection.getUsers();
   }
   else{
     collection = await connection.getArtist();
@@ -2523,7 +2523,7 @@ userDB.withdrawBalance = async(amount,payload,role) => {
     date : new Date(),
     type : 'Balance Withdraw'
   }
-  let data = await collection.updateOne({"_id":new ObjectId(payload),wallet: { $gte: amount }},{ $inc: { wallet: -amount }, $push: { withdrawHistory: { amount: amount, date: new Date() }, walletHistory : walletData } })
+  let data = await collection.updateOne({"_id":new ObjectId(payload._id),wallet: { $gte: amount }},{ $inc: { wallet: -amount }, $push: { withdrawHistory: { amount: amount, date: new Date() }, walletHistory : walletData } })
   if (data.modifiedCount == 1) {
     let res = {
       status: 200,

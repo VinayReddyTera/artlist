@@ -1570,9 +1570,51 @@ userService.fetchBalance=(payload,role)=>{
   })
 }
 
-userService.withdrawBalance=(amount,payload,role)=>{
-  return userDB.withdrawBalance(amount,payload,role).then((data)=>{
+userService.withdrawBalance=(amount,payload)=>{
+  return userDB.withdrawBalance(amount,payload).then(async(data)=>{
     if(data){
+      if(data.status == 200){
+        let adminMails = await userDB.fetchAdminEmails();
+        let payload1 = {
+          "subject" : 'Amount Withdrawn',
+          "email" : payload.email,
+          "body" : ""
+          }
+          let data1 = {
+            "button" : false,
+            "name" : payload.name,
+            "body" : `You have withdrawn an amount of rupees ${amount}, and the request is currently in progress and you will get notified once completed. If this was not you report immediately to ${adminMails[0]}`,
+          }
+          let templatePath = 'templates/welcome.html';
+          ejs.renderFile(templatePath,data1,(err,html)=>{
+            if(err){
+              console.log(err)
+            }
+            else{
+              payload1.body = html;
+              userService.sendMail(payload1)
+            }
+          })
+          let payload2 = {
+            "subject" : 'Amount Withdrawn',
+            "email" : adminMails,
+            "body" : ""
+          }
+          let data2 = {
+            "button" : false,
+            "name" : false,
+            "body" : `This is to notify you that ${payload.role} ${payload.name} has withdrawn an amount of rupees ${amount}. Please login to Artlist and settle pending amounts.`,
+          }
+          ejs.renderFile(templatePath,data2,(err,html)=>{
+            if(err){
+              console.log(err)
+            }
+            else{
+              payload2.body = html;
+              userService.sendMail(payload2)
+            }
+          })
+      }
       return data
     }
     else{
@@ -1601,8 +1643,38 @@ userService.fetchAllRefunds=()=>{
 }
 
 userService.requestRefund=(payload)=>{
-  return userDB.requestRefund(payload).then((data)=>{
+  return userDB.requestRefund(payload).then(async(data)=>{
     if(data){
+      if(data.status == 200){
+        let adminMails = await userDB.fetchAdminEmails();
+        adminMails.push(payload.artistEmail)
+        let payload1 = {
+          "subject" : 'Refund Requested',
+          "email" : adminMails,
+          'cc': payload.candEmail,
+          "body" : ""
+          }
+          payload.body = ``
+          if(payload.type == 'hourly'){
+            payload.body = `Booking successful for hourly Event on ${new Date(payload.date).toDateString()}. `
+          }
+          else if(payload.type == 'fullDay'){
+            payload.body = `Booking successful for Full Day Event on ${new Date(payload.date).toDateString()}. `
+          }
+          else if(payload.type == 'event'){
+            payload.body = `Booking successful for Event on ${new Date(payload.date).toDateString()}. `
+          }
+          let templatePath = 'templates/reminder.html';
+          ejs.renderFile(templatePath,payload,(err,html)=>{
+            if(err){
+              console.log(err)
+            }
+            else{
+              payload1.body = html;
+              userService.sendMail(payload1)
+            }
+          })
+      }
       return data
     }
     else{
@@ -1711,8 +1783,32 @@ userService.fetchPendingWithdraws=()=>{
 }
 
 userService.payBalance=(payload)=>{
-  return userDB.payBalance(payload).then((data)=>{
+  return userDB.payBalance(payload).then(async(data)=>{
     if(data){
+      if(data.status == 200){
+        let adminMails = await userDB.fetchAdminEmails();
+        let payload1 = {
+          "subject" : 'Amount Settled',
+          "email" : payload.email,
+          "body" : "",
+          "cc":adminMails
+          }
+          let data1 = {
+            "button" : false,
+            "name" : payload.name,
+            "body" : `This is to inform you that an amount of rupees ${payload.amount} which you have withdrawn was settled by the team Artlist.`,
+          }
+          let templatePath = 'templates/welcome.html';
+          ejs.renderFile(templatePath,data1,(err,html)=>{
+            if(err){
+              console.log(err)
+            }
+            else{
+              payload1.body = html;
+              userService.sendMail(payload1)
+            }
+          })
+      }
       return data
     }
     else{

@@ -407,6 +407,9 @@ export class UserHistoryComponent implements OnInit{
     })
     this.refundForm = this.fb.group({
       id:[''],
+      bookingType:['',[Validators.required]],
+      type:['',[Validators.required]],
+      date:['',[Validators.required]],
       refundReason:['',[Validators.required]]
     })
     this.bookingForm = this.fb.group({
@@ -1139,7 +1142,35 @@ export class UserHistoryComponent implements OnInit{
   }
 
   openRefund(data:any){
-    this.refundForm.controls.id.setValue(data._id);
+    console.log(data)
+    this.refundForm = this.fb.group({
+      bookingType:[data.bookingType,[Validators.required]],
+      type:[data.type,[Validators.required]],
+      date:[new Date(data.date),[Validators.required]],
+      name:[data.name,[Validators.required]],
+      artistName:[data.candName,[Validators.required]],
+      artistPhone:[data.phoneNo,[Validators.required]],
+      artistEmail:[data.email,[Validators.required]],
+      price:[data.price,[Validators.required]],
+      refundReason:['',[Validators.required]],
+      id : [data._id]
+    })
+    if(data.type == 'hourly'){
+      this.showFrom = true;
+      this.refundForm.addControl('from', new FormControl(formatDate(new Date(data.from), 'HH:mm', 'en-US'), Validators.required));
+      this.refundForm.addControl('to', new FormControl(formatDate(new Date(data.to), 'HH:mm', 'en-US'), Validators.required));
+    }
+    else if(data.type == 'event'){
+      this.refundForm.addControl('slot', new FormControl(data.slot, Validators.required));
+    }
+    if(data.bookingType == 'onsite'){
+      this.refundForm.addControl('address', new FormControl(data.address, Validators.required));
+      this.refundForm.addControl('mandal', new FormControl(data.mandal, Validators.required));
+      this.refundForm.addControl('district', new FormControl(data.district, Validators.required));
+      this.refundForm.addControl('state', new FormControl(data.state, Validators.required));
+      this.refundForm.addControl('pincode', new FormControl(data.pincode, Validators.required));
+    }
+    console.log(this.refundForm.value)
     $(`#refund`).modal('show');
   }
 

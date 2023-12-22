@@ -272,6 +272,9 @@ export class PendingWithdrawsComponent implements OnInit{
     let value = (<HTMLInputElement>document.getElementById('check'));
     let payload:any = {
       role : this.payloadData.role,
+      name : this.payloadData.name,
+      email : this.payloadData.email,
+      amount : this.payloadData.amount,
       ids : []
     };
     if(value.checked){
