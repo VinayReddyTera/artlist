@@ -1840,8 +1840,13 @@ userDB.updateBooking = async (payload) => {
     }
   }
   if(payload?.wallet){
+    let walletData = {
+      amount : payload.wallet,
+      date : new Date(),
+      type : 'Event Rescheduled'
+    }
     const userCollection = await connection.getUsers();
-    let arrearUpdate = await userCollection.updateOne({"_id":new ObjectId(payload.data.userId)},{$inc:{'wallet':payload.wallet}});
+    let arrearUpdate = await userCollection.updateOne({"_id":new ObjectId(payload.data.userId)},{$inc:{'wallet':payload.wallet},$push:{'walletHistory':walletData}});
     if(arrearUpdate.modifiedCount != 1){
       return {status:204,data:'unable to update wallet amount and reschedule'}
     }

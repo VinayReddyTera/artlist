@@ -62,7 +62,7 @@ export class AllCommissionsComponent implements OnInit{
       field: "action",
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
-      headerName: "View Genre",
+      headerName: "View Details",
       cellRenderer: commissionRenderer,
       cellRendererParams: { onStatusChange: this.viewAll.bind(this) }
     },
