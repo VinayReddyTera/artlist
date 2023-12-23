@@ -28,7 +28,8 @@ export class ArtistProfileComponent implements OnInit{
     'showProfile':true,
     'showAvailable':false,
     'showPassword':false,
-    'showProfileStatus':false
+    'showProfileStatus':false,
+    'showWallet':false
   }
   items: any;
   states = [

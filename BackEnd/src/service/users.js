@@ -1500,7 +1500,7 @@ userService.fetchUserDashboardData=(payload)=>{
 userService.payArtCommission=(payload,userData)=>{
   return userDB.payArtCommission(payload.id).then(async(data)=>{
     if(data){
-      if(data.status == 200){;
+      if(data.status == 200){
         let ccEmails = await userDB.fetchAdminEmails();
         if(ccEmails){
           let payload1;
@@ -1709,7 +1709,7 @@ userService.payRefund=async(payload)=>{
               let data1 = {
                 "button" : false,
                 "name" : payload.candName,
-                "body" : `This is to inform you that the team Artlist has settled an amount of rupees ${payload.price}, for the event you hired ${payload.artistName} as ${payload.name}`
+                "body" : `This is to inform you that the team Artlist has settled an amount of rupees ${payload.price}, for the event you hired ${payload.artistName} as ${payload.name}. The amount will be added to your wallet.`
               }
               let templatePath = 'templates/welcome.html';
               ejs.renderFile(templatePath,data1,(err,html)=>{
@@ -1747,7 +1747,7 @@ userService.payRefund=async(payload)=>{
               let data1 = {
                 "button" : false,
                 "name" : payload.candName,
-                "body" : `This is to inform you that the team Artlist has settled an amount of rupees ${payload.price}, for the event you hired ${payload.artistName} as ${payload.name}`
+                "body" : `This is to inform you that the team Artlist has settled an amount of rupees ${payload.price}, for the event you hired ${payload.artistName} as ${payload.name}. The amount will be added to your wallet.`
               }
               let templatePath = 'templates/welcome.html';
               ejs.renderFile(templatePath,data1,(err,html)=>{
