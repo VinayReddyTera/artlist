@@ -1241,6 +1241,10 @@ userDB.getArtists = async()=>{
         district: 1,
         state: 1,
         pincode: 1,
+        inaug : 1,
+        wishes: 1,
+        inaugPrice : 1,
+        wishesPrice: 1,
         'skills': {
           $map: {
             input: '$skills',
@@ -1272,7 +1276,7 @@ userDB.getArtists = async()=>{
         }
       }
     }
-  ])
+  ]);
 
   let filteredArray = []
 function removeSkillsAndGenre(array) {

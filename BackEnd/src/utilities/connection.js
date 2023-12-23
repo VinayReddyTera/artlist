@@ -145,6 +145,8 @@ const history = Schema({
     refundAccepted : String,
     refundReason : String,
     pricing : Object,
+    inaugPrice : Number,
+    wishesPrice : Number,
     type : String,
     bookingType : String,
     address : String,

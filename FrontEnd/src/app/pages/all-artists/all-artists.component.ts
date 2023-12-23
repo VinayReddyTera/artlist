@@ -30,6 +30,7 @@ ngOnInit() {
    this.apiService.getArtists().subscribe(
     (res:any)=>{
       if(res.status == 200){
+        console.log(res.data)
         const newArray:any = [];
         res.data.forEach((person:any) => {
             person.skills.forEach((skill:any) => {
@@ -48,7 +49,6 @@ ngOnInit() {
                 });
             });
         });
-        console.log(newArray)
         this.artists = newArray;
       }
       else if(res.status == 204){
