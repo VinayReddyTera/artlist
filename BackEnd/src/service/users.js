@@ -1693,7 +1693,7 @@ userService.requestRefund=(payload)=>{
 }
 
 userService.payRefund=async(payload)=>{
-  if(payload.refundStatus == true){
+  if(payload.refundAccepted1 == true){
     let commissionData = await userDB.getcommissionStatus(payload._id);
     if(commissionData.paid && commissionData.commissionPaid == 'Not Paid'){
       return userDB.payRefundWithoutCommission(payload,commissionData).then(async(data)=>{

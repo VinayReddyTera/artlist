@@ -355,10 +355,10 @@ export class RefundsComponent implements OnInit{
 
   confirmRefund(status:any){
     if(status == 'accept'){
-      this.refundData.refundStatus = true;
+      this.refundData.refundAccepted1 = true;
     }
     else{
-      this.refundData.refundStatus = false
+      this.refundData.refundAccepted1 = false
     }
     console.log(this.refundData)
     this.apiService.initiateLoading(true);
