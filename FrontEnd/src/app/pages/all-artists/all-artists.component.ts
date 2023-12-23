@@ -22,6 +22,15 @@ displayData:any = [];
 filteredData:any = [];
 filterForm : any;
 filterApplied:boolean = false;
+inaugArray:any=[];
+wishesArray:any=[];
+show:any = {
+  showArt : true,
+  showInaug : false,
+  showWishes : false
+}
+inaugfilterForm : any;
+wishesfilterForm : any;
 
 constructor(private apiService:ApiService,private router:Router,private encrypt:EncryptionService,private fb: FormBuilder){}
 
@@ -49,7 +58,19 @@ ngOnInit() {
                 });
             });
         });
+        res.data.forEach((item:any) => {
+          if (item.inaug) {
+              const { skills, wishes, wishesPrice, ...inaugItem } = item;
+              this.inaugArray.push(inaugItem);
+          }
+          if (item.wishes) {
+              const { skills, inaug, inaugPrice, ...wishesItem } = item;
+              this.wishesArray.push(wishesItem);
+          }
+      });
         this.artists = newArray;
+        console.log(this.inaugArray);
+        console.log(this.wishesArray)
       }
       else if(res.status == 204){
         let msgData = {
@@ -80,6 +101,17 @@ ngOnInit() {
     experience:[''],
     rating : ['']
   })
+  this.inaugfilterForm = this.fb.group({
+    name:[''],
+    address:[''],
+    price:[''],
+    language : ['']
+  })
+  this.wishesfilterForm = this.fb.group({
+    name:[''],
+    price:[''],
+    language : ['']
+  })
 }
 
 onPageChange(event: any) {
@@ -89,7 +121,15 @@ onPageChange(event: any) {
     this.displayData = this.filteredData.slice(this.first,this.first+this.rows)
   }
   else{
-    this.displayData = this.artists.slice(this.first,this.first+this.rows)
+    if(this.show.showArt){
+      this.displayData = this.artists.slice(this.first,this.first+this.rows);
+    }
+    else if(this.show.showInaug){
+      this.displayData = this.inaugArray.slice(this.first,this.first+this.rows);
+    }
+    else{
+      this.displayData = this.wishesArray.slice(this.first,this.first+this.rows);
+    }
   }
 }
 
@@ -99,11 +139,25 @@ view(data:any){
     // window.open(`${window.location.origin}/artist-data`)
 }
 
-clear(){
-  this.filterForm.reset();
-  this.displayData = this.artists.slice(0,10);
+clear(data:any){
+  if(data == 'art'){
+    this.filterForm.reset();
+    this.displayData = this.artists.slice(0,10);
+  }
+  else if(data == 'inaug'){
+    this.inaugfilterForm.reset();
+    this.displayData = this.inaugArray.slice(0,10);
+  }
+  else{
+    this.wishesfilterForm.reset();
+    this.displayData = this.wishesArray.slice(0,10);
+  }
   this.filteredData = [];
-  this.filterApplied = false
+  this.filterApplied = false;
+  this.startIndex = 1;
+  this.endIndex = 5;
+  this.first = 0;
+  this.rows = 10;
 }
 
 filter(){
@@ -172,6 +226,137 @@ if(this.filteredData.length == 0){
 else{
   this.errorMessage = null
 }
+}
+
+inaugFilter(){
+  console.log(this.inaugfilterForm.value);
+  this.filterApplied = true
+  this.filteredData = this.inaugArray.filter((item:any) => {
+    // Function to check if a string contains a substring
+    const containsSubstring = (str:any, substr:any) => str.toLowerCase().includes(substr.toLowerCase());
+  
+    // Filter by name
+    if (this.inaugfilterForm.value.name && !containsSubstring(item.name, this.inaugfilterForm.value.name)) {
+      return false;
+    }
+  
+    // Filter by address
+    if (
+      this.inaugfilterForm.value.address &&
+      !(
+        containsSubstring(item.address, this.inaugfilterForm.value.address) ||
+        containsSubstring(item.mandal, this.inaugfilterForm.value.address) ||
+        containsSubstring(item.district, this.inaugfilterForm.value.address) ||
+        containsSubstring(item.state, this.inaugfilterForm.value.address) ||
+        containsSubstring(item.pincode.toString(), this.inaugfilterForm.value.address)
+      )
+    ) {
+      return false;
+    }
+  
+    // Filter by language
+    if (
+      this.inaugfilterForm.value.language &&
+      !item.language.some((lang:any) => containsSubstring(lang, this.inaugfilterForm.value.language))
+    ) {
+      return false;
+    }
+  
+    // Filter by price
+    if (this.inaugfilterForm.value.price && item.inaugPrice < parseInt(this.inaugfilterForm.value.price)) {
+      return false;
+    }
+  
+    // If all conditions pass, include the item in the filtered result
+    return true;
+  });
+  this.totalRecords = this.filteredData.length
+  this.displayData = this.filteredData.slice(0,10)
+  if(this.filteredData.length == 0){
+    this.errorMessage = 'No Data Available with above filter!'
+  }
+  else{
+    this.errorMessage = null
+  }
+}
+
+wishesFilter(){
+  console.log(this.wishesfilterForm.value);
+  this.filterApplied = true
+  this.filteredData = this.wishesArray.filter((item:any) => {
+    // Function to check if a string contains a substring
+    const containsSubstring = (str:any, substr:any) => str.toLowerCase().includes(substr.toLowerCase());
+  
+    // Filter by name
+    if (this.wishesfilterForm.value.name && !containsSubstring(item.name, this.wishesfilterForm.value.name)) {
+      return false;
+    }
+  
+    // Filter by language
+    if (
+      this.wishesfilterForm.value.language &&
+      !item.language.some((lang:any) => containsSubstring(lang, this.wishesfilterForm.value.language))
+    ) {
+      return false;
+    }
+  
+    // Filter by price
+    if (this.wishesfilterForm.value.price && item.wishesPrice < parseInt(this.wishesfilterForm.value.price)) {
+      return false;
+    }
+  
+    // If all conditions pass, include the item in the filtered result
+    return true;
+  });
+  this.totalRecords = this.filteredData.length
+  this.displayData = this.filteredData.slice(0,10)
+  if(this.filteredData.length == 0){
+    this.errorMessage = 'No Data Available with above filter!'
+  }
+  else{
+    this.errorMessage = null
+  }
+}
+
+change(key:any){
+  for (const prop in this.show) {
+    if (this.show.hasOwnProperty(prop)) {
+      this.show[prop] = prop === key;
+    }
+  }
+  this.filteredData = [];
+  this.errorMessage = null;
+  this.startIndex = 1;
+  this.endIndex = 5;
+  this.first = 0;
+  this.rows = 10;
+  this.filterApplied = false;
+  if(this.show.showArt){
+    if(this.artists.length > 0){
+      this.totalRecords = this.artists.length;
+      this.displayData = this.artists.slice(0,10);
+    }
+  }
+  else if(this.show.showInaug){
+    if(this.inaugArray.length > 0){
+      this.totalRecords = this.inaugArray.length;
+      this.displayData = this.inaugArray.slice(0,10);
+    }
+  }
+  else{
+    if(this.wishesArray.length > 0){
+      this.totalRecords = this.wishesArray.length;
+      this.displayData = this.wishesArray.slice(0,10);
+    }
+  }
+}
+
+bookInaug(data:any){
+console.log(data)
+}
+
+bookWishes(data:any){
+console.log(data)
 }
 
 }
