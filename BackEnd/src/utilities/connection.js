@@ -147,8 +147,6 @@ const history = Schema({
     pricing : Object,
     inaug: {type:Boolean,default:false},
     wishes: {type:Boolean,default:false},
-    inaugPrice : Number,
-    wishesPrice : Number,
     type : String,
     bookingType : String,
     address : String,

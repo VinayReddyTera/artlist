@@ -330,7 +330,7 @@
           <div class="account-pages">
               <div class="container">
                 <div class="p-2">
-                  <form class="form-horizontal" [formGroup]="bookWishesForm" (ngSubmit)="confirmbookWishes()">
+                  <form class="form-horizontal" [formGroup]="wishesForm" (ngSubmit)="confirmbookWishes()">
                     <div class="mb-3">
                       <label for="date">Deadline Date</label> <br>
                       <p-calendar [minDate]="minDate" formControlName="date" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [readonlyInput]="true"></p-calendar>
@@ -353,8 +353,8 @@
                       </div>
                     </div>
                     <div class="mt-3 d-grid">
-                      <button *ngIf="bookWishesForm.value.paid" class="btn btn-success" type="submit">Pay and Book Now</button>
-                      <button *ngIf="!bookWishesForm.value.paid" class="btn btn-primary" type="submit">Book Now</button>
+                      <button *ngIf="wishesForm.value.paid" class="btn btn-success" type="submit">Pay and Book Now</button>
+                      <button *ngIf="!wishesForm.value.paid" class="btn btn-primary" type="submit">Book Now</button>
                     </div>
                   </form>
                 </div>

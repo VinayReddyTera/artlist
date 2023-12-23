@@ -33,22 +33,41 @@ show:any = {
 }
 inaugfilterForm : any;
 wishesfilterForm : any;
-bookWishesForm:any;
+wishesForm:any;
+inaugForm:any;
 minDate : Date = new Date(new Date().setDate(new Date().getDate()+1));
 price:any;
 
 constructor(private apiService:ApiService,private router:Router,private encrypt:EncryptionService,private fb: FormBuilder){}
 
 ngOnInit() {
-  this.bookWishesForm = this.fb.group({
-    bookingType:['online',[Validators.required]],
+  this.wishesForm = this.fb.group({
+    bookingType:['online'],
+    type:['Personal Wishes'],
     date:['',[Validators.required]],
     artistId:[''],
     modifiedBy:['user'],
-    wishesPrice:[''],
+    price:[''],
     commission:[''],
     wishes:[true],
-    paid:[true]
+    paid:[true],
+    artistName:[''],
+    artistPhone:[''],
+    artistEmail:['']
+  })
+  this.inaugForm = this.fb.group({
+    bookingType:['onsite'],
+    type:['inauguration'],
+    date:['',[Validators.required]],
+    artistId:[''],
+    modifiedBy:['user'],
+    price:[''],
+    commission:[''],
+    inaug:[true],
+    paid:[true],
+    artistName:[''],
+    artistPhone:[''],
+    artistEmail:['']
   })
    this.apiService.initiateLoading(true);
    this.apiService.getArtists().subscribe(
@@ -368,38 +387,59 @@ change(key:any){
 bookInaug(data:any){
 console.log(data);
 this.price = data.inaugPrice;
+this.inaugForm.controls.price.setValue(data.inaugPrice);
+this.inaugForm.controls.artistId.setValue(data._id);
+this.inaugForm.controls.artistName.setValue(data.name);
+this.inaugForm.controls.artistPhone.setValue(data.phoneNo);
+this.inaugForm.controls.artistEmail.setValue(data.email);
 $('#bookInaug').modal('show')
 }
 
 bookWishes(data:any){
 console.log(data);
 this.price = data.wishesPrice;
+this.wishesForm.controls.price.setValue(data.wishesPrice);
+this.wishesForm.controls.artistId.setValue(data._id);
+this.wishesForm.controls.artistName.setValue(data.name);
+this.wishesForm.controls.artistPhone.setValue(data.phoneNo);
+this.wishesForm.controls.artistEmail.setValue(data.email);
 $('#bookWishes').modal('show')
 }
 
-get f() { return this.bookWishesForm.controls; }
+get f() { return this.wishesForm.controls; }
 
 updateWishesPay(data:any){
   if(data == 'paynow'){
-    this.bookWishesForm.controls.paid.setValue(true);
-    this.bookWishesForm.addControl('paymentType', new FormControl('online', Validators.required));
+    this.wishesForm.controls.paid.setValue(true);
+    this.wishesForm.addControl('paymentType', new FormControl('online', Validators.required));
   }
   else{
-    this.bookWishesForm.controls.paid.setValue(false);
-    this.bookWishesForm.removeControl('paymentType');
+    this.wishesForm.controls.paid.setValue(false);
+    this.wishesForm.removeControl('paymentType');
+  }
+}
+
+updateInaugPay(data:any){
+  if(data == 'paynow'){
+    this.inaugForm.controls.paid.setValue(true);
+    this.inaugForm.addControl('paymentType', new FormControl('online', Validators.required));
+  }
+  else{
+    this.inaugForm.controls.paid.setValue(false);
+    this.inaugForm.removeControl('paymentType');
   }
 }
 
 confirmbookWishes(){
-  if(this.bookWishesForm.valid){
-    if(this.bookWishesForm.value.paid){
-      this.bookWishesForm.controls.commission.setValue(this.bookWishesForm.value.wishesPrice*0.95);
+  if(this.wishesForm.valid){
+    if(this.wishesForm.value.paid){
+      this.wishesForm.controls.commission.setValue(this.wishesForm.value.price*0.95);
     }
     else{
-      this.bookWishesForm.controls.commission.setValue(-(this.bookWishesForm.value.wishesPrice*0.05));
+      this.wishesForm.controls.commission.setValue(-(this.wishesForm.value.price*0.05));
     }
     this.apiService.initiateLoading(true);
-    this.apiService.bookWishes(this.bookWishesForm.value).subscribe(
+    this.apiService.bookWishes(this.wishesForm.value).subscribe(
     (res : any)=>{
       console.log(res)
       if(res.status == 200){
@@ -430,7 +470,7 @@ confirmbookWishes(){
   })
   }
   else{
-    const controls = this.bookWishesForm.controls;
+    const controls = this.wishesForm.controls;
     for (const name in controls) {
         if (controls[name].invalid) {
             controls[name].markAsDirty()

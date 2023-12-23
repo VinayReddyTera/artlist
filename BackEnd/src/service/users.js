@@ -1898,6 +1898,56 @@ userService.payBalance=(payload)=>{
   })
 }
 
+userService.bookWishes=(payload)=>{
+  return userDB.bookWishes(payload).then(async(data)=>{
+    if(data){
+      if(data.status == 200){
+        let roles = ['artist','user'];
+        for(let j of roles){
+          let payload1 = {
+            "subject" : 'Personal Wishes Booking Successful',
+            "email" : '',
+            "body" : "",
+            }
+            let data1 = {
+              "button" : false,
+              "name" : '',
+              "body" : '',
+            }
+            if(j == 'user'){
+              payload1.email = payload.userEmail;
+              data1.name = payload.userName
+              data1.body = `This is to inform you that you have successfully hired ${payload.artistName} for Personal Wishes. The artist will give you the personalised video before ${new Date(payload.date).toDateString()}. Artist Phone No : ${payload.artistPhone}, Artist Email : ${payload.artistEmail}.`
+            }
+            else{
+              payload1.email = payload.artistEmail;
+              data1.name = payload.artistName
+              data1.body = `This is to inform you that you have been hired by ${payload.userName} for Personal Wishes. You should give the personalised video before ${new Date(payload.date).toDateString()}. User Phone No : ${payload.userPhone}, User Email : ${payload.userEmail}.`
+            }
+            let templatePath = 'templates/welcome.html';
+            ejs.renderFile(templatePath,data1,(err,html)=>{
+              if(err){
+                console.log(err)
+              }
+              else{
+                payload1.body = html;
+                userService.sendMail(payload1)
+              }
+            })
+        }
+      }
+      return data
+    }
+    else{
+      let res= {
+        status : 204,
+        data: 'Unable to update'
+      }
+      return res
+    }
+  })
+}
+
 userService.test=()=>{
   return userDB.test().then((data)=>{
     if(data){

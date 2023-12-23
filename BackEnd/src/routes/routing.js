@@ -1146,7 +1146,12 @@ router.post('/bookWishes',verifyToken,(req,res,next)=>{
   if(payload.role != 'user'){
     return res.json({status:204,data:'Unauthorized Request'})
   }
-  userservice.bookWishes(req.body).then((data)=>{
+  let payload1 = req.body;
+  payload1.userId = payload._id;
+  payload1.userName = payload.name;
+  payload1.userPhone = payload.phoneNo;
+  payload1.userEmail = payload.email;
+  userservice.bookWishes(payload1).then((data)=>{
     return res.json(data)
   }).catch((err)=>{
     next(err)
