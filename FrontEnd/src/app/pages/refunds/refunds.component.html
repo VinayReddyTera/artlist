@@ -38,3 +38,37 @@
     </ag-grid-angular>
   </div>
 </div>
+
+<div class="modal fade custom-class" id="approve" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header border-bottom-0">
+        <h5>Accept Refund</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
+    </div>
+      <div class="modal-body">
+        <div class="mb-2">
+          <span class="font-weight-bold">Total amount to be paid : </span><span class="text-success font-weight-bold">{{refundData?.price}} ₹</span>
+        </div>
+        <button class="btn btn-block btn-success" (click)="confirmRefund('accept')">Accept</button>
+    </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade custom-class" id="reject" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header border-bottom-0">
+        <h5>Reject Refund</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
+    </div>
+    <div class="modal-body">
+      <div class="mb-2">
+        <span class="font-weight-bold">Total amount to be paid : </span><span class="text-success font-weight-bold">{{refundData?.price}} ₹</span>
+      </div>
+      <button class="btn btn-block btn-success" (click)="confirmRefund('reject')">Reject</button>
+    </div>
+    </div>
+  </div>
+</div>

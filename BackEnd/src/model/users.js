@@ -2656,7 +2656,7 @@ userDB.rejectRefund = async(payload) => {
 
 userDB.payRefundWithoutCommission = async(payload,commissionData) => {
   const collection = await connection.history();
-  let data = await collection.updateOne({"_id":new ObjectId(payload._id)},{$set:{'refundAccepted':'Accepted',refundRequested:false}})
+  let data = await collection.updateOne({"_id":new ObjectId(payload._id)},{$set:{'refundAccepted':'Accepted',refundRequested:false,refundStatus:'positive'}})
   if (data.modifiedCount == 1) {
     let walletData = {
       amount : commissionData.price,
@@ -2714,7 +2714,7 @@ userDB.payRefundWithoutCommission = async(payload,commissionData) => {
 
 userDB.payRefundWithCommission = async(payload,commissionData) => {
   const collection = await connection.history();
-  let data = await collection.updateOne({"_id":new ObjectId(payload._id)},{$set:{'refundAccepted':'Accepted',refundRequested:false}})
+  let data = await collection.updateOne({"_id":new ObjectId(payload._id)},{$set:{'refundAccepted':'Accepted',refundRequested:false,refundStatus:'positive'}})
   if (data.modifiedCount == 1) {
     let walletData = {
       amount : commissionData.price,

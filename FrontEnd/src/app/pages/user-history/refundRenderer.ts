@@ -20,7 +20,7 @@ export class refundRenderer implements AgRendererComponent {
   agInit(params: ICellRendererParams): void {
     this.params = params;
     this.data = params.data;
-    if((this.data.paid == true && this.data.status == 'artist not attended') || this.data.refundRequested){
+    if(((this.data.paid == true && this.data.status == 'artist not attended') || this.data.refundRequested) && this.data.refundStatus == 'negative'){
         this.disable = false
     }
   }

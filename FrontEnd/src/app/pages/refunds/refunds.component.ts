@@ -297,6 +297,7 @@ export class RefundsComponent implements OnInit{
   gridApi:any;
   rating:any;
   text:any;
+  refundData:any;
 
   ngOnInit(): void {
     this.apiService.initiateLoading(true);
@@ -341,18 +342,27 @@ export class RefundsComponent implements OnInit{
     this.usersRowData = [];
     this.ngOnInit();
   }
-
+  
   accept(data:any,status:any){
-    console.log(data);
+    this.refundData = data
     if(status == 'accept'){
-      data.refundStatus = true;
+      $(`#approve`).modal('show');
     }
     else{
-      data.refundStatus = false
+      $(`#reject`).modal('show');
     }
-    console.log(data)
+  }
+
+  confirmRefund(status:any){
+    if(status == 'accept'){
+      this.refundData.refundStatus = true;
+    }
+    else{
+      this.refundData.refundStatus = false
+    }
+    console.log(this.refundData)
     this.apiService.initiateLoading(true);
-    this.apiService.payRefund(data).subscribe(
+    this.apiService.payRefund(this.refundData).subscribe(
       (res:any)=>{
         if(res.status == 200){
           let msgData = {
@@ -362,7 +372,9 @@ export class RefundsComponent implements OnInit{
             life : 5000
           }
           this.apiService.sendMessage(msgData);
-          this.refresh()
+          $(`#reject`).modal('hide');
+          $(`#approve`).modal('hide');
+          this.refresh();
         }
         else if(res.status == 204){
           let msgData = {
