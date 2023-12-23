@@ -320,4 +320,51 @@
   </div>
 </div>
 
+<div class="modal fade" id="bookWishes" tabindex="-1" role="dialog" aria-labelledby="booking" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header border-bottom-0">
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
+    </div>
+      <div class="modal-body">
+          <div class="account-pages">
+              <div class="container">
+                <div class="p-2">
+                  <form class="form-horizontal" [formGroup]="bookWishesForm" (ngSubmit)="confirmbookWishes()">
+                    <div class="mb-3">
+                      <label for="date">Deadline Date</label> <br>
+                      <p-calendar [minDate]="minDate" formControlName="date" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [readonlyInput]="true"></p-calendar>
+                        <div *ngIf="f.date.errors?.required && f.date.dirty" class="required-message text-danger">
+                          <small>Required Field!</small>
+                        </div>
+                    </div>
+                    <div *ngIf="f.date.errors?.required && f.date.dirty" class="required-message text-danger">
+                      <small>Date is required</small>
+                    </div>
+                    <div class="font-weight-bold price-text">Price : <span class="text-success">{{price}} ₹</span></div>
+                    <div class="form-row">
+                      <div class="form-check form-group col-md-6" style="padding-left: 25px;">
+                        <input name="formRadio" class="form-check-input" id="payNow" checked type="radio" (click)="updateWishesPay('paynow')">
+                        <label for="payNow" class="form-check-label">Pay Now</label>
+                      </div>
+                      <div class="form-check form-group col-md-6" style="padding-left: 25px;">
+                        <input name="formRadio" class="form-check-input" id="payLater" type="radio" (click)="updateWishesPay('paylater')">
+                        <label for="payLater" class="form-check-label">Pay Later</label>
+                      </div>
+                    </div>
+                    <div class="mt-3 d-grid">
+                      <button *ngIf="bookWishesForm.value.paid" class="btn btn-success" type="submit">Pay and Book Now</button>
+                      <button *ngIf="!bookWishesForm.value.paid" class="btn btn-primary" type="submit">Book Now</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            
+              <!-- end container -->
+            </div>
+    </div>
+    </div>
+  </div>
+</div>
+
 <div *ngIf="errorMessage" class="text-danger text-center font-weight-bold">{{errorMessage}}</div>

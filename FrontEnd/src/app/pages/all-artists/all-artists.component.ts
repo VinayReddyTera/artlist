@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../services/api.service';
 import { EncryptionService } from '../services/encryption.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+
+declare const $:any;
 
 @Component({
   selector: 'app-all-artists',
@@ -31,15 +33,27 @@ show:any = {
 }
 inaugfilterForm : any;
 wishesfilterForm : any;
+bookWishesForm:any;
+minDate : Date = new Date(new Date().setDate(new Date().getDate()+1));
+price:any;
 
 constructor(private apiService:ApiService,private router:Router,private encrypt:EncryptionService,private fb: FormBuilder){}
 
 ngOnInit() {
+  this.bookWishesForm = this.fb.group({
+    bookingType:['online',[Validators.required]],
+    date:['',[Validators.required]],
+    artistId:[''],
+    modifiedBy:['user'],
+    wishesPrice:[''],
+    commission:[''],
+    wishes:[true],
+    paid:[true]
+  })
    this.apiService.initiateLoading(true);
    this.apiService.getArtists().subscribe(
     (res:any)=>{
       if(res.status == 200){
-        console.log(res.data)
         const newArray:any = [];
         res.data.forEach((person:any) => {
             person.skills.forEach((skill:any) => {
@@ -352,11 +366,77 @@ change(key:any){
 }
 
 bookInaug(data:any){
-console.log(data)
+console.log(data);
+this.price = data.inaugPrice;
+$('#bookInaug').modal('show')
 }
 
 bookWishes(data:any){
-console.log(data)
+console.log(data);
+this.price = data.wishesPrice;
+$('#bookWishes').modal('show')
+}
+
+get f() { return this.bookWishesForm.controls; }
+
+updateWishesPay(data:any){
+  if(data == 'paynow'){
+    this.bookWishesForm.controls.paid.setValue(true);
+    this.bookWishesForm.addControl('paymentType', new FormControl('online', Validators.required));
+  }
+  else{
+    this.bookWishesForm.controls.paid.setValue(false);
+    this.bookWishesForm.removeControl('paymentType');
+  }
+}
+
+confirmbookWishes(){
+  if(this.bookWishesForm.valid){
+    if(this.bookWishesForm.value.paid){
+      this.bookWishesForm.controls.commission.setValue(this.bookWishesForm.value.wishesPrice*0.95);
+    }
+    else{
+      this.bookWishesForm.controls.commission.setValue(-(this.bookWishesForm.value.wishesPrice*0.05));
+    }
+    this.apiService.initiateLoading(true);
+    this.apiService.bookWishes(this.bookWishesForm.value).subscribe(
+    (res : any)=>{
+      console.log(res)
+      if(res.status == 200){
+        let msgData = {
+          severity : "success",
+          summary : 'Success',
+          detail : res.data,
+          life : 5000
+        }
+      this.apiService.sendMessage(msgData);
+      $('#bookWishes').modal('hide')
+      }
+      else if(res.status == 204){
+        let msgData = {
+            severity : "error",
+            summary : 'Error',
+            detail : res.data,
+            life : 5000
+          }
+        this.apiService.sendMessage(msgData);
+      }
+    },
+    (err:any)=>{
+      console.log(err);
+    }
+  ).add(()=>{
+    this.apiService.initiateLoading(false);
+  })
+  }
+  else{
+    const controls = this.bookWishesForm.controls;
+    for (const name in controls) {
+        if (controls[name].invalid) {
+            controls[name].markAsDirty()
+        }
+    }
+  }
 }
 
 }

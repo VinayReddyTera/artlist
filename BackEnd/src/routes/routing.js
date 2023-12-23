@@ -1140,6 +1140,19 @@ router.post('/payBalance',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to book Wishes
+router.post('/bookWishes',verifyToken,(req,res,next)=>{
+  let payload = jwt.decode(req.headers.authorization).data;
+  if(payload.role != 'user'){
+    return res.json({status:204,data:'Unauthorized Request'})
+  }
+  userservice.bookWishes(req.body).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 //router to get reminder
 router.get('/reminder',(req,res,next)=>{
   userservice.getReminder().then((data)=>{
