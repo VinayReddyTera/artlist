@@ -134,7 +134,10 @@
               <h5 class="text-truncate font-size-15">
                 <a class="text-dark">{{history.candName}}</a>
               </h5>
-              <div class="text-muted">{{history.name}}</div>
+              <div *ngIf="history.name;else noName" class="text-muted">{{history.name}}</div>
+              <ng-template #noName>
+                <div>{{history.type}}</div>
+              </ng-template>
               <div class="text-muted">{{history.date | date : 'mediumDate'}}</div>
               <div class="text-muted">
                 <span class="badge" [ngClass]="{

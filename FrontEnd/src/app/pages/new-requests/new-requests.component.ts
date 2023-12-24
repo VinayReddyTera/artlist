@@ -267,6 +267,7 @@ export class NewRequestsComponent  implements OnInit{
   historyData:any;
   dataView:any;
   disable:any = false;
+  disableReschedule:any = false;
 
   ngOnInit(): void {
     this.bookingForm = this.fb.group({
@@ -804,10 +805,15 @@ export class NewRequestsComponent  implements OnInit{
     let status = data.status
     $(`#dataView`).modal('show');
     if(data.modifiedBy == 'artist' || new Date(data.date)<new Date() || (status == 'completed' || status == 'c' || status == 'artist not attended' || status =='cancelled')){
-      this.disable = true
+      this.disable = true;
+      this.disableReschedule = true;
     }
     if((status == 'r' || status == 'a') && new Date(data.date)>=new Date()){
-      this.disable = false
+      this.disable = false;
+      this.disableReschedule = false;
+    }
+    if(data.type == 'Personal Wishes'){
+      this.disableReschedule = true;
     }
   }
 
