@@ -440,6 +440,7 @@ export class NewRequestsComponent  implements OnInit{
         }
       this.apiService.sendMessage(msgData);
       $(`#${status}`).modal('hide');
+      $('#dataView').modal('hide')
       this.usersRowData = [];
       this.errorMessage = null;
       this.refresh();

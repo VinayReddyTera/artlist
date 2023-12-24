@@ -387,6 +387,7 @@ export class UserHistoryComponent implements OnInit{
   historyData:any;
   dataView:any;
   disable:any = false;
+  disableReschedule:any = false;
   disableRefund:boolean=true;
   isStatusEditable:boolean = false;
   statusForm:any;
@@ -688,6 +689,7 @@ export class UserHistoryComponent implements OnInit{
       this.apiService.sendMessage(msgData);
       $(`#approve`).modal('hide');
       $(`#reject`).modal('hide');
+      $(`#dataView`).modal('hide');
       this.usersRowData = [];
       this.errorMessage = null;
       this.refresh();
@@ -1321,9 +1323,14 @@ export class UserHistoryComponent implements OnInit{
     $(`#dataView`).modal('show');
     if(data.modifiedBy == 'user' || new Date(data.date)<new Date() || (status == 'completed' || status == 'c' || status == 'artist not attended' || status =='cancelled')){
       this.disable = true
+      this.disableReschedule = true;
     }
     if((status == 'r' || status == 'a') && new Date(data.date)>=new Date()){
       this.disable = false
+      this.disableReschedule = false;
+    }
+    if(data.type == 'Personal Wishes'){
+      this.disableReschedule = true;
     }
     if((data.paid == true && data.status == 'artist not attended') || data.refundRequested){
       this.disableRefund = false

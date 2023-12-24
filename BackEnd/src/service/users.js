@@ -1082,7 +1082,7 @@ userService.fetchNewRequests=(payload)=>{
 userService.updateEvent=(updatePayload,userData)=>{
   return userDB.updateEvent(updatePayload,userData.role).then((data)=>{
     if(data){
-      if(data.status == 200){
+      if(data.status == 200 && updatePayload.type != 'Personal Wishes'){
         let payload = {...updatePayload,...userData}
         let roles = ['artist','user'];
         let slotMap = {
@@ -1171,6 +1171,89 @@ userService.updateEvent=(updatePayload,userData)=>{
             }
             let templatePath = 'templates/reminder.html';
             ejs.renderFile(templatePath,payload,(err,html)=>{
+              if(err){
+                console.log(err)
+              }
+              else{
+                payload1.body = html;
+                userService.sendMail(payload1)
+              }
+            })
+        }
+      }
+      else if(data.status == 200 && updatePayload.type == 'Personal Wishes'){
+        let payload = {...updatePayload,...userData}
+        let roles = ['artist','user'];
+        for(let j of roles){
+          let payload1 = {
+            "subject" : '',
+            "email" : '',
+            "body" : ''
+            }
+            let data1 = {
+              "button" : false,
+              "name" : '',
+              "body" : ''
+            }
+            if(updatePayload.status == 'a'){
+              payload1.subject = 'Personal Wishes Event Accepted'
+            }
+            else if(updatePayload.status == 'r'){
+              payload1.subject = 'Personal Wishes Event Rejected'
+            }
+            else if(updatePayload.status == 'c'){
+              payload1.subject = 'Personal Wishes Event Completed'
+            }
+            else if(updatePayload.status == 'artist not attended'){
+              payload1.subject = `Artist didn't gave video`
+            }
+            else if(updatePayload.status == 'cancelled'){
+              payload1.subject = 'Personal Wishes Event Cancelled'
+            }
+            let text;
+            if(updatePayload.status == 'a' || updatePayload.status == 'r'){
+              if(userData.role == 'artist'){
+                text = `${payload1.subject} by the ${userData.role} ${userData.artistName}`
+              }
+              else{
+                text = `${payload1.subject} by the ${userData.role} ${userData.candName}`
+              }
+            }
+            else if(updatePayload.status == 'c'){
+              if(userData.role == 'artist'){
+                text = `Personal Wishes Event status marked as Completed by the ${userData.role} ${userData.artistName}`
+              }
+              else{
+                text = `Personal Wishes Event status marked as Completed by the ${userData.role} ${userData.candName}`
+              }
+            }
+            else if(updatePayload.status == 'artist not attended'){
+              if(userData.role == 'artist'){
+                text = `Personal Wishes Event status marked as Artist Not Attended by the ${userData.role} ${userData.artistName}`
+              }
+              else{
+                text = `Personal Wishes Event status marked as Artist Not Attended by the ${userData.role} ${userData.candName}`
+              }
+            }
+            else if(updatePayload.status == 'cancelled'){
+              if(userData.role == 'artist'){
+                text = `Personal Wishes Event status marked as Cancelled by the ${userData.role} ${userData.artistName}`
+              }
+              else{
+                text = `Personal Wishes Event status marked as Cancelled by the ${userData.role} ${userData.candName}`
+              }
+            }
+            data1.body = `${text} with a deadline date : ${new Date(payload.date).toDateString()}. `
+            if(j == 'user'){
+              payload1.email = payload.candEmail;
+              data1.name = payload.candName;
+            }
+            else{
+              payload1.email = payload.artistEmail;
+              data1.name = payload.artistName;
+            }
+            let templatePath = 'templates/welcome.html';
+            ejs.renderFile(templatePath,data1,(err,html)=>{
               if(err){
                 console.log(err)
               }

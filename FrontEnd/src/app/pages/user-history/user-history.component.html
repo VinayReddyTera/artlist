@@ -510,7 +510,10 @@
                 <h5 class="text-truncate font-size-15">
                   <a class="text-dark">{{dataView?.candName}}</a>
                 </h5>
-                <div class="text-muted">{{dataView?.name}}</div>
+                <div *ngIf="dataView?.name;else noName1" class="text-muted">{{dataView?.name}}</div>
+                <ng-template #noName1>
+                  <div>{{dataView?.type}}</div>
+                </ng-template>
                 <div class="text-muted">
                   <span class="badge" [ngClass]="{
                     'badge-soft-warning': ['pending', 'rescheduled'].includes(dataView?.status),
@@ -543,7 +546,7 @@
                     <button [disabled]="disable" class="btn btn-danger btn-rounded btn-icon icon" pTooltip="reject" tooltipPosition="top" (click)="viewStatus(dataView,'reject')">
                     <i class="mdi mdi-close edit"></i>
                     </button>&nbsp;
-                    <button [disabled]="disable" class="btn btn-info btn-rounded btn-icon icon" pTooltip="reschedule" tooltipPosition="top" (click)="viewStatus(dataView,'reschedule')">
+                    <button [disabled]="disableReschedule" class="btn btn-info btn-rounded btn-icon icon" pTooltip="reschedule" tooltipPosition="top" (click)="viewStatus(dataView,'reschedule')">
                     <i class="mdi mdi-calendar-clock edit"></i>
                     </button>&nbsp;
                     <button [disabled]='disableRefund' class="btn btn-success btn-rounded btn-icon icon" (click)="openRefund(dataView)">
@@ -633,7 +636,7 @@
           </div>
         </div>
 
-        <div class="card">
+        <div *ngIf="dataView?.pricing" class="card">
           <div class="card-body">
             <h4 class="card-title mb-4">Pricing</h4>
 
