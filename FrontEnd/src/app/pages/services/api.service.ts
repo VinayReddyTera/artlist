@@ -247,6 +247,10 @@ export class ApiService {
     return this.http.post(environment.domain+"bookWishes",payload).pipe(catchError(this.handleError.bind(this)))
   }
 
+  bookInaug(payload:any):Observable<any>{
+    return this.http.post(environment.domain+"bookInaug",payload).pipe(catchError(this.handleError.bind(this)))
+  }
+
   private handleError(err: any): Observable<never> {
     if (err.error.status === 204) {
       localStorage.clear();

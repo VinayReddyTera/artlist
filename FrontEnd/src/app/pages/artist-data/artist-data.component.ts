@@ -79,7 +79,8 @@ export class ArtistDataComponent implements OnInit{
       modifiedBy:['user'],
       pricing:[this.artistData.skill.pricing],
       commission:[''],
-      paid:[true]
+      paid:[true],
+      paymentType:['online']
     })
   }
 

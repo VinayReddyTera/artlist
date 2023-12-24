@@ -37,6 +37,43 @@ wishesForm:any;
 inaugForm:any;
 minDate : Date = new Date(new Date().setDate(new Date().getDate()+1));
 price:any;
+states = [
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
+  "Andaman and Nicobar Islands",
+  "Chandigarh",
+  "Dadra and Nagar Haveli and Daman and Diu",
+  "Lakshadweep",
+  "Delhi",
+  "Puducherry"
+];
+availableData: any;
 
 constructor(private apiService:ApiService,private router:Router,private encrypt:EncryptionService,private fb: FormBuilder){}
 
@@ -51,13 +88,14 @@ ngOnInit() {
     commission:[''],
     wishes:[true],
     paid:[true],
+    paymentType:['online'],
     artistName:[''],
     artistPhone:[''],
     artistEmail:['']
   })
   this.inaugForm = this.fb.group({
     bookingType:['onsite'],
-    type:['inauguration'],
+    type:['Inauguration'],
     date:['',[Validators.required]],
     artistId:[''],
     modifiedBy:['user'],
@@ -65,9 +103,16 @@ ngOnInit() {
     commission:[''],
     inaug:[true],
     paid:[true],
+    slot:['',[Validators.required]],
+    paymentType:['online'],
     artistName:[''],
     artistPhone:[''],
-    artistEmail:['']
+    artistEmail:[''],
+    address : ['',[Validators.required]],
+    mandal : ['',[Validators.required]],
+    district : ['',[Validators.required]],
+    state : ['Telangana',[Validators.required]],
+    pincode : ['',[Validators.required]]
   })
    this.apiService.initiateLoading(true);
    this.apiService.getArtists().subscribe(
@@ -386,6 +431,7 @@ change(key:any){
 
 bookInaug(data:any){
 console.log(data);
+this.fetchAvailable(data._id)
 this.price = data.inaugPrice;
 this.inaugForm.controls.price.setValue(data.inaugPrice);
 this.inaugForm.controls.artistId.setValue(data._id);
@@ -406,7 +452,8 @@ this.wishesForm.controls.artistEmail.setValue(data.email);
 $('#bookWishes').modal('show')
 }
 
-get f() { return this.wishesForm.controls; }
+get g() { return this.wishesForm.controls; }
+get f() { return this.inaugForm.controls; }
 
 updateWishesPay(data:any){
   if(data == 'paynow'){
@@ -477,6 +524,134 @@ confirmbookWishes(){
         }
     }
   }
+}
+
+confirmbookInaug(){
+  let date = this.inaugForm.value.date;
+  let dates = this.availableData['event'];
+  let isFound = false;
+  console.log(this.inaugForm.value)
+  if(this.inaugForm.valid){
+    if(this.inaugForm.value.paid){
+      this.inaugForm.controls.commission.setValue(this.inaugForm.value.price*0.95);
+    }
+    else{
+      this.inaugForm.controls.commission.setValue(-(this.inaugForm.value.price*0.05));
+    }
+    for(let i of dates){
+      if(new Date(i.date).toLocaleDateString() == new Date(date).toLocaleDateString()){
+        isFound = true;
+        break
+      }
+    }
+    if(isFound){
+      this.apiService.initiateLoading(true);
+      this.apiService.bookInaug(this.inaugForm.value).subscribe(
+      (res : any)=>{
+        console.log(res)
+        if(res.status == 200){
+          let msgData = {
+            severity : "success",
+            summary : 'Success',
+            detail : res.data,
+            life : 5000
+          }
+        this.apiService.sendMessage(msgData);
+        $('#bookInaug').modal('hide')
+        }
+        else if(res.status == 204){
+          let msgData = {
+              severity : "error",
+              summary : 'Error',
+              detail : res.data,
+              life : 5000
+            }
+          this.apiService.sendMessage(msgData);
+          if(res.data == 'Slot already booked'){
+            this.fetchAvailable(this.inaugForm.value.artistId);
+          }
+        }
+      },
+      (err:any)=>{
+        console.log(err);
+      }
+    ).add(()=>{
+      this.apiService.initiateLoading(false);
+    })
+    }
+    else{
+      let msgData = {
+        severity : "error",
+        summary : 'Error',
+        detail : 'date should be present in available dates',
+        life : 5000
+      }
+      this.apiService.sendMessage(msgData);
+      return
+    }
+  }
+  else{
+    console.log('here')
+    const controls = this.inaugForm.controls;
+    for (const name in controls) {
+        if (controls[name].invalid) {
+            controls[name].markAsDirty()
+        }
+    }
+  }
+}
+
+fetchAvailable(id:any){
+  this.apiService.initiateLoading(true);
+  this.apiService.fetchAvailable({'id':id}).subscribe(
+    (res:any)=>{
+      if(res.status == 200){
+        this.availableData = res.data
+        console.log(this.availableData)
+      }
+      else if(res.status == 204){
+        let msgData = {
+          severity : "error",
+          summary : 'Error',
+          detail : res.data,
+          life : 5000
+        }
+        this.apiService.sendMessage(msgData);
+      }
+    },
+    (err:any)=>{
+      console.log(err)
+    }
+  ).add(()=>{
+    this.apiService.initiateLoading(false);
+  })
+}
+
+buttonEvent(i:any,date:any,event:any){
+  this.inaugForm.controls.date.setValue(date);
+  let text = event.target.innerText[0];
+  if(text == '4'){
+    this.inaugForm.controls.slot.setValue(1);
+  }
+  else if(text == '9'){
+    this.inaugForm.controls.slot.setValue(2);
+  }
+  else if(text == '2'){
+    this.inaugForm.controls.slot.setValue(3);
+  }
+  else if(text == '7'){
+    this.inaugForm.controls.slot.setValue(4);
+  }
+  else if(text == '1'){
+    this.inaugForm.controls.slot.setValue(5);
+  }
+  for(let i in this.availableData.event){
+    for(let j in this.availableData.event[i].slots){
+      let id = 'btn' + i + j
+      document.getElementById(id)?.classList.remove('btn-clicked');
+    }
+  }
+  document.getElementById(event.target.id)?.classList.add('btn-clicked');
 }
 
 }
