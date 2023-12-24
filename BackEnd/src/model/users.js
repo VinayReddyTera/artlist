@@ -1337,7 +1337,8 @@ userDB.fetchAvailable = async(id)=>{
   let bookings = await collection1.find({
     artistId: id,
     date: { $gt: today },
-    status: { $in: ['a', 'pending','rescheduled'] }
+    status: { $in: ['a', 'pending','rescheduled'] },
+    type: { $ne: 'Personal Wishes' }
   })
 
   let converted = {};

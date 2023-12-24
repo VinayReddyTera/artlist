@@ -47,7 +47,7 @@
         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
     </div>
       <div class="modal-body">
-        <div class="mb-2"><span class="font-weight-bold">Total amount to be paid : </span><span class="text-success">{{(paymentData?.commission * -1) | number: '1.0-0'}} ₹</span></div>
+        <div class="mb-2"><span class="font-weight-bold">Total amount to be paid : </span><span class="text-success">{{(paymentData?.commission) | number: '1.0-0'}} ₹</span></div>
         <button class="btn btn-block btn-success" (click)="pay()">Pay Now</button>
       </div>
     </div>
@@ -63,7 +63,7 @@
     </div>
       <div class="modal-body">
         <div class="mb-2">
-          <span class="font-weight-bold">Total amount to be paid : </span><span class="text-success font-weight-bold">{{(paymentData?.commission * -1) | number: '1.0-0'}} ₹</span>
+          <span class="font-weight-bold">Total amount to be paid : </span><span class="text-success font-weight-bold">{{paymentData?.commission | number: '1.0-0'}} ₹</span>
         </div>
         <div class="card-body mb-2">
           <div class="row">
