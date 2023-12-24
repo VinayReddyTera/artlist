@@ -35,7 +35,7 @@ export class approverRenderer implements AgRendererComponent {
       this.disable = false;
       this.disableReschedule = false;
     }
-    if(this.data.type == 'Personal Wishes'){
+    if(this.data.type == 'Personal Wishes' || this.data.type == 'Inauguration'){
       this.disableReschedule = true;
     }
   }

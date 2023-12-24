@@ -171,181 +171,181 @@
           <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
       </div>
         <div class="modal-body">
-            <div class="account-pages">
-                <div class="container">
-                  <div class="p-2">
-                    <form class="form-horizontal" [formGroup]="bookingForm" (ngSubmit)="bookNow()">
-                      <div class="mb-3">
-                        <label for="password">Select Event Type</label>
+          <div class="account-pages">
+              <div class="container">
+                <div class="p-2">
+                  <form class="form-horizontal" [formGroup]="bookingForm" (ngSubmit)="bookNow()">
+                    <div class="mb-3">
+                      <label for="password">Select Event Type</label>
+                      <div class="input-group auth-pass-inputgroup">
+                          <select id="role" class="form-control" formControlName="bookingType" (change)="addAddress()">
+                            <option value="" disabled selected>--select event type--</option>
+                            <option value="online">Online</option>
+                            <option value="onsite">On-Site</option>
+                          </select>
+                        </div>
+                        <div *ngIf="f.type.errors?.required && f.type.dirty" class="text-danger">
+                          <small>Required Field!</small>
+                          </div>
+                      </div>
+
+                      <div *ngIf="bookingForm.get('bookingType').value === 'onsite'" class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+      
+                        <input type="text" formControlName="address" class="form-control"
+                          [ngClass]="f.address.errors" id="address"
+                          placeholder="Address" />
+      
+                        <div *ngIf="f.address.errors" class="invalid-feedback">
+                          <div *ngIf="f.address.errors.required">Address is required</div>
+                        </div>
+                      </div>
+      
+                      <div *ngIf="bookingForm.get('bookingType').value === 'onsite'" class="mb-3">
+                        <label for="mandal" class="form-label">Mandal</label>
+      
+                        <input type="text" formControlName="mandal" class="form-control"
+                          [ngClass]="f.mandal.errors" id="mandal"
+                          placeholder="Mandal" />
+      
+                        <div *ngIf="f.mandal.errors" class="invalid-feedback">
+                          <div *ngIf="f.mandal.errors.required">Mandal is required</div>
+                        </div>
+                      </div>
+      
+                      <div *ngIf="bookingForm.get('bookingType').value === 'onsite'" class="mb-3">
+                        <label for="district" class="form-label">District</label>
+      
+                        <input type="text" formControlName="district" class="form-control"
+                          [ngClass]="f.district.errors" id="district"
+                          placeholder="District" />
+      
+                        <div *ngIf="f.district.errors" class="invalid-feedback">
+                          <div *ngIf="f.district.errors.required">District is required</div>
+                        </div>
+                      </div>
+      
+                      <div *ngIf="bookingForm.get('bookingType').value === 'onsite'" class="mb-3">
+                        <label for="state" class="form-label">State</label>
+      
+                        <select name="state" id="state" formControlName="state" class="form-control"
+                        [ngClass]="f.state.errors">
+                          <option value="0" disabled selected>--select state--</option>
+                          <option *ngFor="let state of states" [value]="state">{{state}}</option>
+                        </select>
+      
+                        <div *ngIf="f.state.errors" class="invalid-feedback">
+                          <div *ngIf="f.state.errors.required">State is required</div>
+                        </div>
+                      </div>
+      
+                      <div *ngIf="bookingForm.get('bookingType').value === 'onsite'" class="mb-3">
+                        <label for="pincode" class="form-label">Pincode</label>
+      
+                        <input type="number" formControlName="pincode" class="form-control"
+                          [ngClass]="f.pincode.errors" id="pincode"
+                          placeholder="Pincode" />
+      
+                        <div *ngIf="f.pincode.errors" class="invalid-feedback">
+                          <div *ngIf="f.pincode.errors.required">Pincode is required</div>
+                        </div>
+                      </div>
+
+                      <div class="mb-3" *ngIf="bookingForm.get('bookingType').value">
+                        <label for="password">Select Booking Type</label>
                         <div class="input-group auth-pass-inputgroup">
-                            <select id="role" class="form-control" formControlName="bookingType" (change)="addAddress()">
-                              <option value="" disabled selected>--select event type--</option>
-                              <option value="online">Online</option>
-                              <option value="onsite">On-Site</option>
+                            <select id="role" class="form-control" formControlName="type" (change)="addField()">
+                              <option value="" disabled selected>--select booking type--</option>
+                              <option value="hourly">Hourly</option>
+                              <option value="fullDay">Full Day</option>
+                              <option value="event">Event</option>
                             </select>
                           </div>
                           <div *ngIf="f.type.errors?.required && f.type.dirty" class="text-danger">
                             <small>Required Field!</small>
-                           </div>
-                        </div>
-
-                        <div *ngIf="bookingForm.get('bookingType').value === 'onsite'" class="mb-3">
-                          <label for="address" class="form-label">Address</label>
-        
-                          <input type="text" formControlName="address" class="form-control"
-                            [ngClass]="f.address.errors" id="address"
-                            placeholder="Address" />
-        
-                          <div *ngIf="f.address.errors" class="invalid-feedback">
-                            <div *ngIf="f.address.errors.required">Address is required</div>
-                          </div>
-                        </div>
-        
-                        <div *ngIf="bookingForm.get('bookingType').value === 'onsite'" class="mb-3">
-                          <label for="mandal" class="form-label">Mandal</label>
-        
-                          <input type="text" formControlName="mandal" class="form-control"
-                            [ngClass]="f.mandal.errors" id="mandal"
-                            placeholder="Mandal" />
-        
-                          <div *ngIf="f.mandal.errors" class="invalid-feedback">
-                            <div *ngIf="f.mandal.errors.required">Mandal is required</div>
-                          </div>
-                        </div>
-        
-                        <div *ngIf="bookingForm.get('bookingType').value === 'onsite'" class="mb-3">
-                          <label for="district" class="form-label">District</label>
-        
-                          <input type="text" formControlName="district" class="form-control"
-                            [ngClass]="f.district.errors" id="district"
-                            placeholder="District" />
-        
-                          <div *ngIf="f.district.errors" class="invalid-feedback">
-                            <div *ngIf="f.district.errors.required">District is required</div>
-                          </div>
-                        </div>
-        
-                        <div *ngIf="bookingForm.get('bookingType').value === 'onsite'" class="mb-3">
-                          <label for="state" class="form-label">State</label>
-        
-                          <select name="state" id="state" formControlName="state" class="form-control"
-                          [ngClass]="f.state.errors">
-                            <option value="0" disabled selected>--select state--</option>
-                            <option *ngFor="let state of states" [value]="state">{{state}}</option>
-                          </select>
-        
-                          <div *ngIf="f.state.errors" class="invalid-feedback">
-                            <div *ngIf="f.state.errors.required">State is required</div>
-                          </div>
-                        </div>
-        
-                        <div *ngIf="bookingForm.get('bookingType').value === 'onsite'" class="mb-3">
-                          <label for="pincode" class="form-label">Pincode</label>
-        
-                          <input type="number" formControlName="pincode" class="form-control"
-                            [ngClass]="f.pincode.errors" id="pincode"
-                            placeholder="Pincode" />
-        
-                          <div *ngIf="f.pincode.errors" class="invalid-feedback">
-                            <div *ngIf="f.pincode.errors.required">Pincode is required</div>
-                          </div>
-                        </div>
-
-                        <div class="mb-3" *ngIf="bookingForm.get('bookingType').value">
-                          <label for="password">Select Booking Type</label>
-                          <div class="input-group auth-pass-inputgroup">
-                              <select id="role" class="form-control" formControlName="type" (change)="addField()">
-                                <option value="" disabled selected>--select booking type--</option>
-                                <option value="hourly">Hourly</option>
-                                <option value="fullDay">Full Day</option>
-                                <option value="event">Event</option>
-                              </select>
                             </div>
-                            <div *ngIf="f.type.errors?.required && f.type.dirty" class="text-danger">
+                        </div>
+
+                        <div *ngIf="bookingForm.value.type == 'fullDay'" class="timeSlots">
+                          <button type="button" *ngFor="let date of availableData.fullDay; let i = index" class="btn date-button"
+                          (click)="buttonFullDay(date,$event)" [id]="'btn'+ i">{{date | date : 'mediumDate'}}</button>
+                        </div>
+
+                        <div *ngIf="bookingForm.value.type == 'event'">
+                          <div *ngFor="let slot of availableData.event;let i = index">
+                            <div class="font-weight-bold">{{slot.date | date : 'mediumDate'}}</div>
+                            <div class="timeSlots">
+                              <button type="button" *ngFor="let date of slot.slots; let j = index" class="btn date-button"
+                                (click)="buttonEvent(j,slot.date,$event)" [id]="'btn'+ i + j">{{date | event}}</button>
+                            </div>
+                          </div>
+                        </div>
+                        <div *ngIf="bookingForm.value.type == 'hourly'" class="mb-3">
+                          <label for="date">Date</label> <br>
+                          <p-calendar [minDate]="minDate" formControlName="date" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [readonlyInput]="true"></p-calendar>
+                          <!-- <input type="date" formControlName="date" class="form-control" id="date"/> -->
+                            <div *ngIf="f.date.errors?.required && f.date.dirty" class="required-message text-danger">
                               <small>Required Field!</small>
-                             </div>
-                          </div>
-
-                          <div *ngIf="bookingForm.value.type == 'fullDay'" class="timeSlots">
-                            <button type="button" *ngFor="let date of availableData.fullDay; let i = index" class="btn date-button"
-                            (click)="buttonFullDay(date,$event)" [id]="'btn'+ i">{{date | date : 'mediumDate'}}</button>
-                          </div>
-
-                          <div *ngIf="bookingForm.value.type == 'event'">
-                            <div *ngFor="let slot of availableData.event;let i = index">
-                              <div class="font-weight-bold">{{slot.date | date : 'mediumDate'}}</div>
-                              <div class="timeSlots">
-                                <button type="button" *ngFor="let date of slot.slots; let j = index" class="btn date-button"
-                                  (click)="buttonEvent(j,slot.date,$event)" [id]="'btn'+ i + j">{{date | event}}</button>
-                              </div>
                             </div>
-                          </div>
-                          <div *ngIf="bookingForm.value.type == 'hourly'" class="mb-3">
-                            <label for="date">Date</label> <br>
-                            <p-calendar [minDate]="minDate" formControlName="date" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [readonlyInput]="true"></p-calendar>
-                            <!-- <input type="date" formControlName="date" class="form-control" id="date"/> -->
-                              <div *ngIf="f.date.errors?.required && f.date.dirty" class="required-message text-danger">
-                                <small>Required Field!</small>
+                        </div>
+                        <div *ngIf="f.date.errors?.required && f.date.dirty && (bookingForm.value.type == 'fullDay' || bookingForm.value.type == 'event')" class="required-message text-danger">
+                          <small>Date is required</small>
+                        </div>
+                        <div *ngIf="showFrom" class="form-row">
+                          <div class="form-group col-md-6">
+                              <div class="mb-3">
+                                  <label for="from">From</label>
+                                  <input type="time" formControlName="from" step="3600" (change)="calPrice()" class="form-control" id="from"/>
+                                    <div *ngIf="f.from.errors?.required && f.from.dirty" class="required-message text-danger">
+                                      <small>Required Field!</small>
+                                    </div>
                               </div>
                           </div>
-                          <div *ngIf="f.date.errors?.required && f.date.dirty && (bookingForm.value.type == 'fullDay' || bookingForm.value.type == 'event')" class="required-message text-danger">
-                            <small>Date is required</small>
-                          </div>
-                          <div *ngIf="showFrom" class="form-row">
-                            <div class="form-group col-md-6">
-                                <div class="mb-3">
-                                    <label for="from">From</label>
-                                    <input type="time" formControlName="from" step="3600" (change)="calPrice()" class="form-control" id="from"/>
-                                      <div *ngIf="f.from.errors?.required && f.from.dirty" class="required-message text-danger">
-                                        <small>Required Field!</small>
-                                      </div>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group col-md-6" style="position: relative;">
-                                <div class="mb-3">
-                                    <label for="to">To</label>
-                                    <input type="time" formControlName="to" step="3600" (change)="calPrice()" class="form-control" id="to"/>
-                                      <div *ngIf="f.to.errors?.required && f.to.dirty" class="required-message text-danger">
-                                        <small>Required Field!</small>
-                                      </div>
-                                </div>
-                            </div>
-                          </div>
-                          <div>
-                            <button *ngIf="!checkAvailability && showFrom" class="btn btn-primary mb-2" (click)="checkAvailability = !checkAvailability">Check availability</button>
-                            <button *ngIf="checkAvailability && showFrom" class="btn btn-danger mb-2" (click)="checkAvailability = !checkAvailability">Hide availability</button>
-                          </div>
-                          <div *ngIf="bookingForm.value.type == 'hourly' && showFrom && checkAvailability">
-                            <div *ngFor="let slot of availableData.hourly;let i = index">
-                              <div class="font-weight-bold">{{slot.date | date : 'mediumDate'}}</div>
-                              <div class="timeSlots">
-                                <button type="button" *ngFor="let date of slot.availableSlots; let j = index" class="btn date-button"
-                                  [id]="'btn'+ i + j">{{date}}</button>
+                          
+                          <div class="form-group col-md-6" style="position: relative;">
+                              <div class="mb-3">
+                                  <label for="to">To</label>
+                                  <input type="time" formControlName="to" step="3600" (change)="calPrice()" class="form-control" id="to"/>
+                                    <div *ngIf="f.to.errors?.required && f.to.dirty" class="required-message text-danger">
+                                      <small>Required Field!</small>
+                                    </div>
                               </div>
+                          </div>
+                        </div>
+                        <div>
+                          <button *ngIf="!checkAvailability && showFrom" class="btn btn-primary mb-2" (click)="checkAvailability = !checkAvailability">Check availability</button>
+                          <button *ngIf="checkAvailability && showFrom" class="btn btn-danger mb-2" (click)="checkAvailability = !checkAvailability">Hide availability</button>
+                        </div>
+                        <div *ngIf="bookingForm.value.type == 'hourly' && showFrom && checkAvailability">
+                          <div *ngFor="let slot of availableData.hourly;let i = index">
+                            <div class="font-weight-bold">{{slot.date | date : 'mediumDate'}}</div>
+                            <div class="timeSlots">
+                              <button type="button" *ngFor="let date of slot.availableSlots; let j = index" class="btn date-button"
+                                [id]="'btn'+ i + j">{{date}}</button>
                             </div>
                           </div>
-                          <div *ngIf="bookingForm.value.type" class="font-weight-bold price-text">Price : <span class="text-success">{{price}} ₹</span></div>
-                          <div *ngIf="bookingForm.value.type" class="form-row">
-                            <div class="form-check form-group col-md-6" style="padding-left: 25px;">
-                              <input name="formRadio" class="form-check-input" id="payNow" checked type="radio" (click)="updatePay('paynow')">
-                              <label for="payNow" class="form-check-label">Pay Now</label>
-                            </div>
-                            <div class="form-check form-group col-md-6" style="padding-left: 25px;">
-                              <input name="formRadio" class="form-check-input" id="payLater" type="radio" (click)="updatePay('paylater')">
-                              <label for="payLater" class="form-check-label">Pay Later</label>
-                            </div>
+                        </div>
+                        <div *ngIf="bookingForm.value.type" class="font-weight-bold price-text">Price : <span class="text-success">{{price}} ₹</span></div>
+                        <div *ngIf="bookingForm.value.type" class="form-row">
+                          <div class="form-check form-group col-md-6" style="padding-left: 25px;">
+                            <input name="formRadio" class="form-check-input" id="payNow" checked type="radio" (click)="updatePay('paynow')">
+                            <label for="payNow" class="form-check-label">Pay Now</label>
                           </div>
-                      <div class="mt-3 d-grid">
-                        <button *ngIf="bookingForm.value.paid" class="btn btn-success" type="submit">Pay and Book Now</button>
-                        <button *ngIf="!bookingForm.value.paid" class="btn btn-primary" type="submit">Book Now</button>
-                      </div>
-                    </form>
-                  </div>
+                          <div class="form-check form-group col-md-6" style="padding-left: 25px;">
+                            <input name="formRadio" class="form-check-input" id="payLater" type="radio" (click)="updatePay('paylater')">
+                            <label for="payLater" class="form-check-label">Pay Later</label>
+                          </div>
+                        </div>
+                    <div class="mt-3 d-grid">
+                      <button *ngIf="bookingForm.value.paid" class="btn btn-success" type="submit">Pay and Book Now</button>
+                      <button *ngIf="!bookingForm.value.paid" class="btn btn-primary" type="submit">Book Now</button>
+                    </div>
+                  </form>
                 </div>
-              
-                <!-- end container -->
               </div>
+            
+              <!-- end container -->
+            </div>
       </div>
       </div>
     </div>

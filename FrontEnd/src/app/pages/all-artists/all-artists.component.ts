@@ -591,7 +591,6 @@ confirmbookInaug(){
     }
   }
   else{
-    console.log('here')
     const controls = this.inaugForm.controls;
     for (const name in controls) {
         if (controls[name].invalid) {

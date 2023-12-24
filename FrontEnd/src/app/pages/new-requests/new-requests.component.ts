@@ -813,7 +813,7 @@ export class NewRequestsComponent  implements OnInit{
       this.disable = false;
       this.disableReschedule = false;
     }
-    if(data.type == 'Personal Wishes'){
+    if(data.type == 'Personal Wishes' || data.type == 'Inauguration'){
       this.disableReschedule = true;
     }
   }

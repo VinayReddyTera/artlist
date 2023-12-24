@@ -1329,7 +1329,7 @@ export class UserHistoryComponent implements OnInit{
       this.disable = false
       this.disableReschedule = false;
     }
-    if(data.type == 'Personal Wishes'){
+    if(data.type == 'Personal Wishes' || data.type == 'Inauguration'){
       this.disableReschedule = true;
     }
     if((data.paid == true && data.status == 'artist not attended') || data.refundRequested){

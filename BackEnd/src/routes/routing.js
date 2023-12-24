@@ -1158,6 +1158,24 @@ router.post('/bookWishes',verifyToken,(req,res,next)=>{
   })
 })
 
+//router to book Inauguration
+router.post('/bookInaug',verifyToken,(req,res,next)=>{
+  let payload = jwt.decode(req.headers.authorization).data;
+  if(payload.role != 'user'){
+    return res.json({status:204,data:'Unauthorized Request'})
+  }
+  let payload1 = req.body;
+  payload1.userId = payload._id;
+  payload1.candName = payload.name;
+  payload1.candPhone = payload.phoneNo;
+  payload1.candEmail = payload.email;
+  userservice.bookInaug(payload1).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 //router to get reminder
 router.get('/reminder',(req,res,next)=>{
   userservice.getReminder().then((data)=>{

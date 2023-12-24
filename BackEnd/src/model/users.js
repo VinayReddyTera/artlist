@@ -2965,6 +2965,31 @@ userDB.bookWishes = async (payload) => {
   }
 }
 
+userDB.bookInaug = async (payload) => {
+  const collection = await connection.history();
+  let date = new Date(payload.date);
+  let arr = [];
+  arr.push(new Date(date.setDate(date.getDate()-1)))
+  arr.push(new Date(date.setDate(date.getDate()-2)))
+  arr.push(new Date(date.setDate(date.getDate()-2)))
+  payload.reminderDates = arr;
+  let data = await collection.create(payload);
+  if (data) {
+    let res = {
+      status: 200,
+      data: 'Booking Successfull'
+    }
+    return res
+  }
+  else {
+    let res = {
+      status: 204,
+      data: 'Unable to book artist'
+    }
+    return res
+  }
+}
+
 userDB.test = async () => {
   const collection = await connection.history();
   let data = await collection.updateMany({},{$set:{commissionPaid:'Not Paid'}})
