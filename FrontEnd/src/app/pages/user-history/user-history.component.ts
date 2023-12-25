@@ -540,6 +540,7 @@ export class UserHistoryComponent implements OnInit{
     })
   }
   else{
+    console.log('here')
     const controls = this.feedbackForm.controls;
     for (const name in controls) {
         if (controls[name].invalid) {
