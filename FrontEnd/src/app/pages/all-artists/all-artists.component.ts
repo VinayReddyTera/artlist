@@ -74,6 +74,38 @@ states = [
   "Puducherry"
 ];
 availableData: any;
+payRequest:google.payments.api.PaymentDataRequest={
+  apiVersion: 2,
+  apiVersionMinor: 0,
+  allowedPaymentMethods: [
+    {
+      type: 'CARD',
+      parameters: {
+        allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+        allowedCardNetworks: ['AMEX', 'VISA', 'MASTERCARD']
+      },
+      tokenizationSpecification: {
+        type: 'PAYMENT_GATEWAY',
+        parameters: {
+          gateway: 'example',
+          gatewayMerchantId: 'exampleGatewayMerchantId'
+        }
+      }
+    }
+  ],
+  merchantInfo: {
+    merchantId: '12345678901234567890',
+    merchantName: 'Demo Merchant'
+  },
+  transactionInfo: {
+    totalPriceStatus: 'FINAL',
+    totalPriceLabel: 'Total',
+    totalPrice: '1.00',
+    currencyCode: 'INR',
+    countryCode: 'IN'
+  },
+  callbackIntents : ['PAYMENT_AUTHORIZATION']
+};
 
 constructor(private apiService:ApiService,private router:Router,private encrypt:EncryptionService,private fb: FormBuilder){}
 
@@ -652,5 +684,21 @@ buttonEvent(i:any,date:any,event:any){
   }
   document.getElementById(event.target.id)?.classList.add('btn-clicked');
 }
+
+onLoadPaymentData = (event: any): void => {
+  console.log('load payment data', event.detail);
+};
+
+onError = (event: any): void => {
+  console.error('error', event.error);
+};
+
+onPaymentDataAuthorized: google.payments.api.PaymentAuthorizedHandler = (paymentData:any) => {
+  console.log('payment authorized', paymentData);
+
+  return {
+    transactionState: 'SUCCESS',
+  };
+};
 
 }

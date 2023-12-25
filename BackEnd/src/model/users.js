@@ -1693,43 +1693,62 @@ userDB.fetchAllUnpaidCommissions = async () => {
 userDB.giveArtistFeedback = async (payload) => {
   const collection = await connection.history();
   const artistCollection = await connection.getArtist();
-  let data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{feedback:payload.feedback,rating:payload.rating,status:'c'}});
-  let ratingData = await collection.find({"name":payload.name,"artistId":payload.artistId,"rating": { $exists: true }},{_id:0,rating:1,name:1});
-  let rating;
-  if(ratingData.length>0){
-    const sumOfRatings = ratingData.reduce((sum, item) => {
-      if (item.rating !== undefined) {
-        return sum + item.rating;
+  if(payload.type != 'Inauguration' && payload.type != 'Personal Wishes'){
+    let data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{feedback:payload.feedback,rating:payload.rating,status:'c'}});
+    let ratingData = await collection.find({"name":payload.name,"artistId":payload.artistId,"rating": { $exists: true }},{_id:0,rating:1,name:1});
+    let rating;
+    if(ratingData.length>0){
+      const sumOfRatings = ratingData.reduce((sum, item) => {
+        if (item.rating !== undefined) {
+          return sum + item.rating;
+        }
+        return sum;
+      }, 0);
+      rating = sumOfRatings/ratingData.length
+      rating = parseFloat(rating.toFixed(1));
+    }
+    else{
+      rating = payload.rating
+    }
+    let artistData = await artistCollection.updateOne({
+      "skills.name": payload.name,
+      "_id": new ObjectId(payload.artistId)
+    },{
+      $set: {
+        "skills.$.rating": rating
       }
-      return sum;
-    }, 0);
-    rating = sumOfRatings/ratingData.length
-    rating = parseFloat(rating.toFixed(1));
+    })
+    if ((data.modifiedCount == 1 || data.acknowledged == true) && (artistData.modifiedCount == 1 || artistData.acknowledged == true)) {
+      let res = {
+        status: 200,
+        data: 'Successfully took feedback'
+      }
+      return res
+    }
+    else {
+      let res = {
+        status: 204,
+        data: 'Unable to take feedback'
+      }
+      return res
+    }
   }
   else{
-    rating = payload.rating
-  }
-  let artistData = await artistCollection.updateOne({
-    "skills.name": payload.name,
-    "_id": new ObjectId(payload.artistId)
-  },{
-    $set: {
-      "skills.$.rating": rating
+    let data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{feedback:payload.feedback,rating:payload.rating,status:'c'}});
+    if (data.modifiedCount == 1 || data.acknowledged == true) {
+      let res = {
+        status: 200,
+        data: 'Successfully took feedback'
+      }
+      return res
     }
-  })
-  if ((data.modifiedCount == 1 || data.acknowledged == true) && (artistData.modifiedCount == 1 || artistData.acknowledged == true)) {
-    let res = {
-      status: 200,
-      data: 'Successfully took feedback'
+    else {
+      let res = {
+        status: 204,
+        data: 'Unable to take feedback'
+      }
+      return res
     }
-    return res
-  }
-  else {
-    let res = {
-      status: 204,
-      data: 'Unable to take feedback'
-    }
-    return res
   }
 }
 

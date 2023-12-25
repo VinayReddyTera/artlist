@@ -391,13 +391,46 @@ export class UserHistoryComponent implements OnInit{
   disableRefund:boolean=true;
   isStatusEditable:boolean = false;
   statusForm:any;
+  payRequest:google.payments.api.PaymentDataRequest={
+    apiVersion: 2,
+    apiVersionMinor: 0,
+    allowedPaymentMethods: [
+      {
+        type: 'CARD',
+        parameters: {
+          allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+          allowedCardNetworks: ['AMEX', 'VISA', 'MASTERCARD']
+        },
+        tokenizationSpecification: {
+          type: 'PAYMENT_GATEWAY',
+          parameters: {
+            gateway: 'example',
+            gatewayMerchantId: 'exampleGatewayMerchantId'
+          }
+        }
+      }
+    ],
+    merchantInfo: {
+      merchantId: '12345678901234567890',
+      merchantName: 'Demo Merchant'
+    },
+    transactionInfo: {
+      totalPriceStatus: 'FINAL',
+      totalPriceLabel: 'Total',
+      totalPrice: '1.00',
+      currencyCode: 'INR',
+      countryCode: 'IN'
+    },
+    callbackIntents : ['PAYMENT_AUTHORIZATION']
+  };
 
   ngOnInit(): void {
     this.feedbackForm = this.fb.group({
       feedback:['',[Validators.required]],
       rating:['',[Validators.required]],
-      name:['',[Validators.required]],
+      name:[''],
       artistId:['',[Validators.required]],
+      type:['',[Validators.required]],
       id:['',[Validators.required]]
     })
     this.rejectionForm = this.fb.group({
@@ -480,6 +513,7 @@ export class UserHistoryComponent implements OnInit{
     if(new Date(data.date)<new Date() && (data.status == 'completed' || data.status == 'c')){
       this.feedbackForm.controls.id.setValue(data._id);
       this.feedbackForm.controls.name.setValue(data.name);
+      this.feedbackForm.controls.type.setValue(data.type);
       this.feedbackForm.controls.artistId.setValue(data.artistId);
       if(data.feedback){
         this.feedbackForm.controls.feedback.setValue(data.feedback);
@@ -1399,5 +1433,21 @@ export class UserHistoryComponent implements OnInit{
       }
     }
   }
+
+  onLoadPaymentData = (event: any): void => {
+    console.log('load payment data', event.detail);
+  };
+
+  onError = (event: any): void => {
+    console.error('error', event.error);
+  };
+
+  onPaymentDataAuthorized: google.payments.api.PaymentAuthorizedHandler = (paymentData:any) => {
+    console.log('payment authorized', paymentData);
+
+    return {
+      transactionState: 'SUCCESS',
+    };
+  };
 
 }

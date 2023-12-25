@@ -86,7 +86,7 @@ export class ArtistDataComponent implements OnInit{
     transactionInfo: {
       totalPriceStatus: 'FINAL',
       totalPriceLabel: 'Total',
-      totalPrice: '100.00',
+      totalPrice: '1.00',
       currencyCode: 'INR',
       countryCode: 'IN'
     },
@@ -466,7 +466,7 @@ export class ArtistDataComponent implements OnInit{
     console.error('error', event.error);
   };
 
-  onPaymentDataAuthorized: google.payments.api.PaymentAuthorizedHandler = paymentData => {
+  onPaymentDataAuthorized: google.payments.api.PaymentAuthorizedHandler = (paymentData:any) => {
     console.log('payment authorized', paymentData);
 
     return {
