@@ -161,7 +161,7 @@ const history = Schema({
     paid : {type:Boolean,default:false},
     paymentType : String,
     commission : Number,
-    commissionPaid : {type:String,default:'Not Paid'},
+    commissionPaid : {type:String,default:'Not Paid'}
 },{collection : "history"});
 
 let collection = {}

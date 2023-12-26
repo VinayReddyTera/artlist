@@ -543,6 +543,7 @@ export class UserHistoryComponent implements OnInit{
         console.log(res)
         if(res.status == 200){
           $('#giveFeedback').modal('hide');
+          $('#dataView').modal('hide');
           let msgData = {
             severity : "success",
             summary : 'Success',

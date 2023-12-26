@@ -242,13 +242,7 @@ export class AllCommissionsComponent implements OnInit{
           this.successMessage = res.data
         }
         else if(res.status == 204){
-          if(res.data == 'Invalid token'){
-            localStorage.clear();
-            this.router.navigate(['/account/login']);
-          }
-          else{
-            this.errorMessage = res.data;
-          }
+          this.errorMessage = res.data;
         }
       },
       (err:any)=>{
@@ -269,7 +263,7 @@ export class AllCommissionsComponent implements OnInit{
       if(this.commission == 0){
         this.showBtn = false;
       }
-      this.commission = Math.round(Math.abs(this.commission));
+      this.commission = Math.round(this.commission);
     })
   }
 
@@ -309,9 +303,10 @@ export class AllCommissionsComponent implements OnInit{
   pay(){
     let payload:any = {
       id : [],
+      artistId:this.paymentData.artistId,
       email: this.paymentData.email,
       name : this.paymentData.candName,
-      commission:Math.round(this.paymentData.commission * -1)
+      commission:Math.round(this.paymentData.commission)
     }
     for(let i of this.paymentData.data){
       payload.id.push(i._id)

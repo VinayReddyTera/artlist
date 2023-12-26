@@ -1664,7 +1664,7 @@ userService.fetchUserDashboardData=(payload)=>{
 }
 
 userService.payArtCommission=(payload,userData)=>{
-  return userDB.payArtCommission(payload.id).then(async(data)=>{
+  return userDB.payArtCommission(payload,userData).then(async(data)=>{
     if(data){
       if(data.status == 200){
         let ccEmails = await userDB.fetchAdminEmails();

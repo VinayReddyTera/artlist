@@ -247,6 +247,10 @@ export class CommissionComponent implements OnInit{
     this.ngOnInit();
   }
 
+  payNow(){
+    $(`#payNow1`).modal('show');
+  }
+
   pay(){
     let payload:any = {
       id:[],
@@ -259,6 +263,7 @@ export class CommissionComponent implements OnInit{
     this.apiService.payArtCommission(payload).subscribe(
       (res:any)=>{
         if(res.status == 200){
+          $(`#payNow1`).modal('hide');
           let msgData = {
             severity : "success",
             summary : 'Success',

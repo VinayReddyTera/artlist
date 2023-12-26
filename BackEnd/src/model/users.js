@@ -2494,10 +2494,28 @@ userDB.fetchUserDashboardData = async (payload) => {
   }
 }
 
-userDB.payArtCommission = async (payload) => {
+userDB.payArtCommission = async (payload,userData) => {
   const collection = await connection.history();
-  let data = await collection.updateMany({"_id":{ $in: payload }},{$set:{commissionPaid:'Paid'}})
-  if (data.modifiedCount == payload.length) {
+  let data = await collection.updateMany({"_id":{ $in: payload.id }},{$set:{commissionPaid:'Paid'}})
+  const artistCollection = await connection.getArtist();
+  let artistUpdate;
+  if(userData.role == 'admin'){
+    let walletData = {
+      amount : payload.commission,
+      date : new Date(),
+      type : 'Commission Received'
+    }
+    artistUpdate = await artistCollection.updateOne({"_id":new ObjectId(payload.artistId)},{ $inc: { wallet: payload.commission }, $push: { walletHistory : walletData } });
+  }
+  else{
+    let walletData = {
+      amount : -payload.commission,
+      date : new Date(),
+      type : 'Commission Paid'
+    }
+    artistUpdate = await artistCollection.updateOne({"_id":new ObjectId(userData._id)},{ $inc: { wallet: -payload.commission }, $push: { walletHistory : walletData } });
+  }
+  if (data.modifiedCount == payload.id.length && artistUpdate.modifiedCount == 1) {
     let res = {
       status: 200,
       data: 'Successfully updated'

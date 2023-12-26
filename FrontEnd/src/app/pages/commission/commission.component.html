@@ -44,4 +44,19 @@
     <span class="text-success">{{commission}} ₹</span>
   </div>
 
-  <button *ngIf="showBtn" class="btn btn-success mt-3" (click)="pay()">Pay Now</button>
+  <button *ngIf="showBtn" class="btn btn-success mt-3" (click)="payNow()">Pay Now</button>
+
+  <div class="modal fade" id="payNow1" tabindex="-1" role="dialog" aria-labelledby="viewFeedback" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header border-bottom-0">
+          <h5>Confirm to Pay</h5>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
+      </div>
+        <div class="modal-body">
+          <div class="mb-2"><span class="font-weight-bold">Total amount to be paid : </span><span class="text-success">{{(commission) | number: '1.0-0'}} ₹</span></div>
+          <button class="btn btn-block btn-success" (click)="pay()"> Pay</button>
+        </div>
+      </div>
+    </div>
+  </div>

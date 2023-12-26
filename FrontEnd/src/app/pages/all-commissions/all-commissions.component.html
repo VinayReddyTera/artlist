@@ -62,7 +62,7 @@
         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"> </button>
     </div>
       <div class="modal-body">
-        <div class="mb-2">
+        <div *ngIf="commission>0" class="mb-2">
           <span class="font-weight-bold">Total amount to be paid : </span><span class="text-success font-weight-bold">{{paymentData?.commission | number: '1.0-0'}} ₹</span>
         </div>
         <div class="card-body mb-2">
@@ -90,7 +90,7 @@
           >
           </ag-grid-angular>
         </div>
-        <button class="btn btn-success" (click)="pay()">Pay Now</button>
+        <button [disabled]="commission<=0" class="btn btn-success" (click)="pay()">Pay Now</button>
       </div>
     </div>
   </div>
