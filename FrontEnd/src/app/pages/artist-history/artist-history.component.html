@@ -1,7 +1,3 @@
-<div *ngIf="errorMessage" class="text-danger font-weight-bold message">
-    {{errorMessage}}
-  </div>
-
 <div *ngIf="usersRowData.length" class="form-check form-switch form-switch-lg mb-3 d-flex justify-content-end">
     <input type="checkbox" id="check" checked="" class="form-check-input" (change)="change()">
     <label  for="check" class="form-check-label">Card View</label>
@@ -395,4 +391,8 @@
       </div>
       </div>
     </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="text-danger font-weight-bold message">
+    {{errorMessage}}
   </div>

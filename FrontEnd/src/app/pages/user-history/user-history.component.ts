@@ -1225,7 +1225,6 @@ export class UserHistoryComponent implements OnInit{
             life : 5000
           }
         this.apiService.sendMessage(msgData);
-        $(`#refund`).modal('hide');
         this.usersRowData = [];
         this.errorMessage = null;
         this.refresh();
@@ -1244,7 +1243,8 @@ export class UserHistoryComponent implements OnInit{
         console.log(err);
       }
     ).add(()=>{
-      this.apiService.initiateLoading(false)
+      this.apiService.initiateLoading(false);
+      $(`#refund`).modal('hide');
     })
     }
     else{
@@ -1367,7 +1367,7 @@ export class UserHistoryComponent implements OnInit{
     if(data.type == 'Personal Wishes' || data.type == 'Inauguration'){
       this.disableReschedule = true;
     }
-    if((data.paid == true && data.status == 'artist not attended') || data.refundRequested){
+    if(((data.paid == true && data.status == 'artist not attended') || data.refundRequested) && data.refundStatus == 'negative'){
       this.disableRefund = false
     }
     if(new Date(data.date)<new Date() && data.status != 'c' && data.status != 'r'){

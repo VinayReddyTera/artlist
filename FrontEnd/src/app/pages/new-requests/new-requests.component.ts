@@ -92,6 +92,14 @@ export class NewRequestsComponent  implements OnInit{
       cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value
     },
     {
+      field: "bookingType",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Event Type",
+      cellRenderer: (params:any)=> params.value == null ? "N/A" : params.value,
+      width:130
+    },
+    {
       field: "date",
       filter: "agDateColumnFilter",
       filterParams: { maxNumConditions: 1 },

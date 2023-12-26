@@ -1811,6 +1811,19 @@ userDB.updateEvent = async (payload,role) => {
     data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{'status':payload.status,'remarks':payload.remarks,'modifiedBy':role,"refundStatus":'negative'}})
     
   }
+  else if(payload.status == 'c' && payload.refundStatus == 'positive'){
+    let walletData = {
+      amount : -payload.price,
+      date : new Date(),
+      type : 'Event Completed'
+    }
+    const userCollection = await connection.getUsers();
+    let arrearUpdate = await userCollection.updateOne({"_id":new ObjectId(payload.userId)},{$inc:{'wallet':-payload.price},$push:{'walletHistory':walletData}});
+    if(arrearUpdate.modifiedCount != 1){
+      return {status:204,data:'unable to update wallet amount and accept event'}
+    }
+    data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{'status':payload.status,'remarks':payload.remarks,'modifiedBy':role,"refundStatus":'negative'}}) 
+  }
   else{
     data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{'status':payload.status,'modifiedBy':role}})
   }
@@ -2631,15 +2644,34 @@ userDB.fetchAllRefunds = async() => {
 
 userDB.requestRefund = async(payload) => {
   const collection = await connection.history();
-  let data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{'refundRequested':true,'refundReason':payload.refundReason,'status':'artist not attended','refundAccepted':'Pending'}})
-  if (data.modifiedCount == 1) {
-    let res = {
-      status: 200,
-      data: 'Refund Requested'
+  let eventData = await collection.findOne({"_id":new ObjectId(payload.id)},{paid:1,status:1,refundRequested:1,refundStatus:1});
+  if(eventData){
+    if(((eventData.paid == true && eventData.status == 'artist not attended') || eventData.refundRequested) && eventData.refundStatus == 'negative'){
+      let data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{'refundRequested':true,'refundReason':payload.refundReason,'status':'artist not attended','refundAccepted':'Pending'}})
+      if (data.modifiedCount == 1) {
+        let res = {
+          status: 200,
+          data: 'Refund Requested'
+        }
+        return res
+      }
+      else {
+        let res = {
+          status: 204,
+          data: 'Unable to request refund'
+        }
+        return res
+      }
     }
-    return res
+    else{
+      let res = {
+        status: 204,
+        data: 'Not eligible for refund'
+      }
+      return res
+    }
   }
-  else {
+  else{
     let res = {
       status: 204,
       data: 'Unable to request refund'
