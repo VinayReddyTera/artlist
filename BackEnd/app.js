@@ -31,10 +31,10 @@ cron.schedule('00 07 * * *', () => {
 app.use('/',router);
 // app.use(myErrorLogger);
 
-app.use(express.static(path.join(__dirname+'/dist')));
-app.get('*',(req,res)=>{
-  res.sendFile(path.join(__dirname+'/dist/index.html'))
-})
+// app.use(express.static(path.join(__dirname+'/dist')));
+// app.get('*',(req,res)=>{
+//   res.sendFile(path.join(__dirname+'/dist/index.html'))
+// })
 
 port = process.env.PORT || 1204;
 app.listen(port);
