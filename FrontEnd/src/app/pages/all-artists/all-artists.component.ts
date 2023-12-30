@@ -94,7 +94,7 @@ payRequest:google.payments.api.PaymentDataRequest={
     }
   ],
   merchantInfo: {
-    merchantId: '12345678901234567890',
+    merchantId: 'BCR2DN4TZKV67QBB',
     merchantName: 'Demo Merchant'
   },
   transactionInfo: {
@@ -106,6 +106,8 @@ payRequest:google.payments.api.PaymentDataRequest={
   },
   callbackIntents : ['PAYMENT_AUTHORIZATION']
 };
+
+//Your Case ID is 7-6525000035583. Refer to this if you need to contact us again.
 
 constructor(private apiService:ApiService,private router:Router,private encrypt:EncryptionService,private fb: FormBuilder){}
 

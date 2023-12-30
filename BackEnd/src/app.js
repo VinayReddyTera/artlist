@@ -8,6 +8,7 @@ const cors = require("cors");
 const app = express();
 const cron = require('node-cron');
 const userservice = require("./service/users");
+const path = require('path')
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -29,6 +30,11 @@ cron.schedule('00 07 * * *', () => {
 // app.use(myRequestLogger);
 app.use('/',router);
 // app.use(myErrorLogger);
+
+app.use(express.static(path.join(__dirname+'/dist')));
+app.get('*',(req,res)=>{
+  res.sendFile(path.join(__dirname+'/dist/index.html'))
+})
 
 port = process.env.PORT || 1204;
 app.listen(port);
