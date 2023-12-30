@@ -1187,11 +1187,12 @@ router.get('/reminder',(req,res,next)=>{
 
 //router to test
 router.get('/test',(req,res,next)=>{
-  userservice.test().then((data)=>{
-    return res.json(data)
-  }).catch((err)=>{
-    next(err)
-  })
+  res.json('ok')
+  // userservice.test().then((data)=>{
+  //   return res.json(data)
+  // }).catch((err)=>{
+  //   next(err)
+  // })
 })
 
 module.exports = router
