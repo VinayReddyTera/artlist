@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../services/api.service';
 import { EncryptionService } from '../services/encryption.service';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { environment } from 'src/environments/environment';
 
 declare const $:any;
+declare const Razorpay: any;
 
 @Component({
   selector: 'app-all-artists',
@@ -100,14 +102,12 @@ payRequest:google.payments.api.PaymentDataRequest={
   transactionInfo: {
     totalPriceStatus: 'FINAL',
     totalPriceLabel: 'Total',
-    totalPrice: '1.00',
-    currencyCode: 'INR',
-    countryCode: 'IN'
+    totalPrice: '100.00',
+    currencyCode: 'USD',
+    countryCode: 'US'
   },
   callbackIntents : ['PAYMENT_AUTHORIZATION']
 };
-
-//Your Case ID is 7-6525000035583. Refer to this if you need to contact us again.
 
 constructor(private apiService:ApiService,private router:Router,private encrypt:EncryptionService,private fb: FormBuilder){}
 
@@ -514,10 +514,10 @@ updateInaugPay(data:any){
 confirmbookWishes(){
   if(this.wishesForm.valid){
     if(this.wishesForm.value.paid){
-      this.wishesForm.controls.commission.setValue(this.wishesForm.value.price*0.95);
+      this.wishesForm.controls.commission.setValue(this.wishesForm.value.price*environment.artistCommission);
     }
     else{
-      this.wishesForm.controls.commission.setValue(-(this.wishesForm.value.price*0.05));
+      this.wishesForm.controls.commission.setValue(-(this.wishesForm.value.price*(1-environment.artistCommission)));
     }
     this.apiService.initiateLoading(true);
     this.apiService.bookWishes(this.wishesForm.value).subscribe(
@@ -567,10 +567,10 @@ confirmbookInaug(){
   console.log(this.inaugForm.value)
   if(this.inaugForm.valid){
     if(this.inaugForm.value.paid){
-      this.inaugForm.controls.commission.setValue(this.inaugForm.value.price*0.95);
+      this.inaugForm.controls.commission.setValue(this.inaugForm.value.price*environment.artistCommission);
     }
     else{
-      this.inaugForm.controls.commission.setValue(-(this.inaugForm.value.price*0.05));
+      this.inaugForm.controls.commission.setValue(-(this.inaugForm.value.price*(1-environment.artistCommission)));
     }
     for(let i of dates){
       if(new Date(i.date).toLocaleDateString() == new Date(date).toLocaleDateString()){
@@ -687,20 +687,60 @@ buttonEvent(i:any,date:any,event:any){
   document.getElementById(event.target.id)?.classList.add('btn-clicked');
 }
 
-onLoadPaymentData = (event: any): void => {
-  console.log('load payment data', event.detail);
-};
+razor(){
 
-onError = (event: any): void => {
-  console.error('error', event.error);
-};
+  this.apiService.createOrder().subscribe(
+    (res:any)=>{
+      let options = { 
+        "key": environment.keyid,  
+        "amount": "50000",  
+        "currency": "INR", 
+        "name": "Artlist", 
+        "description": "Pay & Book Artist", 
+        "image": "https://media.geeksforgeeks.org/wp-content/uploads/20210806114908/dummy-200x200.png", 
+        "order_id": res.id,   
+        "handler": (response:any)=>{ 
+          var event = new CustomEvent("payment.success", 
+          {
+              detail: response,
+              bubbles: true,
+              cancelable: true
+          }
+        );    
+        window.dispatchEvent(event);
+        }, 
+        "theme": { 
+            "color": "#2300a3" 
+        } 
+    }; 
+      let razorpayObject = new Razorpay(options);
+      razorpayObject.open();
+      razorpayObject.on('payment.failed',(response:any)=>{ 
+        console.log(response);
+      });
+    },
+    (err:any)=>{
+      console.log(err)
+    }
+  )
+}
 
-onPaymentDataAuthorized: google.payments.api.PaymentAuthorizedHandler = (paymentData:any) => {
-  console.log('payment authorized', paymentData);
-
-  return {
-    transactionState: 'SUCCESS',
-  };
-};
+@HostListener('window:payment.success', ['$event']) 
+onPaymentSuccess(event:any): void {
+  let payload = {
+    razorpayOrderId: event.detail.razorpay_order_id,
+    razorpayPaymentId: event.detail.razorpay_payment_id,
+    razorpaySignature: event.detail.razorpay_signature
+    }
+    this.apiService.verifyOrder(payload).subscribe(
+    (res:any) => {
+        // this.paymentId = res.message;
+        console.log(res)
+    },
+    (err:any) => {
+        console.log(err.error.message);
+    }
+    );
+}
 
 }

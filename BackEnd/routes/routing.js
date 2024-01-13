@@ -4,6 +4,12 @@ const userservice = require("../service/users");
 const jwt = require('jsonwebtoken');
 const verifyToken = require("../utilities/verifyToken");
 const validate = require("../utilities/validateData");
+const Razorpay = require('razorpay');
+const razorpayInstance = new Razorpay({
+  key_id: process.env.keyid, 
+  key_secret: process.env.keysecret 
+});
+const crypto = require('crypto');
 let skillList = [
   "Director",
   "Producer",
@@ -1184,6 +1190,46 @@ router.get('/reminder',(req,res,next)=>{
     next(err)
   })
 })
+
+// api to create razorpay order
+router.get('/createOrder', (req, res)=>{
+  
+  let options = {
+    amount: 50000,
+    currency: "INR"
+  };      
+    
+  razorpayInstance.orders.create(options,(err, order)=>{   
+      if(!err) {
+        res.json(order) 
+      }
+      else{
+        res.send(err); 
+      }
+    } 
+  )
+});
+
+// api to verify razorpay order
+router.post('/verifyOrder', (req, res)=>{  
+  const {razorpayOrderId, razorpayPaymentId,razorpaySignature} = req.body;
+
+  const key_secret = process.env.keysecret;
+
+  let hmac = crypto.createHmac('sha256', key_secret);  
+
+  // Passing the data to be hashed 
+  hmac.update(razorpayOrderId + "|" + razorpayPaymentId); 
+    
+  // Creating the hmac in the required format 
+  const generated_signature = hmac.digest('hex'); 
+
+  if(razorpaySignature===generated_signature){ 
+      res.json({success:true, message:"Payment has been verified"}) 
+  } 
+  else
+  res.json({success:false, message:"Payment verification failed"}) 
+});
 
 //router to test
 router.get('/test',(req,res,next)=>{

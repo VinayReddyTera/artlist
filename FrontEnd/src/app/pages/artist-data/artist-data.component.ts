@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ApiService } from '../services/api.service';
 import { EncryptionService } from '../services/encryption.service';
 import { FormBuilder, Validators, FormControl } from '@angular/forms';
+import { environment } from 'src/environments/environment';
 
 declare const $:any;
 
@@ -155,10 +156,10 @@ export class ArtistDataComponent implements OnInit{
     console.log(this.bookingForm.valid,this.bookingForm.value)
     if(this.bookingForm.valid){
       if(this.bookingForm.value.paid){
-        this.bookingForm.controls.commission.setValue(this.bookingForm.value.price*0.95);
+        this.bookingForm.controls.commission.setValue(this.bookingForm.value.price*environment.artistCommission);
       }
       else{
-        this.bookingForm.controls.commission.setValue(-(this.bookingForm.value.price*0.05));
+        this.bookingForm.controls.commission.setValue(-(this.bookingForm.value.price*(1-environment.artistCommission)));
       }
       if(type == 'fullDay'){
         for(let i of dates){

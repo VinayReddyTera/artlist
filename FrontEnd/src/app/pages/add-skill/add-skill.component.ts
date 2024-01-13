@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../services/api.service';
 import { FormBuilder, FormControl, Validators, FormArray, AbstractControl, FormGroup  } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { environment } from 'src/environments/environment.prod';
+import { environment } from 'src/environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EncryptionService } from '../services/encryption.service';
 

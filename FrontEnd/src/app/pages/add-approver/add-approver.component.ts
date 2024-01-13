@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from 'src/app/pages/services/api.service';
-import { environment } from 'src/environments/environment.prod';
+import { environment } from 'src/environments/environment';
 import { EncryptionService } from '../services/encryption.service';
 
 declare const $:any;

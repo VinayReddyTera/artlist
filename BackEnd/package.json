@@ -33,6 +33,7 @@
     "path": "^0.12.7",
     "pb-util": "^1.0.3",
     "qs": "^6.11.1",
+    "razorpay": "^2.9.2",
     "redis": "^4.6.5",
     "request-promise": "^4.2.6",
     "tesseract.js": "^4.0.3",
