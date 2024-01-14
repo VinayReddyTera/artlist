@@ -1192,10 +1192,10 @@ router.get('/reminder',(req,res,next)=>{
 })
 
 // api to create razorpay order
-router.get('/createOrder', (req, res)=>{
+router.post('/createOrder', (req, res)=>{
   
   let options = {
-    amount: 50000,
+    amount: req.body.price,
     currency: "INR"
   };      
     

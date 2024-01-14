@@ -353,7 +353,7 @@
                       </div>
                     </div>
                     <div class="mt-3 d-grid">
-                      <button *ngIf="wishesForm.value.paid" class="btn btn-success" type="button" (click)="razor()">Pay and Book Now</button>
+                      <button *ngIf="wishesForm.value.paid" class="btn btn-success" type="button" (click)="razor('wishes')">Pay and Book Now</button>
                       <button *ngIf="!wishesForm.value.paid" class="btn btn-primary" type="submit">Book Now</button>
                     </div>
                   </form>
@@ -455,7 +455,7 @@
                           </div>
                         </div>
                     <div class="mt-3 d-grid">
-                      <button *ngIf="inaugForm.value.paid" class="btn btn-success" type="button" (click)="razor()">Pay and Book Now</button>
+                      <button *ngIf="inaugForm.value.paid" class="btn btn-success" type="button" (click)="razor('inaug')">Pay and Book Now</button>
                       <button *ngIf="!inaugForm.value.paid" class="btn btn-primary" type="submit">Book Now</button>
                     </div>
                   </form>

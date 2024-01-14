@@ -76,38 +76,7 @@ states = [
   "Puducherry"
 ];
 availableData: any;
-payRequest:google.payments.api.PaymentDataRequest={
-  apiVersion: 2,
-  apiVersionMinor: 0,
-  allowedPaymentMethods: [
-    {
-      type: 'CARD',
-      parameters: {
-        allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
-        allowedCardNetworks: ['AMEX', 'VISA', 'MASTERCARD']
-      },
-      tokenizationSpecification: {
-        type: 'PAYMENT_GATEWAY',
-        parameters: {
-          gateway: 'example',
-          gatewayMerchantId: 'exampleGatewayMerchantId'
-        }
-      }
-    }
-  ],
-  merchantInfo: {
-    merchantId: 'BCR2DN4TZKV67QBB',
-    merchantName: 'Demo Merchant'
-  },
-  transactionInfo: {
-    totalPriceStatus: 'FINAL',
-    totalPriceLabel: 'Total',
-    totalPrice: '100.00',
-    currencyCode: 'USD',
-    countryCode: 'US'
-  },
-  callbackIntents : ['PAYMENT_AUTHORIZATION']
-};
+paymentId:any;
 
 constructor(private apiService:ApiService,private router:Router,private encrypt:EncryptionService,private fb: FormBuilder){}
 
@@ -515,6 +484,7 @@ confirmbookWishes(){
   if(this.wishesForm.valid){
     if(this.wishesForm.value.paid){
       this.wishesForm.controls.commission.setValue(this.wishesForm.value.price*environment.artistCommission);
+      this.wishesForm.addControl('paymentId', new FormControl(this.paymentId, Validators.required));
     }
     else{
       this.wishesForm.controls.commission.setValue(-(this.wishesForm.value.price*(1-environment.artistCommission)));
@@ -568,6 +538,7 @@ confirmbookInaug(){
   if(this.inaugForm.valid){
     if(this.inaugForm.value.paid){
       this.inaugForm.controls.commission.setValue(this.inaugForm.value.price*environment.artistCommission);
+      this.wishesForm.addControl('paymentId', new FormControl(this.paymentId, Validators.required));
     }
     else{
       this.inaugForm.controls.commission.setValue(-(this.inaugForm.value.price*(1-environment.artistCommission)));
@@ -687,9 +658,47 @@ buttonEvent(i:any,date:any,event:any){
   document.getElementById(event.target.id)?.classList.add('btn-clicked');
 }
 
-razor(){
+razor(data:any){
+  let payload;
+  if(data == 'wishes'){
+    if(this.wishesForm.valid){
+      console.log(this.wishesForm.value);
+      payload = {
+        price:this.wishesForm.value.price*100
+      }
+      this.createOrder(payload,data);
+    }
+    else{
+      const controls = this.wishesForm.controls;
+      for (const name in controls) {
+          if (controls[name].invalid) {
+              controls[name].markAsDirty()
+          }
+      }
+    }
+  }
+  else{
+    if(this.inaugForm.valid){
+      console.log(this.inaugForm.value);
+      payload = {
+        price:this.inaugForm.value.price*100
+      }
+      this.createOrder(payload,data);
+    }
+    else{
+      const controls = this.inaugForm.controls;
+      for (const name in controls) {
+          if (controls[name].invalid) {
+              controls[name].markAsDirty()
+          }
+      }
+    }
+  }
+}
 
-  this.apiService.createOrder().subscribe(
+createOrder(payload:any,data:any){
+  this.apiService.initiateLoading(true)
+  this.apiService.createOrder(payload).subscribe(
     (res:any)=>{
       let options = { 
         "key": environment.keyid,  
@@ -700,6 +709,7 @@ razor(){
         "image": "https://media.geeksforgeeks.org/wp-content/uploads/20210806114908/dummy-200x200.png", 
         "order_id": res.id,   
         "handler": (response:any)=>{ 
+          response.type = data;
           var event = new CustomEvent("payment.success", 
           {
               detail: response,
@@ -722,7 +732,9 @@ razor(){
     (err:any)=>{
       console.log(err)
     }
-  )
+  ).add(()=>{
+    this.apiService.initiateLoading(false)
+  })
 }
 
 @HostListener('window:payment.success', ['$event']) 
@@ -732,9 +744,16 @@ onPaymentSuccess(event:any): void {
     razorpayPaymentId: event.detail.razorpay_payment_id,
     razorpaySignature: event.detail.razorpay_signature
     }
+    this.paymentId = [event.detail.razorpay_payment_id]
+    console.log(this.paymentId)
     this.apiService.verifyOrder(payload).subscribe(
     (res:any) => {
-        // this.paymentId = res.message;
+        if(event.detail.type == 'wishes'){
+          this.confirmbookWishes();
+        }
+        else{
+          this.confirmbookInaug();
+        }
         console.log(res)
     },
     (err:any) => {

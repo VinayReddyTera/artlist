@@ -251,8 +251,8 @@ export class ApiService {
     return this.http.post(environment.domain+"bookInaug",payload).pipe(catchError(this.handleError.bind(this)))
   }
 
-  createOrder():Observable<any>{
-    return this.http.get(environment.domain+"createOrder").pipe(catchError(this.handleError.bind(this)))
+  createOrder(payload:any):Observable<any>{
+    return this.http.post(environment.domain+"createOrder",payload).pipe(catchError(this.handleError.bind(this)))
   }
 
   verifyOrder(payload:any):Observable<any>{
