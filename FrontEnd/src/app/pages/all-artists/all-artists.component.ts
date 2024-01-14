@@ -700,34 +700,47 @@ createOrder(payload:any,data:any){
   this.apiService.initiateLoading(true)
   this.apiService.createOrder(payload).subscribe(
     (res:any)=>{
-      let options = { 
-        "key": environment.keyid,  
-        "amount": "50000",  
-        "currency": "INR", 
-        "name": "Artlist", 
-        "description": "Pay & Book Artist", 
-        "image": "https://media.geeksforgeeks.org/wp-content/uploads/20210806114908/dummy-200x200.png", 
-        "order_id": res.id,   
-        "handler": (response:any)=>{ 
-          response.type = data;
-          var event = new CustomEvent("payment.success", 
-          {
-              detail: response,
-              bubbles: true,
-              cancelable: true
-          }
-        );    
-        window.dispatchEvent(event);
-        }, 
-        "theme": { 
-            "color": "#2300a3" 
-        } 
-    }; 
-      let razorpayObject = new Razorpay(options);
-      razorpayObject.open();
-      razorpayObject.on('payment.failed',(response:any)=>{ 
-        console.log(response);
-      });
+      if(res.status == 200){
+        let options = { 
+          "key": environment.keyid,  
+          "amount": payload.price,  
+          "currency": "INR", 
+          "name": "Artlist", 
+          "description": "Pay & Book Artist", 
+          "image": environment.payDetails.image, 
+          "order_id": res.data.id,
+          "handler": (response:any)=>{ 
+            response.type = data;
+            response.price = payload.price
+            var event = new CustomEvent("payment.success", 
+            {
+                detail: response,
+                bubbles: true,
+                cancelable: true
+            }
+          );    
+          window.dispatchEvent(event);
+          }, 
+          "theme": { 
+              "color": environment.payDetails.color
+          } 
+      }; 
+        let razorpayObject = new Razorpay(options);
+        razorpayObject.open();
+        razorpayObject.on('payment.failed',(response:any)=>{ 
+          console.log(response);
+        });
+      }
+      else if(res.status == 204){
+        let msgData = {
+          severity : "error",
+          summary : 'Error',
+          detail : res.data,
+          life : 5000
+        }
+        this.apiService.sendMessage(msgData);
+        return
+      }
     },
     (err:any)=>{
       console.log(err)
@@ -746,8 +759,15 @@ onPaymentSuccess(event:any): void {
     }
     this.paymentId = [event.detail.razorpay_payment_id]
     console.log(this.paymentId)
+    this.apiService.initiateLoading(true)
     this.apiService.verifyOrder(payload).subscribe(
     (res:any) => {
+      if(res.status == 200){
+        let mailPayload = {
+          paymentId : event.detail.razorpay_payment_id,
+          price : event.detail.price
+        }
+        this.apiService.sendMail(mailPayload)
         if(event.detail.type == 'wishes'){
           this.confirmbookWishes();
         }
@@ -755,11 +775,24 @@ onPaymentSuccess(event:any): void {
           this.confirmbookInaug();
         }
         console.log(res)
+      }
+      else if(res.status == 204){
+        let msgData = {
+          severity : "error",
+          summary : 'Error',
+          detail : res.data,
+          life : 5000
+        }
+        this.apiService.sendMessage(msgData);
+        return
+      }
     },
     (err:any) => {
         console.log(err.error.message);
     }
-    );
+    ).add(()=>{
+      this.apiService.initiateLoading(false)
+    });
 }
 
 }

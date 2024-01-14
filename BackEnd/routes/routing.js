@@ -1183,7 +1183,7 @@ router.post('/bookInaug',verifyToken,(req,res,next)=>{
 })
 
 //router to get reminder
-router.get('/reminder',(req,res,next)=>{
+router.get('/reminder',verifyToken,(req,res,next)=>{
   userservice.getReminder().then((data)=>{
     return res.json(data)
   }).catch((err)=>{
@@ -1191,8 +1191,18 @@ router.get('/reminder',(req,res,next)=>{
   })
 })
 
+//router to send pay mail
+router.post('/sendMail',verifyToken,(req,res,next)=>{
+  let payload = jwt.decode(req.headers.authorization).data;
+  userservice.sendPayMail(req.body,payload).then((data)=>{
+    return res.json(data)
+  }).catch((err)=>{
+    next(err)
+  })
+})
+
 // api to create razorpay order
-router.post('/createOrder', (req, res)=>{
+router.post('/createOrder',verifyToken, (req, res)=>{
   
   let options = {
     amount: req.body.price,
@@ -1201,17 +1211,25 @@ router.post('/createOrder', (req, res)=>{
     
   razorpayInstance.orders.create(options,(err, order)=>{   
       if(!err) {
-        res.json(order) 
+        let response = {
+          status : 200,
+          data: order
+        }
+        res.json(response) 
       }
       else{
-        res.send(err); 
+        let response = {
+          status : 204,
+          data: 'Unable to connect payments server'
+        }
+        res.json(response)
       }
     } 
   )
 });
 
 // api to verify razorpay order
-router.post('/verifyOrder', (req, res)=>{  
+router.post('/verifyOrder',verifyToken, (req, res)=>{  
   const {razorpayOrderId, razorpayPaymentId,razorpaySignature} = req.body;
 
   const key_secret = process.env.keysecret;
@@ -1225,10 +1243,14 @@ router.post('/verifyOrder', (req, res)=>{
   const generated_signature = hmac.digest('hex'); 
 
   if(razorpaySignature===generated_signature){ 
-      res.json({success:true, message:"Payment has been verified"}) 
+    let response = {
+      status : 200,
+      data: 'Payment Verified'
+    }
+    res.json(response)
   } 
   else
-  res.json({success:false, message:"Payment verification failed"}) 
+  res.json({status:204, data:"Payment verification failed"}) 
 });
 
 //router to test

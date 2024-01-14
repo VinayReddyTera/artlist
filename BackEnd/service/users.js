@@ -2198,6 +2198,36 @@ userService.bookInaug=async(payload)=>{
   }
 }
 
+userService.sendPayMail = (payData,userData) =>{
+  let payload1 = {
+    "subject" : `Amount Paid`,
+    "email" : userData.email,
+    "body" : '',
+    "attachment" : ""
+  }
+  let data = {
+    "button": false,
+    "name": userData.name,
+    "url": false,
+    "body": `You made a payment of rupees ${payData.price} to Artlist with Payment Id : ${payData.paymentId}. Keep this payment id for future reference.`,
+  }
+  let templatePath = 'templates/welcome.html';
+  ejs.renderFile(templatePath, data, (err, html) => {
+    if (err) {
+      console.log(err)
+    }
+    else {
+      payload1.body = html;
+      userService.sendMail(payload1)
+    }
+  })
+  let res = {
+    status: 200,
+    data: "mail sent"
+  }
+  return res
+}
+
 userService.test=()=>{
   return userDB.test().then((data)=>{
     if(data){
