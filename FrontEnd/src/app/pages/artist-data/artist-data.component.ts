@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../services/api.service';
 import { EncryptionService } from '../services/encryption.service';
 import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 
+declare const Razorpay: any;
 declare const $:any;
 
 @Component({
@@ -25,76 +26,11 @@ export class ArtistDataComponent implements OnInit{
   price:any;
   checkAvailability : boolean = false;
   minDate : Date = new Date(new Date().setDate(new Date().getDate()+1));
-  states = [
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chhattisgarh",
-    "Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    "Madhya Pradesh",
-    "Maharashtra",
-    "Manipur",
-    "Meghalaya",
-    "Mizoram",
-    "Nagaland",
-    "Odisha",
-    "Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Tamil Nadu",
-    "Telangana",
-    "Tripura",
-    "Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
-    "Andaman and Nicobar Islands",
-    "Chandigarh",
-    "Dadra and Nagar Haveli and Daman and Diu",
-    "Lakshadweep",
-    "Delhi",
-    "Puducherry"
-  ];
-  payRequest:google.payments.api.PaymentDataRequest={
-    apiVersion: 2,
-    apiVersionMinor: 0,
-    allowedPaymentMethods: [
-      {
-        type: 'CARD',
-        parameters: {
-          allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
-          allowedCardNetworks: ['AMEX', 'VISA', 'MASTERCARD']
-        },
-        tokenizationSpecification: {
-          type: 'PAYMENT_GATEWAY',
-          parameters: {
-            gateway: 'example',
-            gatewayMerchantId: 'exampleGatewayMerchantId'
-          }
-        }
-      }
-    ],
-    merchantInfo: {
-      merchantId: '12345678901234567890',
-      merchantName: 'Demo Merchant'
-    },
-    transactionInfo: {
-      totalPriceStatus: 'FINAL',
-      totalPriceLabel: 'Total',
-      totalPrice: '1.00',
-      currencyCode: 'INR',
-      countryCode: 'IN'
-    },
-    callbackIntents : ['PAYMENT_AUTHORIZATION']
-  };
+  paymentId:any;
+  states:any;
 
   ngOnInit(): void {
+    this.states = environment.states;
     if(localStorage.getItem('artistData')){
       this.artistData = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('artistData')));
     }
@@ -459,20 +395,126 @@ export class ArtistDataComponent implements OnInit{
     }
   }
 
-  onLoadPaymentData = (event: any): void => {
-    console.log('load payment data', event.detail);
-  };
-
-  onError = (event: any): void => {
-    console.error('error', event.error);
-  };
-
-  onPaymentDataAuthorized: google.payments.api.PaymentAuthorizedHandler = (paymentData:any) => {
-    console.log('payment authorized', paymentData);
-
-    return {
-      transactionState: 'SUCCESS',
-    };
-  };
+  razor(){
+    let payload;
+    if(this.bookingForm.valid){
+      console.log(this.bookingForm.value);
+      if(!this.bookingForm.value.price){
+        let msgData = {
+          severity : "error",
+          summary : 'Error',
+          detail : 'Price is mandatory',
+          life : 5000
+        }
+        this.apiservice.sendMessage(msgData);
+        return
+      }
+      payload = {
+        price:this.bookingForm.value.price*100
+      }
+      this.createOrder(payload);
+    }
+    else{
+      const controls = this.bookingForm.controls;
+      for (const name in controls) {
+          if (controls[name].invalid) {
+              controls[name].markAsDirty()
+          }
+      }
+    }
+  }
+  
+  createOrder(payload:any){
+    this.apiservice.initiateLoading(true)
+    this.apiservice.createOrder(payload).subscribe(
+      (res:any)=>{
+        if(res.status == 200){
+          let options = { 
+            "key": environment.keyid,  
+            "amount": payload.price,  
+            "currency": "INR", 
+            "name": "Artlist", 
+            "description": "Pay & Book Artist", 
+            "image": environment.payDetails.image, 
+            "order_id": res.data.id,
+            "handler": (response:any)=>{
+              response.price = payload.price
+              var event = new CustomEvent("payment.success", 
+              {
+                  detail: response,
+                  bubbles: true,
+                  cancelable: true
+              }
+            );    
+            window.dispatchEvent(event);
+            }, 
+            "theme": { 
+                "color": environment.payDetails.color
+            } 
+        }; 
+          let razorpayObject = new Razorpay(options);
+          razorpayObject.open();
+          razorpayObject.on('payment.failed',(response:any)=>{ 
+            console.log(response);
+          });
+        }
+        else if(res.status == 204){
+          let msgData = {
+            severity : "error",
+            summary : 'Error',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiservice.sendMessage(msgData);
+          return
+        }
+      },
+      (err:any)=>{
+        console.log(err)
+      }
+    ).add(()=>{
+      this.apiservice.initiateLoading(false)
+    })
+  }
+  
+  @HostListener('window:payment.success', ['$event']) 
+  onPaymentSuccess(event:any): void {
+    let payload = {
+      razorpayOrderId: event.detail.razorpay_order_id,
+      razorpayPaymentId: event.detail.razorpay_payment_id,
+      razorpaySignature: event.detail.razorpay_signature
+      }
+      this.paymentId = [event.detail.razorpay_payment_id]
+      console.log(this.paymentId)
+      this.apiservice.initiateLoading(true)
+      this.apiservice.verifyOrder(payload).subscribe(
+      (res:any) => {
+        if(res.status == 200){
+          let mailPayload = {
+            paymentId : event.detail.razorpay_payment_id,
+            price : event.detail.price
+          }
+          this.apiservice.sendMail(mailPayload)
+          this.bookNow();
+          console.log(res)
+        }
+        else if(res.status == 204){
+          let msgData = {
+            severity : "error",
+            summary : 'Error',
+            detail : res.data,
+            life : 5000
+          }
+          this.apiservice.sendMessage(msgData);
+          return
+        }
+      },
+      (err:any) => {
+          console.log(err.error.message);
+      }
+      ).add(()=>{
+        this.apiservice.initiateLoading(false)
+      });
+  }
 
 }

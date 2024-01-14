@@ -1254,7 +1254,7 @@ router.post('/verifyOrder',verifyToken, (req, res)=>{
 });
 
 //router to test
-router.get('/test',(req,res,next)=>{
+router.get('/test',verifyToken,(req,res,next)=>{
   res.json('ok')
   // userservice.test().then((data)=>{
   //   return res.json(data)

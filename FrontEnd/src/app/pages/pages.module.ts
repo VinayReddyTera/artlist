@@ -72,7 +72,6 @@ import { historyRenderer } from './pending-withdraws/viewHistory';
 import { withdrawPayRenderer } from './pending-withdraws/pay';
 import { StatusPipe } from './user-history/status.pipe';
 import { WalletTransactionsComponent } from './wallet-transactions/wallet-transactions.component';
-import { GooglePayButtonModule } from '@google-pay/button-angular';
 
 @NgModule({
   declarations: [
@@ -152,8 +151,7 @@ import { GooglePayButtonModule } from '@google-pay/button-angular';
     MultiSelectModule,
     CalendarModule,
     PaginatorModule,
-    RatingModule,
-    GooglePayButtonModule
+    RatingModule
   ]
 })
 export class PagesModule { }

@@ -10,7 +10,7 @@
                 <!-- <input type="text" class="form-control" formControlName="name" placeholder="Enter Job Description Title"> -->
                 <select class="form-control select2" id="skillName" formControlName="name">
                     <option value="0" disabled selected>--select--</option>
-                    <option *ngFor="let skill of skillList" [value]="skill">{{skill}}</option>
+                    <option *ngFor="let skill of skillList" [value]="skill.name">{{skill.name}}</option>
                   </select>
                 <div *ngIf="skillForm.controls.name.errors?.required && skillForm.controls.name.dirty" class="required-message text-danger">
                   <small>Required Field!</small>

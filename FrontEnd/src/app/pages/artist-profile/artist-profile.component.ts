@@ -32,67 +32,8 @@ export class ArtistProfileComponent implements OnInit{
     'showWallet':false
   }
   items: any;
-  states = [
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chhattisgarh",
-    "Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    "Madhya Pradesh",
-    "Maharashtra",
-    "Manipur",
-    "Meghalaya",
-    "Mizoram",
-    "Nagaland",
-    "Odisha",
-    "Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Tamil Nadu",
-    "Telangana",
-    "Tripura",
-    "Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
-    "Andaman and Nicobar Islands",
-    "Chandigarh",
-    "Dadra and Nagar Haveli and Daman and Diu",
-    "Lakshadweep",
-    "Delhi",
-    "Puducherry"
-  ];
-  languages = [
-    {"name": "Hindi"},
-    {"name": "Bengali"},
-    {"name": "English"},
-    {"name": "Telugu"},
-    {"name": "Marathi"},
-    {"name": "Tamil"},
-    {"name": "Urdu"},
-    {"name": "Gujarati"},
-    {"name": "Kannada"},
-    {"name": "Odia"},
-    {"name": "Punjabi"},
-    {"name": "Malayalam"},
-    {"name": "Assamese"},
-    {"name": "Sanskrit"},
-    {"name": "Konkani"},
-    {"name": "Nepali"},
-    {"name": "Manipuri"},
-    {"name": "Sindhi"},
-    {"name": "Maithili"},
-    {"name": "Dogri"},
-    {"name": "Bodo"},
-    {"name": "Kashmiri"},
-    {"name": "Santhali"}
-  ];
+  states:any;
+  languages:any;
   availableDays:any;
   availableArray:any;
   dayMappings:any = {
@@ -112,6 +53,8 @@ export class ArtistProfileComponent implements OnInit{
     private encrypt:EncryptionService,private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
+    this.languages = environment.languages;
+    this.states = environment.states;
     this.apiService.initiateLoading(true)
     this.apiService.getAvailable().subscribe(
       (res:any)=>{

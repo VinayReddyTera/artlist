@@ -21,76 +21,18 @@ export class SignupComponent implements OnInit {
   errorMessage:any;
   showPassword: boolean = false;
   showConfirmPassword : boolean = false;
-  // set the currenr year
   year: number = new Date().getFullYear();
   role : any;
-  states = [
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chhattisgarh",
-    "Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    "Madhya Pradesh",
-    "Maharashtra",
-    "Manipur",
-    "Meghalaya",
-    "Mizoram",
-    "Nagaland",
-    "Odisha",
-    "Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Tamil Nadu",
-    "Telangana",
-    "Tripura",
-    "Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
-    "Andaman and Nicobar Islands",
-    "Chandigarh",
-    "Dadra and Nagar Haveli and Daman and Diu",
-    "Lakshadweep",
-    "Delhi",
-    "Puducherry"
-  ];
-  languages = [
-    {"name": "Hindi"},
-    {"name": "Bengali"},
-    {"name": "English"},
-    {"name": "Telugu"},
-    {"name": "Marathi"},
-    {"name": "Tamil"},
-    {"name": "Urdu"},
-    {"name": "Gujarati"},
-    {"name": "Kannada"},
-    {"name": "Odia"},
-    {"name": "Punjabi"},
-    {"name": "Malayalam"},
-    {"name": "Assamese"},
-    {"name": "Sanskrit"},
-    {"name": "Konkani"},
-    {"name": "Nepali"},
-    {"name": "Manipuri"},
-    {"name": "Sindhi"},
-    {"name": "Maithili"},
-    {"name": "Dogri"},
-    {"name": "Bodo"},
-    {"name": "Kashmiri"},
-    {"name": "Santhali"}
-  ];
+  states:any;
+  languages:any;
 
   // tslint:disable-next-line: max-line-length
   constructor(private formBuilder: FormBuilder, private activeRoute : ActivatedRoute,
      private router: Router,private apiService:ApiService) { }
 
   ngOnInit() {
+    this.states = environment.states;
+    this.languages = environment.languages;
     this.role = this.activeRoute.snapshot.params['type']
     this.signupForm = this.formBuilder.group({
       name: ['', Validators.required],
