@@ -10,6 +10,7 @@ const razorpayInstance = new Razorpay({
   key_secret: process.env.keysecret 
 });
 const crypto = require('crypto');
+const e = require("express");
 let skillList = [
   "Director",
   "Producer",
@@ -1191,16 +1192,6 @@ router.get('/reminder',verifyToken,(req,res,next)=>{
   })
 })
 
-//router to send pay mail
-router.post('/sendMail',verifyToken,(req,res,next)=>{
-  let payload = jwt.decode(req.headers.authorization).data;
-  userservice.sendPayMail(req.body,payload).then((data)=>{
-    return res.json(data)
-  }).catch((err)=>{
-    next(err)
-  })
-})
-
 // api to create razorpay order
 router.post('/createOrder',verifyToken, (req, res)=>{
   
@@ -1251,6 +1242,32 @@ router.post('/verifyOrder',verifyToken, (req, res)=>{
   } 
   else
   res.json({status:204, data:"Payment verification failed"}) 
+});
+
+// api to verify razorpay order
+router.post('/verify', (req, res)=>{
+  let shasum = crypto.createHmac('sha256',process.env.webhookSecret);
+  shasum.update(JSON.stringify(req.body));
+  let digest = shasum.digest('hex');
+  if(digest === req.headers['x-razorpay-signature']){
+    let payload = {
+      id : req.body.payload.payment.entity.notes.id,
+      paymentId : req.body.payload.payment.entity.id,
+      price : req.body.payload.payment.entity.amount,
+      email : req.body.payload.payment.entity.email,
+      name : req.body.payload.payment.entity.name
+    }
+    userservice.updatePayment(payload).then((data)=>{
+      if(data){
+        return res.status(200).json({status:'ok'})
+      }
+      else{
+        return res.status(400).json({status:400})
+      }
+    }).catch((err)=>{
+      next(err)
+    })
+  }
 });
 
 //router to test

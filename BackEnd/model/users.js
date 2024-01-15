@@ -1586,7 +1586,8 @@ userDB.bookArtist = async (payload) => {
     let res = {
       status: 200,
       sendMail:true,
-      data: 'Booking Successfull'
+      data: 'Booking Successfull',
+      id:data._id
     }
     return res
   }
@@ -3021,7 +3022,8 @@ userDB.bookWishes = async (payload) => {
   if (data) {
     let res = {
       status: 200,
-      data: 'Booking Successfull'
+      data: 'Booking Successfull',
+      id : data._id
     }
     return res
   }
@@ -3046,7 +3048,8 @@ userDB.bookInaug = async (payload) => {
   if (data) {
     let res = {
       status: 200,
-      data: 'Booking Successfull'
+      data: 'Booking Successfull',
+      id : data._id
     }
     return res
   }
@@ -3056,6 +3059,17 @@ userDB.bookInaug = async (payload) => {
       data: 'Unable to book artist'
     }
     return res
+  }
+}
+
+userDB.updatePayment = async(payload) => {
+  const collection = await connection.history();
+  let data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{paid:true,paymentType:'online'},$push:{paymentId:payload.paymentId}})
+  if (data.modifiedCount == 1) {
+    return true
+  }
+  else {
+    return null
   }
 }
 

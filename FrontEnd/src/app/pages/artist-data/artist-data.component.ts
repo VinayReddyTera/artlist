@@ -29,6 +29,7 @@ export class ArtistDataComponent implements OnInit{
   paymentId:any;
   states:any;
   userData:any;
+  payNow:boolean=true;
 
   ngOnInit(): void {
     if(localStorage.getItem('data')){
@@ -51,9 +52,7 @@ export class ArtistDataComponent implements OnInit{
       price:[''],
       modifiedBy:['user'],
       pricing:[this.artistData.skill.pricing],
-      commission:[''],
-      paid:[true],
-      paymentType:['online']
+      commission:['']
     })
   }
 
@@ -95,12 +94,7 @@ export class ArtistDataComponent implements OnInit{
     let isFound = false;
     console.log(this.bookingForm.valid,this.bookingForm.value)
     if(this.bookingForm.valid){
-      if(this.bookingForm.value.paid){
-        this.bookingForm.controls.commission.setValue(this.bookingForm.value.price*environment.artistCommission);
-      }
-      else{
-        this.bookingForm.controls.commission.setValue(-(this.bookingForm.value.price*(1-environment.artistCommission)));
-      }
+      this.bookingForm.controls.commission.setValue(-(this.bookingForm.value.price*(1-environment.artistCommission)));
       if(type == 'fullDay'){
         for(let i of dates){
           if(new Date(i).toLocaleDateString() == new Date(date).toLocaleDateString()){
@@ -170,9 +164,14 @@ export class ArtistDataComponent implements OnInit{
               detail : res.data,
               life : 5000
             }
-          this.apiservice.sendMessage(msgData);
+            if(this.payNow){
+              this.razor(res.id,this.bookingForm.value.price)
+            }
+            else{
+              this.apiservice.sendMessage(msgData);
+              $('#booking').modal('hide')
+            }
           this.apiCalled = false;
-          $('#booking').modal('hide')
           }
           else if(res.status == 204){
             let msgData = {
@@ -390,45 +389,25 @@ export class ArtistDataComponent implements OnInit{
 
   updatePay(data:any){
     if(data == 'paynow'){
-      this.bookingForm.controls.paid.setValue(true);
-      this.bookingForm.addControl('paymentType', new FormControl('online', Validators.required));
+      this.payNow = true;
+      // this.bookingForm.controls.paid.setValue(true);
+      // this.bookingForm.addControl('paymentType', new FormControl('online', Validators.required));
     }
     else{
-      this.bookingForm.controls.paid.setValue(false);
-      this.bookingForm.removeControl('paymentType');
+      this.payNow = false;
+      // this.bookingForm.controls.paid.setValue(false);
+      // this.bookingForm.removeControl('paymentType');
     }
   }
 
-  razor(){
-    let payload;
-    if(this.bookingForm.valid){
-      console.log(this.bookingForm.value);
-      if(!this.bookingForm.value.price){
-        let msgData = {
-          severity : "error",
-          summary : 'Error',
-          detail : 'Price is mandatory',
-          life : 5000
-        }
-        this.apiservice.sendMessage(msgData);
-        return
-      }
-      payload = {
-        price:this.bookingForm.value.price*100
-      }
-      this.createOrder(payload);
+  razor(id:any,price:any){
+    let payload = {
+      price:price*100
     }
-    else{
-      const controls = this.bookingForm.controls;
-      for (const name in controls) {
-          if (controls[name].invalid) {
-              controls[name].markAsDirty()
-          }
-      }
-    }
+    this.createOrder(payload,id);
   }
   
-  createOrder(payload:any){
+  createOrder(payload:any,id:any){
     this.apiservice.initiateLoading(true)
     this.apiservice.createOrder(payload).subscribe(
       (res:any)=>{
@@ -441,30 +420,25 @@ export class ArtistDataComponent implements OnInit{
             "description": "Pay & Book Artist", 
             "image": environment.payDetails.image, 
             "order_id": res.data.id,
+            "notes":{
+              "id" : id
+            },
             "prefill": {
               "contact":this.userData.phoneNo,
               "name": this.userData.name,   
               "email": this.userData.email
              },
              "modal":{
-               "backdropclose" : false,
-               "escape" : false,
-               "confirm_close" : true,
-               "ondismiss":(response:any)=>{
-                 console.log(response)
-               }
-             },
-            "handler": (response:any)=>{
-              response.price = payload.price
-              var event = new CustomEvent("payment.success", 
-              {
-                  detail: response,
-                  bubbles: true,
-                  cancelable: true
+              "backdropclose" : false,
+              "escape" : false,
+              "confirm_close" : true,
+              "ondismiss":()=>{
+                $('#booking').modal('hide')
               }
-            );    
-            window.dispatchEvent(event);
-            }, 
+            },
+            "handler": (response:any)=>{
+              $('#booking').modal('hide')
+            },
             "theme": { 
                 "color": environment.payDetails.color
             } 
@@ -492,46 +466,6 @@ export class ArtistDataComponent implements OnInit{
     ).add(()=>{
       this.apiservice.initiateLoading(false)
     })
-  }
-  
-  @HostListener('window:payment.success', ['$event']) 
-  onPaymentSuccess(event:any): void {
-    let payload = {
-      razorpayOrderId: event.detail.razorpay_order_id,
-      razorpayPaymentId: event.detail.razorpay_payment_id,
-      razorpaySignature: event.detail.razorpay_signature
-      }
-      this.paymentId = [event.detail.razorpay_payment_id]
-      console.log(this.paymentId)
-      this.apiservice.initiateLoading(true)
-      this.apiservice.verifyOrder(payload).subscribe(
-      (res:any) => {
-        if(res.status == 200){
-          let mailPayload = {
-            paymentId : event.detail.razorpay_payment_id,
-            price : event.detail.price
-          }
-          this.apiservice.sendMail(mailPayload).subscribe()
-          this.bookNow();
-          console.log(res)
-        }
-        else if(res.status == 204){
-          let msgData = {
-            severity : "error",
-            summary : 'Error',
-            detail : res.data,
-            life : 5000
-          }
-          this.apiservice.sendMessage(msgData);
-          return
-        }
-      },
-      (err:any) => {
-          console.log(err.error.message);
-      }
-      ).add(()=>{
-        this.apiservice.initiateLoading(false)
-      });
   }
 
 }

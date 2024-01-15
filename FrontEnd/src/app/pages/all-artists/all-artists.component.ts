@@ -78,6 +78,8 @@ states = [
 availableData: any;
 paymentId:any;
 userData:any;
+wishesPayNow:boolean = true;
+inaugPayNow:boolean = true;
 
 constructor(private apiService:ApiService,private router:Router,private encrypt:EncryptionService,private fb: FormBuilder){}
 
@@ -94,8 +96,6 @@ ngOnInit() {
     price:[''],
     commission:[''],
     wishes:[true],
-    paid:[true],
-    paymentType:['online'],
     artistName:[''],
     artistPhone:[''],
     artistEmail:['']
@@ -109,9 +109,7 @@ ngOnInit() {
     price:[''],
     commission:[''],
     inaug:[true],
-    paid:[true],
     slot:['',[Validators.required]],
-    paymentType:['online'],
     artistName:[''],
     artistPhone:[''],
     artistEmail:[''],
@@ -448,15 +446,15 @@ this.inaugForm.controls.artistEmail.setValue(data.email);
 $('#bookInaug').modal('show')
 }
 
-bookWishes(data:any){
-console.log(data);
-this.price = data.wishesPrice;
-this.wishesForm.controls.price.setValue(data.wishesPrice);
-this.wishesForm.controls.artistId.setValue(data._id);
-this.wishesForm.controls.artistName.setValue(data.name);
-this.wishesForm.controls.artistPhone.setValue(data.phoneNo);
-this.wishesForm.controls.artistEmail.setValue(data.email);
-$('#bookWishes').modal('show')
+bookWishes(data: any) {
+  console.log(data);
+  this.price = data.wishesPrice;
+  this.wishesForm.controls.price.setValue(data.wishesPrice);
+  this.wishesForm.controls.artistId.setValue(data._id);
+  this.wishesForm.controls.artistName.setValue(data.name);
+  this.wishesForm.controls.artistPhone.setValue(data.phoneNo);
+  this.wishesForm.controls.artistEmail.setValue(data.email);
+  $('#bookWishes').modal('show')
 }
 
 get g() { return this.wishesForm.controls; }
@@ -464,35 +462,33 @@ get f() { return this.inaugForm.controls; }
 
 updateWishesPay(data:any){
   if(data == 'paynow'){
-    this.wishesForm.controls.paid.setValue(true);
-    this.wishesForm.addControl('paymentType', new FormControl('online', Validators.required));
+    // this.wishesForm.controls.paid.setValue(true);
+    // this.wishesForm.addControl('paymentType', new FormControl('online', Validators.required));
+    this.wishesPayNow = true;
   }
   else{
-    this.wishesForm.controls.paid.setValue(false);
-    this.wishesForm.removeControl('paymentType');
+    this.wishesPayNow = false;
+    // this.wishesForm.controls.paid.setValue(false);
+    // this.wishesForm.removeControl('paymentType');
   }
 }
 
 updateInaugPay(data:any){
   if(data == 'paynow'){
-    this.inaugForm.controls.paid.setValue(true);
-    this.inaugForm.addControl('paymentType', new FormControl('online', Validators.required));
+    this.inaugPayNow = true;
+    // this.inaugForm.controls.paid.setValue(true);
+    // this.inaugForm.addControl('paymentType', new FormControl('online', Validators.required));
   }
   else{
-    this.inaugForm.controls.paid.setValue(false);
-    this.inaugForm.removeControl('paymentType');
+    this.inaugPayNow = false;
+    // this.inaugForm.controls.paid.setValue(false);
+    // this.inaugForm.removeControl('paymentType');
   }
 }
 
 confirmbookWishes(){
   if(this.wishesForm.valid){
-    if(this.wishesForm.value.paid){
-      this.wishesForm.controls.commission.setValue(this.wishesForm.value.price*environment.artistCommission);
-      this.wishesForm.addControl('paymentId', new FormControl(this.paymentId, Validators.required));
-    }
-    else{
-      this.wishesForm.controls.commission.setValue(-(this.wishesForm.value.price*(1-environment.artistCommission)));
-    }
+    this.wishesForm.controls.commission.setValue(-(this.wishesForm.value.price*(1-environment.artistCommission)));
     this.apiService.initiateLoading(true);
     this.apiService.bookWishes(this.wishesForm.value).subscribe(
     (res : any)=>{
@@ -504,8 +500,13 @@ confirmbookWishes(){
           detail : res.data,
           life : 5000
         }
-      this.apiService.sendMessage(msgData);
-      $('#bookWishes').modal('hide')
+        if(this.wishesPayNow){
+          this.razor(res.id,this.wishesForm.value.price)
+        }
+        else{
+          this.apiService.sendMessage(msgData);
+          $('#bookWishes').modal('hide')
+        }
       }
       else if(res.status == 204){
         let msgData = {
@@ -540,13 +541,7 @@ confirmbookInaug(){
   let isFound = false;
   console.log(this.inaugForm.value)
   if(this.inaugForm.valid){
-    if(this.inaugForm.value.paid){
-      this.inaugForm.controls.commission.setValue(this.inaugForm.value.price*environment.artistCommission);
-      this.inaugForm.addControl('paymentId', new FormControl(this.paymentId, Validators.required));
-    }
-    else{
-      this.inaugForm.controls.commission.setValue(-(this.inaugForm.value.price*(1-environment.artistCommission)));
-    }
+    this.inaugForm.controls.commission.setValue(-(this.inaugForm.value.price*(1-environment.artistCommission)));
     for(let i of dates){
       if(new Date(i.date).toLocaleDateString() == new Date(date).toLocaleDateString()){
         isFound = true;
@@ -565,8 +560,13 @@ confirmbookInaug(){
             detail : res.data,
             life : 5000
           }
-        this.apiService.sendMessage(msgData);
-        $('#bookInaug').modal('hide')
+          if(this.inaugPayNow){
+            this.razor(res.id,this.inaugForm.value.price)
+          }
+          else{
+            this.apiService.sendMessage(msgData);
+            $('#bookInaug').modal('hide')
+          }
         }
         else if(res.status == 204){
           let msgData = {
@@ -662,45 +662,14 @@ buttonEvent(i:any,date:any,event:any){
   document.getElementById(event.target.id)?.classList.add('btn-clicked');
 }
 
-razor(data:any){
-  let payload;
-  if(data == 'wishes'){
-    if(this.wishesForm.valid){
-      console.log(this.wishesForm.value);
-      payload = {
-        price:this.wishesForm.value.price*100
-      }
-      this.createOrder(payload,data);
-    }
-    else{
-      const controls = this.wishesForm.controls;
-      for (const name in controls) {
-          if (controls[name].invalid) {
-              controls[name].markAsDirty()
-          }
-      }
-    }
+razor(id:any,price:any){
+  let payload = {
+    price:price*100
   }
-  else{
-    if(this.inaugForm.valid){
-      console.log(this.inaugForm.value);
-      payload = {
-        price:this.inaugForm.value.price*100
-      }
-      this.createOrder(payload,data);
-    }
-    else{
-      const controls = this.inaugForm.controls;
-      for (const name in controls) {
-          if (controls[name].invalid) {
-              controls[name].markAsDirty()
-          }
-      }
-    }
-  }
+  this.createOrder(payload,id);
 }
 
-createOrder(payload:any,data:any){
+createOrder(payload:any,id:any){
   this.apiService.initiateLoading(true)
   this.apiService.createOrder(payload).subscribe(
     (res:any)=>{
@@ -714,7 +683,7 @@ createOrder(payload:any,data:any){
           "image": environment.payDetails.image, 
           "order_id": res.data.id,
           "notes":{
-            "description" : data
+            "id" : id
           },
           "prefill": {
            "contact":this.userData.phoneNo,
@@ -725,23 +694,15 @@ createOrder(payload:any,data:any){
             "backdropclose" : false,
             "escape" : false,
             "confirm_close" : true,
-            "ondismiss":(response:any)=>{
-              console.log(response)
+            "ondismiss":()=>{
+              $('#bookWishes').modal('hide')
+              $('#bookInaug').modal('hide')
             }
           },
-          "handler": (response:any)=>{ 
-            response.type = data;
-            response.price = payload.price;
-            console.log(response)
-            var event = new CustomEvent("payment.success", 
-            {
-                detail: response,
-                bubbles: true,
-                cancelable: true
-            }
-          );    
-          window.dispatchEvent(event);
-          }, 
+          "handler": (response:any)=>{
+            $('#bookWishes').modal('hide')
+            $('#bookInaug').modal('hide')
+          },
           "theme": { 
               "color": environment.payDetails.color
           } 
@@ -769,51 +730,6 @@ createOrder(payload:any,data:any){
   ).add(()=>{
     this.apiService.initiateLoading(false)
   })
-}
-
-@HostListener('window:payment.success', ['$event']) 
-onPaymentSuccess(event:any): void {
-  let payload = {
-    razorpayOrderId: event.detail.razorpay_order_id,
-    razorpayPaymentId: event.detail.razorpay_payment_id,
-    razorpaySignature: event.detail.razorpay_signature
-    }
-    this.paymentId = [event.detail.razorpay_payment_id]
-    console.log(this.paymentId)
-    this.apiService.initiateLoading(true)
-    this.apiService.verifyOrder(payload).subscribe(
-    (res:any) => {
-      if(res.status == 200){
-        let mailPayload = {
-          paymentId : event.detail.razorpay_payment_id,
-          price : event.detail.price
-        }
-        this.apiService.sendMail(mailPayload).subscribe()
-        if(event.detail.type == 'wishes'){
-          this.confirmbookWishes();
-        }
-        else{
-          this.confirmbookInaug();
-        }
-        console.log(res)
-      }
-      else if(res.status == 204){
-        let msgData = {
-          severity : "error",
-          summary : 'Error',
-          detail : res.data,
-          life : 5000
-        }
-        this.apiService.sendMessage(msgData);
-        return
-      }
-    },
-    (err:any) => {
-        console.log(err.error.message);
-    }
-    ).add(()=>{
-      this.apiService.initiateLoading(false)
-    });
 }
 
 }

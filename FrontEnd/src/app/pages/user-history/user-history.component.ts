@@ -1391,36 +1391,14 @@ export class UserHistoryComponent implements OnInit{
     }
   }
 
-  razor(){
-    let payload;
-    if(this.bookingForm.valid){
-      console.log(this.bookingForm.value);
-      if(!this.bookingForm.value.price){
-        let msgData = {
-          severity : "error",
-          summary : 'Error',
-          detail : 'Price is mandatory',
-          life : 5000
-        }
-        this.apiService.sendMessage(msgData);
-        return
-      }
-      payload = {
-        price:this.bookingForm.value.price*100
-      }
-      this.createOrder(payload);
+  razor(id:any,price:any){
+    let payload = {
+      price:price*100
     }
-    else{
-      const controls = this.bookingForm.controls;
-      for (const name in controls) {
-          if (controls[name].invalid) {
-              controls[name].markAsDirty()
-          }
-      }
-    }
+    this.createOrder(payload,id);
   }
   
-  createOrder(payload:any){
+  createOrder(payload:any,id:any){
     this.apiService.initiateLoading(true)
     this.apiService.createOrder(payload).subscribe(
       (res:any)=>{
@@ -1433,31 +1411,25 @@ export class UserHistoryComponent implements OnInit{
             "description": "Pay & Book Artist", 
             "image": environment.payDetails.image, 
             "order_id": res.data.id,
+            "notes":{
+              "id" : id
+            },
             "prefill": {
               "contact":this.userData.phoneNo,
               "name": this.userData.name,   
               "email": this.userData.email
              },
              "modal":{
-               "backdropclose" : false,
-               "escape" : false,
-               "confirm_close" : true,
-               "ondismiss":(response:any)=>{
-                 console.log(response)
-               }
-             },
-            "handler": (response:any)=>{
-              console.log(response)
-              response.price = payload.price
-              var event = new CustomEvent("payment.success", 
-              {
-                  detail: response,
-                  bubbles: true,
-                  cancelable: true
+              "backdropclose" : false,
+              "escape" : false,
+              "confirm_close" : true,
+              "ondismiss":()=>{
+                $('#booking').modal('hide')
               }
-            );    
-            window.dispatchEvent(event);
-            }, 
+            },
+            "handler": (response:any)=>{
+              $('#booking').modal('hide')
+            },
             "theme": { 
                 "color": environment.payDetails.color
             } 
@@ -1485,46 +1457,6 @@ export class UserHistoryComponent implements OnInit{
     ).add(()=>{
       this.apiService.initiateLoading(false)
     })
-  }
-  
-  @HostListener('window:payment.success', ['$event']) 
-  onPaymentSuccess(event:any): void {
-    let payload = {
-      razorpayOrderId: event.detail.razorpay_order_id,
-      razorpayPaymentId: event.detail.razorpay_payment_id,
-      razorpaySignature: event.detail.razorpay_signature
-      }
-      this.paymentId = [event.detail.razorpay_payment_id]
-      console.log(this.paymentId)
-      this.apiService.initiateLoading(true)
-      this.apiService.verifyOrder(payload).subscribe(
-      (res:any) => {
-        if(res.status == 200){
-          let mailPayload = {
-            paymentId : event.detail.razorpay_payment_id,
-            price : event.detail.price
-          }
-          this.apiService.sendMail(mailPayload).subscribe()
-          this.reschedule();
-          console.log(res)
-        }
-        else if(res.status == 204){
-          let msgData = {
-            severity : "error",
-            summary : 'Error',
-            detail : res.data,
-            life : 5000
-          }
-          this.apiService.sendMessage(msgData);
-          return
-        }
-      },
-      (err:any) => {
-          console.log(err.error.message);
-      }
-      ).add(()=>{
-        this.apiService.initiateLoading(false)
-      });
   }
 
 }
