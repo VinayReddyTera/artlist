@@ -354,6 +354,7 @@
                     </div>
                     <div class="mt-3 d-grid">
                       <button *ngIf="wishesForm.value.paid" class="btn btn-success" type="button" (click)="razor('wishes')">Pay and Book Now</button>
+                      <div *ngIf="wishesForm.value.paid" class="text-danger font-weight-bold mt-2">Please donot close the payment popup until it closes itself<sup>*</sup></div>
                       <button *ngIf="!wishesForm.value.paid" class="btn btn-primary" type="submit">Book Now</button>
                     </div>
                   </form>

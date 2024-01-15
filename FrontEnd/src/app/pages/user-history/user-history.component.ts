@@ -13,6 +13,7 @@ import { UserApproverRenderer } from './userApproverRenderer';
 import { left } from '@popperjs/core';
 import { refundRenderer } from './refundRenderer';
 import { environment } from 'src/environments/environment';
+import { EncryptionService } from '../services/encryption.service';
 
 declare const $:any;
 declare const Razorpay: any;
@@ -24,7 +25,7 @@ declare const Razorpay: any;
 })
 export class UserHistoryComponent implements OnInit{
 
-  constructor(private apiService : ApiService,private router:Router,private fb: FormBuilder){}
+  constructor(private apiService : ApiService,private router:Router,private fb: FormBuilder,private encrypt: EncryptionService){}
 
   errorMessage : any;
   modifiedRows:any=[]
@@ -248,7 +249,7 @@ export class UserHistoryComponent implements OnInit{
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "State",
-            cellRenderer: (params:any)=> {
+      cellRenderer: (params:any)=> {
         if(params.value === '' || params.value === null || params.value === undefined){
           return 'N/A'
         }
@@ -262,7 +263,7 @@ export class UserHistoryComponent implements OnInit{
       filter: "agTextColumnFilter",
       filterParams: { maxNumConditions: 1 },
       headerName: "Pincode",
-            cellRenderer: (params:any)=> {
+      cellRenderer: (params:any)=> {
         if(params.value === '' || params.value === null || params.value === undefined){
           return 'N/A'
         }
@@ -292,6 +293,20 @@ export class UserHistoryComponent implements OnInit{
           else{
             return 'N/A'
           }
+        }
+      }
+    },
+    {
+      field: "paymentId",
+      filter: "agTextColumnFilter",
+      filterParams: { maxNumConditions: 1 },
+      headerName: "Payment Id",
+      cellRenderer: (params:any)=> {
+        if(params.value === '' || params.value === null || params.value === undefined || params.value.length === 0){
+          return 'N/A'
+        }
+        else{
+          return params.value.toString()
         }
       }
     },
@@ -359,8 +374,12 @@ export class UserHistoryComponent implements OnInit{
   isStatusEditable:boolean = false;
   statusForm:any;
   paymentId:any;
+  userData:any;
 
   ngOnInit(): void {
+    if(localStorage.getItem('data')){
+      this.userData = JSON.parse(this.encrypt.deCrypt(localStorage.getItem('data')));
+    }
     this.states = environment.states
     this.feedbackForm = this.fb.group({
       feedback:['',[Validators.required]],
@@ -1414,7 +1433,21 @@ export class UserHistoryComponent implements OnInit{
             "description": "Pay & Book Artist", 
             "image": environment.payDetails.image, 
             "order_id": res.data.id,
+            "prefill": {
+              "contact":this.userData.phoneNo,
+              "name": this.userData.name,   
+              "email": this.userData.email
+             },
+             "modal":{
+               "backdropclose" : false,
+               "escape" : false,
+               "confirm_close" : true,
+               "ondismiss":(response:any)=>{
+                 console.log(response)
+               }
+             },
             "handler": (response:any)=>{
+              console.log(response)
               response.price = payload.price
               var event = new CustomEvent("payment.success", 
               {
@@ -1471,7 +1504,7 @@ export class UserHistoryComponent implements OnInit{
             paymentId : event.detail.razorpay_payment_id,
             price : event.detail.price
           }
-          this.apiService.sendMail(mailPayload)
+          this.apiService.sendMail(mailPayload).subscribe()
           this.reschedule();
           console.log(res)
         }

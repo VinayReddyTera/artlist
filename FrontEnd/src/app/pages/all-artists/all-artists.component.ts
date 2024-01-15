@@ -77,10 +77,14 @@ states = [
 ];
 availableData: any;
 paymentId:any;
+userData:any;
 
 constructor(private apiService:ApiService,private router:Router,private encrypt:EncryptionService,private fb: FormBuilder){}
 
 ngOnInit() {
+  if(localStorage.getItem('data')){
+    this.userData = JSON.parse(this.encrypt.deCrypt(localStorage.getItem('data')));
+  }
   this.wishesForm = this.fb.group({
     bookingType:['online'],
     type:['Personal Wishes'],
@@ -538,7 +542,7 @@ confirmbookInaug(){
   if(this.inaugForm.valid){
     if(this.inaugForm.value.paid){
       this.inaugForm.controls.commission.setValue(this.inaugForm.value.price*environment.artistCommission);
-      this.wishesForm.addControl('paymentId', new FormControl(this.paymentId, Validators.required));
+      this.inaugForm.addControl('paymentId', new FormControl(this.paymentId, Validators.required));
     }
     else{
       this.inaugForm.controls.commission.setValue(-(this.inaugForm.value.price*(1-environment.artistCommission)));
@@ -709,9 +713,26 @@ createOrder(payload:any,data:any){
           "description": "Pay & Book Artist", 
           "image": environment.payDetails.image, 
           "order_id": res.data.id,
+          "notes":{
+            "description" : data
+          },
+          "prefill": {
+           "contact":this.userData.phoneNo,
+           "name": this.userData.name,   
+           "email": this.userData.email
+          },
+          "modal":{
+            "backdropclose" : false,
+            "escape" : false,
+            "confirm_close" : true,
+            "ondismiss":(response:any)=>{
+              console.log(response)
+            }
+          },
           "handler": (response:any)=>{ 
             response.type = data;
-            response.price = payload.price
+            response.price = payload.price;
+            console.log(response)
             var event = new CustomEvent("payment.success", 
             {
                 detail: response,
@@ -767,7 +788,7 @@ onPaymentSuccess(event:any): void {
           paymentId : event.detail.razorpay_payment_id,
           price : event.detail.price
         }
-        this.apiService.sendMail(mailPayload)
+        this.apiService.sendMail(mailPayload).subscribe()
         if(event.detail.type == 'wishes'){
           this.confirmbookWishes();
         }

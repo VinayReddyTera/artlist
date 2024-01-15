@@ -28,8 +28,12 @@ export class ArtistDataComponent implements OnInit{
   minDate : Date = new Date(new Date().setDate(new Date().getDate()+1));
   paymentId:any;
   states:any;
+  userData:any;
 
   ngOnInit(): void {
+    if(localStorage.getItem('data')){
+      this.userData = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('data')));
+    }
     this.states = environment.states;
     if(localStorage.getItem('artistData')){
       this.artistData = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('artistData')));
@@ -437,6 +441,19 @@ export class ArtistDataComponent implements OnInit{
             "description": "Pay & Book Artist", 
             "image": environment.payDetails.image, 
             "order_id": res.data.id,
+            "prefill": {
+              "contact":this.userData.phoneNo,
+              "name": this.userData.name,   
+              "email": this.userData.email
+             },
+             "modal":{
+               "backdropclose" : false,
+               "escape" : false,
+               "confirm_close" : true,
+               "ondismiss":(response:any)=>{
+                 console.log(response)
+               }
+             },
             "handler": (response:any)=>{
               response.price = payload.price
               var event = new CustomEvent("payment.success", 
@@ -494,7 +511,7 @@ export class ArtistDataComponent implements OnInit{
             paymentId : event.detail.razorpay_payment_id,
             price : event.detail.price
           }
-          this.apiservice.sendMail(mailPayload)
+          this.apiservice.sendMail(mailPayload).subscribe()
           this.bookNow();
           console.log(res)
         }

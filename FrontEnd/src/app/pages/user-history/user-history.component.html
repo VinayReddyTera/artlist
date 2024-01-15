@@ -443,13 +443,13 @@
                         You will receive amount of <span class="text-success">{{arrear}} ₹</span> in your wallet
                       </div>
                   <div *ngIf="!eventData?.paid" class="mt-3 d-grid">
-                    <button *ngIf="payNow" class="btn btn-success" type="submit" (click)="razor()">Pay and Reschedule</button>
+                    <button *ngIf="payNow" class="btn btn-success" type="button" (click)="razor()">Pay and Reschedule</button>
                     <button *ngIf="!payNow" class="btn btn-primary" type="submit">Reschedule</button>
                   </div>
                   <div *ngIf="eventData?.paid" class="mt-3 d-grid">
                     <button *ngIf="arrear >= 0;else elseBlock1" class="btn btn-primary" type="submit">Reschedule</button>
                     <ng-template #elseBlock1>
-                      <button class="btn btn-success" type="submit" (click)="razor()">Pay {{arrear*-1}} and Reschedule</button>
+                      <button class="btn btn-success" type="button" (click)="razor()">Pay {{arrear*-1}} and Reschedule</button>
                     </ng-template>
                   </div>
                 </form>
@@ -630,6 +630,10 @@
                     <th scope="row">Paid :</th>
                     <td><span class="badge badge-soft-danger" style="font-size: 13px;">Not Paid</span></td>
                   </ng-template>
+                  <tr *ngIf="dataView?.paymentId">
+                    <th scope="row">Payment Id :</th>
+                    <td>{{dataView?.paymentId}}</td>
+                  </tr>
                 </tbody>
               </table>
             </div>

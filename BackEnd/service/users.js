@@ -2198,7 +2198,7 @@ userService.bookInaug=async(payload)=>{
   }
 }
 
-userService.sendPayMail = (payData,userData) =>{
+userService.sendPayMail = async(payData,userData) =>{
   let payload1 = {
     "subject" : `Amount Paid`,
     "email" : userData.email,
@@ -2209,7 +2209,7 @@ userService.sendPayMail = (payData,userData) =>{
     "button": false,
     "name": userData.name,
     "url": false,
-    "body": `You made a payment of rupees ${payData.price} to Artlist with Payment Id : ${payData.paymentId}. Keep this payment id for future reference.`,
+    "body": `You made a payment of rupees ${payData.price/100} to Artlist with Payment Id : ${payData.paymentId}. Keep this payment id for future reference.`,
   }
   let templatePath = 'templates/welcome.html';
   ejs.renderFile(templatePath, data, (err, html) => {
