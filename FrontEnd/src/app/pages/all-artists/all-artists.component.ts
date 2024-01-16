@@ -683,7 +683,8 @@ createOrder(payload:any,id:any){
           "image": environment.payDetails.image, 
           "order_id": res.data.id,
           "notes":{
-            "id" : id
+            "id" : id,
+            "type" : 'schedule'
           },
           "prefill": {
            "contact":this.userData.phoneNo,

@@ -406,9 +406,7 @@ export class UserHistoryComponent implements OnInit{
       bookingType:['',[Validators.required]],
       type:['',[Validators.required]],
       date:['',[Validators.required]],
-      price:[''],
-      commission:[''],
-      paid:[true]
+      price:['']
     })
     this.apiService.initiateLoading(true);
     this.apiService.fetchHistory().subscribe(
@@ -558,8 +556,11 @@ export class UserHistoryComponent implements OnInit{
         date:[new Date(data.date),[Validators.required]],
         name:[data.name,[Validators.required]],
         commission:[data.commission],
-        paid:[true]
-      })
+        paid:[false]
+      });
+      if(this.eventData.paid){
+        this.bookingForm.controls.paid.setValue(true);
+      }
       if(data.type == 'hourly'){
         this.showFrom = true;
         this.bookingForm.addControl('from', new FormControl(formatDate(new Date(data.from), 'HH:mm', 'en-US'), Validators.required));
@@ -711,6 +712,9 @@ export class UserHistoryComponent implements OnInit{
     let isFound = false;
     console.log(this.bookingForm.valid,this.bookingForm.value)
     if(this.bookingForm.valid){
+      if(this.arrear<0){
+        this.bookingForm.controls.paid.setValue(false);
+      }
       if(this.bookingForm.value.paid){
         this.bookingForm.controls.commission.setValue(this.bookingForm.value.price*environment.artistCommission);
       }
@@ -782,6 +786,9 @@ export class UserHistoryComponent implements OnInit{
         if(this.arrear>0){
           payload.wallet = this.arrear;
         }
+        else if(this.arrear < 0){
+          payload.data.arrear = this.arrear
+        }
         if(this.eventData.paid && this.eventData.refundStatus == 'positive'){
           payload.oldPrice = this.eventData.price;
           payload.refundStatus = this.eventData.refundStatus
@@ -797,12 +804,20 @@ export class UserHistoryComponent implements OnInit{
               detail : res.data,
               life : 5000
             }
-          this.apiService.sendMessage(msgData);
-          $(`#reschedule`).modal('hide');
-          $(`#dataView`).modal('hide');
-          this.usersRowData = [];
-          this.errorMessage = null;
-          this.ngOnInit();
+            if(this.payNow){
+              this.razor(this.eventData._id,this.bookingForm.value.price,'schedule')
+            }
+            else if(this.arrear < 0){
+              this.razor(this.eventData._id,-1*this.arrear,'reschedule')
+            }
+            else{
+              this.apiService.sendMessage(msgData);
+              $(`#reschedule`).modal('hide');
+              $(`#dataView`).modal('hide');
+              this.usersRowData = [];
+              this.errorMessage = null;
+              this.ngOnInit();
+            }
           }
           else if(res.status == 204){
             let msgData = {
@@ -1124,12 +1139,12 @@ export class UserHistoryComponent implements OnInit{
 
   updatePay(data:any){
     if(data == 'paynow'){
-      this.bookingForm.controls.paid.setValue(true);
+      // this.bookingForm.controls.paid.setValue(true);
       this.payNow = true;
       this.bookingForm.addControl('paymentType', new FormControl('online'));
     }
     else{
-      this.bookingForm.controls.paid.setValue(false);
+      // this.bookingForm.controls.paid.setValue(false);
       this.payNow = false;
       this.bookingForm.addControl('paymentType', new FormControl(null));
     }
@@ -1391,19 +1406,19 @@ export class UserHistoryComponent implements OnInit{
     }
   }
 
-  razor(id:any,price:any){
+  razor(id:any,price:any,type:any){
     let payload = {
       price:price*100
     }
-    this.createOrder(payload,id);
+    this.createOrder(payload,id,type);
   }
   
-  createOrder(payload:any,id:any){
+  createOrder(payload:any,id:any,type:any){
     this.apiService.initiateLoading(true)
     this.apiService.createOrder(payload).subscribe(
       (res:any)=>{
         if(res.status == 200){
-          let options = { 
+          let options:any = { 
             "key": environment.keyid,  
             "amount": payload.price,  
             "currency": "INR", 
@@ -1412,7 +1427,8 @@ export class UserHistoryComponent implements OnInit{
             "image": environment.payDetails.image, 
             "order_id": res.data.id,
             "notes":{
-              "id" : id
+              "id" : id,
+              "type" : type
             },
             "prefill": {
               "contact":this.userData.phoneNo,
@@ -1424,16 +1440,27 @@ export class UserHistoryComponent implements OnInit{
               "escape" : false,
               "confirm_close" : true,
               "ondismiss":()=>{
-                $('#booking').modal('hide')
+                $(`#reschedule`).modal('hide');
+                $(`#dataView`).modal('hide');
+                this.usersRowData = [];
+                this.errorMessage = null;
+                this.ngOnInit();
               }
             },
             "handler": (response:any)=>{
-              $('#booking').modal('hide')
+              $(`#reschedule`).modal('hide');
+              $(`#dataView`).modal('hide');
+              this.usersRowData = [];
+              this.errorMessage = null;
+              this.ngOnInit();
             },
             "theme": { 
                 "color": environment.payDetails.color
             } 
         }; 
+        if(type == 'reschedule'){
+          options.notes.amount = this.bookingForm.value.price
+        }
           let razorpayObject = new Razorpay(options);
           razorpayObject.open();
           razorpayObject.on('payment.failed',(response:any)=>{ 

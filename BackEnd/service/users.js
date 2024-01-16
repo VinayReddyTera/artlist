@@ -1532,6 +1532,7 @@ userService.updateBooking=async(payload)=>{
 userService.getReminder=()=>{
   return userDB.getReminder().then((data)=>{
       if(data){
+        console.log(data)
         let role = ['user','artist']
         for(let i of data){
           let slotMap = {
@@ -1599,6 +1600,7 @@ userService.getReminder=()=>{
               }
               else{
                 payload.body = html;
+                console.log(i)
                 userService.sendMail(payload)
               }
             })
@@ -2230,6 +2232,18 @@ userService.sendPayMail = async(payload) =>{
 
 userService.updatePayment=(payload)=>{
   return userDB.updatePayment(payload).then((data)=>{
+    if(data){
+      userService.sendPayMail(payload)
+      return true
+    }
+    else{
+      return false;
+    }
+  })
+}
+
+userService.updateReschedulePayment=(payload)=>{
+  return userDB.updateReschedulePayment(payload).then((data)=>{
     if(data){
       userService.sendPayMail(payload)
       return true

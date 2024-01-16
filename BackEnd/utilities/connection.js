@@ -151,6 +151,7 @@ const history = Schema({
     bookingType : String,
     address : String,
     paymentId:[String],
+    arrear:Number,
     mandal : String,
     district:String,
     state:String,

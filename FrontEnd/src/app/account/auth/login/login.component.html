@@ -50,9 +50,9 @@
                     <input type="password" id="password" class="form-control" formControlName="password" placeholder="Enter password"
                       aria-label="Password" aria-describedby="password-addon" [ngClass]="{ 'is-invalid': submitted && loginForm.controls.password.errors }">
 
-                    <button class="btn btn-light ms-0" type="button" id="password-addon">
-                      <i class="mdi mdi-eye" *ngIf="!showPassword" (click)="togglePasswordVisibility()"></i>
-                      <i class="mdi mdi-eye-off" *ngIf="showPassword" (click)="togglePasswordVisibility()"></i>
+                    <button class="btn btn-light ms-0" type="button" id="password-addon" (click)="togglePasswordVisibility()">
+                      <i class="mdi mdi-eye" *ngIf="!showPassword"></i>
+                      <i class="mdi mdi-eye-off" *ngIf="showPassword"></i>
                     </button>
                     </div>
                     <div *ngIf="loginForm.controls.password.errors?.required && loginForm.controls.password.dirty" class="text-danger">

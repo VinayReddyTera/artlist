@@ -1905,6 +1905,7 @@ userDB.updateBooking = async (payload) => {
         status : 'rescheduled',
         reminderDates : arr,
         modifiedBy : payload.role,
+        arrear : payload.data?.arrear,
         refundStatus : 'negative'
       }})
     }
@@ -1915,6 +1916,7 @@ userDB.updateBooking = async (payload) => {
         slot : payload.data.slot,
         reminderDates : arr,
         modifiedBy : payload.role,
+        arrear : payload.data?.arrear,
         refundStatus : 'negative'
       }})
     }
@@ -1924,6 +1926,7 @@ userDB.updateBooking = async (payload) => {
         date : payload.data.date,
         reminderDates : arr,
         modifiedBy : payload.role,
+        arrear : payload.data?.arrear,
         refundStatus : 'negative'
       }})
     }
@@ -1949,6 +1952,7 @@ userDB.updateBooking = async (payload) => {
           district : '',
           state : '',
           pincode:'',
+          arrear : payload.data?.arrear,
           refundStatus : 'negative'
         }})
       }
@@ -1971,6 +1975,7 @@ userDB.updateBooking = async (payload) => {
           district : '',
           state : '',
           pincode:'',
+          arrear : payload.data?.arrear,
           refundStatus : 'negative'
         }})
       }
@@ -1993,6 +1998,7 @@ userDB.updateBooking = async (payload) => {
           district : '',
           state : '',
           pincode:'',
+          arrear : payload.data?.arrear,
           refundStatus : 'negative'
         }})
       }
@@ -2017,6 +2023,7 @@ userDB.updateBooking = async (payload) => {
           district : payload.data.district,
           state : payload.data.state,
           pincode:payload.data.pincode,
+          arrear : payload.data?.arrear,
           refundStatus : 'negative'
         }})
       }
@@ -2039,6 +2046,7 @@ userDB.updateBooking = async (payload) => {
           district : payload.data.district,
           state : payload.data.state,
           pincode:payload.data.pincode,
+          arrear : payload.data?.arrear,
           refundStatus : 'negative'
         }})
       }
@@ -2061,6 +2069,7 @@ userDB.updateBooking = async (payload) => {
           district : payload.data.district,
           state : payload.data.state,
           pincode:payload.data.pincode,
+          arrear : payload.data?.arrear,
           refundStatus : 'negative'
         }})
       }
@@ -3063,8 +3072,21 @@ userDB.bookInaug = async (payload) => {
 }
 
 userDB.updatePayment = async(payload) => {
+  let commission = process.env.artistCommission*(payload.price/100)
   const collection = await connection.history();
-  let data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{paid:true,paymentType:'online'},$push:{paymentId:payload.paymentId}})
+  let data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{paid:true,paymentType:'online',commission:commission},$push:{paymentId:payload.paymentId}})
+  if (data.modifiedCount == 1) {
+    return true
+  }
+  else {
+    return null
+  }
+}
+
+userDB.updateReschedulePayment = async(payload) => {
+  let commission = process.env.artistCommission*(payload.amount)
+  const collection = await connection.history();
+  let data = await collection.updateOne({"_id":new ObjectId(payload.id)},{$set:{paid:true,paymentType:'online',commission:commission,arrear:0},$push:{paymentId:payload.paymentId}})
   if (data.modifiedCount == 1) {
     return true
   }

@@ -1184,7 +1184,7 @@ router.post('/bookInaug',verifyToken,(req,res,next)=>{
 })
 
 //router to get reminder
-router.get('/reminder',verifyToken,(req,res,next)=>{
+router.get('/reminder',(req,res,next)=>{
   userservice.getReminder().then((data)=>{
     return res.json(data)
   }).catch((err)=>{
@@ -1250,6 +1250,7 @@ router.post('/verify', (req, res)=>{
   shasum.update(JSON.stringify(req.body));
   let digest = shasum.digest('hex');
   if(digest === req.headers['x-razorpay-signature']){
+    console.log('payment captured')
     let payload = {
       id : req.body.payload.payment.entity.notes.id,
       paymentId : req.body.payload.payment.entity.id,
@@ -1257,16 +1258,31 @@ router.post('/verify', (req, res)=>{
       email : req.body.payload.payment.entity.email,
       name : req.body.payload.payment.entity.name
     }
-    userservice.updatePayment(payload).then((data)=>{
-      if(data){
-        return res.status(200).json({status:'ok'})
-      }
-      else{
-        return res.status(400).json({status:400})
-      }
-    }).catch((err)=>{
-      next(err)
-    })
+    if(req.body.payload.payment.entity.notes.type == 'schedule'){
+      userservice.updatePayment(payload).then((data)=>{
+        if(data){
+          return res.status(200).json({status:'ok'})
+        }
+        else{
+          return res.status(400).json({status:400})
+        }
+      }).catch((err)=>{
+        next(err)
+      })
+    }
+    else{
+      payload.amount = req.body.payload.payment.entity.notes.amount
+      userservice.updateReschedulePayment(payload).then((data)=>{
+        if(data){
+          return res.status(200).json({status:'ok'})
+        }
+        else{
+          return res.status(400).json({status:400})
+        }
+      }).catch((err)=>{
+        next(err)
+      })
+    }
   }
 });
 
