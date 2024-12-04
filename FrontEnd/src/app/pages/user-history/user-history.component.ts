@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { contactDetailsRenderer } from '../all-approvers/contactRenderer';

@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormControl } from '@angular/forms';
-
 import { Router } from '@angular/router';
-
 import { environment } from 'src/environments/environment';
 import { ApiService } from 'src/app/pages/services/api.service';
 import { EncryptionService } from 'src/app/pages/services/encryption.service';

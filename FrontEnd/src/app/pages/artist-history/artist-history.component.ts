@@ -7,7 +7,7 @@ import { ApiService } from '../services/api.service';
 import { slotRenderer } from '../user-history/slotRenderer';
 import { userHistoryTimeRenderer } from '../user-history/userHistoryTimeRenderer';
 import { artistfeedbackRenderer } from './feedbackRenderer';
-import { FormBuilder, FormControl, Validators} from '@angular/forms';
+import { FormBuilder, Validators} from '@angular/forms';
 
 declare const $:any;
 
@@ -16,7 +16,7 @@ declare const $:any;
   templateUrl: './artist-history.component.html',
   styleUrls: ['./artist-history.component.css']
 })
-export class ArtistHistoryComponent  implements OnInit{
+export class ArtistHistoryComponent implements OnInit{
 
   constructor(private apiService : ApiService,private router:Router,private fb: FormBuilder){}
 

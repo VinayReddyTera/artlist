@@ -1287,8 +1287,9 @@ router.post('/verify', (req, res)=>{
 });
 
 //router to test
-router.get('/test',verifyToken,(req,res,next)=>{
-  res.json('ok')
+router.get('/test',(req,res,next)=>{
+  let payload = jwt.decode(req.headers.authorization).data;
+  res.json(payload)
   // userservice.test().then((data)=>{
   //   return res.json(data)
   // }).catch((err)=>{

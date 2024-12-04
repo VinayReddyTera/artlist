@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
+
 export class ApiService {
 
   constructor(private http : HttpClient,private decrypt:EncryptionService,private router:Router) { }

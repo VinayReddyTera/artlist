@@ -73,24 +73,6 @@ export class AddSkillComponent implements OnInit {
     
   }
 
-  validateEmail(c:FormControl): { emailError: { message: string; }; } | null{
-    const emailRegex = environment.emailRegex
-    return emailRegex.test(c.value)? null : {
-      emailError : {
-        message : 'Invalid email format!'
-      }
-    }
-  }
-
-  validatePhone(c:FormControl): { phoneError: { message: string; }; } | null{
-    const phoneRegex = environment.phoneNoRegex
-    return phoneRegex.test(c.value)? null : {
-      phoneError : {
-        message : 'Invalid Mobile No format!'
-      }
-    }
-  }
-
   addGenreFormGroup() {
     return this.fb.group({
       name: ['', [Validators.required]],

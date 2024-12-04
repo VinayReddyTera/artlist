@@ -135,11 +135,11 @@ userService.forgotPassword = (userData,origin) =>{
             return data
         }
         else{
-            return userDB.generateOtpForUsers(userData).then((data)=>{
-                if(data.status == 200){
+            return userDB.generateOtpForUsers(userData).then((otpData)=>{
+                if(otpData.status == 200){
                     let resetData = {
                         email : userData.email,
-                        otp : data.data,
+                        otp : otpData.data,
                         role : userData.role
                     }
                     const expirationTime = Math.floor(Date.now() / 1000) + 7200;
