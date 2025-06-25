@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable,Subject,throwError } from 'rxjs';
+import { BehaviorSubject, Observable,Subject,throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { EncryptionService } from './encryption.service';
 import { catchError } from 'rxjs/operators';

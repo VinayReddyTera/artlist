@@ -8,7 +8,19 @@ const cors = require("cors");
 const app = express();
 const cron = require('node-cron');
 const userservice = require("./service/users");
-const path = require('path')
+const path = require('path');
+const helmet = require('helmet');
+
+// Block rendering in iframe
+app.use(
+  helmet.frameguard({ action: 'deny' }) // or 'sameorigin'
+);
+
+app.use((req, res, next) => {
+  res.setHeader("Content-Security-Policy", "frame-ancestors 'none'");
+  next();
+});
+
 
 app.use(cors());
 app.use(bodyParser.json());

@@ -1,8 +1,9 @@
 import { Component, OnInit, Output, EventEmitter, Inject,ElementRef, Renderer2 } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { DOCUMENT, ViewportScroller } from '@angular/common';
 import { EncryptionService } from 'src/app/pages/services/encryption.service';
 import { ApiService } from 'src/app/pages/services/api.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-topbar',
@@ -23,14 +24,42 @@ export class TopbarComponent implements OnInit {
   @Output() mobileMenuButtonClicked = new EventEmitter();
   count = 0;
   incrementCount : number = 0;
-  maxLimit : number = 2;
-
+  maxLimit : number = 1;
+  delta:number = 0;
+  show = false;
+  private observer!: MutationObserver;
+  
   ngOnInit() {
     let data = JSON.parse(this.decrypt.deCrypt(localStorage.getItem('data')));
     this.name = data.name;
     this.role = data.role;
     this.openMobileMenu = false;
     this.element = document.documentElement;
+
+    // Subscribe to router events to reapply font size on route change
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      console.log(this.delta);
+      this.count = 0;
+      if (this.delta) {
+        this.adjustFontSize(this.delta);
+      }
+    });
+
+    // Create a MutationObserver to observe changes in the DOM
+    this.observer = new MutationObserver(() => {
+      if (this.delta > 0) {
+        this.incrementCount = 0;
+        this.adjustFontSize(2);
+      }
+    });
+
+    // Start observing the document body for changes
+    this.observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
   }
 
   adjustFontSize(delta: number) {
@@ -47,13 +76,23 @@ export class TopbarComponent implements OnInit {
       console.log('No decrements allowed if increment count is 0');
       return;
     }
+    this.delta = delta;
     let elements:any = document.querySelectorAll('body *'); // get all elements within the body
     for(let element of elements){
       let htmlElement = element as HTMLElement; // Explicitly cast Element to HTMLElement
       let currentFontSize = window.getComputedStyle(htmlElement).fontSize;
       let currentSize = `${parseFloat(currentFontSize) + delta}px`
       if(this.count){
-        htmlElement.style.cssText += `font-size: ${currentSize} !important;`;
+        if(delta > 0){
+          if (!htmlElement.hasAttribute('data-font-adjusted')) {
+            htmlElement.style.cssText += `font-size: ${currentSize} !important;`;
+            htmlElement.setAttribute('data-font-adjusted', 'true');
+          }
+        }
+        else if(delta < 0){
+          htmlElement.style.cssText += `font-size: ${currentSize} !important;`;
+          htmlElement.removeAttribute('data-font-adjusted');
+        }
       }
       else{
         htmlElement.style.cssText += `font-size: ${currentFontSize} !important;`; 
@@ -71,6 +110,17 @@ export class TopbarComponent implements OnInit {
       this.incrementCount--; // Decrease the count only if allowed
     }
     }
+  }
+
+  showToast(){
+    // let msgData = {
+    //   severity : "info",
+    //   summary : 'Info',
+    //   detail : 'This feature is under development',
+    //   life : 10000
+    // }
+    // this.apiService.sendMessage(msgData);
+    this.show = !this.show;
   }
 
   toggleMobileMenu(event: any) {

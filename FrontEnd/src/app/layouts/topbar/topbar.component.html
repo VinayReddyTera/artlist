@@ -22,6 +22,13 @@
         </a>
       </div>
 
+      <button class="btn btn-success" (click)="adjustFontSize(2)">+ve</button>
+      <button class="btn btn-danger" (click)="adjustFontSize(-2)">-ve</button>
+
+      <button class="btn btn-outline-success" (click)="showToast()">show toast</button>
+
+      <div *ngIf="show" style="font-size: 14px;">test</div>
+
       <button type="button" class="btn btn-sm px-3 font-size-16 header-item" id="vertical-menu-btn"
         (click)="toggleMobileMenu($event)">
         <i class="fa fa-fw fa-bars"></i>

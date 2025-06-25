@@ -13,6 +13,7 @@ declare const Razorpay: any;
   templateUrl: './all-artists.component.html',
   styleUrls: ['./all-artists.component.css']
 })
+
 export class AllArtistsComponent implements OnInit{
 artists:any=[];
 showAdvance:any = false;
